@@ -32,19 +32,19 @@ export interface VitalsSummaryItem {
 export const CONFIRMED_VITALS_BENEFITS: VitalsSummaryItem[] = [
   {
     metricName: "Blood Sugar",
-    purpose: "Monitor glycemic balance to maintain stable mood and steady morning energy.",
+    purpose: "Free monthly checkup included with your subscription, in collaboration with MedCity Health Labs.",
     frequency: "Monthly",
     partnerLab: "MedCity Health Labs",
   },
   {
     metricName: "Cholesterol",
-    purpose: "Proactive lipid tracking to support long-term cardiovascular health.",
+    purpose: "Free monthly checkup included with your subscription, in collaboration with MedCity Health Labs.",
     frequency: "Monthly",
     partnerLab: "MedCity Health Labs",
   },
   {
     metricName: "Blood Pressure",
-    purpose: "Circulatory health and stress biomarker evaluation.",
+    purpose: "Free monthly checkup included with your subscription, in collaboration with MedCity Health Labs.",
     frequency: "Monthly",
     partnerLab: "MedCity Health Labs",
   },

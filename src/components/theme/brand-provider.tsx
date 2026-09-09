@@ -21,12 +21,10 @@ export function BrandThemeProvider({
   initialTheme?: BrandTheme;
 }) {
   const pathname = usePathname();
-  const [theme, setThemeState] = useState<BrandTheme>(() => {
-    if (typeof window !== "undefined" && pathname?.startsWith("/medcity-smiles")) {
-      return "medcity";
-    }
-    return initialTheme;
-  });
+  const isMedCity = pathname?.startsWith("/medcity-smiles");
+  const [theme, setThemeState] = useState<BrandTheme>(
+    isMedCity ? "medcity" : initialTheme
+  );
 
   // Automatically adapt default theme when navigating between primary routes
   useEffect(() => {

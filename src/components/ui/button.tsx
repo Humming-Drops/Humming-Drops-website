@@ -7,6 +7,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: "sm" | "md" | "lg";
   brand?: BrandTheme | "auto";
   isLoading?: boolean;
+  asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -17,6 +18,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size = "md",
       brand = "auto",
       isLoading = false,
+      asChild = false,
       disabled,
       children,
       ...props
@@ -83,16 +85,26 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
 
+    const combinedClasses = cn(
+      "inline-flex items-center justify-center font-display transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
+      getVariantClasses(),
+      getSizeClasses(),
+      className
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<{ className?: string }>;
+      return React.cloneElement(child, {
+        className: cn(combinedClasses, child.props.className),
+        ...props,
+      });
+    }
+
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={cn(
-          "inline-flex items-center justify-center font-display transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
-          getVariantClasses(),
-          getSizeClasses(),
-          className
-        )}
+        className={combinedClasses}
         {...props}
       >
         {isLoading ? (

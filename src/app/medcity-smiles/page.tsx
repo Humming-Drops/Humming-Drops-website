@@ -10,35 +10,7 @@ export const metadata: Metadata = {
 
 export default function MedCitySmilesPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-teal-50/30" data-theme="medcity">
-      {/* Header Shell */}
-      <header className="border-b border-teal-200 bg-white/80 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link href="/medcity-smiles" className="font-display font-bold text-xl text-teal-900 tracking-tight">
-              MedCity Smiles
-            </Link>
-            <span className="text-xs bg-teal-100 text-teal-900 px-2.5 py-0.5 rounded-full font-medium hidden sm:inline">
-              Mental Wellbeing & Community
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <Link
-              href="/"
-              className="text-xs sm:text-sm px-3 py-1.5 rounded-full bg-forest-50 text-forest-900 hover:bg-forest-100 border border-forest-200 font-medium transition"
-            >
-              ← Switch to Humming Drops
-            </Link>
-            <Link
-              href="/subscribe"
-              className="text-xs sm:text-sm px-4 py-2 rounded-full bg-teal-700 text-white hover:bg-teal-800 font-medium transition"
-            >
-              Join Community with Breakfast Box
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="w-full" data-theme="medcity">
 
       {/* Main Structural Shell */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full space-y-16">
@@ -121,18 +93,6 @@ export default function MedCitySmilesPage() {
           </div>
         </section>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-teal-200 bg-stone-50 py-8 text-xs text-stone-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>© {new Date().getFullYear()} MedCity Smiles in collaboration with Humming Drops.</div>
-          <div className="flex gap-4">
-            <Link href="/" className="hover:underline">Humming Drops</Link>
-            <Link href="/about" className="hover:underline">About</Link>
-            <Link href="/contact" className="hover:underline">Contact</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -10,40 +10,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Structural Announcement Banner */}
-      <div className="bg-forest-900 text-white text-xs sm:text-sm py-2 px-4 text-center">
-        <span>Fresh Morning Doorstep Delivery in Bangalore · Operational Kitchen at Berrybeats Cafe</span>
-      </div>
-
-      {/* Global Brand Navigation Header Shell */}
-      <header className="border-b border-stone-200 bg-white/80 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link href="/" className="font-display font-bold text-xl text-forest-900 tracking-tight">
-              Humming Drops
-            </Link>
-            <span className="text-xs bg-forest-100 text-forest-800 px-2.5 py-0.5 rounded-full font-medium hidden sm:inline">
-              Physical Nutrition
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <Link
-              href="/medcity-smiles"
-              className="text-xs sm:text-sm px-3 py-1.5 rounded-full bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200 font-medium transition"
-            >
-              Switch to MedCity Smiles →
-            </Link>
-            <Link
-              href="/subscribe"
-              className="text-xs sm:text-sm px-4 py-2 rounded-full bg-forest-900 text-white hover:bg-forest-800 font-medium transition"
-            >
-              Subscribe Now
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="w-full">
 
       {/* Route Content Shell */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full space-y-16">
@@ -145,19 +112,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-
-      {/* Structural Footer Shell */}
-      <footer className="border-t border-stone-200 bg-stone-50 py-8 text-xs text-stone-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>© {new Date().getFullYear()} Humming Drops. All rights reserved. Operating from Berrybeats Cafe, Bangalore.</div>
-          <div className="flex gap-4">
-            <Link href="/about" className="hover:underline">About</Link>
-            <Link href="/contact" className="hover:underline">Contact</Link>
-            <Link href="/plans" className="hover:underline">Plans</Link>
-            <Link href="/login" className="hover:underline">Subscriber Login</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

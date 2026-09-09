@@ -226,14 +226,15 @@ Initialize a clean, production-grade Next.js 15+ App Router codebase with strict
 1. Clean directory structure (`src/app`, `src/components`, `src/lib`, `src/types`, `src/hooks`).
 2. Global styles with CSS variable theming supporting `theme-humming` and `theme-medcity`.
 3. Root layout with metadata, OpenGraph tags, and persistent global components.
-4. Navigation Shell (`Navbar.tsx` with Dual-Mode Switcher).
-5. Footer Shell (`Footer.tsx` with Bangalore address, Berrybeats Cafe mention, contact details, partner links).
+4. Navigation Shell (`Navbar.tsx` with Dual-Mode Switcher and responsive drawer strategy: compact drawer below `xl:` (1280px) including 768px tablet, keeping primary CTA and switcher accessible).
+5. Footer Shell (`Footer.tsx` with Bangalore address, Berrybeats Cafe mention, contact details, partner links, respecting content guardrails).
 6. Core accessible UI primitives (`Button`, `Badge`, `Card`, `Tabs`, `Dialog`, `Input`).
 
 ### Acceptance Criteria
 * Zero TypeScript errors under strict mode (`tsconfig.json` with `"strict": true`).
 * Fast HMR (Hot Module Replacement) and build execution under Next.js.
 * Complete CSS variable tokens mapped for light/dual mode.
+* Consistent responsive behavior at 768px tablet: navigation drawer used rather than squeezed desktop links, zero horizontal overflow, primary CTA accessible.
 
 ---
 
@@ -241,40 +242,42 @@ Initialize a clean, production-grade Next.js 15+ App Router codebase with strict
 
 ### Objective
 Deliver a compelling, high-converting homepage for Humming Drops that presents the breakfast box subscription as an effortless, essential morning habit.
+*Visual Direction Reference:* Implements the fresh, food-first, organic geometry and tactile produce storytelling principles analyzed from `eatwholy.com` (while creating a 100% original Humming Drops design; see `docs/uiux-design.md` Section 10).
 
 ### Section Breakdown
 1. **Announcement Bar:**
-   * Bangalore launch notification: "Delivering fresh every morning across Bangalore · Kitchen at Berrybeats Cafe".
+   * Bangalore launch notification: "Morning Doorstep Delivery in Bangalore · Kitchen at Berrybeats Cafe".
 2. **Hero Section:**
    * Headline: "Healthy Drops, Healthier You."
    * Supporting Copy: "A daily morning delivery of fresh mixed-cut fruit boxes, crisp vegetables, sprouts, and salads — meticulously prepared to fuel your day."
    * CTAs: Primary: "Choose Your Plan (₹3,500/mo)" → `/plans`; Secondary: "Explore Box Anatomy" → `#box-contents`.
-   * Visual Centerpiece: High-definition 5-compartment box imagery with floating nutritional callout chips.
-   * Trust Badges: "100% Fresh Daily Cut" | "Zero Preservatives" | "Free Monthly Lab Vitals Checkup".
+    * Visual Centerpiece: High-definition 5-compartment box imagery with nutritional callout chips.
+    * Trust Badges: "Fresh Daily Morning Delivery" | "Meticulously Prepared Produce" | "Free Monthly Health Checkup".
 3. **Problem vs. Solution Strip:**
    * Directly adapted from Page 2 of the brochure:
      * *The Problem:* Fast-paced life, lack of time to shop and wash produce, missing out on vital daily vitamins impacting physical and mental energy.
      * *The Solution:* Monthly doorstep subscription delivering pre-cut, washed, balanced nutrition every morning before breakfast.
 4. **Interactive Box Anatomy Breakdown (The 5 Daily Pillars):**
    * Sourced directly from Page 4 of the brochure:
-     1. 🍎 **4 Varieties of Fruits Every Day** (Seasonal melons, berries, papaya, apples, grapes, kiwi).
-     2. 🥕 **2 Varieties of Vegetables Every Day** (Crisp carrots, cucumber sticks, bell peppers).
-     3. 🥗 **Fresh Mix Salad Every Day** (Crunchy garden greens, light dressing, cherry tomatoes).
-     4. 🌱 **Fresh Sprouts Every Day** (High-protein sprouted lentils and beans).
-     5. 🥜 **Dry Fruits 3 Days a Week** (Almonds, cashews, walnuts, dates — upgraded to Daily in Premium).
+     1. 🍎 **4 Varieties of Fruits Every Day** (Confirmed brochure inclusion; seasonal varieties rotate [CLIENT INPUT REQUIRED: exact seasonal rotation per CIR-06]).
+     2. 🥕 **2 Varieties of Vegetables Every Day** (Confirmed brochure inclusion [CLIENT INPUT REQUIRED: daily vegetable varieties per CIR-06]).
+     3. 🥗 **Fresh Mix Salad Every Day** (Confirmed brochure inclusion).
+     4. 🌱 **Fresh Sprouts Every Day** (Confirmed brochure inclusion).
+     5. 🥜 **Dry Fruits 3 Days a Week (Standard) / Daily (Premium)** (Confirmed brochure inclusion: 3 days a week on Standard, nutritious serving every day on Premium).
+     *(Note: Any specific produce varieties shown in marketing photos are illustrative examples only, not contractually promised contents).*
 5. **Subscription Plans & Pricing Matrix:**
    * Direct brochure pricing:
      * **Standard Plan: ₹3,500/month** (`~₹116/day`)
      * **Premium Plan: ₹4,000/month** (`~₹133/day`)
      * Feature comparison table showing Standard vs. Premium dry fruit frequency, MedCity Labs discounts, and special healthy juice drops curated with CARE by Berrybeats.
 6. **Free Monthly Health Monitoring Highlight:**
-   * Prominently featuring the free monthly Blood Sugar, Cholesterol, and Blood Pressure checkup in partnership with MedCity Health Labs.
+   * Prominently featuring the free monthly Blood Sugar, Cholesterol, and Blood Pressure checkup in partnership with MedCity Health Labs ("A community of experts to monitor your vitals").
 7. **The MedCity Smiles Bridge Section:**
    * "Nourish the Body, Uplift the Mind" teaser card transitioning the user to the mental health community.
 8. **Delivery & Sourcing Process ("How It Works"):**
    * Step 1: Subscribe & customize preferences.
    * Step 2: Fresh morning harvest & hygienic preparation at Berrybeats Cafe.
-   * Step 3: Doorstep delivery before 8:00 AM.
+   * Step 3: Morning doorstep delivery [CLIENT INPUT REQUIRED: confirmed morning delivery hours per CIR-02].
    * Step 4: Monthly health checkup & community support.
 9. **Frequently Asked Questions (Accordion):**
    * Covering freshness, morning delivery hours, pause/resume policy, hygiene standards.
@@ -287,6 +290,7 @@ Deliver a compelling, high-converting homepage for Humming Drops that presents t
 
 ### Objective
 Create a distinct, serene, and deeply empathetic digital space for MedCity Smiles that establishes mental wellbeing, doctor/nutritionist guidance, and community connection as equal partners to physical nutrition.
+*Visual Direction Reference:* Implements the calm, restorative whitespace and gentle geometry of `headspace.com` combined with the empathetic, high-credibility community warmth of `goodinside.com` (while creating a 100% original MedCity Smiles experience; see `docs/uiux-design.md` Section 10).
 
 ### Section Breakdown
 1. **MedCity Smiles Dedicated Hero:**
@@ -298,20 +302,21 @@ Create a distinct, serene, and deeply empathetic digital space for MedCity Smile
    * Adapted directly from Page 5 of the brochure:
      * Just as Humming Drops nourishes the physical body, MedCity Smiles provides a supportive, inspiring space where members learn to laugh, share happiness, and discover emotional clarity.
 3. **The Holistic Plan: Mind and Body Pillars (From Page 6 of Brochure):**
-   * **Pillar 1: Fuel Your Brain:** Explaining the neuro-nutritional science of how balanced fresh produce stabilizes mood and cognitive focus.
-   * **Pillar 2: Cultivate Positive Self-Talk:** Practical cognitive reframing prompts: challenging negative thoughts, celebrating micro-progress, self-compassion.
+   * **Pillar 1: Fuel Your Brain:** Sourced directly from Page 6 of the brochure: "Eating a balanced diet supports brain health and is key to a stable mood."
+   * **Pillar 2: Cultivate Positive Self-Talk:** Practical prompts: challenging negative thoughts, celebrating small progress, self-compassion.
    * **Pillar 3: Happy-Healthy Coping Mechanisms:** Actionable toolkits for movement, deep breathing, yoga, and creative expression (art, music, writing).
    * **Pillar 4: Community Gatherings & Live Shares:** Group connection, safe sharing circles, and expert guidance.
 4. **Doctor & Nutritionist Community Advisory:**
    * Sourced directly from Page 3 of the brochure: "A community of doctors and nutritionists to serve you at any time; a community of experts to monitor your vitals."
    * Credentialed advisory panel cards with clinical backgrounds and upcoming session topics.
-5. **Vitals & Preventative Healthcare Center:**
-   * Interactive explanation of the 3 free monthly tests: Blood Sugar (glycemic stability), Cholesterol (cardiovascular wellness), and Blood Pressure (stress and circulatory health).
+5. **Free Monthly Health Checkup Section (Sugar, Cholesterol, BP):**
+   * Highlighting the 3 free monthly checkups explicitly confirmed on Page 3 and Page 6 of the brochure: 1. Blood Sugar, 2. Cholesterol, and 3. Blood Pressure, powered in partnership with MedCity Health Labs ("A community of experts to monitor your vitals").
+   * Visual Design Direction: Warm, approachable, and destigmatizing design treatment (inspired by Headspace's low-cognitive-load approach), avoiding cold hospital sterility while strictly avoiding unapproved medical claims.
 6. **Live Events & Interactive Class Schedule:**
-   * Calendar of upcoming weekly virtual/in-person workshops (e.g., "Mindful Mornings", "Nutrition for Cognitive Vitality", "Stress & Breathwork").
+   * Calendar of upcoming weekly virtual/in-person workshops (e.g., interactive classes, seminars, live sharing circles per Page 5/6 of brochure).
    * One-click RSVP for registered members.
 7. **Community Voices & Stories:**
-   * Authentic stories highlighting everyday positive choices.
+   * Authentic member experiences [CLIENT INPUT REQUIRED: Client-provided authentic member experiences; no invented testimonials].
 8. **Final Community CTA:**
    * "Your membership is free with every Humming Drops breakfast box subscription."
 

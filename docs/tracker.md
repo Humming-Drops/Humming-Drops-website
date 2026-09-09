@@ -128,21 +128,21 @@
 ## Phase 3 — Frontend Foundation & Layouts
 
 ### 3.1 Project Scaffold & Tooling
-* [ ] **HD-031:** Initialize Next.js project with TypeScript strict mode, ESLint, and Prettier.
-* [ ] **HD-032:** Install core dependencies (`clsx`, `tailwind-merge`, `lucide-react`, `framer-motion`).
-* [ ] **HD-033:** Scaffold accessible shadcn/ui primitives into `@/components/ui/`.
+* [x] **HD-031:** Initialize Next.js project with TypeScript strict mode, ESLint, and Prettier.
+* [x] **HD-032:** Install core dependencies (`clsx`, `tailwind-merge`, `lucide-react`, `framer-motion`).
+* [x] **HD-033:** Scaffold accessible primitives into `@/components/ui/` (`Button`, `Badge`, `Card`, `Container`, `Section`).
 
 ### 3.2 Global Header & Footer Components
-* [ ] **HD-034:** Build `Navbar.tsx` with responsive desktop menu, mobile drawer, and dual brand switcher.
-* [ ] **HD-035:** Implement persistent sticky header with backdrop blur effect.
-* [ ] **HD-036:** Build `Footer.tsx` containing Bangalore location, Berrybeats Cafe info, phone, email, and social links.
-* [ ] **HD-037:** Build `BrandSwitcher.tsx` with smooth animated active pill indicator.
+* [x] **HD-034:** Build `Navbar.tsx` with responsive desktop menu, accessible mobile drawer, and dual brand switcher.
+* [x] **HD-035:** Implement persistent sticky header with backdrop blur effect.
+* [x] **HD-036:** Build `Footer.tsx` containing Bangalore location, Berrybeats Cafe info, MedCity Health Labs info, phone, and email.
+* [x] **HD-037:** Build `BrandSwitcher.tsx` with smooth animated active pill indicator and accessible keyboard tablist.
 
 #### Test Cases (Phase 3)
-* [ ] **TC-031:** TypeScript compiles with 0 errors (`npm run build`).
-* [ ] **TC-032:** Navbar renders correctly on mobile (hamburger drawer) and desktop.
-* [ ] **TC-033:** Mobile drawer closes on navigation and ESC key press.
-* [ ] **TC-034:** Header stays pinned during scroll with smooth backdrop blur.
+* [x] **TC-031:** TypeScript compiles with 0 errors (`npm run build`).
+* [x] **TC-032:** Navbar renders correctly on mobile (hamburger drawer) and desktop.
+* [x] **TC-033:** Mobile drawer closes on navigation and ESC key press.
+* [x] **TC-034:** Header stays pinned during scroll with smooth backdrop blur.
 
 ---
 
@@ -151,7 +151,7 @@
 ### 4.1 Hero Section
 * [ ] **HD-041:** Build `Hero.tsx` with headline "Healthy Drops, Healthier You", sub-copy, and dual CTAs.
 * [ ] **HD-042:** Implement interactive 5-compartment breakfast box centerpiece using authentic client imagery.
-* [ ] **HD-043:** Add trust badges ("100% Fresh Daily Cut", "Zero Preservatives", "Free Monthly Lab Checkup").
+* [ ] **HD-043:** Add trust badges ("Fresh Daily Morning Delivery", "Meticulously Prepared Produce", "Free Monthly Health Checkup").
 
 ### 4.2 Problem & Solution Section
 * [ ] **HD-044:** Build `ProblemSolution.tsx` highlighting modern lifestyle challenges and the morning delivery solution.

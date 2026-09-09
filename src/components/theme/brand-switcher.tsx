@@ -43,7 +43,7 @@ export function BrandSwitcher({
         aria-selected={theme === "humming"}
         onClick={() => handleSelect("humming")}
         className={cn(
-          "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900 focus-visible:ring-offset-1",
+          "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900 focus-visible:ring-offset-1",
           theme === "humming"
             ? "text-forest-950 font-bold"
             : "text-content-secondary hover:text-content-primary"
@@ -58,7 +58,7 @@ export function BrandSwitcher({
         )}
         <span aria-hidden="true">🥗</span>
         <span className="hidden sm:inline">Humming Drops</span>
-        <span className="text-[10px] text-forest-700 hidden md:inline font-normal">
+        <span className="text-[10px] text-forest-700 hidden 2xl:inline font-normal">
           · Physical
         </span>
       </button>
@@ -68,7 +68,7 @@ export function BrandSwitcher({
         aria-selected={theme === "medcity"}
         onClick={() => handleSelect("medcity")}
         className={cn(
-          "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",
+          "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",
           theme === "medcity"
             ? "text-teal-950 font-bold"
             : "text-content-secondary hover:text-content-primary"
@@ -83,7 +83,7 @@ export function BrandSwitcher({
         )}
         <span aria-hidden="true">💚</span>
         <span className="hidden sm:inline">MedCity Smiles</span>
-        <span className="text-[10px] text-teal-700 hidden md:inline font-normal">
+        <span className="text-[10px] text-teal-700 hidden 2xl:inline font-normal">
           · Mental & Labs
         </span>
       </button>

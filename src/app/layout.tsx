@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { BrandThemeProvider } from "@/components/theme/brand-provider";
+import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     default: "Humming Drops | Healthy Drops, Healthier you",
   },
   description:
-    "Fresh mixed cut fruit & breakfast boxes delivered every morning to your doorstep in Bangalore. Complete physical and mental wellness ecosystem in partnership with MedCity Smiles and MedCity Health Labs.",
+    "Healthy, fresh breakfast boxes delivered to your doorstep. Supporting daily nutrition and mental wellbeing in partnership with Berrybeats Cafe and MedCity Health Labs.",
   keywords: [
     "Humming Drops",
     "Breakfast Subscription Bangalore",
@@ -42,11 +43,7 @@ export default function RootLayout({
     <html lang="en" data-theme="humming" className={`${inter.variable} ${plusJakarta.variable}`}>
       <body className="min-h-screen bg-canvas text-content-primary antialiased transition-brand">
         <BrandThemeProvider>
-          <div className="flex min-h-screen flex-col">
-            <main id="main-content" className="flex-1">
-              {children}
-            </main>
-          </div>
+          <AppShell>{children}</AppShell>
         </BrandThemeProvider>
       </body>
     </html>
