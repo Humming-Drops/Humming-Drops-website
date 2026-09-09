@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { BrandThemeProvider } from "@/components/theme/brand-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,13 +39,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
-      <body className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors duration-200">
-        <div className="flex min-h-screen flex-col">
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
-        </div>
+    <html lang="en" data-theme="humming" className={`${inter.variable} ${plusJakarta.variable}`}>
+      <body className="min-h-screen bg-canvas text-content-primary antialiased transition-brand">
+        <BrandThemeProvider>
+          <div className="flex min-h-screen flex-col">
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+          </div>
+        </BrandThemeProvider>
       </body>
     </html>
   );

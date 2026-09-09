@@ -106,22 +106,22 @@
 ## Phase 2 — Design System & Tokens
 
 ### 2.1 Color Tokens & Theming Engine
-* [ ] **HD-021:** Configure Tailwind CSS color palette for Humming Drops (`forest-900: #144518`, `forest-800: #1a5720`, `leaf-500: #2e7301`, `cream-50: #fdfcf7`).
-* [ ] **HD-022:** Configure Tailwind CSS color palette for MedCity Smiles (`teal-900: #0d5049`, `teal-700: #156c63`, `mint-100: #e6f7f5`).
-* [ ] **HD-023:** Create CSS variable mappings for semantic tokens (`--color-primary`, `--color-surface`, `--color-accent`).
-* [ ] **HD-024:** Verify WCAG AA/AAA contrast ratios for all text-on-surface pairings.
+* [x] **HD-021:** Configure Tailwind CSS color palette for Humming Drops (`forest-900: #144518`, `forest-800: #1b5e20`, `leaf-500: #2e7301`, `cream-50: #fdfcf7`).
+* [x] **HD-022:** Configure Tailwind CSS color palette for MedCity Smiles (`teal-900: #0d5049`, `teal-700: #156c63`, `mint-100: #e6f7f5`).
+* [x] **HD-023:** Create CSS variable mappings for semantic tokens (`--bg-canvas`, `--bg-surface`, `--primary-brand`, `--text-primary`, `--border-subtle`, `--shadow-card`).
+* [x] **HD-024:** Verify WCAG AA/AAA contrast ratios for all text-on-surface pairings (`scratch/test-phase2-design-tokens.mjs`).
 
 ### 2.2 Typography, Spacing & Elevation
-* [ ] **HD-025:** Configure Google Fonts (`Plus Jakarta Sans` and `Inter`) with `next/font/google`.
-* [ ] **HD-026:** Define responsive typography scale from `text-xs` to `text-6xl`.
-* [ ] **HD-027:** Implement spacing scale (4px/8px rhythm) and container constraints (`max-w-7xl`).
-* [ ] **HD-028:** Configure disciplined border radii (`rounded-full` for CTAs, `rounded-2xl` for cards).
-* [ ] **HD-029:** Configure custom botanical soft shadows.
+* [x] **HD-025:** Configure Google Fonts (`Plus Jakarta Sans` and `Inter`) with `next/font/google` (`display: swap`).
+* [x] **HD-026:** Define responsive typography scale from `caption` to `display-hero`.
+* [x] **HD-027:** Implement spacing scale (4px/8px rhythm) and container constraints (`max-w-7xl`, `max-w-reading`, `max-w-form-flow`).
+* [x] **HD-028:** Configure disciplined border radii (`rounded-pill` for CTAs/badges, `rounded-2xl` for cards).
+* [x] **HD-029:** Configure custom botanical and mindful soft shadows (`shadow-card`, `shadow-raised`, `shadow-floating`).
 
 #### Test Cases (Phase 2)
-* [ ] **TC-021:** Contrast ratio >= 4.5:1 on all body text, >= 3:1 on large text.
-* [ ] **TC-022:** Fonts load without layout shift (`font-display: swap`).
-* [ ] **TC-023:** CSS variables seamlessly switch tokens when toggling brand modes.
+* [x] **TC-021:** Contrast ratio >= 4.5:1 on all body text, >= 3:1 on large text (verified by automated test suite).
+* [x] **TC-022:** Fonts load without layout shift (`font-display: swap`).
+* [x] **TC-023:** CSS variables seamlessly switch tokens when toggling brand modes.
 
 ---
 
