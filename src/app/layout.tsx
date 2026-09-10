@@ -17,6 +17,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://hummingdrops.com"),
   title: {
     template: "%s | Humming Drops",
     default: "Humming Drops | Healthy Drops, Healthier you",

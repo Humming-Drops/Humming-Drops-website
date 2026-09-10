@@ -30,7 +30,7 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
       { title: "2 Varieties of Vegetables", frequency: "Every Day" },
       { title: "Fresh Mix Salad", frequency: "Every Day" },
       { title: "Fresh Sprouts", frequency: "Every Day" },
-      { title: "Dry Fruits (Almonds, Cashews, Dates, Walnuts)", frequency: "3 Days a Week" },
+      { title: "Dry Fruits", frequency: "3 Days a Week" },
     ],
     communityAndHealthPerks: [
       "Free Membership to MedCity Smiles Community",
@@ -50,7 +50,7 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
       { title: "2 Varieties of Vegetables", frequency: "Every Day" },
       { title: "Fresh Mix Salad", frequency: "Every Day" },
       { title: "Fresh Sprouts", frequency: "Every Day" },
-      { title: "Daily Nutritious Dry Fruits", frequency: "Every Day (Upgraded)", isPremiumOnly: true },
+      { title: "Daily Dry Fruits", frequency: "Every Day (Upgraded)", isPremiumOnly: true },
     ],
     communityAndHealthPerks: [
       "Free Membership to MedCity Smiles Community",

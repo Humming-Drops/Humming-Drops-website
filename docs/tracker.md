@@ -146,45 +146,69 @@
 
 ---
 
-## Phase 4 — Humming Drops Homepage
+## Phase 4 — Humming Drops Homepage (Refinement Pass Complete)
 
-### 4.1 Hero Section
-* [ ] **HD-041:** Build `Hero.tsx` with headline "Healthy Drops, Healthier You", sub-copy, and dual CTAs.
-* [ ] **HD-042:** Implement interactive 5-compartment breakfast box centerpiece using authentic client imagery.
-* [ ] **HD-043:** Add trust badges ("Fresh Daily Morning Delivery", "Meticulously Prepared Produce", "Free Monthly Health Checkup").
+### 4.1 UX Flow Architecture
+* [x] **HD-040:** Implemented editorial user journey: **Discover → Explore → Understand → Connect → Trust → Subscribe → Action**, moving pricing/subscription conversion to the end of the homepage.
 
-### 4.2 Problem & Solution Section
-* [ ] **HD-044:** Build `ProblemSolution.tsx` highlighting modern lifestyle challenges and the morning delivery solution.
+### 4.2 Hero Section (Editorial Redesign)
+* [x] **HD-041:** Build editorial `Hero.tsx` with headline "Healthy Drops, Healthier you", hand-drawn wavy underline accent, brochure sub-copy, and exploratory CTAs ("Explore What's Inside" & "The Morning Ritual").
+* [x] **HD-042:** Implement authentic 5-compartment breakfast box centerpiece (`/images/humming-drops-box.png`, priority load) with asymmetrical layout.
+* [x] **HD-043:** Add handcrafted doodle arrows and floating annotations pointing to compartments ("🍎 4 Fruits Every Day", "🥕 2 Crisp Vegetables", "🥗 Fresh Mix Salad & Sprouts", "Meticulously Prepared").
 
-### 4.3 Box Anatomy & Nutritional Breakdown
-* [ ] **HD-045:** Build `BoxAnatomy.tsx` showcasing the 5 daily contents:
-  * [ ] 4 Varieties of Fruits Every Day
-  * [ ] 2 Varieties of Vegetables Every Day
-  * [ ] Fresh Mix Salad Every Day
-  * [ ] Fresh Sprouts Every Day
-  * [ ] Dry Fruits (3 Days/Week in Standard, Daily in Premium)
-* [ ] **HD-046:** Add interactive tab or card hover to view seasonal fruit & vegetable details.
+### 4.3 Interactive Box Experience (Replacing Generic Cards)
+* [x] **HD-045:** Build `BoxAnatomy.tsx` centering on the authentic box photo with 5 clickable/tappable compartment hotspots:
+  * [x] 01: 4 Varieties of Fruits — Every Day
+  * [x] 02: 2 Varieties of Vegetables — Every Day
+  * [x] 03: Fresh Mix Salad — Every Day
+  * [x] 04: Fresh Sprouts — Every Day
+  * [x] 05: Dry Fruits (3 Days/Week in Standard, Daily in Premium)
+* [x] **HD-046:** Dynamic compartment reveal card with animated transitions, mobile-friendly touch pill selector, and interactive Standard (₹3,500/mo) vs. Premium (₹4,000/mo) toggle.
 
-### 4.4 Plans & Pricing Comparison
-* [ ] **HD-047:** Build `PricingSection.tsx` featuring Standard (₹3,500) and Premium (₹4,000).
-* [ ] **HD-048:** Add daily cost breakdown indicator (`₹116/day` vs `₹133/day`).
-* [ ] **HD-049:** Highlight Premium-exclusive perks (Daily dry fruits, MedCity Labs discounts, Special juice drops).
+### 4.4 Morning Ritual & Sourcing Journey
+* [x] **HD-052:** Build `MorningJourney.tsx` as an illustrated visual path connecting 4 milestone steps (Fresh Morning Harvest → Thoughtful Preparation at Berrybeats Cafe → Doorstep Morning Delivery → Nourish Body & Mind) paired with authentic fresh produce imagery (`/images/humming-drops-fresh-produce.png`).
 
-### 4.5 Health Monitoring & MedCity Smiles Teaser
-* [ ] **HD-050:** Build `VitalsTeaser.tsx` highlighting free monthly Sugar, Cholesterol, and BP tests.
-* [ ] **HD-051:** Build `MedCitySmilesBridge.tsx` inviting users to discover the mental wellbeing community.
+### 4.5 Why Humming Drops & Daily Habit Philosophy
+* [x] **HD-055:** Build `WhyHummingDrops.tsx` based on Brochure Pages 2 & 7, contrasting the modern nutrient challenge with the daily whole-food habit solution.
 
-### 4.6 How It Works & FAQs
-* [ ] **HD-052:** Build `HowItWorks.tsx` with 4-step morning timeline (Harvest → Prep → Delivery → Vitals).
-* [ ] **HD-053:** Build `FaqSection.tsx` with accessible accordion component.
-* [ ] **HD-054:** Build `FinalCta.tsx` with prominent subscription launch button.
+### 4.6 Health Monitoring & MedCity Smiles Bridge
+* [x] **HD-051:** Build `HealthCommunityBridge.tsx` highlighting the mind-body connection, the 4 MedCity Smiles wellness pillars, and free monthly Sugar, Cholesterol, and BP tests in partnership with MedCity Health Labs.
+
+### 4.7 Plans & Pricing Comparison (Conversion Payoff)
+* [x] **HD-047:** Build `PricingSection.tsx` at the end of the journey featuring Standard (₹3,500/mo) and Premium (₹4,000/mo) cards with strict brochure fidelity.
+* [x] **HD-048:** Daily cost breakdown indicators (`~₹116/day` vs `~₹133/day`).
+* [x] **HD-049:** Highlight Premium-exclusive perks (Daily dry fruits, MedCity Labs discounts, special healthy juice drops by CARE by Berrybeats).
+* [x] **HD-050:** Assisted booking helpline card with verified WhatsApp/call details (`8618902810` · `Berrybeats cafe, Bangalore`).
+
+### 4.8 Closing CTA
+* [x] **HD-054:** Build `ClosingCTA.tsx` with final subscription invitation, direct WhatsApp link, and confirmed partner/location attribution.
 
 #### Test Cases (Phase 4)
-* [ ] **TC-041:** Desktop hero renders without layout shifts; box image loads with `priority`.
-* [ ] **TC-042:** Mobile view stacks hero copy and imagery cleanly; zero horizontal overflow.
-* [ ] **TC-043:** Clicking "Subscribe Now" navigates to `/subscribe` with pre-selected plan.
-* [ ] **TC-044:** Pricing cards clearly articulate difference between Standard and Premium.
-* [ ] **TC-045:** Accordion items expand and collapse smoothly with full keyboard accessibility (`Enter`/`Space`).
+* [x] **TC-041:** Desktop hero renders without layout shifts; box image loads with `priority`.
+* [x] **TC-042:** Mobile view stacks hero copy, imagery, and touch selectors cleanly; zero horizontal overflow (tested across 375px, 768px, 1280px, 1440px).
+* [x] **TC-043:** Interactive hotspots dynamically update compartment cards on click/tap with full keyboard accessibility.
+* [x] **TC-044:** Pricing cards clearly articulate difference between Standard and Premium.
+* [x] **TC-045:** Strict content safety guardrail passes: zero unconfirmed operational claims ("chilled delivery", "Bangalore kitchen", "across Bangalore" promises removed).
+
+---
+
+## Phase 4.6 — Backend Integration & Lead Persistence (40% Presentation Slice)
+
+### 4.9 End-to-End Onboarding & Persistence Engine
+* [x] **HD-046A:** Configured `.env.example` documenting server-authoritative checkout mode (`CHECKOUT_MODE=assisted_lead`) and safe client presentation hint (`NEXT_PUBLIC_CHECKOUT_MODE=assisted_lead`).
+* [x] **HD-046B:** Implemented `src/lib/lead-storage.ts` with repository pattern (`ILeadRepository` interface) and isolated demo server-side JSON repository (`JsonFileLeadRepository`) targeting `data/leads.json`.
+* [x] **HD-046C:** Hardened `src/app/api/subscriptions/lead/route.ts` with server-side validation (Indian mobile regex, email format, string sanitization, canonical pricing guardrail, and `pending_confirmation` lifecycle enforcement).
+* [x] **HD-046D:** Upgraded `src/app/subscribe/page.tsx` into a complete 5-step interactive wizard (Plan Selection, Contact, Bangalore Address, Dietary Preferences, Order Review & Mode B Assisted Registration).
+* [x] **HD-046E:** Built confirmation view with prominent `HD-REG-YYYY-XXXXX` reference code, `Pending Manual Confirmation` status badge (guaranteeing `pending_confirmation != active`), and direct WhatsApp link to official Bangalore coordinator (`8618902810`).
+* [x] **HD-046F:** Automated end-to-end integration test suite `scratch/test-phase4-backend-flow.mjs` verifying 6/6 test assertions over live HTTP.
+
+#### Test Cases (Phase 4.6)
+* [x] **TC-046A:** Valid subscription lead submission succeeds (HTTP 201) and returns unique reference code.
+* [x] **TC-046B:** Invariant guardrail verified: `status === "pending_confirmation"` and `hasActivePerks === false`.
+* [x] **TC-046C:** Client price tampering rejected; canonical pricing (Standard ₹3,500 / Premium ₹4,000) strictly enforced on server.
+* [x] **TC-046D:** Invalid phone numbers, invalid emails, and empty payloads rejected with descriptive HTTP 400 field errors.
+* [x] **TC-046E:** Submitted leads are persisted to `data/leads.json` with complete audit metadata.
+* [x] **TC-046F:** Verified lead query via `GET /api/subscriptions/lead?ref=...`.
 
 ---
 
