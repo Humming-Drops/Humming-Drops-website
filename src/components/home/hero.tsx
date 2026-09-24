@@ -121,7 +121,7 @@ export function Hero() {
               <a
                 href="#box-experience"
                 onClick={handleScrollToSection("box-experience")}
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-forest-900 text-white font-semibold text-base shadow-sm hover:bg-forest-800 active:scale-[0.99] transition-all"
+                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-leaf-500 text-white font-semibold text-base shadow-sm hover:bg-leaf-600 active:scale-[0.99] transition-all"
               >
                 <span>Explore What&apos;s Inside</span>
                 <ArrowDown className="w-4 h-4 text-forest-300 group-hover:translate-y-0.5 transition-transform" />

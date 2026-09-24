@@ -131,6 +131,8 @@ export function MorningJourney() {
               return (
                 <button
                   key={step.number}
+                  onMouseEnter={() => setActiveStepIndex(idx)}
+                  onFocus={() => setActiveStepIndex(idx)}
                   onClick={() => setActiveStepIndex(idx)}
                   className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between space-y-2.5 ${
                     isActive
@@ -143,7 +145,7 @@ export function MorningJourney() {
                     <span className="text-base">{step.emoji}</span>
                     <span
                       className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                        isActive ? "bg-forest-900 text-white" : "bg-canvas text-content-muted"
+                        isActive ? "bg-leaf-500 text-white" : "bg-canvas text-content-muted"
                       }`}
                     >
                       {step.number}
@@ -226,7 +228,7 @@ export function MorningJourney() {
                     key={i}
                     onClick={() => setActiveStepIndex(i)}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === activeStepIndex ? "w-6 bg-forest-900" : "bg-forest-200 hover:bg-forest-400"
+                      i === activeStepIndex ? "w-6 bg-leaf-500" : "bg-forest-200 hover:bg-forest-400"
                     }`}
                     aria-label={`Jump to step ${i + 1}`}
                   />
@@ -260,7 +262,7 @@ export function MorningJourney() {
             </div>
 
             {/* Handcrafted Quote Card */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-forest-900 text-white space-y-2 relative overflow-hidden shadow-card">
+            <div className="p-5 sm:p-6 rounded-3xl bg-leaf-700 text-white space-y-2 relative overflow-hidden shadow-card">
               <div className="relative z-10 space-y-1.5">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">🌿</span>
