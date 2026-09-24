@@ -29,9 +29,9 @@ export const HUMMING_DROPS_NAV: BrandNavConfig = {
   logoSrc: "/images/humming-drops-logo.png",
   logoAlt: "Humming Drops Official Logo",
   navItems: [
-    { label: "Plans & Pricing", href: "/plans" },
+    { label: "Plans", href: "/#pricing" },
+    { label: "How it works", href: "/#journey" },
     { label: "MedCity Smiles", href: "/medcity-smiles" },
-    { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
   primaryCTA: {
@@ -73,23 +73,27 @@ export interface FooterLinkGroup {
 
 export const SHARED_FOOTER_CONFIG = {
   phone: "8618902810",
+  whatsapp: "8618902810",
   email: "hummingdrops@gmail.com",
+  website: "www.hummingdrops.com",
   location: "Berrybeats Cafe, Bangalore",
   partners: "In partnership with Berrybeats Cafe & MedCity Health Labs",
   linkGroups: [
     {
-      title: "Navigation",
+      title: "Shop & Plans",
       links: [
-        { label: "Subscription Plans", href: "/plans" },
-        { label: "MedCity Smiles Community", href: "/medcity-smiles" },
-        { label: "Subscribe", href: "/subscribe" },
+        { label: "Standard Plan (₹3,500/mo)", href: "/subscribe?plan=standard" },
+        { label: "Premium Plan (₹4,000/mo)", href: "/subscribe?plan=premium" },
+        { label: "What's in the Box", href: "/#box-experience" },
+        { label: "How it Works", href: "/#journey" },
       ],
     },
     {
-      title: "Organization",
+      title: "Know More",
       links: [
-        { label: "About Us", href: "/about" },
-        { label: "Contact", href: "/contact" },
+        { label: "About Humming Drops", href: "/about" },
+        { label: "MedCity Smiles Community", href: "/medcity-smiles" },
+        { label: "Contact & Helpline", href: "/contact" },
       ],
     },
     {
@@ -97,7 +101,7 @@ export const SHARED_FOOTER_CONFIG = {
       links: [
         { label: "Sign In", href: "/login" },
         { label: "Register", href: "/register" },
-        { label: "Dashboard", href: "/dashboard" },
+        { label: "Subscriber Dashboard", href: "/dashboard" },
       ],
     },
   ],

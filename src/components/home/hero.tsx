@@ -1,26 +1,18 @@
 "use client";
 
-import Image from "next/image";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, Sparkles, ChevronRight, HeartPulse } from "lucide-react";
-import {
-  DoodleArrow,
-  DoodleCircle,
-  DoodleSquiggle,
-  DoodleSunRays,
-  DoodleSprout,
-  DoodleSparkle,
-  HandwrittenAnnotation,
-  GentleWaveDivider,
-} from "@/components/ui/doodles";
+import { ArrowDown, ChevronRight, ChevronDown } from "lucide-react";
+import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.4, ease: "easeOut" },
   },
 };
 
@@ -29,14 +21,48 @@ const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
     },
   },
 };
 
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  // Check Save-Data and reduced motion for video loading
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isSaveData = (navigator as unknown as { connection?: { saveData?: boolean } })?.connection?.saveData === true;
+      if (!isSaveData && !shouldReduceMotion) {
+        setShouldLoadVideo(true);
+      }
+    }
+  }, [shouldReduceMotion]);
+
+  // Ensure video plays reliably and pauses when off-screen
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.play().catch(() => {});
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [shouldLoadVideo]);
 
   const handleScrollToSection = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,224 +75,185 @@ export function Hero() {
   return (
     <section
       aria-label="Welcome to Humming Drops"
-      className="relative overflow-hidden bg-gradient-to-b from-cream-50 via-cream-50 to-white pt-8 pb-10 lg:pt-14 lg:pb-16"
+      className="relative overflow-hidden bg-[#FFFEF8] min-h-[auto] lg:h-[calc(100svh-4rem)] lg:min-h-[620px] lg:max-h-[820px] flex flex-col lg:flex-row items-stretch"
     >
-      {/* Handcrafted warm morning aura with gentle organic shapes */}
-      <div
-        className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-amber-100/40 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-1/3 -right-28 w-[30rem] h-[30rem] rounded-full bg-forest-100/30 blur-3xl"
-        aria-hidden="true"
-      />
+      {/* =========================================================================
+          DESKTOP RIGHT / MOBILE TOP: EDGE-TO-EDGE FULL-HEIGHT VIDEO (CLEAN, NO OVERLAYS)
+          ========================================================================= */}
+      <div className="relative w-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[56%] xl:w-[58%] h-[44svh] sm:h-[48svh] lg:h-full overflow-hidden bg-mint z-0 rounded-b-[28px] lg:rounded-none pointer-events-none">
+        {shouldLoadVideo ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/images/hero-poster.jpg"
+            disablePictureInPicture
+            disableRemotePlayback
+            controlsList="nodownload noremoteplayback nofullscreen"
+            tabIndex={-1}
+            className="w-full h-full object-cover object-center pointer-events-none"
+            style={{
+              filter: "saturate(1.05)",
+            }}
+            aria-hidden="true"
+          >
+            <source src="/videos/hero-clean.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src="/images/hero-poster.jpg"
+            alt="Humming Drops Fresh Produce"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 58vw"
+            className="object-cover object-center pointer-events-none"
+          />
+        )}
+      </div>
 
-      {/* Floating background sun doodle */}
+      {/* =========================================================================
+          DESKTOP LEFT / MOBILE BOTTOM: SOLID CREAM PANEL WITH ORGANIC S-CURVE
+          ========================================================================= */}
       <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-12 left-1/2 -translate-x-1/2 opacity-25 text-amber-500"
-        animate={shouldReduceMotion ? {} : { y: [-4, 4, -4] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 w-full lg:w-[48%] xl:w-[46%] bg-[#FFFEF8] flex flex-col justify-between items-center lg:items-end px-5 sm:px-8 lg:pl-10 lg:pr-12 pt-8 pb-4 lg:pt-12 lg:pb-6 -mt-6 lg:mt-0 rounded-t-[28px] lg:rounded-none shadow-card lg:shadow-none"
+        initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <DoodleSunRays className="w-16 h-16" />
-      </motion.div>
+        {/* Organic S-Curve Divider along Right Seam on Desktop */}
+        <div className="hidden lg:block absolute top-0 bottom-0 -right-16 xl:-right-20 w-16 xl:w-20 h-full z-20 pointer-events-none">
+          <svg
+            viewBox="0 0 100 1000"
+            preserveAspectRatio="none"
+            className="w-full h-full filter drop-shadow-[6px_0_16px_rgba(30,43,36,0.06)]"
+          >
+            <path
+              d="M 0,0 L 40,0 C 90,260 10,480 75,740 C 98,850 88,940 70,1000 L 0,1000 Z"
+              fill="#FFFEF8"
+            />
+            <path
+              d="M 40,0 C 90,260 10,480 75,740 C 98,850 88,940 70,1000"
+              fill="none"
+              stroke="#FFD84D"
+              strokeWidth="3"
+            />
+          </svg>
+        </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-          {/* Left Column: Emotion-First Minimal Copy (6 cols) */}
+        {/* Content Container (Max width 540px, pristine readability) */}
+        <div className="max-w-[540px] w-full text-left my-auto">
           <motion.div
-            className="lg:col-span-6 space-y-6 text-left"
+            className="space-y-5 sm:space-y-6"
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
           >
-            {/* Handcrafted eyebrow with sun motif */}
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide shadow-xs">
+            {/* 1. Pill Tag Row */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap xs:flex-nowrap items-center gap-2">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide shadow-2xs whitespace-nowrap">
                 <span className="text-sm">☀️</span>
                 <span>Fresh Every Morning · Doorstep Nutrition</span>
               </span>
-              <HandwrittenAnnotation rotation="-rotate-2" color="text-forest-800 hidden sm:inline-flex">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-[#E2ECE4] text-xs font-medium text-forest-800 shadow-2xs whitespace-nowrap">
                 Meticulously prepared ✦
-              </HandwrittenAnnotation>
+              </span>
             </motion.div>
 
-            {/* Main Headline with Handcrafted Highlight */}
-            <motion.div variants={fadeInUp} className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-forest-900 tracking-tight leading-[1.08]">
-                Healthy Drops, <br />
-                <span className="relative inline-block text-forest-800">
+            {/* 2. Main Headline: line-height 1.12 with 6px extra gap & sun underline below */}
+            <motion.div variants={fadeInUp} className="space-y-1">
+              <h1 className="text-[2.25rem] sm:text-5xl lg:text-[3.85rem] font-extrabold tracking-tight flex flex-col gap-1.5 leading-[1.12] text-left">
+                <span className="text-[#1E2B24]">Healthy Drops,</span>
+                <span className="relative inline-block pb-3 bg-gradient-to-r from-primary to-primary-bright bg-clip-text text-transparent">
                   Healthier you
                   <DoodleSquiggle
-                    className="absolute -bottom-2.5 left-0 w-full text-brand-primary"
-                    color="currentColor"
+                    className="absolute -bottom-[10px] left-0 w-full h-2.5 text-sun pointer-events-none stroke-[3.5]"
+                    color="#FFD84D"
                   />
                 </span>
               </h1>
             </motion.div>
 
-            {/* Concise Emotional Copy */}
+            {/* 3. Subline */}
             <motion.p
               variants={fadeInUp}
-              className="text-lg sm:text-xl text-content-secondary leading-relaxed max-w-lg font-sans"
+              className="text-base sm:text-lg text-[#4A5A52] font-normal font-sans leading-relaxed max-w-lg"
             >
               Start your morning with fresh, thoughtful, and nourishing whole foods — meticulously prepared and delivered straight to your door.
             </motion.p>
 
-            {/* Exploratory Call-to-Actions */}
-            <motion.div
-              variants={fadeInUp}
-              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5"
-            >
-              <a
-                href="#box-experience"
-                onClick={handleScrollToSection("box-experience")}
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-leaf-500 text-white font-semibold text-base shadow-sm hover:bg-leaf-600 active:scale-[0.99] transition-all"
-              >
-                <span>Explore What&apos;s Inside</span>
-                <ArrowDown className="w-4 h-4 text-forest-300 group-hover:translate-y-0.5 transition-transform" />
-              </a>
+            {/* 4. CTAs */}
+            <motion.div variants={fadeInUp} className="space-y-2.5 pt-1">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Link
+                  href="/subscribe?plan=standard"
+                  className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[20px] bg-primary text-white font-bold text-base shadow-[0_8px_24px_rgba(31,138,69,0.28)] hover:bg-primary-hover hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                >
+                  <span>Subscribe Now</span>
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </Link>
 
-              <a
-                href="#journey"
-                onClick={handleScrollToSection("journey")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-forest-300 bg-surface/90 text-forest-900 font-semibold text-base hover:bg-forest-50/80 transition-colors shadow-xs"
-              >
-                <span>The Morning Ritual</span>
-                <ChevronRight className="w-4 h-4 text-forest-600" />
-              </a>
+                <a
+                  href="#box-experience"
+                  onClick={handleScrollToSection("box-experience")}
+                  className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[20px] border-2 border-primary bg-white text-primary font-semibold text-base hover:bg-mint hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer"
+                >
+                  <span>See what&apos;s inside</span>
+                  <ArrowDown className="w-4 h-4 text-primary" />
+                </a>
+              </div>
+
+              {/* Sub-CTA Informational Line */}
+              <p className="text-xs font-semibold text-[#4A5A52] pt-0.5">
+                Plans from ₹3,500/month · Free monthly health check
+              </p>
             </motion.div>
 
-            {/* 3 Meaningful Visual Proof Chips */}
+            {/* 5. Clean White Chips (14px font, 10px 14px padding, whitespace-nowrap, all 3 on one row) */}
             <motion.div
               variants={fadeInUp}
-              className="pt-4 border-t border-line-subtle grid grid-cols-2 sm:grid-cols-3 gap-3"
+              className="pt-3 border-t border-[#E2ECE4]"
             >
-              <div className="flex items-center gap-2 text-xs font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-base">🍎</span>
-                <span>4 Fruits &amp; 2 Veg Daily</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-base">🥗</span>
-                <span>Fresh Salad &amp; Sprouts</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-teal-900 bg-teal-50/70 p-2 rounded-xl border border-teal-100 col-span-2 sm:col-span-1">
-                <span className="text-base">🩺</span>
-                <span>Free Monthly Health Check</span>
+              <div className="flex flex-nowrap overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-3 gap-2 no-scrollbar pb-1">
+                <div className="shrink-0 snap-start flex items-center gap-2 text-sm font-semibold text-[#1E2B24] bg-white border border-[#E2ECE4] px-3.5 py-2.5 rounded-[20px] shadow-2xs whitespace-nowrap">
+                  <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0 text-xs text-berry">
+                    🍎
+                  </div>
+                  <span>4 Fruits &amp; 2 Veg</span>
+                </div>
+                <div className="shrink-0 snap-start flex items-center gap-2 text-sm font-semibold text-[#1E2B24] bg-white border border-[#E2ECE4] px-3.5 py-2.5 rounded-[20px] shadow-2xs whitespace-nowrap">
+                  <div className="w-6 h-6 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 text-xs text-citrus">
+                    🥗
+                  </div>
+                  <span>Salad &amp; Sprouts</span>
+                </div>
+                <div className="shrink-0 snap-start flex items-center gap-2 text-sm font-semibold text-[#1E2B24] bg-white border border-teal-200/80 px-3.5 py-2.5 rounded-[20px] shadow-2xs whitespace-nowrap">
+                  <div className="w-6 h-6 rounded-full bg-[#E8F7F1] border border-teal-200 flex items-center justify-center shrink-0 text-xs text-aqua">
+                    🩺
+                  </div>
+                  <span>Free Health Check</span>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* Right Column: Editorial Box Showcase with Integrated Communicative Annotations (6 cols) */}
-          <motion.div
-            className="lg:col-span-6 relative mt-6 lg:mt-0"
-            initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-          >
-            {/* The Box Centerpiece Card */}
-            <div className="relative mx-auto max-w-lg">
-              {/* Subtle background glow */}
-              <div
-                className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-amber-200/30 to-forest-200/30 blur-xl pointer-events-none"
-                aria-hidden="true"
-              />
-
-              {/* Box Photo Frame */}
-              <div className="relative rounded-[2rem] p-3 sm:p-4 bg-surface border border-forest-200/90 shadow-card transition-shadow hover:shadow-floating">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-forest-50/60">
-                  <Image
-                    src="/images/humming-drops-box.png"
-                    alt="Authentic Humming Drops 5-Compartment Breakfast Box containing fresh cut fruits, vegetables, salad, and sprouts"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 560px"
-                    className="object-cover object-center"
-                    priority
-                  />
-                </div>
-
-                {/* Box Caption Bar */}
-                <div className="mt-3 px-2 flex items-center justify-between text-xs text-content-muted">
-                  <span className="font-semibold text-content-primary flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-brand-primary inline-block" />
-                    Authentic 5-Compartment Box
-                  </span>
-                  <span>Berrybeats Cafe · Bangalore</span>
-                </div>
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 1: Top-Left (4 Varieties of Fruits) */}
-              <div className="hidden sm:flex absolute -top-8 -left-6 md:-left-8 flex-col items-end z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 font-display font-bold text-xs shadow-xs rotate-[-3deg]">
-                  🍎 4 Fruits Every Day
-                </span>
-                <DoodleArrow
-                  direction="curve-right"
-                  className="w-9 h-7 text-rose-700 mt-1 -mr-2"
-                />
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 2: Top-Right (2 Crisp Veggies) */}
-              <div className="hidden sm:flex absolute -top-8 -right-6 md:-right-8 flex-col items-start z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-display font-bold text-xs shadow-xs rotate-[3deg]">
-                  🥕 2 Crisp Vegetables
-                </span>
-                <DoodleArrow
-                  direction="curve-left"
-                  className="w-9 h-7 text-amber-700 mt-1 -ml-2"
-                />
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 3: Bottom-Left (Sprouts & Salad) */}
-              <div className="hidden sm:flex absolute bottom-14 -left-6 md:-left-8 flex-col items-end z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-display font-bold text-xs shadow-xs rotate-[2deg]">
-                  🥗 Salad &amp; Sprouts Daily
-                </span>
-                <DoodleArrow
-                  direction="right"
-                  className="w-8 h-6 text-emerald-700 mt-1 -mr-1"
-                />
-              </div>
-
-              {/* Floating Badge: Bottom-Right */}
-              <div className="absolute bottom-12 right-4 sm:bottom-14 sm:right-6 bg-surface/95 backdrop-blur-sm border border-forest-200 rounded-2xl px-3.5 py-2 shadow-card flex items-center gap-2.5 z-20">
-                <div className="w-7 h-7 rounded-lg bg-forest-100 flex items-center justify-center text-forest-800 shrink-0 text-sm">
-                  🌱
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[11px] font-bold text-content-primary leading-tight">
-                    Meticulously Prepared
-                  </span>
-                  <span className="text-[10px] text-content-muted">
-                    Fresh produce every morning
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile-only visual badges below image */}
-            <div className="sm:hidden mt-4 flex flex-wrap justify-center gap-2">
-              <span className="px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-xs font-semibold">
-                🍎 4 Fruits Daily
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
-                🥕 2 Veg Daily
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold">
-                🥗 Salad &amp; Sprouts
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
-                🥜 Dry Fruits
-              </span>
-            </div>
           </motion.div>
         </div>
-      </div>
 
-      {/* Gentle curved transition flowing into Box Experience */}
-      <div className="mt-8 lg:mt-12 -mb-10 lg:-mb-16">
-        <GentleWaveDivider fill="#ffffff" className="w-full h-8 sm:h-12 text-white" />
-      </div>
+        {/* Small Chevron strictly inside the Left Cream Panel */}
+        <div className="hidden lg:flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-body/75 pt-2 pointer-events-none max-w-[540px] w-full">
+          <motion.div
+            animate={shouldReduceMotion ? {} : { y: [0, 3, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-4 h-4 text-primary" />
+          </motion.div>
+        </div>
+      </motion.div>
     </section>
   );
 }
+
+
+
+

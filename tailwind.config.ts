@@ -57,20 +57,31 @@ const config: Config = {
           200: "#dbe7e5",
           300: "#c2d6d3",
         },
+        /* Core Design Tokens */
+        primary: {
+          DEFAULT: "#1F8A45",
+          bright: "#3CC46A",
+          hover: "#176f37",
+        },
+        mint: "#EFFAF2",
         citrus: {
+          DEFAULT: "#FF9F1C",
           50: "#fef3eb",
-          500: "#e86a17", // Sun Papaya / Carrot Accent
+          500: "#FF9F1C",
           700: "#9a3412",
         },
         berry: {
+          DEFAULT: "#F0567A",
           50: "#fdf2f2",
-          500: "#c53030", // Strawberry / Pomegranate Accent
+          500: "#F0567A",
           700: "#991b1b",
         },
+        sun: "#FFD84D",
+        aqua: "#2BB3B1",
+        ink: "#1E2B24",
+        body: "#4A5A52",
 
-        /* ======================================================================
-           Semantic Color Tokens (Mapped to Active Theme CSS Variables)
-           ====================================================================== */
+        /* Semantic Color Tokens (Mapped to Active Theme CSS Variables) */
         canvas: "var(--bg-canvas)",
         surface: "var(--bg-surface)",
         "surface-raised": "var(--bg-surface-raised)",

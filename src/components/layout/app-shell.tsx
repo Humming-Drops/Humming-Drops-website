@@ -4,6 +4,7 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { MobileStickyBar } from "@/components/layout/mobile-sticky-bar";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,12 +24,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
 
       {/* Primary Main Landmark */}
-      <main id="main-content" className="flex-1 flex flex-col">
+      <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
         {children}
       </main>
 
       {/* Shared Footer on Public Routes */}
       {!isDashboard && <Footer />}
+
+      {/* Mobile-Only Sticky Bottom CTA Bar */}
+      {!isDashboard && <MobileStickyBar />}
     </div>
   );
 }

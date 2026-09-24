@@ -2,12 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, Activity, Users, ArrowRight, ShieldCheck, Sparkles, Brain, Stethoscope, Smile } from "lucide-react";
+import { Heart, Activity, Users, ArrowRight, ShieldCheck, Sparkles, Brain, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DoodleSquiggle,
-  DoodleHeart,
-  HandwrittenAnnotation,
   OrganicWaveDivider,
 } from "@/components/ui/doodles";
 
@@ -18,9 +16,10 @@ const PILLARS = [
     title: "Fuel Your Brain",
     shortCopy: "Balanced morning nutrition for cognitive energy and mood stability.",
     icon: Brain,
-    badgeBg: "bg-teal-100",
-    badgeColor: "text-teal-800",
-    borderClass: "border-teal-200",
+    badgeBg: "bg-[#E8F7F1]",
+    badgeColor: "text-aqua",
+    cardBg: "bg-[#E8F7F1]/50",
+    borderClass: "border-aqua/20",
   },
   {
     id: "body",
@@ -28,9 +27,10 @@ const PILLARS = [
     title: "Protect Your Vitals",
     shortCopy: "Free monthly health checkups to stay proactive with your wellness.",
     icon: Activity,
-    badgeBg: "bg-emerald-100",
-    badgeColor: "text-emerald-800",
-    borderClass: "border-emerald-200",
+    badgeBg: "bg-mint",
+    badgeColor: "text-primary",
+    cardBg: "bg-mint/60",
+    borderClass: "border-primary/20",
   },
   {
     id: "community",
@@ -38,9 +38,10 @@ const PILLARS = [
     title: "Expert Network",
     shortCopy: "Doctors, clinical nutritionists, and inspiring live sharing sessions.",
     icon: Users,
-    badgeBg: "bg-teal-100",
-    badgeColor: "text-teal-800",
-    borderClass: "border-teal-200",
+    badgeBg: "bg-sky-50",
+    badgeColor: "text-sky-700",
+    cardBg: "bg-sky-50/50",
+    borderClass: "border-sky-200/80",
   },
   {
     id: "reset",
@@ -48,9 +49,10 @@ const PILLARS = [
     title: "Mindful Coping",
     shortCopy: "Positive self-talk, deep breathing, yoga, and joyful creative outlets.",
     icon: Smile,
-    badgeBg: "bg-amber-100",
-    badgeColor: "text-amber-800",
-    borderClass: "border-amber-200",
+    badgeBg: "bg-amber-50",
+    badgeColor: "text-citrus",
+    cardBg: "bg-amber-50/50",
+    borderClass: "border-amber-200/80",
   },
 ];
 
@@ -59,56 +61,56 @@ export function HealthCommunityBridge() {
     <section
       id="health-community"
       aria-label="Health & Community Benefits"
-      className="pt-10 lg:pt-16 pb-0 bg-gradient-to-b from-mist-50 via-teal-50/60 to-mist-50 relative overflow-hidden"
+      className="py-14 sm:py-16 lg:py-24 bg-canvas relative overflow-hidden"
     >
       {/* Background ambient lighting */}
       <div
         aria-hidden="true"
-        className="absolute top-0 right-0 w-96 h-96 bg-teal-100/50 rounded-full blur-3xl pointer-events-none"
+        className="absolute top-0 right-0 w-96 h-96 bg-[#E8F7F1]/60 rounded-full blur-3xl pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-12 left-0 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"
+        className="absolute bottom-12 left-0 w-96 h-96 bg-mint/50 rounded-full blur-3xl pointer-events-none"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Top badge & headline */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-teal-200 text-teal-800 text-xs font-semibold shadow-xs">
-            <Heart className="w-3.5 h-3.5 text-teal-600" aria-hidden="true" />
+        <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[20px] bg-white border border-aqua/30 text-aqua text-xs font-semibold shadow-2xs">
+            <Heart className="w-3.5 h-3.5 text-aqua" aria-hidden="true" />
             <span>Body &amp; Mind Connection</span>
           </div>
 
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-teal-950 leading-tight">
+          <h2 className="font-display text-[1.75rem] sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink leading-[1.18]">
             Nourishing the Body,{" "}
-            <span className="text-teal-700 relative inline-block">
+            <span className="text-aqua relative inline-block pb-2">
               Uplifting the Mind
               <DoodleSquiggle
-                className="absolute -bottom-2 left-0 w-full text-teal-400"
-                color="currentColor"
+                className="absolute bottom-0 left-0 w-full h-2 text-sun pointer-events-none stroke-[2.5]"
+                color="#FFD84D"
               />
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-teal-900/80 font-sans leading-relaxed max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-body font-sans leading-relaxed max-w-2xl mx-auto">
             At Humming Drops, true wellness is more than just eating healthy. Every plan unlocks free membership to MedCity Smiles and free monthly vitals monitoring.
           </p>
         </div>
 
         {/* 2 Main Visual Blocks: Left 4-Pillar Interconnected Matrix, Right Free Health Checkup Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
           {/* Block 1: Interconnected 4-Pillar Visual System (6 cols) */}
-          <div className="lg:col-span-6 rounded-3xl p-6 sm:p-8 bg-white border border-teal-100 shadow-card flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
+          <div className="lg:col-span-6 rounded-[20px] p-6 sm:p-7 bg-white border border-[#E2ECE4] shadow-card flex flex-col justify-between space-y-5">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-aqua flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-citrus" />
                   <span>The 4 Holistic Pillars</span>
                 </span>
-                <span className="text-xs text-teal-700/60">Brochure Page 6</span>
+                <span className="text-xs text-body">Holistic Care</span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-bold text-teal-950 font-display">
+              <h3 className="text-xl sm:text-2xl font-bold text-ink font-display">
                 An interconnected circle of care
               </h3>
 
@@ -119,22 +121,22 @@ export function HealthCommunityBridge() {
                   return (
                     <div
                       key={pillar.id}
-                      className={`p-4 rounded-2xl bg-mist-50 border ${pillar.borderClass} space-y-2 flex flex-col justify-between`}
+                      className={`p-3.5 rounded-[20px] ${pillar.cardBg} border ${pillar.borderClass} space-y-2 flex flex-col justify-between`}
                     >
                       <div className="flex items-center justify-between">
                         <div
-                          className={`w-8 h-8 rounded-xl ${pillar.badgeBg} ${pillar.badgeColor} flex items-center justify-center font-bold`}
+                          className={`w-7 h-7 rounded-[20px] ${pillar.badgeBg} ${pillar.badgeColor} flex items-center justify-center font-bold`}
                         >
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-3.5 h-3.5" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-teal-600">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-ink">
                           {pillar.label}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="font-bold text-sm text-teal-950">{pillar.title}</h4>
-                        <p className="text-[11px] text-teal-800/80 leading-snug mt-1 font-sans">
+                        <h4 className="font-bold text-xs sm:text-sm text-ink">{pillar.title}</h4>
+                        <p className="text-[11px] text-body leading-snug mt-1 font-sans">
                           {pillar.shortCopy}
                         </p>
                       </div>
@@ -144,67 +146,67 @@ export function HealthCommunityBridge() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-teal-100 flex items-center justify-between text-xs text-teal-700">
+            <div className="pt-3 border-t border-[#E2ECE4] flex items-center justify-between text-xs text-body">
               <span>Doctor &amp; nutritionist advisory network</span>
-              <Link href="/medcity-smiles" className="font-semibold text-teal-950 hover:underline flex items-center gap-1">
+              <Link href="/medcity-smiles" className="font-semibold text-aqua hover:underline flex items-center gap-1">
                 <span>Learn More</span>
-                <ArrowRight className="w-3 h-3 text-teal-700" />
+                <ArrowRight className="w-3 h-3 text-aqua" />
               </Link>
             </div>
           </div>
 
           {/* Block 2: Free Monthly Checkup Showcase (6 cols) */}
-          <div className="lg:col-span-6 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-teal-600 via-teal-600 to-teal-700 text-white shadow-card flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
+          <div className="lg:col-span-6 rounded-[20px] p-6 sm:p-7 bg-gradient-to-br from-aqua via-aqua to-primary text-white shadow-card flex flex-col justify-between space-y-5">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-white/85 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-200" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-white/90 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-sun" />
                   <span>Included with Every Plan</span>
                 </span>
-                <span className="text-xs text-white/70">Brochure Page 3 &amp; 6</span>
+                <span className="text-xs text-white/80">Monthly Vitals</span>
               </div>
 
               <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
                 Free Monthly Health Checkup
               </h3>
 
-              <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-sans">
+              <p className="text-xs sm:text-sm text-white/95 leading-relaxed font-sans">
                 Stay informed about your key physical wellness metrics every month, powered in partnership with MedCity Health Labs:
               </p>
 
               {/* 3 Metric Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                <div className="p-3.5 rounded-2xl bg-white/15 border border-white/25 text-left space-y-1">
-                  <span className="text-2xl" aria-hidden="true">🩸</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
+                  <span className="text-xl" aria-hidden="true">🩸</span>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Blood Sugar</h4>
-                  <p className="text-[11px] text-white/80">Free monthly test</p>
+                  <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>
-                <div className="p-3.5 rounded-2xl bg-white/15 border border-white/25 text-left space-y-1">
-                  <span className="text-2xl" aria-hidden="true">🫀</span>
+                <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
+                  <span className="text-xl" aria-hidden="true">🫀</span>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Cholesterol</h4>
-                  <p className="text-[11px] text-white/80">Free monthly test</p>
+                  <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>
-                <div className="p-3.5 rounded-2xl bg-white/15 border border-white/25 text-left space-y-1">
-                  <span className="text-2xl" aria-hidden="true">🩺</span>
+                <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
+                  <span className="text-xl" aria-hidden="true">🩺</span>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Blood Pressure</h4>
-                  <p className="text-[11px] text-white/80">Free monthly test</p>
+                  <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/25 space-y-3">
-              <p className="text-xs text-white/85">
+            <div className="pt-3 border-t border-white/20 space-y-3">
+              <p className="text-xs text-white/90">
                 In collaboration with <strong>MedCity Health Labs</strong> · A community of experts to monitor your vitals.
               </p>
               <Button
                 variant="outline"
                 size="md"
                 asChild
-                className="w-full justify-center bg-white text-teal-800 hover:bg-teal-50 border-transparent font-bold shadow-sm"
+                className="w-full justify-center min-h-[48px] bg-white text-aqua hover:bg-mint border-transparent font-bold shadow-xs cursor-pointer rounded-[20px]"
               >
                 <Link href="/medcity-smiles" className="flex items-center gap-2">
                   <span>Explore MedCity Smiles Community</span>
-                  <ArrowRight className="w-4 h-4 text-teal-800" aria-hidden="true" />
+                  <ArrowRight className="w-4 h-4 text-aqua" aria-hidden="true" />
                 </Link>
               </Button>
             </div>
@@ -212,9 +214,9 @@ export function HealthCommunityBridge() {
         </div>
       </div>
 
-      {/* Seamless organic curved transition into Pricing Section (Cream canvas) */}
+      {/* Seamless transition */}
       <div className="mt-12 lg:mt-16 text-canvas">
-        <OrganicWaveDivider fill="#fdfcf7" className="w-full h-12 sm:h-16 text-canvas" />
+        <OrganicWaveDivider fill="#FFFEF8" className="w-full h-12 sm:h-16 text-canvas" />
       </div>
     </section>
   );

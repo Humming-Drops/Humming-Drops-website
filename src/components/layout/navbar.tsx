@@ -21,12 +21,33 @@ export function Navbar() {
   // Active brand nav config
   const navConfig = theme === "medcity" ? MEDCITY_SMILES_NAV : HUMMING_DROPS_NAV;
 
-  // Track scroll position for subtle elevation
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  // Track scroll position for subtle elevation and active section
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 12);
+      
+      // Determine active section based on scroll position
+      const sections = ["pricing", "journey", "box-experience", "health-community"];
+      const scrollPos = window.scrollY + 100;
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveSection(sectionId);
+            return;
+          }
+        }
+      }
+      if (window.scrollY < 300) {
+        setActiveSection("");
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -55,35 +76,35 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full transition-brand border-b",
+        "sticky top-0 z-40 w-full transition-all duration-200 border-b",
         scrolled
-          ? "bg-canvas/95 backdrop-blur-md border-line-subtle shadow-card"
-          : "bg-canvas border-line-subtle/60"
+          ? "bg-white/95 backdrop-blur-md border-[#E2ECE4] shadow-card"
+          : "bg-white/85 backdrop-blur-md border-[#E2ECE4]/70"
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-3">
           {/* Brand Logo & Tagline */}
           <div className="flex items-center gap-3 shrink-0">
             <Link
               href={theme === "medcity" ? "/medcity-smiles" : "/"}
-              className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-lg p-1"
+              className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-xl p-1"
               aria-label={`${navConfig.name} Home`}
             >
               {theme === "humming" ? (
-                <div className="relative h-14 w-40 sm:w-52 transition-transform duration-fast group-hover:scale-[1.02]">
+                <div className="relative h-10 w-36 sm:h-11 sm:w-44 transition-transform duration-fast group-hover:scale-[1.02]">
                   <Image
                     src="/images/humming-drops-logo.png"
                     alt="Humming Drops Logo"
                     fill
-                    sizes="(max-width: 640px) 160px, 208px"
+                    sizes="(max-width: 640px) 144px, 192px"
                     className="object-contain object-left"
                     priority
                   />
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
-                  <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center p-1.5 shrink-0 overflow-hidden shadow-sm">
+                  <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center p-1.5 shrink-0 overflow-hidden shadow-xs">
                     <Image
                       src="/images/medcity-smiles-logo.png"
                       alt="MedCity Smiles Logo"
@@ -110,22 +131,25 @@ export function Navbar() {
             <BrandSwitcher navigateOnSwitch={true} />
           </div>
 
-          {/* Desktop Navigation Links (Visible on XL screens to prevent header overcrowding) */}
+          {/* Desktop Navigation Links */}
           <nav
             aria-label="Main Navigation"
-            className="hidden xl:flex items-center gap-1 xl:gap-2"
+            className="hidden xl:flex items-center gap-1.5"
           >
             {navConfig.navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isHashMatch =
+                (item.href === "/#pricing" && activeSection === "pricing") ||
+                (item.href === "/#journey" && activeSection === "journey");
+              const isActive = pathname === item.href || (pathname === "/" && isHashMatch);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-2.5 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
+                    "px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
                     isActive
-                      ? "text-brand-primary font-semibold bg-brand-subtle/80"
-                      : "text-content-secondary hover:text-content-primary hover:bg-muted/80"
+                      ? "text-primary bg-mint font-bold shadow-2xs"
+                      : "text-body hover:text-primary hover:bg-mint/60"
                   )}
                 >
                   <span>{item.label}</span>

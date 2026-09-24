@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
+import { PricingSection } from "@/components/home/pricing-section";
 import { BoxAnatomy } from "@/components/home/box-anatomy";
 import { MorningJourney } from "@/components/home/morning-journey";
 import { WhyHummingDrops } from "@/components/home/why-humming-drops";
+import { FeatureStrip } from "@/components/home/feature-strip";
 import { HealthCommunityBridge } from "@/components/home/health-community-bridge";
-import { PricingSection } from "@/components/home/pricing-section";
+import { ReviewsSection } from "@/components/home/reviews-section";
+import { FAQSection } from "@/components/home/faq-section";
 import { ClosingCTA } from "@/components/home/closing-cta";
 
 export const metadata: Metadata = {
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Humming Drops | Healthy Drops, Healthier you",
     description:
-      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits.",
+      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
     images: ["/images/humming-drops-box.png"],
   },
 };
@@ -22,26 +25,36 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="w-full">
-      {/* 1. Discover: Editorial Hero with Authentic Meal Box & Hand-Drawn Annotations */}
+      {/* 1. Hero: Headline, food showcase, and primary CTA */}
       <Hero />
 
-      {/* 2. Explore: Interactive 5-Compartment Box Anatomy & Hotspots */}
-      <BoxAnatomy />
-
-      {/* 3. Understand: The Morning Ritual & Sourcing Story */}
-      <MorningJourney />
-
-      {/* 4. Connect: Why Humming Drops & Daily Habit Philosophy */}
-      <WhyHummingDrops />
-
-      {/* 5. Trust: Preventative Health Vitals & MedCity Smiles Community Bridge */}
-      <HealthCommunityBridge />
-
-      {/* 6. Subscribe: Transparent Subscription Plans & Pricing Comparison */}
+      {/* 2. Plan tiles/cards: Standard ₹3,500 & Premium ₹4,000 */}
       <PricingSection />
 
-      {/* 7. Action: Closing CTA & Assisted Booking Helpline */}
+      {/* 3. What's in the box: 5-compartment interactive breakdown */}
+      <BoxAnatomy />
+
+      {/* 4. How it works: 3 steps (Picked fresh, Prepared & packed, Delivered) */}
+      <MorningJourney />
+
+      {/* 5. Morning habit comparison: The morning rush vs. The effortless ritual */}
+      <WhyHummingDrops />
+
+      {/* 6. What makes it Humming Drops: 6-item quality icon strip */}
+      <FeatureStrip />
+
+      {/* 7. Free health checks + MedCity Smiles (Aqua accent) */}
+      <HealthCommunityBridge />
+
+      {/* 8. Reviews/Testimonials placeholder */}
+      <ReviewsSection />
+
+      {/* 9. FAQ accordion */}
+      <FAQSection />
+
+      {/* 10. Final CTA: Subscribe / WhatsApp */}
       <ClosingCTA />
     </div>
   );
 }
+
