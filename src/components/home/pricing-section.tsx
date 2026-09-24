@@ -245,9 +245,9 @@ export function PricingSection() {
         </div>
       </div>
 
-      {/* Organic wave transition into dark forest Closing CTA */}
-      <div className="mt-12 lg:mt-16 text-forest-950">
-        <OrganicWaveDivider fill="#0f3512" className="w-full h-12 sm:h-16 text-forest-950" />
+      {/* Organic wave transition into the bright Closing CTA */}
+      <div className="mt-12 lg:mt-16 text-cream-50">
+        <OrganicWaveDivider fill="#fdfcf7" className="w-full h-12 sm:h-16 text-cream-50" />
       </div>
     </section>
   );
