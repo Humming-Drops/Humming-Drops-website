@@ -30,15 +30,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       if (brand === "humming") {
         switch (variant) {
           case "primary":
-            return "bg-forest-900 text-white hover:bg-forest-800 active:bg-forest-950 shadow-sm";
+            return "bg-leaf-500 text-white hover:bg-leaf-600 active:bg-leaf-700 shadow-sm";
           case "secondary":
             return "bg-forest-50 text-forest-900 hover:bg-forest-100 active:bg-forest-200 border border-forest-200";
           case "outline":
-            return "border-2 border-forest-900 text-forest-900 hover:bg-forest-50 active:bg-forest-100";
+            return "border-2 border-leaf-500 text-leaf-700 hover:bg-forest-50 active:bg-forest-100";
           case "ghost":
             return "text-forest-900 hover:bg-forest-50 active:bg-forest-100";
           case "link":
-            return "text-forest-900 underline-offset-4 hover:underline p-0 h-auto";
+            return "text-leaf-700 underline-offset-4 hover:underline p-0 h-auto";
         }
       }
 

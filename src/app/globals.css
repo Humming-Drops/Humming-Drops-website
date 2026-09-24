@@ -21,16 +21,16 @@
     --bg-subtle: #eaf5e9;            /* Morning Dew Tint */
 
     /* Brand Identity Tokens */
-    --primary-brand: #144518;        /* Deep Forest Green (Official Logo Lettering) */
-    --primary-brand-hover: #1b5e20;  /* Rich Verdant Hover */
+    --primary-brand: #2e7301;        /* Fresh Leaf Green (Official Logo Accent — brighter, welcoming) */
+    --primary-brand-hover: #255c01;  /* Deeper Leaf Hover */
     --primary-brand-subtle: #eaf5e9; /* Morning Dew Container Tint */
     --primary-brand-subtle-hover: #dcefd9;
-    --primary-brand-text: #144518;   /* Forest Text for subtle badges */
+    --primary-brand-text: #144518;   /* Forest Text for subtle badges (retains AA contrast) */
     --primary-brand-contrast: #ffffff; /* High-contrast white on primary */
 
-    /* Secondary Brand Accent (Leaf Accent from Logo) */
-    --brand-secondary: #2e7301;
-    --brand-secondary-hover: #255c01;
+    /* Secondary Brand Accent (Deep Forest, for emphasis text & rare deep accents) */
+    --brand-secondary: #144518;
+    --brand-secondary-hover: #0b260e;
     --brand-secondary-subtle: #f0f7ec;
 
     /* Text & Typography Tokens (Mathematically verified WCAG AA / AAA) */
@@ -65,10 +65,10 @@
     --accent-dryfruit-subtle: #fefce8;
     --accent-dryfruit-text: #713f12; /* Accessible 7.0:1 contrast on white */
 
-    /* Shadows & Elevation (Botanical forest ambient tint) */
-    --shadow-card: 0 2px 8px -1px rgba(20, 69, 24, 0.05), 0 1px 3px -1px rgba(20, 69, 24, 0.03);
-    --shadow-raised: 0 8px 24px -4px rgba(20, 69, 24, 0.08), 0 2px 6px -2px rgba(20, 69, 24, 0.04);
-    --shadow-floating: 0 20px 32px -8px rgba(20, 69, 24, 0.12), 0 4px 12px -2px rgba(20, 69, 24, 0.06);
+    /* Shadows & Elevation (Fresh leaf ambient tint) */
+    --shadow-card: 0 2px 8px -1px rgba(46, 115, 1, 0.05), 0 1px 3px -1px rgba(46, 115, 1, 0.03);
+    --shadow-raised: 0 8px 24px -4px rgba(46, 115, 1, 0.08), 0 2px 6px -2px rgba(46, 115, 1, 0.04);
+    --shadow-floating: 0 20px 32px -8px rgba(46, 115, 1, 0.12), 0 4px 12px -2px rgba(46, 115, 1, 0.06);
 
     /* Universal Semantic Status Tokens */
     --status-success: #15803d;
@@ -167,6 +167,10 @@
     --shadow-floating: 0 20px 32px -8px rgba(21, 108, 99, 0.12), 0 4px 12px -2px rgba(21, 108, 99, 0.06);
   }
 
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     background-color: var(--bg-canvas);
     color: var(--text-primary);
@@ -174,6 +178,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* Universal Keyboard Focus Ring (WCAG 2.1 AA compliant) */
