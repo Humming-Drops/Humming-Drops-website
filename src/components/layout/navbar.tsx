@@ -106,7 +106,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Persistent Brand Switcher */}
-          <div className="hidden sm:flex items-center justify-center shrink-0">
+          <div className="hidden md:flex items-center justify-center shrink-0">
             <BrandSwitcher navigateOnSwitch={true} />
           </div>
 
@@ -122,7 +122,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-3 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5",
+                    "px-2.5 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
                     isActive
                       ? "text-brand-primary font-semibold bg-brand-subtle/80"
                       : "text-content-secondary hover:text-content-primary hover:bg-muted/80"
@@ -153,12 +153,12 @@ export function Navbar() {
               </Link>
             </Button>
 
-            {/* Primary CTA (visible from sm breakpoint upwards) */}
+            {/* Primary CTA (visible from md breakpoint upwards) */}
             <Button
               variant="primary"
               size="sm"
               asChild
-              className="hidden sm:inline-flex shadow-sm gap-1.5"
+              className="hidden md:inline-flex shadow-sm gap-1.5"
             >
               <Link href={navConfig.primaryCTA.href}>
                 <span>{navConfig.primaryCTA.label}</span>
@@ -198,8 +198,8 @@ export function Navbar() {
           className="xl:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
         >
           <div className="px-4 pt-4 pb-6 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto">
-            {/* Mobile Brand Switcher (only shown below sm where header switcher is hidden) */}
-            <div className="flex sm:hidden justify-center pb-2 border-b border-line-subtle">
+            {/* Mobile Brand Switcher (only shown below md where header switcher is hidden) */}
+            <div className="flex md:hidden justify-center pb-2 border-b border-line-subtle">
               <BrandSwitcher navigateOnSwitch={true} />
             </div>
 
