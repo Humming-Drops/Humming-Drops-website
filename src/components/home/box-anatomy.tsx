@@ -202,36 +202,38 @@ export function BoxAnatomy() {
           </p>
 
           {/* Interactive Standard vs Premium Toggle */}
-          <div className="pt-2 inline-flex items-center justify-center">
+          <div className="pt-2 flex items-center justify-center w-full px-2">
             <div
               role="tablist"
               aria-label="Subscription Plan View"
-              className="p-1 rounded-full bg-forest-100/70 border border-forest-200 flex items-center gap-1 shadow-xs"
+              className="p-1 rounded-full bg-forest-100/70 border border-forest-200 flex items-center gap-1 shadow-xs max-w-full"
             >
               <button
                 role="tab"
                 aria-selected={selectedTier === "standard"}
                 onClick={() => setSelectedTier("standard")}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all ${
+                className={`px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                   selectedTier === "standard"
-                    ? "bg-forest-900 text-white shadow-sm"
+                    ? "bg-leaf-500 text-white shadow-sm"
                     : "text-forest-800 hover:text-forest-900 hover:bg-forest-50"
                 }`}
               >
-                Standard Plan (₹3,500/mo)
+                <span>Standard</span>
+                <span className="hidden sm:inline"> Plan (₹3,500/mo)</span>
               </button>
               <button
                 role="tab"
                 aria-selected={selectedTier === "premium"}
                 onClick={() => setSelectedTier("premium")}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                   selectedTier === "premium"
                     ? "bg-amber-700 text-white shadow-sm"
                     : "text-amber-900 hover:text-amber-950 hover:bg-amber-50"
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Premium Plan (₹4,000/mo)</span>
+                <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                <span>Premium</span>
+                <span className="hidden sm:inline"> Plan (₹4,000/mo)</span>
               </button>
             </div>
           </div>
@@ -245,10 +247,12 @@ export function BoxAnatomy() {
             return (
               <button
                 key={c.id}
+                onMouseEnter={() => setActiveCompartmentId(c.id)}
+                onFocus={() => setActiveCompartmentId(c.id)}
                 onClick={() => setActiveCompartmentId(c.id)}
                 className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
                   isSelected
-                    ? "bg-forest-900 text-white border-forest-900 shadow-sm scale-105"
+                    ? "bg-leaf-500 text-white border-leaf-500 shadow-sm scale-105"
                     : "bg-surface text-forest-800 border-forest-200 hover:bg-forest-50"
                 }`}
                 aria-pressed={isSelected}
@@ -285,6 +289,8 @@ export function BoxAnatomy() {
                   return (
                     <button
                       key={c.id}
+                      onMouseEnter={() => setActiveCompartmentId(c.id)}
+                      onFocus={() => setActiveCompartmentId(c.id)}
                       onClick={() => setActiveCompartmentId(c.id)}
                       style={{
                         top: `${c.hotspot.y}%`,
@@ -304,7 +310,7 @@ export function BoxAnatomy() {
                       <span
                         className={`relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full font-display font-extrabold text-xs shadow-md transition-all duration-200 ${
                           isSelected
-                            ? `bg-forest-900 text-white ring-4 ring-white ${c.ringClass} scale-110 shadow-lg`
+                            ? `bg-leaf-500 text-white ring-4 ring-white ${c.ringClass} scale-110 shadow-lg`
                             : "bg-surface/95 text-forest-900 border border-forest-300 hover:scale-110 hover:bg-forest-50"
                         }`}
                       >
@@ -420,7 +426,7 @@ export function BoxAnatomy() {
                         onClick={() => setActiveCompartmentId(c.id)}
                         className={`w-7 h-7 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                           c.id === activeCompartment.id
-                            ? "bg-forest-900 text-white shadow-xs"
+                            ? "bg-leaf-500 text-white shadow-xs"
                             : "bg-white/90 text-forest-800 hover:bg-white"
                         }`}
                         title={c.name}

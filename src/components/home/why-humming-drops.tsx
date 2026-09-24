@@ -108,19 +108,19 @@ export function WhyHummingDrops() {
           </div>
 
           {/* Card 2: The Humming Drops Ritual (With Humming Drops) - 6 cols */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-forest-900 via-forest-900 to-forest-950 text-white shadow-card flex flex-col justify-between space-y-6 relative overflow-hidden">
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-leaf-500 via-leaf-500 to-leaf-600 text-white shadow-card flex flex-col justify-between space-y-6 relative overflow-hidden">
             <div
-              className="pointer-events-none absolute top-0 right-0 w-64 h-64 bg-forest-800 rounded-full blur-3xl opacity-50"
+              className="pointer-events-none absolute top-0 right-0 w-64 h-64 bg-leaf-400 rounded-full blur-3xl opacity-40"
               aria-hidden="true"
             />
 
             <div className="space-y-4 relative z-10">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-800 text-forest-200 text-xs font-bold uppercase tracking-wider border border-forest-700">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold uppercase tracking-wider border border-white/25">
                   <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                   <span>The Effortless Ritual</span>
                 </span>
-                <span className="text-xs text-forest-300 font-medium">With Humming Drops</span>
+                <span className="text-xs text-white/80 font-medium">With Humming Drops</span>
               </div>
 
               <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug">
@@ -129,9 +129,9 @@ export function WhyHummingDrops() {
 
               {/* 4 Visual Solutions */}
               <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-forest-800/80 border border-forest-700 text-xs text-forest-100 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-forest-700 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-300" />
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
+                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
+                    <Check className="w-3.5 h-3.5 text-amber-200" />
                   </div>
                   <div>
                     <strong className="text-white block font-semibold">Morning Doorstep Box:</strong>
@@ -139,9 +139,9 @@ export function WhyHummingDrops() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-forest-800/80 border border-forest-700 text-xs text-forest-100 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-forest-700 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-300" />
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
+                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
+                    <Check className="w-3.5 h-3.5 text-amber-200" />
                   </div>
                   <div>
                     <strong className="text-white block font-semibold">5 Fresh Food Groups:</strong>
@@ -149,9 +149,9 @@ export function WhyHummingDrops() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-forest-800/80 border border-forest-700 text-xs text-forest-100 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-forest-700 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-300" />
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
+                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
+                    <Check className="w-3.5 h-3.5 text-amber-200" />
                   </div>
                   <div>
                     <strong className="text-white block font-semibold">Body &amp; Mind Connection:</strong>
@@ -161,9 +161,9 @@ export function WhyHummingDrops() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-forest-800 relative z-10 flex items-center justify-between text-xs text-forest-300">
-              <span className="font-semibold text-amber-300 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-amber-300" />
+            <div className="pt-4 border-t border-white/20 relative z-10 flex items-center justify-between text-xs text-white/80">
+              <span className="font-semibold text-amber-200 flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-amber-200" />
                 Effortless Daily Habit
               </span>
               <span>Brochure Page 7</span>
@@ -172,9 +172,9 @@ export function WhyHummingDrops() {
         </div>
       </div>
 
-      {/* Seamless curved organic wave transition into dark teal Health & Community Bridge */}
-      <div className="mt-12 lg:mt-16 text-teal-950">
-        <OrganicWaveDivider fill="#042f2e" className="w-full h-12 sm:h-16 text-teal-950" />
+      {/* Seamless curved organic wave transition into the bright Health & Community Bridge */}
+      <div className="mt-12 lg:mt-16 text-mist-50">
+        <OrganicWaveDivider fill="#f8faf9" className="w-full h-12 sm:h-16 text-mist-50" />
       </div>
     </section>
   );
