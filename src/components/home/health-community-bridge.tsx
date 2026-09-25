@@ -75,13 +75,13 @@ export function HealthCommunityBridge() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Top badge & headline */}
-        <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-12 sm:mb-14">
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-900 text-xs font-bold tracking-wide shadow-2xs">
             <Heart className="w-3.5 h-3.5 text-teal-600" aria-hidden="true" />
             <span>Pillar 02 · Mind &amp; Community Care</span>
           </div>
 
-          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#132A1C] leading-[1.16]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold tracking-tight text-[#132A1C] leading-[1.16]">
             Nourishing the Body,{" "}
             <span className="text-teal-700 relative inline-block pb-2">
               Uplifting the Mind
@@ -92,9 +92,12 @@ export function HealthCommunityBridge() {
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] font-sans leading-relaxed max-w-2xl mx-auto">
-            Just as Humming Drops nourishes your body every morning, MedCity Smiles is here for your mind — because real wellness is both.
-          </p>
+          {/* Highlighted Bridge Connection Statement */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#E6F7F5] border-l-4 border-[#00A88F] text-[#0B3D34] shadow-2xs max-w-2xl mx-auto text-left sm:text-center">
+            <p className="text-base sm:text-lg font-medium leading-relaxed font-sans">
+              &ldquo;Just as Humming Drops nourishes your body every morning, MedCity Smiles is here for your mind — because real wellness is both.&rdquo;
+            </p>
+          </div>
         </div>
 
         {/* 2 Main Visual Blocks: Left 4-Pillar Interconnected Matrix, Right Free Health Checkup Showcase */}

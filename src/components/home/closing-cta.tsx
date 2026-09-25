@@ -119,15 +119,15 @@ export function ClosingCTA() {
                 </Link>
               </Button>
 
-              {/* Secondary: Explore MedCity Smiles Pillar */}
+              {/* Secondary: Explore MedCity Smiles Pillar (Outlined Aqua) */}
               <Button
                 variant="outline"
                 size="md"
                 asChild
-                className="w-full sm:w-auto bg-teal-800 hover:bg-teal-900 text-white border border-teal-400/40 font-bold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+                className="w-full sm:w-auto bg-white text-teal-900 hover:bg-teal-50 border-2 border-[#00A88F] hover:border-teal-700 font-extrabold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
               >
                 <Link href="/medcity-smiles" className="flex items-center justify-center gap-1.5">
-                  <Heart className="w-4 h-4 text-teal-300" />
+                  <Heart className="w-4 h-4 text-teal-700" />
                   <span>Explore MedCity Smiles</span>
                 </Link>
               </Button>
