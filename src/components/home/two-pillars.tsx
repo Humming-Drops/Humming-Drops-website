@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowRight, Apple, Heart, Sparkles, Check, Users, Sun } from "lucide-react";
+import { ArrowRight, Apple, Heart, Sparkles, Check, Smile, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
@@ -178,21 +178,21 @@ export function TwoPillars() {
               <div className="flex items-center gap-4 pt-1">
                 {/* 56px soft aqua circle icon */}
                 <div className="w-14 h-14 rounded-full bg-[#E6F7F5] border border-[#B2EBF2]/80 flex items-center justify-center text-[#00A88F] shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                  <Users className="w-7 h-7 text-[#00A88F]" />
+                  <Smile className="w-7 h-7 text-[#00A88F]" />
                 </div>
                 <div>
                   <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">
-                    MedCity Smiles Community
+                    MedCity Smiles Companion
                   </h3>
                   <p className="text-xs text-[#657B6F] font-medium mt-0.5">
-                    Powered in partnership with MedCity Health Labs
+                    Your personal pocket companion for mental wellness
                   </p>
                 </div>
               </div>
 
               {/* 1-Line Core Summary */}
               <p className="text-base text-[#405347] font-normal leading-relaxed pt-1">
-                A supportive community for your mental wellbeing — expert-led sessions, live sharing, and everyday encouragement.
+                A gentle pocket companion reflecting your mood, offering sensory tools for quick calm, and gamifying your wellness journey.
               </p>
 
               {/* 3 Balanced Highlights */}
@@ -201,19 +201,19 @@ export function TwoPillars() {
                   <div className="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-[#00A88F] shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>Doctor, Psychologist &amp; Clinical Nutritionist Network</span>
+                  <span>Mood-Reflecting Hummingbird Companion</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-[#00A88F] shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>Positive Mindset, Coping Habits &amp; Live Sharing Sessions</span>
+                  <span>Tactile Sensory Tools &amp; Quick Breathing Exercises</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-[#00A88F] shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>Free Monthly Doctor-Certified Health Checkups (Sugar &amp; BP)</span>
+                  <span>Grow a Virtual Garden with Daily Wellness Check-ins</span>
                 </div>
               </div>
             </div>

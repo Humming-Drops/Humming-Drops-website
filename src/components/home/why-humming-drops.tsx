@@ -140,8 +140,8 @@ export function WhyHummingDrops() {
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-bold">MedCity Smiles Mental Care:</strong>
-                    Doctor-guided sharing sessions, positive coping tools, and a caring support community.
+                    <strong className="text-white block font-bold">MedCity Smiles Companion:</strong>
+                    A mood-reflecting pocket companion, sensory tools for quick calm, and a gamified virtual garden.
                   </div>
                 </div>
 
