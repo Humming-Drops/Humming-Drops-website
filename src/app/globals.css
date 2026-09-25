@@ -9,53 +9,53 @@
     --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
 
     /* ==========================================================================
-       Design Tokens
+       Design Tokens - Radiant & Fresh Morning Wellness Palette
        ========================================================================== */
-    --primary: #1F8A45;        /* buttons, links (white text passes >= 4.5:1) */
-    --primary-bright: #3CC46A; /* gradients, hover, checkmarks */
-    --bg: #FFFEF8;             /* page base */
-    --mint: #EFFAF2;           /* alternate section background */
-    --citrus: #FF9F1C;         /* badges, Premium accent */
-    --berry: #F0567A;          /* fruit tags, small pops */
-    --sun: #FFD84D;            /* underline accents */
-    --aqua: #2BB3B1;           /* health-checkup / MedCity section only */
-    --ink: #1E2B24;            /* headings */
-    --body: #4A5A52;           /* body text */
-    --radius: 20px;            /* the ONLY border radius for cards/buttons/pills */
+    --primary: #15803D;        /* rich vibrant emerald (WCAG AA >= 4.5:1 on white) */
+    --primary-bright: #22C55E; /* vibrant fresh leaf green */
+    --bg: #FCFDF9;             /* bright, clean, warm morning paper canvas */
+    --mint: #F0FDF4;           /* soft fresh dewy mint container */
+    --citrus: #F59E0B;         /* warm golden citrus accent */
+    --berry: #F43F5E;          /* fresh raspberry pop */
+    --sun: #FBBF24;            /* radiant morning sunshine */
+    --aqua: #0EA5E9;           /* serene health & MedCity accent */
+    --ink: #132A1C;            /* deep soft forest heading color */
+    --body: #405347;           /* clean high-contrast body text */
+    --radius: 20px;            /* consistent soft-corner border radius */
 
     /* Canvas & Surface Tokens */
     --bg-canvas: var(--bg);
     --bg-surface: #ffffff;
     --bg-surface-raised: #ffffff;
     --bg-muted: var(--mint);
-    --bg-subtle: var(--mint);
+    --bg-subtle: #F6FEF9;
 
     /* Brand Identity Tokens */
     --primary-brand: var(--primary);
-    --primary-brand-hover: #176f37;
+    --primary-brand-hover: #166534;
     --primary-brand-subtle: var(--mint);
-    --primary-brand-subtle-hover: #dff4e5;
+    --primary-brand-subtle-hover: #DCFCE7;
     --primary-brand-text: var(--ink);
     --primary-brand-contrast: #ffffff;
 
     /* Secondary Brand Accent */
     --brand-secondary: var(--primary-bright);
-    --brand-secondary-hover: #32a85a;
+    --brand-secondary-hover: #16A34A;
     --brand-secondary-subtle: var(--mint);
 
     /* Text & Typography Tokens */
     --text-primary: var(--ink);
     --text-secondary: var(--body);
-    --text-muted: #64776e;
+    --text-muted: #657B6F;
     --text-inverse: #ffffff;
 
     /* Borders & Dividers */
-    --border-subtle: #E2ECE4;
-    --border-strong: #BDD4C1;
+    --border-subtle: #E3EFE5;
+    --border-strong: #C4E0CA;
     --border-interactive: var(--primary);
 
     /* Accessibility Focus Rings */
-    --focus-ring: var(--primary);
+    --focus-ring: var(--primary-bright);
     --focus-ring-offset: var(--bg);
 
     /* Produce & Nutritional Accent Tokens */
@@ -76,9 +76,9 @@
     --accent-dryfruit-text: #713f12;
 
     /* Shadows & Elevation (Curated lightweight elevation) */
-    --shadow-card: 0 4px 20px -2px rgba(18, 53, 36, 0.05), 0 2px 6px -1px rgba(18, 53, 36, 0.03);
-    --shadow-raised: 0 8px 24px -4px rgba(18, 53, 36, 0.08), 0 2px 6px -2px rgba(18, 53, 36, 0.04);
-    --shadow-floating: 0 16px 36px -6px rgba(18, 53, 36, 0.10), 0 4px 12px -2px rgba(18, 53, 36, 0.05);
+    --shadow-card: 0 4px 20px -2px rgba(22, 101, 52, 0.04), 0 2px 8px -1px rgba(0, 0, 0, 0.03);
+    --shadow-raised: 0 10px 30px -4px rgba(22, 101, 52, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+    --shadow-floating: 0 20px 40px -8px rgba(22, 101, 52, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
 
     /* Universal Semantic Status Tokens */
     --status-success: #176B2C;

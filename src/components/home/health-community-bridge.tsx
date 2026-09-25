@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, Activity, Users, ArrowRight, ShieldCheck, Sparkles, Brain, Smile } from "lucide-react";
+import { Heart, Activity, Users, ArrowRight, ShieldCheck, Sparkles, Brain, Smile, Droplets, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DoodleSquiggle,
@@ -177,17 +177,23 @@ export function HealthCommunityBridge() {
               {/* 3 Metric Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
                 <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
-                  <span className="text-xl" aria-hidden="true">🩸</span>
+                  <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Droplets className="w-4 h-4 text-white" />
+                  </div>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Blood Sugar</h4>
                   <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>
                 <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
-                  <span className="text-xl" aria-hidden="true">🫀</span>
+                  <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Heart className="w-4 h-4 text-white" />
+                  </div>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Cholesterol</h4>
                   <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>
                 <div className="p-3 rounded-[20px] bg-white/15 border border-white/20 text-left space-y-1">
-                  <span className="text-xl" aria-hidden="true">🩺</span>
+                  <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Stethoscope className="w-4 h-4 text-white" />
+                  </div>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Blood Pressure</h4>
                   <p className="text-[11px] text-white/85">Free monthly test</p>
                 </div>

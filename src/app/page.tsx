@@ -6,8 +6,6 @@ import { MorningJourney } from "@/components/home/morning-journey";
 import { WhyHummingDrops } from "@/components/home/why-humming-drops";
 import { FeatureStrip } from "@/components/home/feature-strip";
 import { HealthCommunityBridge } from "@/components/home/health-community-bridge";
-import { ReviewsSection } from "@/components/home/reviews-section";
-import { FAQSection } from "@/components/home/faq-section";
 import { ClosingCTA } from "@/components/home/closing-cta";
 
 export const metadata: Metadata = {
@@ -46,13 +44,7 @@ export default function HomePage() {
       {/* 7. Free health checks + MedCity Smiles (Aqua accent) */}
       <HealthCommunityBridge />
 
-      {/* 8. Reviews/Testimonials placeholder */}
-      <ReviewsSection />
-
-      {/* 9. FAQ accordion */}
-      <FAQSection />
-
-      {/* 10. Final CTA: Subscribe / WhatsApp */}
+      {/* 8. Final CTA: Subscribe / WhatsApp */}
       <ClosingCTA />
     </div>
   );

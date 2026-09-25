@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { SunMedium, Utensils, Truck, Check } from "lucide-react";
+import { SunMedium, Utensils, Truck, Check, Sparkles, Leaf } from "lucide-react";
 import {
   HandwrittenAnnotation,
   GentleWaveDivider,
@@ -11,7 +11,6 @@ import {
 
 interface JourneyStep {
   number: string;
-  emoji: string;
   title: string;
   shortCopy: string;
   badge: string;
@@ -25,7 +24,6 @@ interface JourneyStep {
 const JOURNEY_STEPS: JourneyStep[] = [
   {
     number: "01",
-    emoji: "☀️",
     title: "Picked fresh",
     shortCopy: "Hand-selected crisp seasonal fruits and vegetables picked fresh at dawn from trusted local growers.",
     badge: "Morning Harvest",
@@ -37,7 +35,6 @@ const JOURNEY_STEPS: JourneyStep[] = [
   },
   {
     number: "02",
-    emoji: "🥗",
     title: "Prepared & packed",
     shortCopy: "Washed, cut, and assembled into 5 crisp compartments with strict culinary hygiene at Berrybeats Cafe.",
     badge: "Culinary Kitchen",
@@ -49,7 +46,6 @@ const JOURNEY_STEPS: JourneyStep[] = [
   },
   {
     number: "03",
-    emoji: "🏠",
     title: "Delivered to your door",
     shortCopy: "Arriving at your doorstep every morning before breakfast, ready to enjoy with zero kitchen friction.",
     badge: "Doorstep Delivery",
@@ -102,6 +98,7 @@ export function MorningJourney() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 relative z-10">
             {JOURNEY_STEPS.map((step, idx) => {
               const isActive = activeStepIndex === idx;
+              const StepIcon = step.icon;
 
               return (
                 <button
@@ -117,7 +114,11 @@ export function MorningJourney() {
                   aria-pressed={isActive}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-xl">{step.emoji}</span>
+                    <div
+                      className={`w-8 h-8 rounded-xl ${step.bgLightClass} ${step.accentClass} flex items-center justify-center`}
+                    >
+                      <StepIcon className="w-4 h-4" />
+                    </div>
                     <span
                       className={`text-[11px] font-bold px-2 py-0.5 rounded-[20px] ${
                         isActive ? "bg-primary text-white" : "bg-mint text-body"
@@ -240,7 +241,7 @@ export function MorningJourney() {
             <div className="p-5 sm:p-6 rounded-[20px] bg-gradient-to-br from-primary-bright to-primary text-white space-y-2 relative overflow-hidden shadow-card">
               <div className="relative z-10 space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🌿</span>
+                  <Leaf className="w-4 h-4 text-mint" />
                   <span className="text-[11px] uppercase font-bold tracking-wider text-mint">
                     Our Founding Belief
                   </span>
