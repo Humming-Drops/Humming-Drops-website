@@ -286,8 +286,8 @@ export function MorningJourney() {
               <div className="relative rounded-[20px] p-3 sm:p-4 bg-white border border-[#E2ECE4] shadow-card flex-1 flex flex-col justify-between">
                 <div className="relative w-full aspect-[16/10] rounded-[20px] overflow-hidden bg-mint">
                   <Image
-                    src="/images/humming-drops-fresh-produce.png"
-                    alt="Authentic fresh produce and fruits prepared by Humming Drops"
+                    src="/images/fresh-produce-prep.jpg"
+                    alt="Authentic fresh produce, fruits, and sprouts prepared by Humming Drops"
                     fill
                     sizes="(max-width: 1024px) 100vw, 480px"
                     className="object-cover object-center"
