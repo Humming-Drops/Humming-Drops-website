@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
+import { TwoPillars } from "@/components/home/two-pillars";
 import { MorningJourney } from "@/components/home/morning-journey";
 import { BoxAnatomy } from "@/components/home/box-anatomy";
 import { PricingSection } from "@/components/home/pricing-section";
@@ -27,7 +28,10 @@ export default function HomePage() {
       {/* 1. Hero & Trust Bar */}
       <Hero />
 
-      {/* 2. How It Works: 3-step vertical connected journey */}
+      {/* 2. Two Equal Pillars: Nutrition & MedCity Smiles */}
+      <TwoPillars />
+
+      {/* 3. How It Works: 3-step vertical connected journey */}
       <MorningJourney />
 
       {/* 3. What's in the Box: 5-compartment interactive breakdown */}

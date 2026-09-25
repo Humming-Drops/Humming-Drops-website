@@ -114,6 +114,9 @@ export function Footer() {
               <Link href="/about" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
                 About
               </Link>
+              <Link href="/medcity-smiles" className="text-teal-700 hover:text-teal-800 font-bold transition-colors min-h-[36px] inline-flex items-center">
+                MedCity Smiles
+              </Link>
               <Link href="/contact" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
                 Contact
               </Link>

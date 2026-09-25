@@ -49,7 +49,27 @@ export function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
-    video.play().catch(() => {});
+    // Explicitly set DOM properties to satisfy mobile autoplay policies
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("x5-playsinline", "true");
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback retry on user touch or interaction if browser strictly blocks initial frame
+        const enablePlay = () => {
+          video.play().catch(() => {});
+          window.removeEventListener("touchstart", enablePlay);
+          window.removeEventListener("click", enablePlay);
+        };
+        window.addEventListener("touchstart", enablePlay, { once: true });
+        window.addEventListener("click", enablePlay, { once: true });
+      });
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -206,12 +226,12 @@ export function Hero() {
               </h1>
             </motion.div>
 
-            {/* 3. Subline (Crystal clear for first time users) */}
+            {/* 3. Subline (Equal Two-Pillars Promise) */}
             <motion.p
               variants={fadeInUp}
               className="text-base sm:text-lg text-[#405347] font-normal leading-relaxed max-w-lg"
             >
-              Start every morning with fresh-cut seasonal fruits, crisp salads, sprouted microgreens, and wholesome nuts — triple-washed and delivered straight to your door before 7:30 AM.
+              Fresh, nourishing food for your body. A caring community for your mind. Delivered and supported, every single day.
             </motion.p>
 
             {/* 4. Action CTAs */}

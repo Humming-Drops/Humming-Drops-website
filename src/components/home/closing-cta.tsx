@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Phone, Mail, MapPin, Sparkles, MessageCircle, ExternalLink } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin, Sparkles, MessageCircle, ExternalLink, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ClosingCTA() {
@@ -104,8 +104,9 @@ export function ClosingCTA() {
               </a>
             </div>
 
-            {/* Action CTAs */}
+            {/* Action CTAs: Both Pillars Reflected */}
             <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-2.5 pt-1">
+              {/* Primary: Start Nutrition Subscription */}
               <Button
                 variant="outline"
                 size="md"
@@ -113,11 +114,25 @@ export function ClosingCTA() {
                 className="w-full sm:w-auto bg-white text-emerald-900 hover:bg-emerald-50 border-transparent font-extrabold text-sm sm:text-base px-6 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
               >
                 <Link href="/subscribe?plan=standard" className="flex items-center justify-center gap-1.5">
-                  <span>Start Subscription</span>
+                  <span>Start Your Subscription</span>
                   <ArrowRight className="w-4 h-4 text-emerald-900" aria-hidden="true" />
                 </Link>
               </Button>
 
+              {/* Secondary: Explore MedCity Smiles Pillar */}
+              <Button
+                variant="outline"
+                size="md"
+                asChild
+                className="w-full sm:w-auto bg-teal-800 hover:bg-teal-900 text-white border border-teal-400/40 font-bold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+              >
+                <Link href="/medcity-smiles" className="flex items-center justify-center gap-1.5">
+                  <Heart className="w-4 h-4 text-teal-300" />
+                  <span>Explore MedCity Smiles</span>
+                </Link>
+              </Button>
+
+              {/* WhatsApp Quick Link */}
               <Button
                 variant="outline"
                 size="md"

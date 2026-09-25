@@ -120,18 +120,18 @@ export function WhyHummingDrops() {
               </div>
 
               <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-snug">
-                Your daily breakfast nutrition, ready when you wake up
+                Your daily nutrition &amp; mental wellness, ready when you wake up
               </h3>
 
-              {/* 3 Value Pillars */}
+              {/* 4 Equal Value Pillars: Body & Mind */}
               <div className="space-y-3 pt-1">
                 <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
                   <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-bold">Dawn Delivery by 7:30 AM:</strong>
-                    A fresh, sanitized box waiting right at your doorstep before your day starts.
+                    <strong className="text-white block font-bold">Dawn Nutrition by 7:30 AM:</strong>
+                    Fresh-cut fruits, veggies, mix salad, sprouts &amp; dry fruits delivered to your doorstep.
                   </div>
                 </div>
 
@@ -140,8 +140,18 @@ export function WhyHummingDrops() {
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-bold">5 Pillars of Whole Food:</strong>
-                    4 Fruits, 2 Veggies, Mix Salad, Sprouted Pulses, and wholesome Dry Fruits.
+                    <strong className="text-white block font-bold">MedCity Smiles Mental Care:</strong>
+                    Doctor-guided sharing sessions, positive coping tools, and a caring support community.
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-bold">Free Monthly Lab Checkups:</strong>
+                    Doctor-certified blood sugar, cholesterol &amp; blood pressure tests to monitor your vitals.
                   </div>
                 </div>
 
@@ -151,7 +161,7 @@ export function WhyHummingDrops() {
                   </div>
                   <div>
                     <strong className="text-white block font-bold">Zero Friction, 100% Habit:</strong>
-                    No shopping, no cutting, and no prep — simply open the lid and nourish your body.
+                    No kitchen prep or grocery stress — simply open the lid and nourish both body and mind.
                   </div>
                 </div>
               </div>
@@ -159,7 +169,7 @@ export function WhyHummingDrops() {
 
             <div className="pt-2 flex items-center gap-2 text-xs text-emerald-300 font-semibold relative z-10">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Result: Natural sustained energy, clean digestion, and a calm morning.</span>
+              <span>Result: Natural morning energy, mental peace, and proactive vitality.</span>
             </div>
           </div>
         </div>
