@@ -134,7 +134,7 @@ export function Navbar() {
           {/* Desktop Navigation Links */}
           <nav
             aria-label="Main Navigation"
-            className="hidden xl:flex items-center gap-1.5"
+            className="hidden lg:flex items-center gap-1"
           >
             {navConfig.navItems.map((item) => {
               const isHashMatch =
@@ -164,13 +164,13 @@ export function Navbar() {
           </nav>
 
           {/* Right Actions & Hamburger Toggle */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Secondary CTA (Sign In - visible on xl screens) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Secondary CTA (Sign In - visible on lg screens) */}
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className="hidden xl:inline-flex text-content-secondary hover:text-content-primary font-medium"
+              className="hidden lg:inline-flex text-content-secondary hover:text-content-primary font-medium"
             >
               <Link href={navConfig.secondaryCTA.href}>
                 {navConfig.secondaryCTA.label}
@@ -182,7 +182,7 @@ export function Navbar() {
               variant="primary"
               size="sm"
               asChild
-              className="hidden md:inline-flex shadow-sm gap-1.5"
+              className={cn("hidden md:inline-flex shadow-sm gap-1.5", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
             >
               <Link href={navConfig.primaryCTA.href}>
                 <span>{navConfig.primaryCTA.label}</span>
@@ -190,8 +190,8 @@ export function Navbar() {
               </Link>
             </Button>
 
-            {/* Responsive Hamburger Toggle (visible below xl screens) */}
-            <div className="flex xl:hidden items-center">
+            {/* Responsive Hamburger Toggle (visible below lg screens) */}
+            <div className="flex lg:hidden items-center">
               <Button
                 variant="ghost"
                 size="sm"
@@ -219,7 +219,7 @@ export function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation"
-          className="xl:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
+          className="lg:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
         >
           <div className="px-4 pt-4 pb-6 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto">
             {/* Mobile Brand Switcher (only shown below md where header switcher is hidden) */}
@@ -260,7 +260,7 @@ export function Navbar() {
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center min-h-[48px] text-base font-bold shadow-sm"
+                className={cn("w-full justify-center min-h-[48px] text-base font-bold shadow-sm", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
               >
                 <Link
                   href={navConfig.primaryCTA.href}

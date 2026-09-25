@@ -44,7 +44,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-body hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-flex items-center min-h-[36px] py-1"
+                      className="text-body hover:text-[#00A88F] hover:underline transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-flex items-center min-h-[36px] py-1"
                     >
                       {link.label}
                     </Link>
@@ -111,16 +111,16 @@ export function Footer() {
               © {new Date().getFullYear()} Humming Drops. All rights reserved. · Bangalore Doorstep Nutrition
             </p>
             <div className="flex flex-wrap justify-center gap-4 font-medium">
-              <Link href="/about" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
+              <Link href="/about" className="hover:text-[#00A88F] hover:underline transition-all min-h-[36px] inline-flex items-center">
                 About
               </Link>
-              <Link href="/medcity-smiles" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
+              <Link href="/medcity-smiles" className="hover:text-[#00A88F] hover:underline transition-all min-h-[36px] inline-flex items-center">
                 MedCity Smiles
               </Link>
-              <Link href="/contact" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
+              <Link href="/contact" className="hover:text-[#00A88F] hover:underline transition-all min-h-[36px] inline-flex items-center">
                 Contact
               </Link>
-              <Link href="/subscribe?plan=standard" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
+              <Link href="/subscribe?plan=standard" className="hover:text-[#00A88F] hover:underline transition-all min-h-[36px] inline-flex items-center">
                 Subscribe
               </Link>
             </div>
