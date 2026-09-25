@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, ChevronRight, ChevronDown, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse, Play } from "lucide-react";
+import { ArrowDown, ChevronRight, ChevronDown, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
@@ -44,30 +43,8 @@ const floatingBadgeVariants: Variants = {
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isPlayingMobileVideo, setIsPlayingMobileVideo] = useState(false);
-  const [isDesktopCapable, setIsDesktopCapable] = useState(false);
 
-  // Check screen size, Save-Data and reduced motion
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const checkScreen = () => {
-        setIsMobile(window.innerWidth < 768);
-      };
-      checkScreen();
-      window.addEventListener("resize", checkScreen);
-
-      const isSaveData =
-        (navigator as unknown as { connection?: { saveData?: boolean } })?.connection?.saveData === true;
-      if (!isSaveData && !shouldReduceMotion) {
-        setIsDesktopCapable(true);
-      }
-
-      return () => window.removeEventListener("resize", checkScreen);
-    }
-  }, [shouldReduceMotion]);
-
-  // Ensure video pauses when scrolled out of view and resumes when scrolled back in
+  // Ensure video autoplays and pauses when scrolled out of view, resumes when scrolled back in
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -87,7 +64,7 @@ export function Hero() {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [isDesktopCapable, isMobile, isPlayingMobileVideo]);
+  }, []);
 
   const handleScrollToSection = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -96,8 +73,6 @@ export function Hero() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  const showVideo = (!isMobile && isDesktopCapable) || (isMobile && isPlayingMobileVideo);
 
   return (
     <section
@@ -109,53 +84,29 @@ export function Hero() {
       <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-gradient-to-tr from-amber-100/40 via-yellow-50/30 to-transparent rounded-full blur-2xl pointer-events-none" />
 
       {/* =========================================================================
-          DESKTOP RIGHT / MOBILE TOP: FRESH PRODUCE SHOWCASE (VIDEO / IMAGES + FLOATING PILLS)
+          DESKTOP RIGHT / MOBILE TOP: FRESH PRODUCE SHOWCASE (AUTOPLAYING VIDEO)
           ========================================================================= */}
       <div className="relative w-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[54%] xl:w-[56%] h-[46svh] sm:h-[50svh] lg:h-full overflow-hidden bg-mint z-0 rounded-b-[32px] lg:rounded-none">
-        {showVideo ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="/images/hero-poster.jpg"
-            disablePictureInPicture
-            disableRemotePlayback
-            controlsList="nodownload noremoteplayback nofullscreen"
-            tabIndex={-1}
-            className="w-full h-full object-cover object-center pointer-events-none"
-            style={{
-              filter: "saturate(1.08) brightness(1.02)",
-            }}
-            aria-hidden="true"
-          >
-            <source src="/videos/hero-clean.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          <>
-            <Image
-              src="/images/hero-poster.jpg"
-              alt="Humming Drops Fresh Daily Produce Box"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 56vw"
-              className="object-cover object-center pointer-events-none"
-            />
-            {/* Mobile Play Button - Tap to Play for speed & battery efficiency */}
-            {isMobile && !shouldReduceMotion && (
-              <button
-                type="button"
-                onClick={() => setIsPlayingMobileVideo(true)}
-                aria-label="Play video"
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-14 h-14 rounded-full bg-white/90 hover:bg-white text-emerald-800 shadow-floating backdrop-blur-md transition-transform active:scale-95 cursor-pointer border border-white/60"
-              >
-                <Play className="w-6 h-6 fill-emerald-800 ml-1 text-emerald-800" aria-hidden="true" />
-              </button>
-            )}
-          </>
-        )}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/hero-poster.jpg"
+          disablePictureInPicture
+          disableRemotePlayback
+          controlsList="nodownload noremoteplayback nofullscreen"
+          tabIndex={-1}
+          className="w-full h-full object-cover object-center pointer-events-none"
+          style={{
+            filter: "saturate(1.08) brightness(1.02)",
+          }}
+          aria-hidden="true"
+        >
+          <source src="/videos/hero-clean.mp4" type="video/mp4" />
+        </video>
 
         {/* Soft edge gradient to blend seamlessly */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 lg:hidden pointer-events-none" />
