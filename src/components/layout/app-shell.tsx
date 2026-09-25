@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
 
       {/* Primary Main Landmark */}
-      <main id="main-content" className="flex-1 flex flex-col pb-16 md:pb-0">
+      <main id="main-content" className="flex-1 flex flex-col pb-24 md:pb-0">
         {children}
       </main>
 

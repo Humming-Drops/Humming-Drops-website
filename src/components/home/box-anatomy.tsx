@@ -208,7 +208,7 @@ export function BoxAnatomy() {
                 role="tab"
                 aria-selected={selectedTier === "standard"}
                 onClick={() => setSelectedTier("standard")}
-                className={`flex-1 min-h-[42px] px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer text-center ${
+                className={`flex-1 min-h-[48px] px-3 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer text-center ${
                   selectedTier === "standard"
                     ? "bg-emerald-600 text-white shadow-sm"
                     : "text-[#405347] hover:text-[#132A1C] hover:bg-white/60"
@@ -221,7 +221,7 @@ export function BoxAnatomy() {
                 role="tab"
                 aria-selected={selectedTier === "premium"}
                 onClick={() => setSelectedTier("premium")}
-                className={`flex-1 min-h-[42px] px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer text-center ${
+                className={`flex-1 min-h-[48px] px-3 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer text-center ${
                   selectedTier === "premium"
                     ? "bg-amber-500 text-white shadow-sm"
                     : "text-[#405347] hover:text-[#132A1C] hover:bg-white/60"
@@ -236,7 +236,7 @@ export function BoxAnatomy() {
         </div>
 
         {/* Compartment Pill Navigation */}
-        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-3 mb-8 snap-x snap-mandatory no-scrollbar scroll-smooth px-1">
+        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-3 mb-8 snap-x snap-mandatory no-scrollbar scroll-smooth -mx-5 px-5 sm:mx-0 sm:px-0">
           {COMPARTMENTS.map((c) => {
             const Icon = c.icon;
             const isSelected = c.id === activeCompartmentId;
@@ -246,7 +246,7 @@ export function BoxAnatomy() {
                 onMouseEnter={() => setActiveCompartmentId(c.id)}
                 onFocus={() => setActiveCompartmentId(c.id)}
                 onClick={() => setActiveCompartmentId(c.id)}
-                className={`shrink-0 snap-start flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all border cursor-pointer whitespace-nowrap ${
+                className={`shrink-0 snap-start flex items-center gap-2 px-4 py-3 min-h-[48px] rounded-full text-xs sm:text-sm font-bold transition-all border cursor-pointer whitespace-nowrap ${
                   isSelected
                     ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
                     : "bg-white text-[#405347] border-[#E3EFE5] hover:bg-emerald-50 hover:text-emerald-800"

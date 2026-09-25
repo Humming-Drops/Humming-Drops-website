@@ -40,30 +40,30 @@ export function ReviewsSection() {
     <section
       id="reviews"
       aria-label="Subscriber Reviews"
-      className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#F0FDF4] to-[#FCFDF9] border-y border-[#E3EFE5] relative overflow-hidden"
+      className="py-14 sm:py-16 lg:py-24 bg-gradient-to-b from-[#F0FDF4] to-[#FCFDF9] border-y border-[#E3EFE5] relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-2xl mx-auto space-y-3.5 mb-12 sm:mb-14">
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
             <MessageSquareHeart className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
             <span>Bangalore Morning Community</span>
           </div>
 
-          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[1.75rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
             Loved by Morning Achievers
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed font-sans">
+          <p className="text-base text-[#405347] leading-relaxed font-sans">
             Fresh, doorstep whole foods powering active professionals, families, and wellness seekers across Bangalore every sunrise.
           </p>
         </div>
 
-        {/* 3 Real Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+        {/* Swipeable Horizontal Carousel on Mobile (< sm), Grid on Tablet / Desktop (>= sm) */}
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-4 sm:pb-0 -mx-5 px-5 sm:mx-0 sm:px-0 no-scrollbar max-w-6xl mx-auto items-stretch">
           {TESTIMONIALS.map((t, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-7 rounded-3xl bg-white border border-[#E3EFE5] shadow-card flex flex-col justify-between space-y-5 hover:border-emerald-300 hover:shadow-raised transition-all duration-200"
+              className="min-w-[86%] sm:min-w-0 snap-center shrink-0 sm:shrink p-6 sm:p-7 rounded-3xl bg-white border border-[#E3EFE5] shadow-card flex flex-col justify-between space-y-5 hover:border-emerald-300 hover:shadow-raised transition-all duration-200"
             >
               <div className="space-y-4">
                 {/* Top Row: Stars + Verified Badge */}
@@ -99,15 +99,20 @@ export function ReviewsSection() {
           ))}
         </div>
 
+        {/* Mobile Swipe Cue */}
+        <div className="sm:hidden flex items-center justify-center gap-1.5 text-xs text-[#657B6F] pt-2">
+          <span>← Swipe to read reviews →</span>
+        </div>
+
         {/* Bottom CTA */}
-        <div className="mt-12 text-center">
+        <div className="mt-8 sm:mt-12 text-center">
           <Button
             variant="primary"
             size="lg"
             asChild
-            className="rounded-full px-8 py-3.5 text-base font-bold shadow-md bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white"
+            className="w-full sm:w-auto rounded-full px-8 min-h-[48px] text-base font-bold shadow-md bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white"
           >
-            <Link href="/subscribe?plan=standard" className="flex items-center gap-2">
+            <Link href="/subscribe?plan=standard" className="flex items-center justify-center gap-2">
               <span>Join the Morning Habit Today</span>
               <ArrowRight className="w-4 h-4" />
             </Link>

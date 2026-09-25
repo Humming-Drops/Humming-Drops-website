@@ -199,7 +199,7 @@ export function Navbar() {
                 aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-navigation-drawer"
-                className="p-2 h-10 w-10 text-content-primary hover:bg-muted"
+                className="p-2.5 h-12 w-12 min-h-[48px] min-w-[48px] text-content-primary hover:bg-muted flex items-center justify-center rounded-xl"
               >
                 {mobileMenuOpen ? (
                   <X className="w-6 h-6" aria-hidden="true" />
@@ -237,9 +237,9 @@ export function Navbar() {
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between transition-colors",
+                      "px-4 py-3.5 rounded-xl text-base font-semibold min-h-[48px] flex items-center justify-between transition-colors",
                       isActive
-                        ? "bg-brand-subtle text-brand-primary font-semibold"
+                        ? "bg-brand-subtle text-brand-primary font-bold"
                         : "text-content-secondary hover:text-content-primary hover:bg-muted"
                     )}
                   >
@@ -255,12 +255,12 @@ export function Navbar() {
             </nav>
 
             {/* Mobile CTAs */}
-            <div className="pt-2 border-t border-line-subtle space-y-2.5">
+            <div className="pt-2 border-t border-line-subtle space-y-3">
               <Button
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center shadow-sm"
+                className="w-full justify-center min-h-[48px] text-base font-bold shadow-sm"
               >
                 <Link
                   href={navConfig.primaryCTA.href}
@@ -275,7 +275,7 @@ export function Navbar() {
                 variant="secondary"
                 size="md"
                 asChild
-                className="w-full justify-center"
+                className="w-full justify-center min-h-[48px] text-base font-bold"
               >
                 <Link
                   href={navConfig.secondaryCTA.href}

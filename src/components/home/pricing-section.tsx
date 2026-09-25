@@ -268,12 +268,12 @@ export function PricingSection() {
             Prefer ordering directly via WhatsApp or need custom dietary adjustments? Our Bangalore team is here to assist you daily:
           </p>
 
-          <div className="flex flex-wrap justify-center items-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 pt-2">
             <a
               href="https://wa.me/918618902810"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors"
             >
               <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
               <span>WhatsApp: 8618902810</span>
@@ -281,7 +281,7 @@ export function PricingSection() {
 
             <a
               href="tel:8618902810"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Call: 8618902810</span>

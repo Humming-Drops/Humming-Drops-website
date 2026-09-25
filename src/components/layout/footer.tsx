@@ -33,18 +33,18 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Link Groups */}
+          {/* Link Groups (Stacked on Mobile) */}
           {SHARED_FOOTER_CONFIG.linkGroups.map((group) => (
             <div key={group.title} className="space-y-3">
               <h3 className="font-display font-bold text-sm text-ink tracking-tight">
                 {group.title}
               </h3>
-              <ul className="space-y-2.5 text-sm font-sans">
+              <ul className="space-y-2 text-sm font-sans">
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-body hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-block py-0.5"
+                      className="text-body hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-flex items-center min-h-[36px] py-1"
                     >
                       {link.label}
                     </Link>
@@ -58,12 +58,12 @@ export function Footer() {
         {/* Contact Strip */}
         <div className="mt-10 pt-6 border-t border-[#E2ECE4]">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs sm:text-sm text-body font-sans">
-            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-6">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-6 w-full lg:w-auto">
               <a
                 href={`tel:${SHARED_FOOTER_CONFIG.phone}`}
-                className="flex items-center gap-2 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[36px]"
+                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[48px] py-1"
               >
-                <Phone className="w-4 h-4 text-primary" aria-hidden="true" />
+                <Phone className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
                 <span>+91 {SHARED_FOOTER_CONFIG.phone}</span>
               </a>
 
@@ -71,24 +71,29 @@ export function Footer() {
                 href={`https://wa.me/91${SHARED_FOOTER_CONFIG.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[36px]"
+                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[48px] py-1"
               >
-                <MessageCircle className="w-4 h-4 text-primary" aria-hidden="true" />
+                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" aria-hidden="true" />
                 <span>WhatsApp: {SHARED_FOOTER_CONFIG.whatsapp}</span>
               </a>
 
               <a
                 href={`mailto:${SHARED_FOOTER_CONFIG.email}`}
-                className="flex items-center gap-2 hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[36px]"
+                className="flex items-center gap-2.5 hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[48px] py-1"
               >
-                <Mail className="w-4 h-4 text-primary" aria-hidden="true" />
+                <Mail className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
                 <span>{SHARED_FOOTER_CONFIG.email}</span>
               </a>
 
-              <div className="flex items-center gap-2 text-body min-h-[36px]">
+              <a
+                href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 text-body hover:text-primary min-h-[48px] py-1"
+              >
                 <MapPin className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
                 <span>{SHARED_FOOTER_CONFIG.location}</span>
-              </div>
+              </a>
             </div>
 
             <div className="text-xs text-body font-medium pt-2 lg:pt-0">
@@ -101,18 +106,18 @@ export function Footer() {
       {/* Bottom Copyright Bar */}
       <div className="border-t border-[#E2ECE4] bg-white py-5">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-body font-sans">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-body font-sans text-center sm:text-left">
             <p>
               © {new Date().getFullYear()} Humming Drops. All rights reserved. · Bangalore Doorstep Nutrition
             </p>
-            <div className="flex gap-4 font-medium">
-              <Link href="/about" className="hover:text-primary transition-colors">
+            <div className="flex flex-wrap justify-center gap-4 font-medium">
+              <Link href="/about" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
                 About
               </Link>
-              <Link href="/contact" className="hover:text-primary transition-colors">
+              <Link href="/contact" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
                 Contact
               </Link>
-              <Link href="/subscribe?plan=standard" className="hover:text-primary transition-colors">
+              <Link href="/subscribe?plan=standard" className="hover:text-primary transition-colors min-h-[36px] inline-flex items-center">
                 Subscribe
               </Link>
             </div>

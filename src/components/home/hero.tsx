@@ -296,13 +296,13 @@ export function Hero() {
               </div>
             </motion.div>
 
-            {/* 5. 3 Quick-Glance Feature Cards */}
+            {/* 5. Trust Bar: Horizontally scrollable chip row on mobile with scroll snap / 3-grid on tablet/desktop */}
             <motion.div
               variants={fadeInUp}
               className="pt-3.5 border-t border-[#E3EFE5]"
             >
-              <div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-2.5">
-                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-emerald-200 transition-colors">
+              <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-1 sm:pb-0 -mx-5 px-5 sm:mx-0 sm:px-0 no-scrollbar">
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-emerald-200 transition-colors whitespace-nowrap">
                   <div className="w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
                     <Apple className="w-4 h-4 text-rose-600" />
                   </div>
@@ -312,7 +312,7 @@ export function Hero() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-amber-200 transition-colors">
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-amber-200 transition-colors whitespace-nowrap">
                   <div className="w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
                     <Salad className="w-4 h-4 text-emerald-700" />
                   </div>
@@ -322,7 +322,7 @@ export function Hero() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-sky-200/80 px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-sky-300 transition-colors">
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-sky-200/80 px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-sky-300 transition-colors whitespace-nowrap">
                   <div className="w-7 h-7 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center shrink-0">
                     <HeartPulse className="w-4 h-4 text-sky-600" />
                   </div>
