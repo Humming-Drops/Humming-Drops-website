@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowRight, Apple, Heart, Sparkles, Check, Smile, Sun } from "lucide-react";
+import { Activity, ArrowRight, Apple, Heart, Sparkles, Check, ShieldCheck, Smile, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
@@ -32,18 +32,18 @@ export function TwoPillars() {
 
   return (
     <section
-      id="two-pillars"
-      aria-label="Two Pillars, One Wellness Journey"
+      id="three-pillars"
+      aria-label="Three Pillars, One Wellness Journey"
       className="py-14 sm:py-16 lg:py-24 bg-[#FCFDF9] border-b border-[#E3EFE5] relative overflow-hidden"
     >
       {/* Background Ambient Glows */}
       <div
         aria-hidden="true"
-        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[60vw] max-w-96 h-[60vw] max-h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none"
+        className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[60vw] max-w-96 h-[60vw] max-h-96 bg-teal-100/40 rounded-full blur-3xl pointer-events-none"
       />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
@@ -55,7 +55,7 @@ export function TwoPillars() {
           </div>
 
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-[#132A1C] tracking-tight leading-[1.15]">
-            Two Pillars,{" "}
+            Three Pillars,{" "}
             <span className="relative inline-block text-emerald-700 pb-2">
               One Wellness Journey
               <DoodleSquiggle
@@ -66,22 +66,22 @@ export function TwoPillars() {
           </h2>
 
           <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
-            Humming Drops is built on two equal foundations working together: fresh daily nutrition for your physical vitality, and MedCity Smiles for your mental wellbeing.
+            Humming Drops brings together fresh daily nutrition, mental wellbeing, and preventative health support for a more complete everyday wellness journey.
           </p>
         </div>
 
-        {/* 2 Equal Visual Pillar Cards */}
+        {/* 3 Equal Visual Pillar Cards */}
         <motion.div
           variants={shouldReduceMotion ? undefined : containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8 max-w-5xl mx-auto items-stretch"
+          className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 max-w-7xl mx-auto items-stretch"
         >
           {/* Pillar 1: Nutrition (Primary Green Accent) */}
           <motion.div
             variants={shouldReduceMotion ? undefined : cardVariants}
-            className="rounded-3xl p-6 sm:p-8 lg:p-9 bg-white border border-emerald-500/25 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-emerald-500/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-emerald-500/25 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-emerald-500/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
           >
             {/* Top Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-green-500" />
@@ -90,7 +90,7 @@ export function TwoPillars() {
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">
                   <Sun className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Pillar 01 · Body</span>
+                  <span>Body</span>
                 </span>
                 <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                   Every Morning
@@ -159,7 +159,7 @@ export function TwoPillars() {
           {/* Pillar 2: MedCity Smiles (Aqua / Teal Accent) */}
           <motion.div
             variants={shouldReduceMotion ? undefined : cardVariants}
-            className="rounded-3xl p-6 sm:p-8 lg:p-9 bg-white border border-[#00A88F]/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-[#00A88F]/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-[#00A88F]/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-[#00A88F]/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
           >
             {/* Top Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-500 via-[#00A88F] to-emerald-500" />
@@ -168,7 +168,7 @@ export function TwoPillars() {
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-950 text-xs font-extrabold uppercase tracking-wider">
                   <Heart className="w-3.5 h-3.5 text-[#00A88F]" />
-                  <span>Pillar 02 · Mind</span>
+                  <span>Mind</span>
                 </span>
                 <span className="text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200/60">
                   Included Free
@@ -229,6 +229,79 @@ export function TwoPillars() {
                 <Link href="/medcity-smiles" className="flex items-center justify-center gap-2">
                   <span>Explore MedCity Smiles</span>
                   <ArrowRight className="w-4 h-4 text-teal-900 transition-transform group-hover/btn:translate-x-1" />
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Pillar 3: MedCity Labs (Clinical Blue Accent) */}
+          <motion.div
+            variants={shouldReduceMotion ? undefined : cardVariants}
+            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-sky-600/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-sky-600/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-500" />
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-950 text-xs font-extrabold uppercase tracking-wider">
+                  <Activity className="w-3.5 h-3.5 text-sky-700" />
+                  <span>Health</span>
+                </span>
+                <span className="text-xs font-bold text-sky-800 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200/70">
+                  Monthly Checkup
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4 pt-1">
+                <div className="w-14 h-14 rounded-full bg-sky-50 border border-sky-200/80 flex items-center justify-center text-sky-700 shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                  <ShieldCheck className="w-7 h-7 text-sky-700" />
+                </div>
+                <div>
+                  <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">
+                    MedCity Labs
+                  </h3>
+                  <p className="text-xs text-[#657B6F] font-medium mt-0.5">
+                    Preventative health support
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-base text-[#405347] font-normal leading-relaxed pt-1">
+                Stay aware of your health with regular check-ups, trusted diagnostics, and guidance from a caring clinical community.
+              </p>
+
+              <div className="space-y-2.5 pt-3 border-t border-[#E3EFE5]">
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
+                  <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <span>Monthly blood sugar, cholesterol &amp; blood pressure checks</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
+                  <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <span>Guidance from doctors and clinical nutritionists</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
+                  <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <span>Better understanding of your vital health markers</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-[#E3EFE5]">
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="w-full justify-center text-base font-bold min-h-[48px] py-3.5 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-950 border-2 border-sky-600/40 hover:border-sky-600 shadow-sm cursor-pointer group/btn"
+              >
+                <Link href="/contact" className="flex items-center justify-center gap-2">
+                  <span>Learn About Health Support</span>
+                  <ArrowRight className="w-4 h-4 text-sky-900 transition-transform group-hover/btn:translate-x-1" />
                 </Link>
               </Button>
             </div>

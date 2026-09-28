@@ -26,7 +26,7 @@ export default function HomePage() {
       {/* 1. Hero & Trust Bar */}
       <Hero />
 
-      {/* 2. Two Equal Pillars: Nutrition & MedCity Smiles */}
+      {/* 2. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
       <TwoPillars />
 
       {/* 3. How It Works: 3-step vertical connected journey */}
