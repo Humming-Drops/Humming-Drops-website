@@ -26,23 +26,23 @@ export default function HomePage() {
       {/* 1. Hero & Trust Bar */}
       <Hero />
 
-      {/* 2. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
+      {/* 2. MedCity Smiles Community */}
+      <HealthCommunityBridge />
+
+      {/* 3. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
       <TwoPillars />
 
-      {/* 3. How It Works: 3-step vertical connected journey */}
+      {/* 4. How It Works: 3-step vertical connected journey */}
       <MorningJourney />
 
-      {/* 4. What's in the Box: 5-compartment interactive breakdown */}
+      {/* 5. What's in the Box: 5-compartment interactive breakdown */}
       <BoxAnatomy />
 
-      {/* 5. Plans: Standard ₹3,500 & Premium ₹4,000 */}
+      {/* 6. Plans: Standard ₹3,500 & Premium ₹4,000 */}
       <PricingSection />
 
-      {/* 6. Why Humming Drops: Morning habit transformation */}
+      {/* 7. Why Humming Drops: Morning habit transformation */}
       <WhyHummingDrops />
-
-      {/* 7. Health & Community: MedCity Smiles & Monthly vitals */}
-      <HealthCommunityBridge />
 
       {/* 8. Final CTA + Full-Width Contact Rows */}
       <ClosingCTA />
