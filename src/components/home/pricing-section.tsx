@@ -191,9 +191,6 @@ export function PricingSection() {
                   </span>
                   <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
                 </div>
-                <div className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-                  <span>Just ~₹133 / day · Only ₹17 more per day</span>
-                </div>
               </div>
 
               {/* Inclusions List */}
