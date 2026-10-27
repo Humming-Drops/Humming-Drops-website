@@ -78,7 +78,7 @@ export function HealthCommunityBridge() {
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-900 text-xs font-bold tracking-wide shadow-2xs">
             <Heart className="w-3.5 h-3.5 text-teal-600" aria-hidden="true" />
-            <span>Pillar 02 · Your Pocket Companion</span>
+            <span>Your Pocket Companion</span>
           </div>
 
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold tracking-tight text-[#132A1C] leading-[1.16]">
