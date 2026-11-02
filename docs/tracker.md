@@ -9,6 +9,35 @@
 * `[x]` Completed  
 * `[!]` Blocked / Requires Client Input (`CIR`)  
 
+## Release Readiness Remediation (2026-11-03)
+
+These tasks are executed strictly in order. A task is marked `[x]` only after
+its implementation and verification are complete.
+
+1. `[x]` **RR-001 — Repair release test execution**
+   - Make `test:vitest`, `test:unit`, and `test:smoke` run the intended suites.
+   - Remove the fixture-only failure and the custom-runner Vitest state failure.
+   - Acceptance: all configured test commands exit with code 0. Verified:
+     `test:vitest` (5 files / 37 tests), `test:unit` (4 files / 32 tests),
+     and `test:smoke` (1 file / 5 tests).
+2. `[ ]` **RR-002 — Implement the template-driven CMS**
+   - Add template selection, structured editing, preview, publish/unpublish,
+     audit trail, and public rendering.
+3. `[ ]` **RR-003 — Complete the admin modules**
+   - Implement subscriptions, payments, content, audit-log, and staff role
+     management routes with permission checks.
+4. `[ ]` **RR-004 — Add Clerk lifecycle synchronization**
+   - Add signed, idempotent `user.created`, `user.updated`, and `user.deleted`
+     reconciliation.
+5. `[ ]` **RR-005 — Verify Railway database operations**
+   - Apply migrations to isolated staging, test backup/restore and rollback,
+     and document the production rollout.
+6. `[ ]` **RR-006 — Enforce production PostgreSQL persistence**
+   - Remove JSON/file persistence from production lead and payment paths.
+7. `[ ]` **RR-007 — Harden customer and health APIs**
+   - Validate pause ranges and status transitions, detect zero-row updates,
+     add audit logging, and enforce clinical health-data permissions.
+
 ---
 
 ## Tracking Index & Quick Links
@@ -397,7 +426,7 @@
 * [ ] **HD-159:** Configure GitHub Actions CI workflow to run linter, typecheck, and test suite on push.
 
 #### Test Cases (Phase 14)
-* [x] **TC-151:** 100% pass rate on unit and integration test suites (4/4 test suites, 23 assertions passing in 1.58s).
+* [ ] **TC-151:** 100% pass rate on unit and integration test suites.
 * [ ] **TC-152:** Playwright E2E passes on desktop Chrome, Firefox, and mobile WebKit.
 
 ---

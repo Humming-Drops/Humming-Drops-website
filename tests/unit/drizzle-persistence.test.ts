@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import { describe, it } from "vitest";
 import {
   subscriptionStatusEnum,
   fulfillmentModeEnum,
@@ -30,7 +31,7 @@ import {
 } from "../../src/lib/lead-storage";
 import { migrateJsonLeadsToPostgres } from "../../src/lib/db/migrate-leads";
 
-export async function run() {
+async function verifyDrizzlePersistence() {
   console.log("▶ Drizzle ORM Schema & Relational Definitions");
 
   // Verify PostgreSQL Enums
@@ -66,6 +67,12 @@ export async function run() {
     "admin",
     "operations",
     "nutritionist",
+    "super_admin",
+    "business_admin",
+    "operations_manager",
+    "finance_manager",
+    "content_manager",
+    "read_only_auditor",
   ]);
 
   // Verify Tables existence and core properties
@@ -158,3 +165,9 @@ export async function run() {
   fs.rmSync(tempDir, { recursive: true, force: true });
   console.log("  ✔ Lead repository enforces pending_confirmation and hasActivePerks=false");
 }
+
+describe("Drizzle persistence and schema invariants", () => {
+  it("verifies the persistence foundation", async () => {
+    await verifyDrizzlePersistence();
+  });
+});
