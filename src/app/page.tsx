@@ -31,11 +31,11 @@ export default function HomePage() {
       {/* 3. Understand: The Morning Ritual & Sourcing Story */}
       <MorningJourney />
 
-      {/* 4. Connect: Why Humming Drops & Daily Habit Philosophy */}
-      <WhyHummingDrops />
-
-      {/* 5. Trust: Preventative Health Vitals & MedCity Smiles Community Bridge */}
+      {/* 4. Trust: Preventative Health Vitals & MedCity Smiles Community Bridge */}
       <HealthCommunityBridge />
+
+      {/* 5. Connect: Why Humming Drops & Daily Habit Philosophy */}
+      <WhyHummingDrops />
 
       {/* 6. Subscribe: Transparent Subscription Plans & Pricing Comparison */}
       <PricingSection />

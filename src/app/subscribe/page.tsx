@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
@@ -424,9 +424,6 @@ export default function SubscribePage() {
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
-                      <span className="inline-block text-[11px] font-semibold text-forest-800 bg-forest-50 px-2 py-0.5 rounded-full">
-                        ~₹{OFFICIAL_PLANS.standard.perDayPriceINR} / day
-                      </span>
                       <p className="text-xs text-stone-600 leading-relaxed">
                         {OFFICIAL_PLANS.standard.tagline}
                       </p>
@@ -470,9 +467,6 @@ export default function SubscribePage() {
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
-                      <span className="inline-block text-[11px] font-semibold text-forest-800 bg-forest-50 px-2 py-0.5 rounded-full">
-                        ~₹{OFFICIAL_PLANS.premium.perDayPriceINR} / day
-                      </span>
                       <p className="text-xs text-stone-600 leading-relaxed">
                         {OFFICIAL_PLANS.premium.tagline}
                       </p>

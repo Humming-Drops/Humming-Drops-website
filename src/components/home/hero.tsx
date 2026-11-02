@@ -82,7 +82,7 @@ export function Hero() {
           >
             {/* Handcrafted eyebrow with sun motif */}
             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide shadow-xs">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 border border-amber-200/80 text-amber-900 text-sm font-semibold tracking-wide shadow-xs">
                 <span className="text-sm">☀️</span>
                 <span>Fresh Every Morning · Doorstep Nutrition</span>
               </span>
@@ -93,7 +93,7 @@ export function Hero() {
 
             {/* Main Headline with Handcrafted Highlight */}
             <motion.div variants={fadeInUp} className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-forest-900 tracking-tight leading-[1.08]">
+              <h1 className="text-5xl sm:text-6xl lg:text-[4.75rem] font-extrabold text-forest-900 tracking-tight leading-[1.08]">
                 Healthy Drops, <br />
                 <span className="relative inline-block text-forest-800">
                   Healthier you
@@ -108,7 +108,7 @@ export function Hero() {
             {/* Concise Emotional Copy */}
             <motion.p
               variants={fadeInUp}
-              className="text-lg sm:text-xl text-content-secondary leading-relaxed max-w-lg font-sans"
+              className="text-xl sm:text-2xl text-content-secondary leading-relaxed max-w-lg font-sans"
             >
               Start your morning with fresh, thoughtful, and nourishing whole foods — meticulously prepared and delivered straight to your door.
             </motion.p>
@@ -121,7 +121,7 @@ export function Hero() {
               <a
                 href="#box-experience"
                 onClick={handleScrollToSection("box-experience")}
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-leaf-500 text-white font-semibold text-base shadow-sm hover:bg-leaf-600 active:scale-[0.99] transition-all"
+                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-leaf-500 text-white font-semibold text-lg shadow-sm hover:bg-leaf-600 active:scale-[0.99] transition-all"
               >
                 <span>Explore What&apos;s Inside</span>
                 <ArrowDown className="w-4 h-4 text-forest-300 group-hover:translate-y-0.5 transition-transform" />
@@ -130,7 +130,7 @@ export function Hero() {
               <a
                 href="#journey"
                 onClick={handleScrollToSection("journey")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-forest-300 bg-surface/90 text-forest-900 font-semibold text-base hover:bg-forest-50/80 transition-colors shadow-xs"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-forest-300 bg-surface/90 text-forest-900 font-semibold text-lg hover:bg-forest-50/80 transition-colors shadow-xs"
               >
                 <span>The Morning Ritual</span>
                 <ChevronRight className="w-4 h-4 text-forest-600" />
@@ -142,16 +142,16 @@ export function Hero() {
               variants={fadeInUp}
               className="pt-4 border-t border-line-subtle grid grid-cols-2 sm:grid-cols-3 gap-3"
             >
-              <div className="flex items-center gap-2 text-xs font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-base">🍎</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
+                <span className="text-xl">🍎</span>
                 <span>4 Fruits &amp; 2 Veg Daily</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-base">🥗</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
+                <span className="text-xl">🥗</span>
                 <span>Fresh Salad &amp; Sprouts</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-teal-900 bg-teal-50/70 p-2 rounded-xl border border-teal-100 col-span-2 sm:col-span-1">
-                <span className="text-base">🩺</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-teal-900 bg-teal-50/70 p-2 rounded-xl border border-teal-100 col-span-2 sm:col-span-1">
+                <span className="text-xl">🩺</span>
                 <span>Free Monthly Health Check</span>
               </div>
             </motion.div>

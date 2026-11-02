@@ -30,7 +30,7 @@ export default function PlansPage() {
             </div>
             <div className="text-4xl font-extrabold text-forest-900">
               ₹{OFFICIAL_PLANS.standard.monthlyPriceINR.toLocaleString()}
-              <span className="text-sm font-normal text-stone-500"> / month (~₹{OFFICIAL_PLANS.standard.perDayPriceINR}/day)</span>
+              <span className="text-sm font-normal text-stone-500"> / month</span>
             </div>
 
             <div className="space-y-2 pt-4 border-t border-stone-100">
@@ -78,7 +78,7 @@ export default function PlansPage() {
             </div>
             <div className="text-4xl font-extrabold text-forest-900">
               ₹{OFFICIAL_PLANS.premium.monthlyPriceINR.toLocaleString()}
-              <span className="text-sm font-normal text-stone-500"> / month (~₹{OFFICIAL_PLANS.premium.perDayPriceINR}/day)</span>
+              <span className="text-sm font-normal text-stone-500"> / month</span>
             </div>
 
             <div className="space-y-2 pt-4 border-t border-forest-100">
