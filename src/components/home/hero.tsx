@@ -1,26 +1,17 @@
 "use client";
 
-import Image from "next/image";
+import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, Sparkles, ChevronRight, HeartPulse } from "lucide-react";
-import {
-  DoodleArrow,
-  DoodleCircle,
-  DoodleSquiggle,
-  DoodleSunRays,
-  DoodleSprout,
-  DoodleSparkle,
-  HandwrittenAnnotation,
-  GentleWaveDivider,
-} from "@/components/ui/doodles";
+import { ArrowDown, ChevronRight, ChevronDown, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
+import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -29,14 +20,71 @@ const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
+      staggerChildren: 0.09,
+      delayChildren: 0.05,
     },
   },
 };
 
+const floatingBadgeVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.9, y: 10 },
+  visible: (customDelay: number) => ({
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      delay: customDelay,
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  }),
+};
+
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Ensure video autoplays and pauses when scrolled out of view, resumes when scrolled back in
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Explicitly set DOM properties to satisfy mobile autoplay policies
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("x5-playsinline", "true");
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback retry on user touch or interaction if browser strictly blocks initial frame
+        const enablePlay = () => {
+          video.play().catch(() => {});
+          window.removeEventListener("touchstart", enablePlay);
+          window.removeEventListener("click", enablePlay);
+        };
+        window.addEventListener("touchstart", enablePlay, { once: true });
+        window.addEventListener("click", enablePlay, { once: true });
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   const handleScrollToSection = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,224 +97,226 @@ export function Hero() {
   return (
     <section
       aria-label="Welcome to Humming Drops"
-      className="relative overflow-hidden bg-gradient-to-b from-cream-50 via-cream-50 to-white pt-8 pb-10 lg:pt-14 lg:pb-16"
+      className="relative overflow-hidden bg-[#FCFDF9] min-h-[auto] lg:h-[calc(100svh-4.25rem)] lg:min-h-[640px] lg:max-h-[840px] flex flex-col lg:flex-row items-stretch"
     >
-      {/* Handcrafted warm morning aura with gentle organic shapes */}
-      <div
-        className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-amber-100/40 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-1/3 -right-28 w-[30rem] h-[30rem] rounded-full bg-forest-100/30 blur-3xl"
-        aria-hidden="true"
-      />
+      {/* Background Soft Radiant Glows for Morning Warmth */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-100/60 via-mint/40 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-gradient-to-tr from-amber-100/40 via-yellow-50/30 to-transparent rounded-full blur-2xl pointer-events-none" />
 
-      {/* Floating background sun doodle */}
+      {/* =========================================================================
+          DESKTOP RIGHT / MOBILE TOP: FRESH PRODUCE SHOWCASE (AUTOPLAYING VIDEO)
+          ========================================================================= */}
+      <div className="relative w-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[54%] xl:w-[56%] h-[46svh] sm:h-[50svh] lg:h-full overflow-hidden bg-mint z-0 rounded-b-[32px] lg:rounded-none">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/hero-poster.jpg"
+          disablePictureInPicture
+          disableRemotePlayback
+          controlsList="nodownload noremoteplayback nofullscreen"
+          tabIndex={-1}
+          className="w-full h-full object-cover object-center pointer-events-none"
+          style={{
+            filter: "saturate(1.08) brightness(1.02)",
+          }}
+          aria-hidden="true"
+        >
+          <source src="/videos/hero-clean.mp4" type="video/mp4" />
+        </video>
+
+        {/* Soft edge gradient to blend seamlessly */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 lg:hidden pointer-events-none" />
+
+        {/* Floating Trust Badge 1 (Top Left / Right) */}
+        <motion.div
+          custom={0.3}
+          variants={floatingBadgeVariants}
+          initial="hidden"
+          animate="visible"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 hidden sm:flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-white/60 shadow-[0_8px_20px_rgba(0,0,0,0.12)] text-xs font-bold text-[#132A1C]"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <Clock className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Doorstep Delivery by 7:30 AM</span>
+        </motion.div>
+
+        {/* Floating Trust Badge 3 (Bottom Right) */}
+        <motion.div
+          custom={0.7}
+          variants={floatingBadgeVariants}
+          initial="hidden"
+          animate="visible"
+          className="absolute bottom-6 right-6 z-20 hidden xl:flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-900/90 backdrop-blur-md text-white border border-emerald-700/50 text-xs font-semibold shadow-lg"
+        >
+          <ShieldCheck className="w-4 h-4 text-emerald-300" />
+          <span>Triple-Washed &amp; 100% Ready-to-Eat</span>
+        </motion.div>
+      </div>
+
+      {/* =========================================================================
+          DESKTOP LEFT / MOBILE BOTTOM: BRIGHT, WELCOMING COPY PANEL
+          ========================================================================= */}
       <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-12 left-1/2 -translate-x-1/2 opacity-25 text-amber-500"
-        animate={shouldReduceMotion ? {} : { y: [-4, 4, -4] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 w-full lg:w-[48%] xl:w-[46%] bg-[#FCFDF9] flex flex-col justify-between items-center lg:items-end px-5 sm:px-8 lg:pl-10 lg:pr-12 pt-7 pb-6 lg:pt-10 lg:pb-8 -mt-6 lg:mt-0 rounded-t-[32px] lg:rounded-none shadow-card lg:shadow-none"
+        initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <DoodleSunRays className="w-16 h-16" />
-      </motion.div>
+        {/* Organic S-Curve Divider along Right Seam on Desktop */}
+        <div className="hidden lg:block absolute top-0 bottom-0 -right-16 xl:-right-20 w-16 xl:w-20 h-full z-20 pointer-events-none">
+          <svg
+            viewBox="0 0 100 1000"
+            preserveAspectRatio="none"
+            className="w-full h-full filter drop-shadow-[8px_0_16px_rgba(20,50,30,0.04)]"
+          >
+            <path
+              d="M 0,0 L 40,0 C 90,260 10,480 75,740 C 98,850 88,940 70,1000 L 0,1000 Z"
+              fill="#FCFDF9"
+            />
+            <path
+              d="M 40,0 C 90,260 10,480 75,740 C 98,850 88,940 70,1000"
+              fill="none"
+              stroke="#FBBF24"
+              strokeWidth="3"
+            />
+          </svg>
+        </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-          {/* Left Column: Emotion-First Minimal Copy (6 cols) */}
+        {/* Content Container (Max width 540px, pristine readability) */}
+        <div className="max-w-[540px] w-full text-left my-auto">
           <motion.div
-            className="lg:col-span-6 space-y-6 text-left"
+            className="space-y-5 sm:space-y-6"
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
           >
-            {/* Handcrafted eyebrow with sun motif */}
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 border border-amber-200/80 text-amber-900 text-sm font-semibold tracking-wide shadow-xs">
-                <span className="text-sm">☀️</span>
-                <span>Fresh Every Morning · Doorstep Nutrition</span>
+            {/* 1. Welcoming Pill Tag Row */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold tracking-wide shadow-2xs">
+                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <span>Fresh Morning Nutrition</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-emerald-700 font-medium">Daily Doorstep</span>
               </span>
-              <HandwrittenAnnotation rotation="-rotate-2" color="text-forest-800 hidden sm:inline-flex">
-                Meticulously prepared ✦
-              </HandwrittenAnnotation>
+
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-semibold shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Zero Prep Required</span>
+              </span>
             </motion.div>
 
-            {/* Main Headline with Handcrafted Highlight */}
-            <motion.div variants={fadeInUp} className="space-y-2">
-              <h1 className="text-5xl sm:text-6xl lg:text-[4.75rem] font-extrabold text-forest-900 tracking-tight leading-[1.08]">
-                Healthy Drops, <br />
-                <span className="relative inline-block text-forest-800">
-                  Healthier you
+            {/* 2. Main Headline with radiant gradient and sun scribble */}
+            <motion.div variants={fadeInUp} className="space-y-1">
+              <h1 className="text-[2.35rem] sm:text-5xl lg:text-[3.85rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
+                <span className="text-[#132A1C]">Healthy Drops,</span>
+                <span className="relative inline-block pb-3.5 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 bg-clip-text text-transparent">
+                  Healthier You
                   <DoodleSquiggle
-                    className="absolute -bottom-2.5 left-0 w-full text-brand-primary"
-                    color="currentColor"
+                    className="absolute -bottom-[8px] left-0 w-full h-3 text-sun pointer-events-none stroke-[3.5]"
+                    color="#FBBF24"
                   />
                 </span>
               </h1>
             </motion.div>
 
-            {/* Concise Emotional Copy */}
+            {/* 3. Subline (Equal Two-Pillars Promise) */}
             <motion.p
               variants={fadeInUp}
-              className="text-xl sm:text-2xl text-content-secondary leading-relaxed max-w-lg font-sans"
+              className="text-base sm:text-lg text-[#405347] font-normal leading-relaxed max-w-lg"
             >
-              Start your morning with fresh, thoughtful, and nourishing whole foods — meticulously prepared and delivered straight to your door.
+              Fresh, nourishing food for your body. A caring community for your mind. Delivered and supported, every single day.
             </motion.p>
 
-            {/* Exploratory Call-to-Actions */}
-            <motion.div
-              variants={fadeInUp}
-              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5"
-            >
-              <a
-                href="#box-experience"
-                onClick={handleScrollToSection("box-experience")}
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-leaf-500 text-white font-semibold text-lg shadow-sm hover:bg-leaf-600 active:scale-[0.99] transition-all"
-              >
-                <span>Explore What&apos;s Inside</span>
-                <ArrowDown className="w-4 h-4 text-forest-300 group-hover:translate-y-0.5 transition-transform" />
-              </a>
+            {/* 4. Action CTAs */}
+            <motion.div variants={fadeInUp} className="space-y-2.5 pt-1">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Link
+                  href="/subscribe?plan=standard"
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base shadow-[0_10px_26px_rgba(22,163,74,0.32)] hover:from-emerald-700 hover:to-green-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer group"
+                >
+                  <span>Start Your Morning Plan</span>
+                  <ChevronRight className="w-4 h-4 text-white/90 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
 
-              <a
-                href="#journey"
-                onClick={handleScrollToSection("journey")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-forest-300 bg-surface/90 text-forest-900 font-semibold text-lg hover:bg-forest-50/80 transition-colors shadow-xs"
-              >
-                <span>The Morning Ritual</span>
-                <ChevronRight className="w-4 h-4 text-forest-600" />
-              </a>
+                <a
+                  href="#box-experience"
+                  onClick={handleScrollToSection("box-experience")}
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer"
+                >
+                  <span>See what&apos;s inside</span>
+                  <ArrowDown className="w-4 h-4 text-emerald-600" />
+                </a>
+              </div>
+
+              {/* Sub-CTA Informational Line */}
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#405347] pt-1">
+                <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹116/day
+                </span>
+                <span>•</span>
+                <span>Pause or cancel anytime</span>
+                <span>•</span>
+                <span className="text-emerald-700 font-medium">Free Health Check</span>
+              </div>
             </motion.div>
 
-            {/* 3 Meaningful Visual Proof Chips */}
+            {/* 5. Trust Bar: Horizontally scrollable chip row on mobile with scroll snap / 3-grid on tablet/desktop */}
             <motion.div
               variants={fadeInUp}
-              className="pt-4 border-t border-line-subtle grid grid-cols-2 sm:grid-cols-3 gap-3"
+              className="pt-3.5 border-t border-[#E3EFE5]"
             >
-              <div className="flex items-center gap-2 text-sm font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-xl">🍎</span>
-                <span>4 Fruits &amp; 2 Veg Daily</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-forest-900 bg-forest-50/70 p-2 rounded-xl border border-forest-100">
-                <span className="text-xl">🥗</span>
-                <span>Fresh Salad &amp; Sprouts</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-teal-900 bg-teal-50/70 p-2 rounded-xl border border-teal-100 col-span-2 sm:col-span-1">
-                <span className="text-xl">🩺</span>
-                <span>Free Monthly Health Check</span>
+              <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-1 sm:pb-0 -mx-5 px-5 sm:mx-0 sm:px-0 no-scrollbar">
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-emerald-200 transition-colors whitespace-nowrap">
+                  <div className="w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
+                    <Apple className="w-4 h-4 text-rose-600" />
+                  </div>
+                  <div className="leading-tight">
+                    <p className="font-bold">4 Cut Fruits</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 2 Veggies</p>
+                  </div>
+                </div>
+
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-amber-200 transition-colors whitespace-nowrap">
+                  <div className="w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+                    <Salad className="w-4 h-4 text-emerald-700" />
+                  </div>
+                  <div className="leading-tight">
+                    <p className="font-bold">Sprouts &amp; Salad</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">+ Dry Fruits</p>
+                  </div>
+                </div>
+
+                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-sky-200/80 px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-sky-300 transition-colors whitespace-nowrap">
+                  <div className="w-7 h-7 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center shrink-0">
+                    <HeartPulse className="w-4 h-4 text-sky-600" />
+                  </div>
+                  <div className="leading-tight">
+                    <p className="font-bold">Free Lab Test</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">MedCity Partner</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* Right Column: Editorial Box Showcase with Integrated Communicative Annotations (6 cols) */}
-          <motion.div
-            className="lg:col-span-6 relative mt-6 lg:mt-0"
-            initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-          >
-            {/* The Box Centerpiece Card */}
-            <div className="relative mx-auto max-w-lg">
-              {/* Subtle background glow */}
-              <div
-                className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-amber-200/30 to-forest-200/30 blur-xl pointer-events-none"
-                aria-hidden="true"
-              />
-
-              {/* Box Photo Frame */}
-              <div className="relative rounded-[2rem] p-3 sm:p-4 bg-surface border border-forest-200/90 shadow-card transition-shadow hover:shadow-floating">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-forest-50/60">
-                  <Image
-                    src="/images/humming-drops-box.png"
-                    alt="Authentic Humming Drops 5-Compartment Breakfast Box containing fresh cut fruits, vegetables, salad, and sprouts"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 560px"
-                    className="object-cover object-center"
-                    priority
-                  />
-                </div>
-
-                {/* Box Caption Bar */}
-                <div className="mt-3 px-2 flex items-center justify-between text-xs text-content-muted">
-                  <span className="font-semibold text-content-primary flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-brand-primary inline-block" />
-                    Authentic 5-Compartment Box
-                  </span>
-                  <span>Berrybeats Cafe · Bangalore</span>
-                </div>
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 1: Top-Left (4 Varieties of Fruits) */}
-              <div className="hidden sm:flex absolute -top-8 -left-6 md:-left-8 flex-col items-end z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 font-display font-bold text-xs shadow-xs rotate-[-3deg]">
-                  🍎 4 Fruits Every Day
-                </span>
-                <DoodleArrow
-                  direction="curve-right"
-                  className="w-9 h-7 text-rose-700 mt-1 -mr-2"
-                />
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 2: Top-Right (2 Crisp Veggies) */}
-              <div className="hidden sm:flex absolute -top-8 -right-6 md:-right-8 flex-col items-start z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-display font-bold text-xs shadow-xs rotate-[3deg]">
-                  🥕 2 Crisp Vegetables
-                </span>
-                <DoodleArrow
-                  direction="curve-left"
-                  className="w-9 h-7 text-amber-700 mt-1 -ml-2"
-                />
-              </div>
-
-              {/* Hand-Drawn Communicative Annotation 3: Bottom-Left (Sprouts & Salad) */}
-              <div className="hidden sm:flex absolute bottom-14 -left-6 md:-left-8 flex-col items-end z-20 pointer-events-none">
-                <span className="px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-display font-bold text-xs shadow-xs rotate-[2deg]">
-                  🥗 Salad &amp; Sprouts Daily
-                </span>
-                <DoodleArrow
-                  direction="right"
-                  className="w-8 h-6 text-emerald-700 mt-1 -mr-1"
-                />
-              </div>
-
-              {/* Floating Badge: Bottom-Right */}
-              <div className="absolute bottom-12 right-4 sm:bottom-14 sm:right-6 bg-surface/95 backdrop-blur-sm border border-forest-200 rounded-2xl px-3.5 py-2 shadow-card flex items-center gap-2.5 z-20">
-                <div className="w-7 h-7 rounded-lg bg-forest-100 flex items-center justify-center text-forest-800 shrink-0 text-sm">
-                  🌱
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[11px] font-bold text-content-primary leading-tight">
-                    Meticulously Prepared
-                  </span>
-                  <span className="text-[10px] text-content-muted">
-                    Fresh produce every morning
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile-only visual badges below image */}
-            <div className="sm:hidden mt-4 flex flex-wrap justify-center gap-2">
-              <span className="px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-xs font-semibold">
-                🍎 4 Fruits Daily
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
-                🥕 2 Veg Daily
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold">
-                🥗 Salad &amp; Sprouts
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
-                🥜 Dry Fruits
-              </span>
-            </div>
           </motion.div>
         </div>
-      </div>
 
-      {/* Gentle curved transition flowing into Box Experience */}
-      <div className="mt-8 lg:mt-12 -mb-10 lg:-mb-16">
-        <GentleWaveDivider fill="#ffffff" className="w-full h-8 sm:h-12 text-white" />
-      </div>
+        {/* Small Animated Chevron */}
+        <div className="hidden lg:flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-[#657B6F] pt-2 pointer-events-none max-w-[540px] w-full">
+          <motion.div
+            animate={shouldReduceMotion ? {} : { y: [0, 3, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-4 h-4 text-emerald-600" />
+          </motion.div>
+        </div>
+      </motion.div>
     </section>
   );
 }

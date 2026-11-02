@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { Leaf, Heart } from "lucide-react";
 import { useBrandTheme } from "./brand-provider";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +57,7 @@ export function BrandSwitcher({
             transition={{ type: "spring", stiffness: 450, damping: 35 }}
           />
         )}
-        <span aria-hidden="true">🥗</span>
+        <Leaf className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
         <span className="hidden sm:inline">Humming Drops</span>
         <span className="text-[10px] text-forest-700 hidden 2xl:inline font-normal">
           · Physical
@@ -81,7 +82,7 @@ export function BrandSwitcher({
             transition={{ type: "spring", stiffness: 450, damping: 35 }}
           />
         )}
-        <span aria-hidden="true">💚</span>
+        <Heart className="w-3.5 h-3.5 text-teal-600" aria-hidden="true" />
         <span className="hidden sm:inline">MedCity Smiles</span>
         <span className="text-[10px] text-teal-700 hidden 2xl:inline font-normal">
           · Mental & Labs

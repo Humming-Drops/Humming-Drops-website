@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
-import { BoxAnatomy } from "@/components/home/box-anatomy";
+import { TwoPillars } from "@/components/home/two-pillars";
 import { MorningJourney } from "@/components/home/morning-journey";
+import { BoxAnatomy } from "@/components/home/box-anatomy";
+import { PricingSection } from "@/components/home/pricing-section";
 import { WhyHummingDrops } from "@/components/home/why-humming-drops";
 import { HealthCommunityBridge } from "@/components/home/health-community-bridge";
-import { PricingSection } from "@/components/home/pricing-section";
 import { ClosingCTA } from "@/components/home/closing-cta";
 
 export const metadata: Metadata = {
@@ -14,33 +15,36 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Humming Drops | Healthy Drops, Healthier you",
     description:
-      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits.",
+      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
     images: ["/images/humming-drops-box.png"],
   },
 };
 
 export default function HomePage() {
   return (
-    <div className="w-full">
-      {/* 1. Discover: Editorial Hero with Authentic Meal Box & Hand-Drawn Annotations */}
+    <div className="w-full overflow-x-clip">
+      {/* 1. Hero & Trust Bar */}
       <Hero />
 
-      {/* 2. Explore: Interactive 5-Compartment Box Anatomy & Hotspots */}
-      <BoxAnatomy />
-
-      {/* 3. Understand: The Morning Ritual & Sourcing Story */}
-      <MorningJourney />
-
-      {/* 4. Trust: Preventative Health Vitals & MedCity Smiles Community Bridge */}
+      {/* 2. MedCity Smiles Community */}
       <HealthCommunityBridge />
 
-      {/* 5. Connect: Why Humming Drops & Daily Habit Philosophy */}
-      <WhyHummingDrops />
+      {/* 3. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
+      <TwoPillars />
 
-      {/* 6. Subscribe: Transparent Subscription Plans & Pricing Comparison */}
+      {/* 4. How It Works: 3-step vertical connected journey */}
+      <MorningJourney />
+
+      {/* 5. What's in the Box: 5-compartment interactive breakdown */}
+      <BoxAnatomy />
+
+      {/* 6. Plans: Standard â‚¹3,500 & Premium â‚¹4,000 */}
       <PricingSection />
 
-      {/* 7. Action: Closing CTA & Assisted Booking Helpline */}
+      {/* 7. Why Humming Drops: Morning habit transformation */}
+      <WhyHummingDrops />
+
+      {/* 8. Final CTA + Full-Width Contact Rows */}
       <ClosingCTA />
     </div>
   );

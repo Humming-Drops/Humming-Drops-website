@@ -1,66 +1,50 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { SHARED_FOOTER_CONFIG } from "@/types/navigation";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line-subtle bg-muted/40 transition-brand mt-auto">
-      {/* Compact Main Footer Directory */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-7">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-8 items-start">
-          {/* Brand & Direct Contact Column */}
-          <div className="col-span-2 space-y-2.5">
-            <div className="relative h-8 w-32">
-              <Image
-                src="/images/humming-drops-logo.png"
-                alt="Humming Drops Official Logo"
-                fill
-                sizes="128px"
-                className="object-contain object-left"
-              />
+    <footer className="border-t border-[#E2ECE4] bg-mint/40 transition-colors mt-auto">
+      {/* Main Footer Directory */}
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-7 lg:py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-9">
+          {/* Brand Col (Span 2) */}
+          <div className="lg:col-span-2 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="relative h-9 w-36">
+                <Image
+                  src="/images/humming-drops-logo.png"
+                  alt="Humming Drops Official Logo"
+                  fill
+                  sizes="176px"
+                  className="object-contain object-left"
+                />
+              </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-content-secondary max-w-sm leading-relaxed">
-              Healthy, fresh breakfast boxes delivered to Bangalore doorsteps.
+            <p className="text-sm text-body max-w-sm leading-relaxed font-sans">
+              Daily doorstep morning breakfast boxes of fresh cut fruits, vegetables, mix salad, sprouts, and dry fruits in Bangalore.
             </p>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-content-secondary">
-              <a
-                href={`tel:${SHARED_FOOTER_CONFIG.phone}`}
-                className="inline-flex items-center gap-1.5 hover:text-brand-primary font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
-              >
-                <Phone className="w-3.5 h-3.5 text-brand-primary" aria-hidden="true" />
-                <span>+91 {SHARED_FOOTER_CONFIG.phone}</span>
-              </a>
-
-              <a
-                href={`mailto:${SHARED_FOOTER_CONFIG.email}`}
-                className="inline-flex items-center gap-1.5 hover:text-brand-primary font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
-              >
-                <Mail className="w-3.5 h-3.5 text-brand-primary" aria-hidden="true" />
-                <span>{SHARED_FOOTER_CONFIG.email}</span>
-              </a>
+            <div className="pt-1.5 text-xs text-body/80 border-t border-[#E2ECE4]">
+              <p className="font-medium text-ink">{SHARED_FOOTER_CONFIG.partners}</p>
             </div>
-
-            <p className="text-[11px] text-content-muted">
-              {SHARED_FOOTER_CONFIG.partners}
-            </p>
           </div>
 
-          {/* Link Groups */}
+          {/* Link Groups (Stacked on Mobile) */}
           {SHARED_FOOTER_CONFIG.linkGroups.map((group) => (
             <div key={group.title} className="space-y-2">
-              <h3 className="font-display font-semibold text-xs uppercase tracking-wider text-content-primary">
+              <h3 className="font-display font-bold text-sm text-ink tracking-tight">
                 {group.title}
               </h3>
-              <ul className="space-y-1 text-xs">
+              <ul className="space-y-1 text-sm font-sans">
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-content-secondary hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
+                      className="text-body hover:text-[#00A88F] hover:underline transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-flex items-center min-h-[32px] py-0.5"
                     >
                       {link.label}
                     </Link>
@@ -70,15 +54,76 @@ export function Footer() {
             </div>
           ))}
         </div>
+
+        {/* Contact Strip */}
+        <div className="mt-7 pt-5 border-t border-[#E2ECE4]">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs sm:text-sm text-body font-sans">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-6 w-full lg:w-auto">
+              <a
+                href={`tel:${SHARED_FOOTER_CONFIG.phone}`}
+                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+              >
+                <Phone className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <span>+91 {SHARED_FOOTER_CONFIG.phone}</span>
+              </a>
+
+              <a
+                href={`https://wa.me/91${SHARED_FOOTER_CONFIG.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" aria-hidden="true" />
+                <span>WhatsApp: {SHARED_FOOTER_CONFIG.whatsapp}</span>
+              </a>
+
+              <a
+                href={`mailto:${SHARED_FOOTER_CONFIG.email}`}
+                className="flex items-center gap-2.5 hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+              >
+                <Mail className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <span>{SHARED_FOOTER_CONFIG.email}</span>
+              </a>
+
+              <a
+                href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 text-body hover:text-primary min-h-[44px] py-1"
+              >
+                <MapPin className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <span>{SHARED_FOOTER_CONFIG.location}</span>
+              </a>
+            </div>
+
+            <div className="text-xs text-body font-medium pt-2 lg:pt-0">
+              Humming Drops · MedCity Smiles
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Bottom Compact Bar */}
-      <div className="border-t border-line-subtle bg-canvas/80 py-2.5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-1 text-[11px] text-content-muted">
-          <p>© {new Date().getFullYear()} Humming Drops · MedCity Smiles. All rights reserved.</p>
-          <div className="flex items-center gap-1.5">
-            <MapPin className="w-3 h-3 text-content-muted shrink-0" aria-hidden="true" />
-            <span>{SHARED_FOOTER_CONFIG.location}</span>
+      {/* Bottom Copyright Bar */}
+      <div className="border-t border-[#E2ECE4] bg-white py-3.5">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-body font-sans text-center sm:text-left">
+            <p>
+              © {new Date().getFullYear()} Humming Drops. All rights reserved. · Bangalore Doorstep Nutrition
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 font-medium">
+              <Link href="/about" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+                About
+              </Link>
+              <Link href="/medcity-smiles" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+                MedCity Smiles
+              </Link>
+              <Link href="/contact" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+                Contact
+              </Link>
+              <Link href="/subscribe?plan=standard" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+                Subscribe
+              </Link>
+            </div>
           </div>
         </div>
       </div>

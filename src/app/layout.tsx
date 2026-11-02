@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { BrandThemeProvider } from "@/components/theme/brand-provider";
 import { AppShell } from "@/components/layout/app-shell";
@@ -15,6 +15,12 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-display",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#FFFEF8",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://hummingdrops.com"),

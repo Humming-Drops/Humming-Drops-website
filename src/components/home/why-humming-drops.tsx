@@ -1,182 +1,179 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Clock, Check, X, Sparkles, HeartPulse, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Clock, Check, X, Sparkles, ShieldCheck } from "lucide-react";
 import {
   DoodleSquiggle,
   HandwrittenAnnotation,
-  OrganicWaveDivider,
 } from "@/components/ui/doodles";
 
 export function WhyHummingDrops() {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <section
       id="why-humming-drops"
       aria-label="Why Humming Drops"
-      className="pt-14 lg:pt-20 pb-0 bg-white relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-[#FAFCF8] relative overflow-hidden border-b border-[#E3EFE5]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Editorial Section Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
+      {/* Soft radiant ambient glow */}
+      <div
+        aria-hidden="true"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-r from-emerald-100/35 via-amber-50/20 to-teal-100/35 rounded-full blur-3xl pointer-events-none"
+      />
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="max-w-3xl mx-auto text-center space-y-3.5 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2">
-            <span className="px-3.5 py-1 rounded-full bg-forest-50 border border-forest-200 text-forest-800 text-xs font-semibold tracking-wide">
+            <span className="px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold tracking-wide">
               The Morning Habit
             </span>
-            <HandwrittenAnnotation rotation="-rotate-1" color="text-forest-700 hidden sm:inline-flex">
-              Small positive choices ✦
+            <HandwrittenAnnotation rotation="-rotate-1" color="text-emerald-700 hidden sm:inline-flex">
+              Small positive choices
             </HandwrittenAnnotation>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-900 tracking-tight leading-tight">
+          <h2 className="text-[2rem] sm:text-4xl lg:text-5xl font-extrabold text-[#132A1C] tracking-tight leading-tight">
             Wellness isn&apos;t one big change. <br className="hidden sm:inline" />
             It&apos;s made of{" "}
-            <span className="relative inline-block text-forest-800">
+            <span className="relative inline-block text-emerald-700 pb-2">
               small, daily choices.
               <DoodleSquiggle
-                className="absolute -bottom-2 left-0 w-full text-brand-primary"
-                color="currentColor"
+                className="absolute bottom-0 left-0 w-full h-3 text-sun pointer-events-none stroke-[3]"
+                color="#FBBF24"
               />
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-content-secondary leading-relaxed max-w-2xl mx-auto font-sans">
-            Mornings are fast-paced. Humming Drops turns daily whole-food nutrition into an effortless, uplifting habit.
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
+            Mornings are fast-paced. Humming Drops turns daily whole-food nutrition into an effortless, uplifting habit you never have to think twice about.
           </p>
         </div>
 
-        {/* High-Impact Visual Metaphor: The Morning Rush vs. The Humming Drops Ritual */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-5xl mx-auto">
-          {/* Card 1: The Morning Rush (Without Humming Drops) - 6 cols */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-stone-50 border border-stone-200/90 shadow-xs flex flex-col justify-between space-y-6">
+        {/* Visual Comparison: The Morning Rush vs The Humming Drops Ritual */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch max-w-5xl mx-auto">
+          {/* Card 1: The Morning Rush (Without Humming Drops) */}
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-stone-50/90 border border-stone-200/80 shadow-card flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-200/70 text-stone-700 text-xs font-bold uppercase tracking-wider">
-                  <Clock className="w-3.5 h-3.5 text-stone-600" />
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-stone-200/80 text-stone-700 border border-stone-300/60 text-xs font-bold tracking-wider uppercase">
+                  <Clock className="w-3.5 h-3.5 text-stone-500" />
                   <span>The Morning Rush</span>
                 </span>
-                <span className="text-xs text-stone-500 font-medium">Without Humming Drops</span>
+                <span className="text-xs text-stone-500 font-semibold">Without Humming Drops</span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-bold text-stone-900 leading-snug">
-                Morning friction gets in the way of nutrition
+              <h3 className="text-xl sm:text-2xl font-extrabold text-stone-900 leading-snug">
+                Morning friction gets in the way of your nutrition
               </h3>
 
-              {/* 4 Visual Friction Points */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-stone-200/80 text-xs text-stone-700 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-stone-100 text-stone-700 flex items-center justify-center shrink-0 font-bold">
-                    <X className="w-3.5 h-3.5 text-rose-600" />
+              {/* 3 Friction Points */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-stone-200/70 text-xs sm:text-sm text-stone-700 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <X className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-stone-900 block font-semibold">Alarm Snooze &amp; Rush:</strong>
-                    No time to wash, slice, or prepare fresh produce before heading out.
+                    <strong className="text-stone-900 block font-bold">Alarm Snooze &amp; Kitchen Rush:</strong>
+                    No time to peel, slice, or wash fresh fruits and vegetables before work.
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-stone-200/80 text-xs text-stone-700 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-stone-100 text-stone-700 flex items-center justify-center shrink-0 font-bold">
-                    <X className="w-3.5 h-3.5 text-rose-600" />
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-stone-200/70 text-xs sm:text-sm text-stone-700 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <X className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-stone-900 block font-semibold">Shopping Friction:</strong>
-                    Grocery runs lead to produce spoiling in the fridge before use.
+                    <strong className="text-stone-900 block font-bold">Grocery Waste &amp; Spoiled Food:</strong>
+                    Buying produce in bulk leads to half of it spoiling in the fridge.
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-stone-200/80 text-xs text-stone-700 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-stone-100 text-stone-700 flex items-center justify-center shrink-0 font-bold">
-                    <X className="w-3.5 h-3.5 text-rose-600" />
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-stone-200/70 text-xs sm:text-sm text-stone-700 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <X className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-stone-900 block font-semibold">Missing Daily Goodness:</strong>
-                    Skipping fruits and vegetables impacts physical energy and focus.
+                    <strong className="text-stone-900 block font-bold">Low Energy &amp; Sugar Crashes:</strong>
+                    Skipping natural fruits and sprouts leads to morning fatigue.
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-stone-200 flex items-center justify-between text-xs text-stone-500">
-              <span className="font-semibold text-rose-700 flex items-center gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-rose-600" />
-                Common Modern Dilemma
-              </span>
-              <span>Brochure Page 2</span>
-            </div>
+            <p className="text-xs text-stone-500 font-medium pt-2">
+              Result: Inconsistent nutrition, food waste, and morning stress.
+            </p>
           </div>
 
-          {/* Card 2: The Humming Drops Ritual (With Humming Drops) - 6 cols */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-leaf-500 via-leaf-500 to-leaf-600 text-white shadow-card flex flex-col justify-between space-y-6 relative overflow-hidden">
-            <div
-              className="pointer-events-none absolute top-0 right-0 w-64 h-64 bg-leaf-400 rounded-full blur-3xl opacity-40"
-              aria-hidden="true"
-            />
+          {/* Card 2: The Effortless Ritual */}
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0F392B] via-[#144A37] to-[#0A261D] text-white border border-emerald-600/30 shadow-floating flex flex-col justify-between space-y-6 relative overflow-hidden">
+            {/* Soft Ambient Inner Glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="space-y-4 relative z-10">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold uppercase tracking-wider border border-white/25">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-300 text-[#07241A] text-xs font-black tracking-wider uppercase shadow-xs">
+                  <Sparkles className="w-3.5 h-3.5 text-[#07241A]" />
                   <span>The Effortless Ritual</span>
                 </span>
-                <span className="text-xs text-white/80 font-medium">With Humming Drops</span>
+                <span className="text-xs text-emerald-300 font-bold">With Humming Drops</span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug">
-                Doorstep freshness for pure morning vitality
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+                Your daily nutrition &amp; mental wellness, ready when you wake up
               </h3>
 
-              {/* 4 Visual Solutions */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-200" />
+              {/* 4 Equal Value Pillars: Body & Mind */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-semibold">Morning Doorstep Box:</strong>
-                    Delivered fresh every morning before breakfast with zero effort.
+                    <strong className="text-white block font-bold">Dawn Nutrition by 7:30 AM:</strong>
+                    Fresh-cut fruits, veggies, mix salad, sprouts &amp; dry fruits delivered to your doorstep.
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-200" />
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-semibold">5 Fresh Food Groups:</strong>
-                    4 fruits, 2 veg, mix salad, sprouts &amp; wholesome dry fruits.
+                    <strong className="text-white block font-bold">MedCity Smiles Companion:</strong>
+                    A mood-reflecting pocket companion, sensory tools for quick calm, and a gamified virtual garden.
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 text-xs text-white/95 shadow-2xs">
-                  <div className="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0 font-bold">
-                    <Check className="w-3.5 h-3.5 text-amber-200" />
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <div>
-                    <strong className="text-white block font-semibold">Body &amp; Mind Connection:</strong>
-                    Free monthly health vitals monitoring + MedCity Smiles community.
+                    <strong className="text-white block font-bold">Free Monthly Lab Checkups:</strong>
+                    Doctor-certified blood sugar, cholesterol &amp; blood pressure tests to monitor your vitals.
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm text-emerald-50 shadow-2xs hover:bg-white/[0.12] transition-colors">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0 font-bold mt-0.5">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <div>
+                    <strong className="text-white block font-bold">Zero Friction, 100% Habit:</strong>
+                    No kitchen prep or grocery stress — simply open the lid and nourish both body and mind.
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/20 relative z-10 flex items-center justify-between text-xs text-white/80">
-              <span className="font-semibold text-amber-200 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-amber-200" />
-                Effortless Daily Habit
-              </span>
-              <span>Brochure Page 7</span>
+            <div className="pt-2 flex items-center gap-2 text-xs text-emerald-300 font-semibold relative z-10">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Result: Natural morning energy, mental peace, and proactive vitality.</span>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Seamless curved organic wave transition into the bright Health & Community Bridge */}
-      <div className="mt-12 lg:mt-16 text-mist-50">
-        <OrganicWaveDivider fill="#f8faf9" className="w-full h-12 sm:h-16 text-mist-50" />
       </div>
     </section>
   );
 }
-

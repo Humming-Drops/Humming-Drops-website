@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -21,12 +21,33 @@ export function Navbar() {
   // Active brand nav config
   const navConfig = theme === "medcity" ? MEDCITY_SMILES_NAV : HUMMING_DROPS_NAV;
 
-  // Track scroll position for subtle elevation
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  // Track scroll position for subtle elevation and active section
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 12);
+
+      // Determine active section based on scroll position
+      const sections = ["pricing", "journey", "box-experience", "health-community"];
+      const scrollPos = window.scrollY + 100;
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveSection(sectionId);
+            return;
+          }
+        }
+      }
+      if (window.scrollY < 300) {
+        setActiveSection("");
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -55,35 +76,35 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full transition-brand border-b",
+        "sticky top-0 z-40 w-full transition-all duration-300 border-b",
         scrolled
-          ? "bg-canvas/95 backdrop-blur-md border-line-subtle shadow-card"
-          : "bg-canvas border-line-subtle/60"
+          ? "bg-white/75 backdrop-blur-md border-[#E2ECE4]/60 shadow-xs"
+          : "bg-transparent border-transparent"
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-3">
           {/* Brand Logo & Tagline */}
           <div className="flex items-center gap-3 shrink-0">
             <Link
               href={theme === "medcity" ? "/medcity-smiles" : "/"}
-              className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-lg p-1"
+              className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-xl p-1"
               aria-label={`${navConfig.name} Home`}
             >
               {theme === "humming" ? (
-                <div className="relative h-14 w-40 sm:w-52 transition-transform duration-fast group-hover:scale-[1.02]">
+                <div className="relative h-10 w-36 sm:h-11 sm:w-44 transition-transform duration-fast group-hover:scale-[1.02]">
                   <Image
                     src="/images/humming-drops-logo.png"
                     alt="Humming Drops Logo"
                     fill
-                    sizes="(max-width: 640px) 160px, 208px"
+                    sizes="(max-width: 640px) 144px, 192px"
                     className="object-contain object-left"
                     priority
                   />
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
-                  <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center p-1.5 shrink-0 overflow-hidden shadow-sm">
+                  <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center p-1.5 shrink-0 overflow-hidden shadow-xs">
                     <Image
                       src="/images/medcity-smiles-logo.png"
                       alt="MedCity Smiles Logo"
@@ -110,22 +131,25 @@ export function Navbar() {
             <BrandSwitcher navigateOnSwitch={true} />
           </div>
 
-          {/* Desktop Navigation Links (Visible on XL screens to prevent header overcrowding) */}
+          {/* Desktop Navigation Links */}
           <nav
             aria-label="Main Navigation"
-            className="hidden xl:flex items-center gap-1 xl:gap-2"
+            className="hidden lg:flex items-center gap-1"
           >
             {navConfig.navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isHashMatch =
+                (item.href === "/#pricing" && activeSection === "pricing") ||
+                (item.href === "/#journey" && activeSection === "journey");
+              const isActive = pathname === item.href || (pathname === "/" && isHashMatch);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-2.5 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
+                    "px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
                     isActive
-                      ? "text-brand-primary font-semibold bg-brand-subtle/80"
-                      : "text-content-secondary hover:text-content-primary hover:bg-muted/80"
+                      ? "text-primary bg-mint font-bold shadow-2xs"
+                      : "text-body hover:text-primary hover:bg-mint/60"
                   )}
                 >
                   <span>{item.label}</span>
@@ -140,13 +164,13 @@ export function Navbar() {
           </nav>
 
           {/* Right Actions & Hamburger Toggle */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Secondary CTA (Sign In - visible on xl screens) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Secondary CTA (Sign In - visible on lg screens) */}
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className="hidden xl:inline-flex text-content-secondary hover:text-content-primary font-medium"
+              className="hidden lg:inline-flex text-content-secondary hover:text-content-primary font-medium"
             >
               <Link href={navConfig.secondaryCTA.href}>
                 {navConfig.secondaryCTA.label}
@@ -158,7 +182,7 @@ export function Navbar() {
               variant="primary"
               size="sm"
               asChild
-              className="hidden md:inline-flex shadow-sm gap-1.5"
+              className={cn("hidden md:inline-flex shadow-sm gap-1.5", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
             >
               <Link href={navConfig.primaryCTA.href}>
                 <span>{navConfig.primaryCTA.label}</span>
@@ -166,8 +190,8 @@ export function Navbar() {
               </Link>
             </Button>
 
-            {/* Responsive Hamburger Toggle (visible below xl screens) */}
-            <div className="flex xl:hidden items-center">
+            {/* Responsive Hamburger Toggle (visible below lg screens) */}
+            <div className="flex lg:hidden items-center">
               <Button
                 variant="ghost"
                 size="sm"
@@ -175,7 +199,7 @@ export function Navbar() {
                 aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-navigation-drawer"
-                className="p-2 h-10 w-10 text-content-primary hover:bg-muted"
+                className="p-2.5 h-12 w-12 min-h-[48px] min-w-[48px] text-content-primary hover:bg-muted flex items-center justify-center rounded-xl"
               >
                 {mobileMenuOpen ? (
                   <X className="w-6 h-6" aria-hidden="true" />
@@ -195,7 +219,7 @@ export function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation"
-          className="xl:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
+          className="lg:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
         >
           <div className="px-4 pt-4 pb-6 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto">
             {/* Mobile Brand Switcher (only shown below md where header switcher is hidden) */}
@@ -213,9 +237,9 @@ export function Navbar() {
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between transition-colors",
+                      "px-4 py-3.5 rounded-xl text-base font-semibold min-h-[48px] flex items-center justify-between transition-colors",
                       isActive
-                        ? "bg-brand-subtle text-brand-primary font-semibold"
+                        ? "bg-brand-subtle text-brand-primary font-bold"
                         : "text-content-secondary hover:text-content-primary hover:bg-muted"
                     )}
                   >
@@ -231,12 +255,12 @@ export function Navbar() {
             </nav>
 
             {/* Mobile CTAs */}
-            <div className="pt-2 border-t border-line-subtle space-y-2.5">
+            <div className="pt-2 border-t border-line-subtle space-y-3">
               <Button
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center shadow-sm"
+                className={cn("w-full justify-center min-h-[48px] text-base font-bold shadow-sm", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
               >
                 <Link
                   href={navConfig.primaryCTA.href}
@@ -251,7 +275,7 @@ export function Navbar() {
                 variant="secondary"
                 size="md"
                 asChild
-                className="w-full justify-center"
+                className="w-full justify-center min-h-[48px] text-base font-bold"
               >
                 <Link
                   href={navConfig.secondaryCTA.href}
@@ -265,7 +289,7 @@ export function Navbar() {
             {/* Kitchen & Lab Partner Footnote */}
             <div className="pt-3 border-t border-line-subtle/60 text-center">
               <p className="text-xs text-content-muted">
-                Doorstep Breakfast Delivery · In partnership with Berrybeats Cafe &amp; MedCity Health Labs
+                Doorstep Breakfast Delivery Â· In partnership with Berrybeats Cafe &amp; MedCity Health Labs
               </p>
             </div>
           </div>

@@ -60,13 +60,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       // Default / Auto (Semantic theme-adaptive via CSS variables)
       switch (variant) {
         case "primary":
-          return "bg-brand-primary text-brand-contrast hover:bg-brand-hover active:opacity-95 shadow-sm";
+          return "bg-brand-primary text-brand-contrast hover:bg-brand-hover hover:-translate-y-0.5 shadow-sm active:translate-y-0 active:opacity-95";
         case "secondary":
-          return "bg-brand-subtle text-brand-text hover:bg-brand-subtle-hover border border-line-subtle";
+          return "bg-white text-brand-primary border border-brand-primary/40 hover:bg-brand-subtle hover:border-brand-primary hover:-translate-y-0.5 shadow-2xs active:translate-y-0";
         case "outline":
-          return "border-2 border-brand-primary text-brand-primary hover:bg-brand-subtle";
+          return "border border-brand-primary text-brand-primary bg-transparent hover:bg-brand-subtle hover:-translate-y-0.5 active:translate-y-0";
         case "ghost":
-          return "text-content-primary hover:bg-brand-subtle";
+          return "text-content-primary hover:bg-brand-subtle hover:text-brand-primary";
         case "link":
           return "text-brand-primary underline-offset-4 hover:underline p-0 h-auto";
       }
@@ -76,17 +76,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       if (variant === "link") return "";
       switch (size) {
         case "sm":
-          return "h-9 px-3 text-xs font-semibold rounded-lg gap-1.5";
+          return "h-9 px-4 text-xs font-semibold rounded-full gap-1.5";
         case "lg":
-          return "h-12 px-6 text-base font-semibold rounded-2xl gap-2.5";
+          return "h-12 px-7 text-base font-semibold rounded-full gap-2.5";
         case "md":
         default:
-          return "h-11 px-5 text-sm font-semibold rounded-xl gap-2";
+          return "h-11 px-5.5 text-sm font-semibold rounded-full gap-2";
       }
     };
 
     const combinedClasses = cn(
-      "inline-flex items-center justify-center font-display transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
+      "inline-flex items-center justify-center font-display transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
       getVariantClasses(),
       getSizeClasses(),
       className
