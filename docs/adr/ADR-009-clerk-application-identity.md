@@ -1,7 +1,7 @@
 # ADR-009: Clerk Authentication with PostgreSQL Application Identity
 
-**Date:** 2026-11-03  
-**Status:** ACCEPTED  
+**Date:** 2026-11-03
+**Status:** ACCEPTED
 **Tags:** authentication, authorization, clerk, postgresql, drizzle
 
 ## Decision
