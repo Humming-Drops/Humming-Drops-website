@@ -56,6 +56,18 @@ export const userRoleEnum = pgEnum("user_role", [
   "admin",
   "operations",
   "nutritionist",
+  "super_admin",
+  "business_admin",
+  "operations_manager",
+  "finance_manager",
+  "content_manager",
+  "read_only_auditor",
+]);
+
+export const contentStatusEnum = pgEnum("content_status", [
+  "draft",
+  "published",
+  "archived",
 ]);
 
 // ============================================================================
@@ -356,6 +368,115 @@ export const subscriptionAuditLogs = pgTable(
 );
 
 // ============================================================================
+// 11. APPLICATION RBAC
+// ============================================================================
+
+export const applicationRoles = pgTable("application_roles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  isSystemRole: boolean("is_system_role").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const applicationPermissions = pgTable("application_permissions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const rolePermissions = pgTable(
+  "role_permissions",
+  {
+    roleId: uuid("role_id")
+      .notNull()
+      .references(() => applicationRoles.id, { onDelete: "cascade" }),
+    permissionId: uuid("permission_id")
+      .notNull()
+      .references(() => applicationPermissions.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("role_permissions_unique_idx").on(table.roleId, table.permissionId)]
+);
+
+export const userRoles = pgTable(
+  "user_roles",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    roleId: uuid("role_id")
+      .notNull()
+      .references(() => applicationRoles.id, { onDelete: "cascade" }),
+    assignedByUserId: uuid("assigned_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("user_roles_unique_idx").on(table.userId, table.roleId)]
+);
+
+export const administrativeAuditLogs = pgTable("administrative_audit_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  actorUserId: uuid("actor_user_id").references(() => users.id, { onDelete: "set null" }),
+  action: text("action").notNull(),
+  resourceType: text("resource_type").notNull(),
+  resourceId: text("resource_id"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ============================================================================
+// 12. TEMPLATE-DRIVEN CONTENT MANAGEMENT
+// ============================================================================
+
+export const contentTemplates = pgTable("content_templates", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  schema: jsonb("schema").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const contentPages = pgTable(
+  "content_pages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    templateId: uuid("template_id")
+      .notNull()
+      .references(() => contentTemplates.id, { onDelete: "restrict" }),
+    slug: text("slug").notNull().unique(),
+    title: text("title").notNull(),
+    status: contentStatusEnum("status").notNull().default("draft"),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
+    publishedByUserId: uuid("published_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    createdByUserId: uuid("created_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    data: jsonb("data").notNull().default(sql`'{}'::jsonb`),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("content_pages_status_idx").on(table.status),
+    index("content_pages_template_idx").on(table.templateId),
+  ]
+);
+
+export const contentAuditLogs = pgTable("content_audit_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  pageId: uuid("page_id")
+    .notNull()
+    .references(() => contentPages.id, { onDelete: "cascade" }),
+  actorUserId: uuid("actor_user_id").references(() => users.id, { onDelete: "set null" }),
+  action: text("action").notNull(),
+  snapshot: jsonb("snapshot"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ============================================================================
 // 11. DRIZZLE RELATIONS GRAPH
 // ============================================================================
 
@@ -366,6 +487,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   healthVitals: many(healthVitals),
   payments: many(payments),
   sessionRegistrations: many(sessionRegistrations),
+  roles: many(userRoles),
+  administrativeAuditLogs: many(administrativeAuditLogs),
 }));
 
 export const profilesRelations = relations(profiles, ({ one }) => ({

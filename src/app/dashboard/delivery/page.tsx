@@ -21,32 +21,33 @@ import { Badge } from "@/components/ui/badge";
 
 export default function DashboardDeliveryPage() {
   const [subscriberName, setSubscriberName] = useState("Subscriber");
-  const [refCode, setRefCode] = useState("HD-REG-2026-94182");
+  const [refCode, setRefCode] = useState("Pending reference");
+  const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
+  const [addressId, setAddressId] = useState<string | null>(null);
+  const [accountError, setAccountError] = useState<string | null>(null);
   const [isPausedTomorrow, setIsPausedTomorrow] = useState(false);
   const [vacationStart, setVacationStart] = useState("");
   const [vacationEnd, setVacationEnd] = useState("");
   const [vacationSaved, setVacationSaved] = useState(false);
-  const [deliveryNotes, setDeliveryNotes] = useState(
-    "Leave at tower reception / Ring doorbell if before 7:30 AM"
-  );
+  const [deliveryNotes, setDeliveryNotes] = useState("");
   const [notesSaved, setNotesSaved] = useState(false);
   const [pauseToast, setPauseToast] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (data.customerName) setSubscriberName(data.customerName);
-        if (data.referenceCode) setRefCode(data.referenceCode);
-        if (typeof data.isPausedTomorrow === "boolean") {
-          setIsPausedTomorrow(data.isPausedTomorrow);
-        }
-        if (data.vacationStart) setVacationStart(data.vacationStart);
-        if (data.vacationEnd) setVacationEnd(data.vacationEnd);
-        if (data.deliveryNotes) setDeliveryNotes(data.deliveryNotes);
-      }
-    } catch {}
+    fetch("/api/customer/me")
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Unable to load account.");
+        const record = data.subscriptions[0];
+        setSubscriberName(data.user.profile?.fullName || data.user.email);
+        setRefCode(record?.subscription.leadReferenceCode || "Pending reference");
+        setSubscriptionId(record?.subscription.id || null);
+        setAddressId(record?.address?.id || null);
+        setDeliveryNotes(record?.address?.deliveryNotes || "");
+        setVacationStart(record?.subscription.pauseStart || "");
+        setVacationEnd(record?.subscription.pauseEnd || "");
+      })
+      .catch((error: Error) => setAccountError(error.message));
   }, []);
 
   const handleToggleTomorrowPause = () => {
@@ -58,14 +59,18 @@ export default function DashboardDeliveryPage() {
     setPauseToast(msg);
     setTimeout(() => setPauseToast(null), 4500);
 
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      const current = raw ? JSON.parse(raw) : {};
-      localStorage.setItem(
-        "hd_subscriber_session",
-        JSON.stringify({ ...current, isPausedTomorrow: newState })
-      );
-    } catch {}
+    if (subscriptionId) {
+      void fetch("/api/customer/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "pause",
+          subscriptionId,
+          pauseStart: newState ? tomorrow.toISOString().slice(0, 10) : "",
+          pauseEnd: newState ? tomorrow.toISOString().slice(0, 10) : "",
+        }),
+      });
+    }
   };
 
   const handleSaveVacation = (e: React.FormEvent) => {
@@ -74,18 +79,13 @@ export default function DashboardDeliveryPage() {
     setVacationSaved(true);
     setTimeout(() => setVacationSaved(false), 3500);
 
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      const current = raw ? JSON.parse(raw) : {};
-      localStorage.setItem(
-        "hd_subscriber_session",
-        JSON.stringify({
-          ...current,
-          vacationStart,
-          vacationEnd,
-        })
-      );
-    } catch {}
+    if (subscriptionId) {
+      void fetch("/api/customer/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "pause", subscriptionId, pauseStart: vacationStart, pauseEnd: vacationEnd }),
+      });
+    }
   };
 
   const handleClearVacation = () => {
@@ -93,18 +93,13 @@ export default function DashboardDeliveryPage() {
     setVacationEnd("");
     setVacationSaved(false);
 
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      const current = raw ? JSON.parse(raw) : {};
-      localStorage.setItem(
-        "hd_subscriber_session",
-        JSON.stringify({
-          ...current,
-          vacationStart: "",
-          vacationEnd: "",
-        })
-      );
-    } catch {}
+    if (subscriptionId) {
+      void fetch("/api/customer/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "pause", subscriptionId, pauseStart: "", pauseEnd: "" }),
+      });
+    }
   };
 
   const handleSaveNotes = (e: React.FormEvent) => {
@@ -112,17 +107,13 @@ export default function DashboardDeliveryPage() {
     setNotesSaved(true);
     setTimeout(() => setNotesSaved(false), 3000);
 
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      const current = raw ? JSON.parse(raw) : {};
-      localStorage.setItem(
-        "hd_subscriber_session",
-        JSON.stringify({
-          ...current,
-          deliveryNotes,
-        })
-      );
-    } catch {}
+    if (addressId) {
+      void fetch("/api/customer/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "delivery_notes", addressId, deliveryNotes }),
+      });
+    }
   };
 
   // Helper date formatted

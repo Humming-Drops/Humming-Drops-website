@@ -19,21 +19,31 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export default function DashboardOverviewPage() {
-  const [subscriberName, setSubscriberName] = useState("Subscriber");
-  const [planName, setPlanName] = useState("Premium Morning Box");
-  const [refCode, setRefCode] = useState("HD-REG-2026-94182");
+  const [subscriberName, setSubscriberName] = useState<string | null>(null);
+  const [planName, setPlanName] = useState<string | null>(null);
+  const [refCode, setRefCode] = useState<string | null>(null);
+  const [accountError, setAccountError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("hd_subscriber_session");
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (data.customerName) setSubscriberName(data.customerName);
-        if (data.planName) setPlanName(data.planName);
-        if (data.referenceCode) setRefCode(data.referenceCode);
-      }
-    } catch {}
+    fetch("/api/customer/me")
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Unable to load account.");
+        const profile = data.user.profile;
+        const subscription = data.subscriptions[0]?.subscription;
+        setSubscriberName(profile?.fullName || data.user.email);
+        setPlanName(subscription?.planId || "Subscription");
+        setRefCode(subscription?.leadReferenceCode || "Pending reference");
+      })
+      .catch((error: Error) => setAccountError(error.message));
   }, []);
+
+  if (accountError) {
+    return <p className="p-6 text-sm text-red-700">{accountError}</p>;
+  }
+  if (!subscriberName || !planName || !refCode) {
+    return <p className="p-6 text-sm text-content-secondary">Loading your subscriber account…</p>;
+  }
 
   return (
     <div className="space-y-8">

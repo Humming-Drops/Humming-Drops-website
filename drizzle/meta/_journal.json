@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1740873600000,
+      "tag": "0001_add_clerk_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740877200000,
+      "tag": "0002_rbac_and_cms",
+      "breakpoints": true
+    }
+  ]
+}

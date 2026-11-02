@@ -11,7 +11,10 @@
     "test": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs",
     "test:unit": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs --unit",
     "test:smoke": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs --smoke",
-    "test:vitest": "vitest run"
+    "test:vitest": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:check": "drizzle-kit check"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.23",
@@ -30,6 +33,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9.20.1",
     "eslint-config-next": "^15.2.0",
     "postcss": "^8.5.2",
