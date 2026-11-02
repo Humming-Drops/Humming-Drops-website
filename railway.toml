@@ -1,0 +1,22 @@
+# ==============================================================================
+# Railway PaaS Deployment Configuration - Humming Drops & MedCity Smiles
+# Authoritative deployment manifest for Production & Staging environments
+# ==============================================================================
+
+[build]
+# Use our optimized multi-stage Dockerfile with standalone Next.js 15 output
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Production startup command utilizing Next.js standalone server
+startCommand = "node server.js"
+
+# Healthcheck probe endpoint for Zero-Downtime rolling deployments
+# Railway validates this HTTP 200 response before shifting public traffic
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+
+# Resilience & Auto-healing configuration
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

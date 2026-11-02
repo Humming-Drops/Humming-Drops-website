@@ -7,13 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs",
+    "test:unit": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs --unit",
+    "test:smoke": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs --smoke",
+    "test:vitest": "vitest run"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.475.0",
     "next": "^15.2.0",
+    "postgres": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.1"
@@ -27,6 +33,7 @@
     "eslint-config-next": "^15.2.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
   }
 }
