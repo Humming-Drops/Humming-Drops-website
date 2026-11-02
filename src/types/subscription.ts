@@ -1,4 +1,4 @@
-import { PlanTier } from "./plans";
+import type { PlanTier } from "./plans";
 
 /**
  * Subscription Lifecycle State Model

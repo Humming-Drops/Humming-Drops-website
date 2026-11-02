@@ -1,35 +1,15 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
 import { leadRepository } from "@/lib/lead-storage";
-
-// Validation & Normalization Helpers
-function normalizePhone(raw: unknown): string {
-  if (typeof raw !== "string") return "";
-  // Strip whitespace, hyphens, plus, parenthesis
-  const cleaned = raw.replace(/[\s\-\(\)\+]/g, "");
-  // Strip leading international country code (+91 or 91) or trunk 0
-  return cleaned.replace(/^91/, "").replace(/^0/, "");
-}
-
-function isValidIndianPhone(phone: string): boolean {
-  // 10 digits starting with 6, 7, 8, or 9
-  return /^[6-9]\d{9}$/.test(phone);
-}
-
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidPincode(pincode: string): boolean {
-  return /^[1-9][0-9]{5}$/.test(pincode);
-}
-
-function sanitizeString(val: unknown, maxLength: number): string {
-  if (typeof val !== "string") return "";
-  return val.trim().slice(0, maxLength);
-}
+import {
+  normalizePhone,
+  isValidIndianPhone,
+  isValidEmail,
+  isValidPincode,
+  sanitizeString,
+} from "@/lib/sanitization";
 
 /**
  * Generate collision-resistant lead reference code
@@ -303,16 +283,37 @@ export async function POST(request: Request) {
 }
 
 /**
+ * Helper to verify administrative authorization for sensitive lead access
+ */
+function isAuthorized(request: Request): boolean {
+  const adminKey = process.env.ADMIN_API_KEY || process.env.LEAD_AUDIT_SECRET;
+  if (!adminKey) return false;
+  const authHeader = request.headers.get("authorization");
+  const xApiKey = request.headers.get("x-api-key");
+  if (xApiKey && xApiKey === adminKey) return true;
+  if (authHeader && (authHeader === `Bearer ${adminKey}` || authHeader === adminKey)) return true;
+  return false;
+}
+
+/**
  * GET /api/subscriptions/lead?ref=HD-REG-...
- * Quick lookup helper for verifying persisted leads during evaluation
+ * Quick lookup helper with RBAC / admin gating to prevent unauthenticated PII leakage.
  */
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get("ref");
+    const authorized = isAuthorized(request);
 
     if (!ref) {
-      // Return total count and recent leads for audit
+      // Listing all leads strictly requires administrative credentials
+      if (!authorized) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized: Admin authorization required to list all lead records." },
+          { status: 401 }
+        );
+      }
+
       const all = await leadRepository.getAllLeads();
       return NextResponse.json({
         total: all.length,
@@ -331,6 +332,24 @@ export async function GET(request: Request) {
     const lead = await leadRepository.getLeadByReference(ref);
     if (!lead) {
       return NextResponse.json({ error: "Lead reference not found." }, { status: 404 });
+    }
+
+    // Unauthenticated requests receive sanitized, masked status data without full customer PII
+    if (!authorized) {
+      const maskedPhone = lead.customer?.phone
+        ? lead.customer.phone.slice(0, 2) + "******" + lead.customer.phone.slice(-2)
+        : "";
+      return NextResponse.json({
+        success: true,
+        leadReferenceCode: lead.leadReferenceCode,
+        planId: lead.planId,
+        planName: lead.planName,
+        status: lead.status,
+        area: lead.deliveryAddress?.area,
+        customerName: lead.customer?.fullName,
+        maskedPhone,
+        createdAt: lead.createdAt,
+      });
     }
 
     return NextResponse.json({

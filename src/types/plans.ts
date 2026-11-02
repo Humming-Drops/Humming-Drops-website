@@ -10,7 +10,6 @@ export interface SubscriptionPlan {
   id: PlanTier;
   name: string;
   monthlyPriceINR: number;
-  perDayPriceINR: number; // Informational display calculation
   tagline: string;
   isRecommended?: boolean;
   boxInclusions: PlanInclusion[];
@@ -23,7 +22,6 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
     id: "standard",
     name: "Standard",
     monthlyPriceINR: 3500,
-    perDayPriceINR: 116,
     tagline: "Complete daily fresh breakfast nutrition & holistic health monitoring",
     boxInclusions: [
       { title: "4 Varieties of Fruits", frequency: "Every Day" },
@@ -42,7 +40,6 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
     id: "premium",
     name: "Premium",
     monthlyPriceINR: 4000,
-    perDayPriceINR: 133,
     tagline: "Everything in Standard plus daily dry fruits, curated juices & lab discounts",
     isRecommended: true,
     boxInclusions: [

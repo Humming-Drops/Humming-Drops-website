@@ -1,4 +1,4 @@
-import { FulfillmentMode } from "@/types/subscription";
+import type { FulfillmentMode } from "@/types/subscription";
 
 /**
  * Checkout Mode Configuration & Security Module
