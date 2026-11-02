@@ -33,3 +33,4 @@ An Architecture Decision Record (ADR) captures a single significant architectura
 | **[ADR-006](ADR-006-health-pii-data-isolation.md)** | Health Vitals & Customer PII Privacy Isolation and Access Boundaries | **ACCEPTED** | 2026-09-23 | Medical Data Privacy & Security |
 | **[ADR-007](ADR-007-client-truth-guardrail.md)** | Client Brochure Supremacy & Provisional Assumptions Management (`CIR-01` to `CIR-07`) | **ACCEPTED** | 2026-09-23 | Business Logic & Domain Invariants |
 | **[ADR-008](ADR-008-component-design-system.md)** | Component Architecture using Tailwind CSS, shadcn/ui & Radix Primitives | **ACCEPTED** | 2026-09-23 | Frontend UI Primitives & Accessibility |
+| **[ADR-009](ADR-009-clerk-application-identity.md)** | Clerk Authentication with PostgreSQL Application Identity | **ACCEPTED** | 2026-11-03 | Authentication & Authorization |

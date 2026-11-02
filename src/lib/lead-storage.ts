@@ -49,6 +49,7 @@ export interface PersistedLeadRecord {
 }
 
 export interface CreateLeadDTO {
+  clerkUserId?: string;
   leadReferenceCode: string;
   planId: PlanTier;
   planName: string;
@@ -268,13 +269,18 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
       let [user] = await tx
         .select()
         .from(users)
-        .where(eq(users.phone, data.customer.phone.trim()))
+        .where(
+          data.clerkUserId
+            ? eq(users.clerkUserId, data.clerkUserId)
+            : eq(users.phone, data.customer.phone.trim())
+        )
         .limit(1);
 
       if (!user) {
         [user] = await tx
           .insert(users)
           .values({
+            clerkUserId: data.clerkUserId,
             email: data.customer.email.trim().toLowerCase(),
             phone: data.customer.phone.trim(),
             role: "customer",

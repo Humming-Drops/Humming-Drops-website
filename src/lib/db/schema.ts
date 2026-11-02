@@ -70,6 +70,7 @@ export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    clerkUserId: text("clerk_user_id"),
     email: text("email").notNull().unique(),
     phone: text("phone").notNull().unique(),
     passwordHash: text("password_hash"),
@@ -79,6 +80,7 @@ export const users = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    uniqueIndex("users_clerk_user_id_idx").on(table.clerkUserId),
     uniqueIndex("users_email_idx").on(table.email),
     uniqueIndex("users_phone_idx").on(table.phone),
   ]

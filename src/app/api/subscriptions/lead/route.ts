@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
 import { leadRepository } from "@/lib/lead-storage";
+import { getAppUserByClerkId, requireClerkUser } from "@/lib/clerk-auth";
+import { auth } from "@clerk/nextjs/server";
 import {
   normalizePhone,
   isValidIndianPhone,
@@ -43,6 +45,7 @@ async function generateUniqueReference(): Promise<string> {
  */
 export async function POST(request: Request) {
   try {
+    const { clerkUserId, user } = await requireClerkUser();
     const authoritativeMode = getServerAuthoritativeCheckoutMode();
 
     let body: any;
@@ -122,6 +125,13 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    const verifiedEmail = user.primaryEmailAddress?.emailAddress?.trim().toLowerCase();
+    if (!verifiedEmail || verifiedEmail !== email) {
+      return NextResponse.json(
+        { success: false, error: "Registration email must match your verified Clerk account email.", field: "customer.email" },
+        { status: 400 }
+      );
+    }
 
     // 3. Delivery Address Validation
     if (!deliveryAddress || typeof deliveryAddress !== "object") {
@@ -194,6 +204,7 @@ export async function POST(request: Request) {
 
     // 7. Persist to Repository
     const persistedRecord = await leadRepository.createLead({
+      clerkUserId,
       leadReferenceCode,
       planId: canonicalPlan.id,
       planName: canonicalPlan.name,
@@ -222,7 +233,7 @@ export async function POST(request: Request) {
     });
 
     // 8. Construct Verified WhatsApp Handoff
-    const prefilledWhatsAppText = `Hi Humming Drops Bangalore team! I just submitted a breakfast box subscription request (${leadReferenceCode}) for the ${canonicalPlan.name} Plan (₹${canonicalPlan.monthlyPriceINR}/mo). My name is ${fullName} (${normalizedPhone}). Delivery location: ${buildingName}, ${area}. Please confirm my morning schedule.`;
+    const prefilledWhatsAppText = `Hi Humming Drops Bangalore team! I just submitted a breakfast box subscription request (${leadReferenceCode}) for the ${canonicalPlan.name} Plan (â‚¹${canonicalPlan.monthlyPriceINR}/mo). My name is ${fullName} (${normalizedPhone}). Delivery location: ${buildingName}, ${area}. Please confirm my morning schedule.`;
 
     const whatsappRedirectUrl = OFFICIAL_CONTACT.whatsappUrl(prefilledWhatsAppText);
 
@@ -283,27 +294,26 @@ export async function POST(request: Request) {
 }
 
 /**
- * Helper to verify administrative authorization for sensitive lead access
- */
-function isAuthorized(request: Request): boolean {
-  const adminKey = process.env.ADMIN_API_KEY || process.env.LEAD_AUDIT_SECRET;
-  if (!adminKey) return false;
-  const authHeader = request.headers.get("authorization");
-  const xApiKey = request.headers.get("x-api-key");
-  if (xApiKey && xApiKey === adminKey) return true;
-  if (authHeader && (authHeader === `Bearer ${adminKey}` || authHeader === adminKey)) return true;
-  return false;
-}
 
 /**
  * GET /api/subscriptions/lead?ref=HD-REG-...
  * Quick lookup helper with RBAC / admin gating to prevent unauthenticated PII leakage.
  */
+async function isClerkAuthorized(): Promise<boolean> {
+  const { userId } = await auth();
+  if (!userId) return false;
+  const appUser = await getAppUserByClerkId(userId);
+  return Boolean(
+    appUser?.isActive &&
+      ["admin", "operations", "nutritionist"].includes(appUser.role)
+  );
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get("ref");
-    const authorized = isAuthorized(request);
+    const authorized = await isClerkAuthorized();
 
     if (!ref) {
       // Listing all leads strictly requires administrative credentials
