@@ -18,6 +18,7 @@ coverage/
 # Local Demo Data (Phase 4.6 temporary store)
 data/*.json
 !data/.gitkeep
+scratch/test-leads-fixture/
 
 # Logs
 npm-debug.log*
