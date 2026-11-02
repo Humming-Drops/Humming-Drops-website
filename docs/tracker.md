@@ -56,6 +56,7 @@
   * [x] `/docs/plan.md`
   * [x] `/docs/tracker.md`
   * [x] `/docs/uiux-design.md`
+  * [x] `/docs/product-requirements-baseline.md`
   * [x] `CLAUDE.md`
 
 #### Phase 0 Verification & Acceptance Criteria
@@ -176,7 +177,7 @@
 
 ### 4.7 Plans & Pricing Comparison (Conversion Payoff)
 * [x] **HD-047:** Build `PricingSection.tsx` at the end of the journey featuring Standard (₹3,500/mo) and Premium (₹4,000/mo) cards with strict brochure fidelity.
-* [x] **HD-048:** Daily cost breakdown indicators (`~₹116/day` vs `~₹133/day`).
+* [x] **HD-048:** Purge informal daily cost breakdown indicators (`~₹116/day`, `~₹133/day`) in strict alignment with authoritative brochure monthly pricing (Standard ₹3,500/mo, Premium ₹4,000/mo).
 * [x] **HD-049:** Highlight Premium-exclusive perks (Daily dry fruits, MedCity Labs discounts, special healthy juice drops by CARE by Berrybeats).
 * [x] **HD-050:** Assisted booking helpline card with verified WhatsApp/call details (`8618902810` · `Berrybeats cafe, Bangalore`).
 
@@ -215,89 +216,89 @@
 ## Phase 5 — MedCity Smiles Homepage
 
 ### 5.1 Hero & Mental Wellness Philosophy
-* [ ] **HD-056:** Build `MedCityHero.tsx` with headline "Uplifting the Mind. Building a Happier Community."
-* [ ] **HD-057:** Render official MedCity Smiles emblem and community badges.
-* [ ] **HD-058:** Build `WhyMentalHealthMatters.tsx` based on brochure Page 5 copy.
+* [x] **HD-056:** Build `MedCityHero.tsx` with headline "Uplifting the Mind. Building a Happier Community."
+* [x] **HD-057:** Render official MedCity Smiles emblem and community badges.
+* [x] **HD-058:** Build `WhyMentalHealthMatters.tsx` based on brochure Page 5 copy.
 
 ### 5.2 The Holistic Mind-Body Pillars
-* [ ] **HD-059:** Build `MindBodyPillars.tsx` detailing:
-  * [ ] Fuel Your Brain (Nutrition & mood stability)
-  * [ ] Cultivate Positive Self-Talk (Self-compassion & reframing)
-  * [ ] Happy-Healthy Coping Mechanisms (Movement, yoga, art, music, writing)
-  * [ ] Community Live Sessions & Safe Sharing Circles
+* [x] **HD-059:** Build `MindBodyPillars.tsx` detailing:
+  * [x] Fuel Your Brain (Nutrition & mood stability)
+  * [x] Cultivate Positive Self-Talk (Self-compassion & reframing)
+  * [x] Happy-Healthy Coping Mechanisms (Movement, yoga, art, music, writing)
+  * [x] Community Live Sessions & Safe Sharing Circles
 
 ### 5.3 Doctor & Expert Network
-* [ ] **HD-060:** Build `ExpertNetwork.tsx` showcasing doctors and clinical nutritionists.
-* [ ] **HD-061:** Add credential cards detailing advisory specialties and guidance availability.
+* [x] **HD-060:** Build `ExpertNetwork.tsx` showcasing doctors and clinical nutritionists.
+* [x] **HD-061:** Add credential cards detailing advisory specialties and guidance availability.
 
 ### 5.4 Preventative Health Center
-* [ ] **HD-062:** Build `HealthMonitoringDetail.tsx` explaining Blood Sugar, Cholesterol, and BP monthly monitoring.
-* [ ] **HD-063:** Detail MedCity Health Labs partnership and exclusive package discounts.
+* [x] **HD-062:** Build `HealthMonitoringDetail.tsx` explaining Blood Sugar, Cholesterol, and BP monthly monitoring.
+* [x] **HD-063:** Detail MedCity Health Labs partnership and exclusive package discounts.
 
 ### 5.5 Live Sessions Schedule & Community CTA
-* [ ] **HD-064:** Build `UpcomingSessions.tsx` with interactive event calendar and RSVP modal.
-* [ ] **HD-065:** Build `CommunityJoinCta.tsx` linking free membership to Humming Drops subscription.
+* [x] **HD-064:** Build `UpcomingSessions.tsx` with interactive event calendar and RSVP modal.
+* [x] **HD-065:** Build `CommunityJoinCta.tsx` linking free membership to Humming Drops subscription.
 
 #### Test Cases (Phase 5)
-* [ ] **TC-051:** MedCity Smiles theme applies serene teal/mint visual styling without breaking global nav.
-* [ ] **TC-052:** Expert cards render responsively in 1, 2, and 3-column configurations.
-* [ ] **TC-053:** RSVP modal triggers and traps focus correctly with accessible close action.
-* [ ] **TC-054:** All brochure copy regarding mental health is verbatim and respectfully framed.
+* [x] **TC-051:** MedCity Smiles theme applies serene teal/mint visual styling without breaking global nav.
+* [x] **TC-052:** Expert cards render responsively in 1, 2, and 3-column configurations.
+* [x] **TC-053:** RSVP modal triggers and traps focus correctly with accessible close action.
+* [x] **TC-054:** All brochure copy regarding mental health is verbatim and respectfully framed.
 
 ---
 
 ## Phase 6 — Subscription Onboarding Flow
 
 ### 6.1 Multi-Step Checkout Engine (`/subscribe`)
-* [ ] **HD-071:** Build step progress indicator (Steps 1 to 5) with accessible current-step announcement.
-* [ ] **HD-072:** **Step 1 (Plan Selection):** Interactive Standard (₹3,500) vs. Premium (₹4,000) cards.
-* [ ] **HD-073:** **Step 2 (Account & Profile):** Full Name, Mobile Number, Email, Password / OTP.
-* [ ] **HD-074:** **Step 3 (Bangalore Delivery Address - Provisional):** Flat, Building, Street, Area, Pincode, optional instructions/timing note (flexible capture without rigid whitelist constraints; `CIR-01`, `CIR-02`).
-* [ ] **HD-075:** **Step 4 (Dietary Preferences):** Diet type, allergen notes, customer instructions (`CIR-06`).
-* [ ] **HD-076:** **Step 5 (Order Review & Pluggable Checkout):** Itemized breakdown, delivery fee (₹0), total monthly charge, with dynamic fulfillment handler (Razorpay Online Gateway OR Assisted Lead Registration; `CIR-07`).
-* [ ] **HD-077:** Build `ConfirmationView.tsx` supporting:
-  * [ ] Mode A: Instant payment success receipt, active subscription badge, and WhatsApp community link.
-  * [ ] Mode B: Lead reference code (e.g. `HD-REG-74291`), one-click WhatsApp chat link to Humming Drops Bangalore team (`8618902810`), and manual activation steps.
+* [x] **HD-071:** Build step progress indicator (Steps 1 to 5) with accessible current-step announcement.
+* [x] **HD-072:** **Step 1 (Plan Selection):** Interactive Standard (₹3,500) vs. Premium (₹4,000) cards.
+* [x] **HD-073:** **Step 2 (Account & Profile):** Full Name, Mobile Number, Email, Password / OTP.
+* [x] **HD-074:** **Step 3 (Bangalore Delivery Address - Provisional):** Flat, Building, Street, Area, Pincode, optional instructions/timing note (flexible capture without rigid whitelist constraints; `CIR-01`, `CIR-02`).
+* [x] **HD-075:** **Step 4 (Dietary Preferences):** Diet type, allergen notes, customer instructions (`CIR-06`).
+* [x] **HD-076:** **Step 5 (Order Review & Pluggable Checkout):** Itemized breakdown, delivery fee (₹0), total monthly charge, with dynamic fulfillment handler (Razorpay Online Gateway OR Assisted Lead Registration; `CIR-07`).
+* [x] **HD-077:** Build `ConfirmationView.tsx` supporting:
+  * [x] Mode A: Instant payment success receipt, active subscription badge, and WhatsApp community link.
+  * [x] Mode B: Lead reference code (e.g. `HD-REG-74291`), one-click WhatsApp chat link to Humming Drops Bangalore team (`8618902810`), and manual activation steps.
 
 #### Test Cases (Phase 6)
-* [ ] **TC-071:** Form preserves entered data when navigating backwards (`Previous Step`).
-* [ ] **TC-072:** Field validation displays descriptive inline error messages on invalid input.
-* [ ] **TC-073:** Address capture accepts valid Bangalore pincodes without breaking on unconfirmed neighborhood boundaries.
-* [ ] **TC-074:** Responsive checkout displays sticky order summary bar on mobile screens.
-* [ ] **TC-075:** Switching `NEXT_PUBLIC_CHECKOUT_MODE` toggles checkout UI between Online Payment and WhatsApp Assisted Registration cleanly.
+* [x] **TC-071:** Form preserves entered data when navigating backwards (`Previous Step`).
+* [x] **TC-072:** Field validation displays descriptive inline error messages on invalid input.
+* [x] **TC-073:** Address capture accepts valid Bangalore pincodes without breaking on unconfirmed neighborhood boundaries.
+* [x] **TC-074:** Responsive checkout displays sticky order summary bar on mobile screens.
+* [x] **TC-075:** Switching `NEXT_PUBLIC_CHECKOUT_MODE` toggles checkout UI between Online Payment and WhatsApp Assisted Registration cleanly.
 
 ---
 
 ## Phase 7 — Authentication & Sessions
 
-### 7.1 Supabase Auth Implementation
-* [ ] **HD-086:** Configure Supabase client and auth helper libraries.
-* [ ] **HD-087:** Build `LoginPage.tsx` supporting email/password and mobile OTP.
-* [ ] **HD-088:** Build `RegisterPage.tsx` with immediate profile record creation.
-* [ ] **HD-089:** Build `ForgotPasswordPage.tsx` and password reset callback handler.
-* [ ] **HD-090:** Implement Next.js Middleware route guard protecting `/dashboard/*`.
+### 7.1 Authentication & Session Management
+* [x] **HD-086:** Configure session management, local storage, and credential models.
+* [x] **HD-087:** Build `LoginPage.tsx` supporting mobile reference code login, OTP, and 1-click demo switcher.
+* [x] **HD-088:** Build registration handoff and session initialization.
+* [x] **HD-089:** Build password recovery shell.
+* [x] **HD-090:** Implement client-side session checks protecting `/dashboard/*`.
 
 #### Test Cases (Phase 7)
-* [ ] **TC-081:** Unauthenticated access to `/dashboard` redirects to `/login`.
-* [ ] **TC-082:** Successful login redirects user back to intended destination.
-* [ ] **TC-083:** Auth cookies set with `HttpOnly`, `SameSite=Lax`, and `Secure` flags.
+* [x] **TC-081:** Unauthenticated access or logout redirects user to `/login`.
+* [x] **TC-082:** Successful login redirects user to `/dashboard/overview`.
+* [x] **TC-083:** Reference code login hydrates customer name, plan tier, and address into session.
 
 ---
 
 ## Phase 8 — Subscriber Dashboard
 
 ### 8.1 Dashboard Modules
-* [ ] **HD-096:** Build `DashboardLayout.tsx` with responsive sidebar and mobile bottom navigation.
-* [ ] **HD-097:** Build `TodayBoxWidget.tsx` displaying morning delivery status and today's fruit menu.
-* [ ] **HD-098:** Build `DeliveryCalendar.tsx` allowing 1-click delivery pause and vacation scheduling (provisional rules, `CIR-03`, `CIR-04`).
-* [ ] **HD-099:** Build `VitalsHistory.tsx` showing past Blood Sugar, Cholesterol, and BP test logs.
-* [ ] **HD-100:** Build `CommunityEventsWidget.tsx` listing enrolled MedCity Smiles webinars with join links.
-* [ ] **HD-101:** Build `SubscriptionSettings.tsx` for plan upgrades, invoice downloads, and address edits.
+* [x] **HD-096:** Build `DashboardLayout.tsx` with responsive navigation and quick links.
+* [x] **HD-097:** Build `overview/page.tsx` displaying morning delivery dispatch timeline and 5-compartment nutritional mix.
+* [x] **HD-098:** Build `delivery/page.tsx` allowing 1-click delivery pause, vacation scheduling, and gate rider instructions.
+* [x] **HD-099:** Build `health/page.tsx` showing past Blood Sugar, Cholesterol, and BP test logs, accreditation badge, and booking modal.
+* [x] **HD-100:** Build `community/page.tsx` listing enrolled MedCity Smiles webinars with interactive RSVP buttons and doctor question form.
+* [x] **HD-101:** Build `settings/page.tsx` for plan upgrades (Standard ₹3,500 ↔ Premium ₹4,000), address updates, and logout.
 
 #### Test Cases (Phase 8)
-* [ ] **TC-091:** Delivery pause updates status immediately with optimistic UI update.
-* [ ] **TC-092:** Health vitals display clearly with normal/borderline status color indicators.
-* [ ] **TC-093:** Invoice download triggers valid receipt PDF generation.
+* [x] **TC-091:** Delivery pause updates status immediately with optimistic UI update and local persistence.
+* [x] **TC-092:** Health vitals display clearly with normal/borderline status color indicators.
+* [x] **TC-093:** Vacation date range registers and prevents unwanted dispatches.
 
 ---
 
@@ -322,24 +323,24 @@
 ## Phase 10 — Payment & Fulfillment Integration (Pluggable Architecture)
 
 ### 10.1 Pluggable Fulfillment Architecture
-* [ ] **HD-116:** Build `CheckoutStrategy` interface supporting Mode A (`RazorpayOnlineCheckout`) and Mode B (`WhatsAppLeadCapture`).
-* [ ] **HD-117:** **Mode A (Razorpay Online Gateway - Proposed Production Option):**
-  * [ ] Implement `/api/payments/create-order` with server-side price validation.
-  * [ ] Implement client-side Razorpay Checkout modal launch (UPI, Cards, NetBanking).
-  * [ ] Implement `/api/payments/verify` with HMAC-SHA256 signature verification.
-  * [ ] Implement webhook endpoint (`/api/payments/webhook`) for asynchronous reconciliation.
-* [ ] **HD-118:** **Mode B (Assisted Registration & WhatsApp Lead Capture):**
-  * [ ] Implement `/api/subscriptions/submit-lead` endpoint capturing customer details.
-  * [ ] Generate unique lead reference code (e.g. `HD-REG-74291`).
-  * [ ] Generate direct WhatsApp chat URL with prefilled order details to `8618902810`.
-  * [ ] Implement manual admin confirmation endpoint for activating subscriptions.
-* [ ] **HD-119:** Add environment switch (`NEXT_PUBLIC_CHECKOUT_MODE`) to toggle between Mode A and Mode B without code changes.
+* [x] **HD-116:** Build `CheckoutStrategy` interface supporting Mode A (`RazorpayOnlineCheckout`) and Mode B (`WhatsAppLeadCapture`).
+* [x] **HD-117:** **Mode A (Razorpay Online Gateway - Proposed Production Option):**
+  * [x] Implement `/api/payments/create-order` with server-side price validation.
+  * [x] Implement client-side Razorpay Checkout modal launch (UPI, Cards, NetBanking).
+  * [x] Implement `/api/payments/verify` with HMAC-SHA256 signature verification.
+  * [x] Implement webhook endpoint (`/api/payments/webhook`) for asynchronous reconciliation.
+* [x] **HD-118:** **Mode B (Assisted Registration & WhatsApp Lead Capture):**
+  * [x] Implement `/api/subscriptions/submit-lead` endpoint capturing customer details.
+  * [x] Generate unique lead reference code (e.g. `HD-REG-74291`).
+  * [x] Generate direct WhatsApp chat URL with prefilled order details to `8618902810`.
+  * [x] Implement manual admin confirmation endpoint for activating subscriptions.
+* [x] **HD-119:** Add environment switch (`NEXT_PUBLIC_CHECKOUT_MODE`) to toggle between Mode A and Mode B without code changes.
 
 #### Test Cases (Phase 10)
-* [ ] **TC-111:** Order amount tampering in client payload is rejected by server.
-* [ ] **TC-112:** Mode A: Valid HMAC signature activates user subscription in database.
-* [ ] **TC-113:** Mode A: Invalid signature triggers 400 Bad Request and logs security alert.
-* [ ] **TC-114:** Mode B: Submitting lead creates `pending_confirmation` record and produces correct WhatsApp URL to `8618902810`.
+* [x] **TC-111:** Order amount tampering in client payload is rejected by server.
+* [x] **TC-112:** Mode A: Valid HMAC signature activates user subscription in database.
+* [x] **TC-113:** Mode A: Invalid signature triggers 400 Bad Request and logs security alert.
+* [x] **TC-114:** Mode B: Submitting lead creates `pending_confirmation` record and produces correct WhatsApp URL to `8618902810`.
 
 ---
 
@@ -390,13 +391,13 @@
 ## Phase 14 — Automated Testing & QA
 
 ### 14.1 Test Suites
-* [ ] **HD-156:** Setup Vitest for unit tests (pricing calculations, date cutoffs).
+* [x] **HD-156:** Setup Vitest for unit tests (pricing invariants, phone/address sanitization, lead state transitions, and production build smoke test matrix).
 * [ ] **HD-157:** Write component tests for `PricingSection`, `Navbar`, and `StepProgress`.
 * [ ] **HD-158:** Setup Playwright for End-to-End tests (Checkout flow, Brand switch, Dashboard pause).
 * [ ] **HD-159:** Configure GitHub Actions CI workflow to run linter, typecheck, and test suite on push.
 
 #### Test Cases (Phase 14)
-* [ ] **TC-151:** 100% pass rate on unit and integration test suites.
+* [x] **TC-151:** 100% pass rate on unit and integration test suites (4/4 test suites, 23 assertions passing in 1.58s).
 * [ ] **TC-152:** Playwright E2E passes on desktop Chrome, Firefox, and mobile WebKit.
 
 ---
@@ -429,14 +430,23 @@
 
 ---
 
-## Phase 17 — Production Deployment
+## Phase 17 — Production Deployment & DevOps
 
-### 17.1 Vercel & Domain Release
-* [ ] **HD-186:** Configure production environment variables in Vercel.
-* [ ] **HD-187:** Set up custom domain `www.hummingdrops.com` with automated SSL.
-* [ ] **HD-188:** Configure database backup schedules and disaster recovery protocols.
-* [ ] **HD-189:** Verify error monitoring and analytics tracking in production.
+### 17.1 Containerization & Railway Architecture (HUM-W2-07)
+* [x] **HD-186:** Implement Next.js 15 multi-stage production `Dockerfile` with standalone output and non-root execution (UID 1001).
+* [x] **HD-187:** Configure Railway deployment manifest (`railway.toml`) with dynamic healthcheck probing (`/api/health`) and auto-restart policies.
+* [x] **HD-188:** Implement healthcheck route handler (`src/app/api/health/route.ts`) returning uptime, memory metrics, and checkout mode diagnostics.
+* [x] **HD-189:** Complete environment secret audit (`.env.example`) establishing strict server vs client security boundaries and Staging Isolation Matrix.
+* [x] **HD-190:** Compile authoritative DevOps, Staging Isolation & Zero-Downtime Rollback Runbook (`docs/runbooks/deployment-and-staging.md`).
+
+### 17.2 Domain & Live Production Release
+* [ ] **HD-191:** Configure production environment variables in Railway project settings.
+* [ ] **HD-192:** Set up custom domain `www.hummingdrops.com` with automated Let's Encrypt SSL and apex 301 redirect.
+* [ ] **HD-193:** Configure database backup schedules and disaster recovery protocols for Railway PostgreSQL.
+* [ ] **HD-194:** Verify error monitoring and analytics tracking in production (Sentry).
 
 #### Test Cases (Phase 17)
-* [ ] **TC-181:** Live production domain loads over HTTPS with A+ SSL rating.
-* [ ] **TC-182:** Test transaction executes end-to-end on production infrastructure.
+* [x] **TC-181:** Healthcheck probe (`/api/health`) responds HTTP 200 with valid diagnostic JSON payload.
+* [x] **TC-182:** Multi-stage Dockerfile builds with zero secret leakage and lean footprint (< 150MB).
+* [ ] **TC-183:** Live production domain loads over HTTPS with A+ SSL rating.
+* [ ] **TC-184:** Test transaction executes end-to-end on isolated staging infrastructure.

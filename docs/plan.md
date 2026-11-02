@@ -267,8 +267,8 @@ Deliver a compelling, high-converting homepage for Humming Drops that presents t
      *(Note: Any specific produce varieties shown in marketing photos are illustrative examples only, not contractually promised contents).*
 5. **Subscription Plans & Pricing Matrix:**
    * Direct brochure pricing:
-     * **Standard Plan: ₹3,500/month** (`~₹116/day`)
-     * **Premium Plan: ₹4,000/month** (`~₹133/day`)
+     * **Standard Plan: ₹3,500/month**
+     * **Premium Plan: ₹4,000/month**
      * Feature comparison table showing Standard vs. Premium dry fruit frequency, MedCity Labs discounts, and special healthy juice drops curated with CARE by Berrybeats.
 6. **Free Monthly Health Monitoring Highlight:**
    * Prominently featuring the free monthly Blood Sugar, Cholesterol, and Blood Pressure checkup in partnership with MedCity Health Labs ("A community of experts to monitor your vitals").

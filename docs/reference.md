@@ -110,7 +110,7 @@ This website requires two distinct yet harmonious experiences tied together by a
 #### UI Patterns Identified
 * **High-Vibrancy Produce Photography:** Clean white-background or natural stone-background product imagery with soft natural shadows.
 * **Nutritional Chip Highlights:** Icon + badge chips (e.g., "Zero Preservatives", "100% Raw & Fresh", "Pre-cut & Ready to Eat").
-* **Indian Rupee Currency Formatting:** Bold, accessible display of `₹` pricing with per-day breakdowns (e.g., "₹3,500/mo · Just ₹116/day").
+* **Indian Rupee Currency Formatting:** Bold, accessible display of `₹` pricing strictly matching client brochure (Standard ₹3,500/mo, Premium ₹4,000/mo).
 
 #### UX Patterns Identified
 * **Unboxing Expectation Management:** Customers want to see the exact box layout before subscribing. Clear compartment photography eliminates hesitation.
@@ -280,7 +280,7 @@ To build a high-performance, accessible, and maintainable application, every com
 | :--- | :--- | :--- |
 | **Global Brand Switcher** | Headspace (Consumer vs. Care) | A prominent, seamless header toggle that smoothly transitions between the **Humming Drops (Physical Nutrition)** and **MedCity Smiles (Mental Wellbeing)** worlds while retaining persistent cart/auth state. |
 | **Hero Product Breakdown** | Eat Wholy & 21st.dev Bento Grid | Highlighting the client's authentic 5-compartment breakfast box with interactive hover/tap hotspots detailing: 4 daily fruits, 2 daily vegetables, mix salad, fresh sprouts, and dry fruits. |
-| **Plan Selection & Pricing** | Headspace & shadcn/ui Tabs | Standard (₹3,500) vs. Premium (₹4,000) cards with clear daily value calculation (`₹116/day` vs `₹133/day`), bulleted inclusions, and immediate "Select Plan" trigger. |
+| **Plan Selection & Pricing** | Headspace & shadcn/ui Tabs | Standard (₹3,500) vs. Premium (₹4,000) cards strictly aligned with authoritative brochure pricing, bulleted inclusions, and immediate "Select Plan" trigger. |
 | **Doctor & Community Hub** | Good Inside & Watermelon UI | Credentialed advisor profile cards (Doctors & Nutritionists), upcoming live webinar schedule cards with RSVP, and mental wellness habit prompts (Positive Self-Talk & Coping Mechanisms). |
 | **Multi-Step Onboarding Flow** | Modern SaaS & DTC Onboarding | Concise, frictionless steps: Plan → Delivery Details (Bangalore address; delivery timing provisional/client input required) → Preferences (allergies/diet) → Review → Fulfillment / Checkout (Pluggable: Razorpay online checkout OR Lead capture with WhatsApp/manual follow-up pending client confirmation). |
 

@@ -177,12 +177,12 @@ Humming Drops and MedCity Smiles share structural components (buttons, nav, card
 
 ### 6.3 Subscription Plan Cards (Standard vs. Premium)
 * **Standard Card (₹3,500/month):**
-  * Clear daily anchor: `Just ₹116 / day`.
+  * Authoritative monthly subscription pricing per client brochure.
   * Inclusions list: 4 fruits, 2 veg, mix salad, sprouts, dry fruits (3 days/week), free MedCity Smiles membership, free monthly health checkup.
   * CTA: `Subscribe Standard`.
 * **Premium Card (₹4,000/month):**
   * "RECOMMENDED" floating badge in warm forest gold.
-  * Daily anchor: `Just ₹133 / day` (Only ₹17 more per day for complete daily dry fruits & juices).
+  * Monthly pricing: ₹4,000 / month (Upgraded dry fruits every day, juices & lab discounts).
   * Highlighted Additions: Daily Dry Fruits, Exclusive MedCity Labs package discounts, Special Healthy Juice Drops curated with CARE by Berrybeats.
   * CTA: `Subscribe Premium` (High-contrast Forest Green button).
 
@@ -397,7 +397,7 @@ This section documents the visual and editorial design principles extracted from
      * Section 1: Morning Delivery Hook & Box Centerpiece (Hero).
      * Section 2: What's Inside Your Daily Box (5-Compartment Bento breakdown).
      * Section 3: Why Fresh Morning Whole Foods? (Nutritional nourishment & morning habit formation per Page 2 of brochure).
-     * Section 4: Transparent Subscription Pricing (Standard ₹3,500 vs. Premium ₹4,000 with per-day breakdown: ₹116/day vs ₹133/day).
+     * Section 4: Transparent Subscription Pricing (Standard ₹3,500/mo vs. Premium ₹4,000/mo strictly per brochure).
      * Section 5: The Holistic Connection (Introduction to MedCity Smiles & free monthly health checkups).
      * Section 6: Kitchen & Hub Transparency (Prepared fresh at Berrybeats Cafe, Bangalore).
   4. **Geometry & Styling:**

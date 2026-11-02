@@ -3,7 +3,7 @@
 **Project:** Humming Drops & MedCity Smiles Web Platform  
 **Location:** `C:\Humming-Drops-website`  
 **Repository Branch:** `main`  
-**Authoritative Documentation:** Located in `/docs/` (`reference.md`, `plan.md`, `tracker.md`, `uiux-design.md`)  
+**Authoritative Documentation:** Located in `/docs/` (`README.md`, `reference.md`, `plan.md`, `tracker.md`, `uiux-design.md`, `adr/`, `runbooks/`, `handover/`)  
 
 ---
 
@@ -93,10 +93,14 @@ Guided by `frontend-design` and `impeccable`:
 ```text
 C:\Humming-Drops-website\
 ├── docs/                        # Master documentation
+│   ├── README.md                # Master Documentation Gateway
 │   ├── reference.md             # Benchmark analysis & component evaluation
 │   ├── plan.md                  # Master plan (Phases 0 to 17)
 │   ├── tracker.md               # Detailed task & test case tracker
-│   └── uiux-design.md           # UI/UX design tokens & component specs
+│   ├── uiux-design.md           # UI/UX design tokens & component specs
+│   ├── adr/                     # Architecture Decision Records (ADR-001 to ADR-008)
+│   ├── runbooks/                # System Runbooks (RB-01 to RB-05)
+│   └── handover/                # Client Handover Specification
 ├── references/                  # Client raw assets (brochure, logo)
 ├── src/
 │   ├── app/                     # Next.js App Router routes
