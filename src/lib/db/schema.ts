@@ -70,6 +70,19 @@ export const contentStatusEnum = pgEnum("content_status", [
   "archived",
 ]);
 
+export const paymentOrderStatusEnum = pgEnum("payment_order_status", [
+  "created",
+  "attempted",
+  "paid",
+]);
+
+export const paymentTransactionStatusEnum = pgEnum("payment_transaction_status", [
+  "authorized",
+  "captured",
+  "failed",
+  "refunded",
+]);
+
 // ============================================================================
 // 2. CORE IDENTITY & PROFILES
 // ============================================================================
@@ -468,7 +481,65 @@ export const contentPages = pgTable(
 );
 
 // ============================================================================
-// 13. CLERK LIFECYCLE WEBHOOK IDEMPOTENCY
+// 13. RAZORPAY ORDER/TRANSACTION PERSISTENCE (pre-subscription)
+// ============================================================================
+// Separate from `payments` (section 9) above, which requires a NOT NULL
+// subscription_id: an order is created before any subscription/lead
+// necessarily exists (Mode A creates the Razorpay order first, then
+// links it to a lead reference only at verification time).
+
+export const paymentOrders = pgTable(
+  "payment_orders",
+  {
+    id: text("id").primaryKey(), // Razorpay order id
+    planId: text("plan_id").notNull(),
+    amountInr: integer("amount_inr").notNull(),
+    amountPaise: integer("amount_paise").notNull(),
+    currency: text("currency").notNull().default("INR"),
+    receipt: text("receipt").notNull(),
+    status: paymentOrderStatusEnum("status").notNull().default("created"),
+    leadReferenceCode: text("lead_reference_code"),
+    notes: jsonb("notes"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("payment_orders_lead_ref_idx").on(table.leadReferenceCode)]
+);
+
+export const paymentTransactions = pgTable(
+  "payment_transactions",
+  {
+    id: text("id").primaryKey(), // Razorpay payment id
+    orderId: text("order_id")
+      .notNull()
+      .references(() => paymentOrders.id, { onDelete: "restrict" }),
+    amountPaise: integer("amount_paise").notNull(),
+    status: paymentTransactionStatusEnum("status").notNull(),
+    signature: text("signature"),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("payment_transactions_order_idx").on(table.orderId)]
+);
+
+export const paymentWebhookEvents = pgTable("payment_webhook_events", {
+  id: text("id").primaryKey(), // Razorpay event id (or synthesized fallback)
+  provider: text("provider").notNull().default("razorpay"),
+  eventType: text("event_type").notNull(),
+  status: text("status").notNull(),
+  payload: jsonb("payload"),
+  processedAt: timestamp("processed_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const paymentOrdersRelations = relations(paymentOrders, ({ many }) => ({
+  transactions: many(paymentTransactions),
+}));
+
+export const paymentTransactionsRelations = relations(paymentTransactions, ({ one }) => ({
+  order: one(paymentOrders, { fields: [paymentTransactions.orderId], references: [paymentOrders.id] }),
+}));
+
+// ============================================================================
+// 14. CLERK LIFECYCLE WEBHOOK IDEMPOTENCY
 // ============================================================================
 
 export const clerkWebhookEvents = pgTable("clerk_webhook_events", {

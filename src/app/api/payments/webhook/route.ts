@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       `evt_${Date.now()}`;
 
     // Deduplication check: if already processed, return 200 without reprocessing
-    if (paymentRepository.hasWebhookEvent(eventId)) {
+    if (await paymentRepository.hasWebhookEvent(eventId)) {
       return NextResponse.json(
         { received: true, note: "duplicate_ignored" },
         { status: 200 }

@@ -46,18 +46,36 @@ runbook:
 
 | idx | tag | What it does |
 |---|---|---|
-| 0 | `0001_add_clerk_identity` | Adds `clerk_user_id` to `users`. |
-| 1 | `0002_rbac_and_cms` | Adds RBAC tables (`application_roles`, `application_permissions`, `role_permissions`, `user_roles`, `administrative_audit_logs`) and CMS tables (`content_templates`, `content_pages`, `content_audit_logs`), plus the RBAC/permission seed data. |
-| 2 | `0003_seed_content_templates` | Seeds two structural content templates (no client copy). |
-| 3 | `0004_clerk_lifecycle_sync` | Drops `users.phone`'s `NOT NULL` constraint; adds `clerk_webhook_events` idempotency table. |
+| 0 | `0000_baseline_schema` | Creates the 11 base tables (`users`, `profiles`, `subscription_plans`, `user_subscriptions`, `delivery_addresses`, `dietary_preferences`, `health_vitals`, `community_sessions`, `session_registrations`, `payments`, `subscription_audit_logs`) and their enums, plus the canonical plan seed rows. **Added retroactively** — see the warning box below. |
+| 1 | `0001_add_clerk_identity` | Adds `clerk_user_id` to `users`. |
+| 2 | `0002_rbac_and_cms` | Adds RBAC tables (`application_roles`, `application_permissions`, `role_permissions`, `user_roles`, `administrative_audit_logs`) and CMS tables (`content_templates`, `content_pages`, `content_audit_logs`), plus the RBAC/permission seed data. |
+| 3 | `0003_seed_content_templates` | Seeds two structural content templates (no client copy). |
+| 4 | `0004_clerk_lifecycle_sync` | Drops `users.phone`'s `NOT NULL` constraint; adds `clerk_webhook_events` idempotency table. |
+| 5 | `0005_postgres_payment_persistence` | Adds `payment_orders`, `payment_transactions`, `payment_webhook_events` — the Postgres-backed replacement for the JSON-file payment repository (RR-006). |
+
+> **Found while writing this runbook (RR-005) and fixed in RR-006:** migrations
+> `0001`–`0004` only ever `ALTER`/`ADD`ed onto tables they assumed already existed —
+> there was no migration that actually created the base 11 tables, and
+> `drizzle/meta/` had no snapshot files, meaning `npm run db:check` was only
+> validating that the journal file itself is well-formed, **not** that it matches
+> `schema.ts`. Against a genuinely fresh database, `0001` would have failed
+> immediately on `ALTER TABLE "users"`. `0000_baseline_schema.sql` fixes this,
+> written with `CREATE TABLE/TYPE/INDEX IF NOT EXISTS` throughout so it's safe to
+> run whether or not these tables already exist from some other process. If you
+> are applying this migration set for the first time against a database that
+> already has these tables (e.g. created outside Drizzle), `0000` will simply be a
+> no-op for those objects — confirm that assumption before running it anyway.
 
 Before applying to any environment, confirm:
 ```bash
 cat drizzle/meta/_journal.json   # idx values are sequential with no gaps/duplicates
 ls drizzle/*.sql                 # one file per journal entry, same count
 ```
-`npm run db:check` (above) already automates this comparison — a manual read is the
-second pair of eyes before a production run, not a replacement for it.
+`npm run db:check` only validates internal journal/file consistency (see the warning
+above) — it is **not** proof that the migration set matches a specific live
+database's actual current state. A manual read of the target database's existing
+tables (`\dt` in `psql`, or equivalent) before the first-ever run against it is not
+optional.
 
 ## 3. Staging first — always
 

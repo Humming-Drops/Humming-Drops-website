@@ -163,8 +163,51 @@ its implementation and verification are complete.
      ("never execute against production without valid credentials") until
      someone with real Railway access runs RB-06 §8's checklist and
      updates it to VERIFIED.
-6. `[ ]` **RR-006 — Enforce production PostgreSQL persistence**
-   - Remove JSON/file persistence from production lead and payment paths.
+6. `[x]` **RR-006 — Enforce production PostgreSQL persistence**
+   - **Found and fixed a prerequisite gap while implementing this:** there was
+     no migration that actually created the 11 base tables (`users`,
+     `payments`, `user_subscriptions`, etc.) — migrations `0001`–`0004` only
+     ever `ALTER`/`ADD`ed onto tables they assumed already existed, and
+     `drizzle/meta/` had no snapshot files, so `npm run db:check` was only
+     validating journal self-consistency, not a real diff against
+     `schema.ts`. Added `drizzle/0000_baseline_schema.sql` (idempotent:
+     `CREATE TABLE/TYPE/INDEX IF NOT EXISTS` throughout, safe against a
+     database that may already have some of these objects), renumbered the
+     journal, and documented this in `docs/runbooks/database-migrations.md`
+     §2.
+   - **Payments:** the existing `payments` table requires a `NOT NULL
+     subscription_id`, but a Razorpay order is created before any
+     subscription/lead necessarily exists (Mode A creates the order first,
+     links it to a lead only at verification). Added dedicated
+     `payment_orders`, `payment_transactions`, `payment_webhook_events`
+     tables (`drizzle/0005_postgres_payment_persistence.sql`) and a
+     `DrizzlePostgresPaymentRepository` in `src/lib/payment-storage.ts`,
+     mirroring the existing `HybridLeadRepository` pattern.
+     `IPaymentRepository.hasWebhookEvent` changed from sync to `Promise<boolean>`
+     (a real DB check can't be synchronous); updated the one call site in
+     `src/app/api/payments/webhook/route.ts` to `await` it.
+   - **Fail-closed guard:** `src/lib/production-persistence-guard.ts`
+     (`assertProductionPersistenceAllowed`) is now called by both
+     `HybridLeadRepository` and `HybridPaymentRepository` before selecting a
+     driver. When `DATABASE_URL` is unconfigured, local JSON is still
+     allowed in development/test, but `NODE_ENV=production` now throws
+     `ProductionPersistenceError` instead of silently writing business
+     records to an ephemeral container filesystem. Previously
+     `HybridLeadRepository` had no such guard at all — this was a real,
+     previously-shipped silent-fallback bug, not just a gap for payments.
+   - Tests (`tests/unit/production-persistence-guard.test.ts`): the guard
+     function itself across configured/unconfigured × every environment
+     value, plus an integration-style test that constructs both hybrid
+     repositories with `DATABASE_URL` unset and `NODE_ENV=production`
+     forced, and asserts every read/write path rejects with
+     `ProductionPersistenceError` rather than falling back to JSON.
+   - Acceptance: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (10 files / 76 tests, up from
+     9/71), `npm run db:check` (passes), `npm run build` succeeds.
+     NOT VERIFIED: that `0000_baseline_schema.sql` through
+     `0005_postgres_payment_persistence.sql` actually apply cleanly, in
+     order, against a real empty Railway Postgres database — no live
+     database is available in this environment (see RR-005 §8).
 7. `[ ]` **RR-007 — Harden customer and health APIs**
    - Validate pause ranges and status transitions, detect zero-row updates,
      add audit logging, and enforce clinical health-data permissions.

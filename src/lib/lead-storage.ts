@@ -10,6 +10,7 @@ import type {
 } from "@/types/subscription";
 import type { PlanTier } from "@/types/plans";
 import { db, isDatabaseConfigured } from "@/lib/db";
+import { assertProductionPersistenceAllowed } from "@/lib/production-persistence-guard";
 import {
   users,
   profiles,
@@ -564,10 +565,9 @@ export class HybridLeadRepository implements ILeadRepository {
   }
 
   private getActiveRepository(): ILeadRepository {
-    if (isDatabaseConfigured()) {
-      return this.postgresRepo;
-    }
-    return this.jsonRepo;
+    const configured = isDatabaseConfigured();
+    assertProductionPersistenceAllowed("lead records", configured, process.env.NODE_ENV);
+    return configured ? this.postgresRepo : this.jsonRepo;
   }
 
   async createLead(data: CreateLeadDTO): Promise<PersistedLeadRecord> {
