@@ -22,6 +22,13 @@
       "when": 1762128000000,
       "tag": "0003_seed_content_templates",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762214400000,
+      "tag": "0004_clerk_lifecycle_sync",
+      "breakpoints": true
     }
   ]
 }

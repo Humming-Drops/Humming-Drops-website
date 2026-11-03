@@ -88,9 +88,47 @@ its implementation and verification are complete.
      against a live Postgres instance with real staff/customer accounts
      — no live database or Clerk session is available in this
      environment (see RR-005).
-4. `[ ]` **RR-004 — Add Clerk lifecycle synchronization**
-   - Add signed, idempotent `user.created`, `user.updated`, and `user.deleted`
-     reconciliation.
+4. `[x]` **RR-004 — Add Clerk lifecycle synchronization**
+   - `/api/webhooks/clerk` (`src/app/api/webhooks/clerk/route.ts`) handles
+     `user.created`, `user.updated`, and `user.deleted`.
+   - Signature verification is hand-rolled against Svix's documented
+     manual-verification algorithm (`src/lib/clerk-webhook.ts`):
+     HMAC-SHA256 over `{svix-id}.{svix-timestamp}.{raw body}`, checked
+     with `crypto.timingSafeEqual` against every `v1,` candidate in
+     `svix-signature` (supports key rotation), plus a 5-minute timestamp
+     tolerance to reject stale/replayed deliveries. Chose hand-rolling
+     over adding the `svix` package to stay consistent with how
+     `src/lib/razorpay.ts` already verifies HMAC signatures natively.
+   - Idempotency: new `clerk_webhook_events` table
+     (`drizzle/0004_clerk_lifecycle_sync.sql`) keyed by the `svix-id`
+     header. A duplicate delivery is ack'd without reprocessing; the
+     event is marked processed only *after* reconciliation succeeds, so
+     a failed attempt is naturally retried by Clerk rather than lost.
+   - Reconciliation (`src/lib/clerk-reconciliation.ts`): links an
+     existing PostgreSQL user by `clerk_user_id` first, else by email
+     (so a customer who registered via assisted-lead intake before ever
+     using Clerk gets linked instead of duplicated), else inserts a new
+     row. `user.deleted` sets `is_active = false` rather than
+     hard-deleting — the row cascades to subscriptions/payments/health
+     records that must be retained.
+   - Schema fix this required: `users.phone` was `NOT NULL`, but Clerk's
+     `user.created` event fires before a phone number is necessarily
+     known (phone is captured later, during subscription onboarding).
+     `drizzle/0004_clerk_lifecycle_sync.sql` drops that constraint (a
+     unique index still permits multiple `NULL`s, so uniqueness is
+     unaffected); `schema.ts` updated to match.
+   - Tests (`tests/unit/clerk-webhook.test.ts`): valid signature accepted;
+     tampered payload rejected; wrong-secret signature rejected; stale
+     timestamp rejected; a valid signature among several decoy
+     candidates still accepted; malformed secret prefix rejected; email/
+     phone extraction from Clerk's primary-id-with-fallback shape.
+   - Acceptance: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (8 files / 63 tests, up
+     from 7/52), `npm run build` succeeds. NOT VERIFIED: an actual
+     Clerk-to-Postgres round trip (duplicate-event dedup and the
+     create/update/delete reconciliation paths) against a live database
+     and a real Clerk webhook delivery — no live database or Clerk
+     environment is available here (see RR-005).
 5. `[ ]` **RR-005 — Verify Railway database operations**
    - Apply migrations to isolated staging, test backup/restore and rollback,
      and document the production rollout.

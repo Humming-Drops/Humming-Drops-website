@@ -84,7 +84,9 @@ export const users = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     clerkUserId: text("clerk_user_id"),
     email: text("email").notNull().unique(),
-    phone: text("phone").notNull().unique(),
+    // Nullable: Clerk's user.created webhook fires before a phone number
+    // is necessarily known (captured later during subscription onboarding).
+    phone: text("phone").unique(),
     passwordHash: text("password_hash"),
     role: userRoleEnum("role").notNull().default("customer"),
     isActive: boolean("is_active").notNull().default(true),
@@ -464,6 +466,16 @@ export const contentPages = pgTable(
     index("content_pages_template_idx").on(table.templateId),
   ]
 );
+
+// ============================================================================
+// 13. CLERK LIFECYCLE WEBHOOK IDEMPOTENCY
+// ============================================================================
+
+export const clerkWebhookEvents = pgTable("clerk_webhook_events", {
+  id: text("id").primaryKey(), // Svix message id (svix-id header)
+  eventType: text("event_type").notNull(),
+  processedAt: timestamp("processed_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const contentAuditLogs = pgTable("content_audit_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
