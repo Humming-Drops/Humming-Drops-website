@@ -1,7 +1,19 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/clerk-auth";
+import { getAppUserByClerkId } from "@/lib/clerk-auth";
+
+const STAFF_ROLES = [
+  "admin",
+  "operations",
+  "nutritionist",
+  "super_admin",
+  "business_admin",
+  "operations_manager",
+  "finance_manager",
+  "content_manager",
+  "read_only_auditor",
+];
 
 export default async function AdminLayout({
   children,
@@ -10,9 +22,11 @@ export default async function AdminLayout({
 }) {
   const { userId } = await auth();
   const appUser = userId ? await getAppUserByClerkId(userId) : null;
-  const canReadLeads = await hasPermission("leads:read");
 
-  if (!appUser?.isActive || !canReadLeads) {
+  // The shell only confirms the visitor holds some staff role; each admin
+  // module (leads, content, payments, ...) enforces its own specific
+  // permission via requirePermission()/hasPermission() on its own routes.
+  if (!appUser?.isActive || !STAFF_ROLES.includes(appUser.role)) {
     redirect("/dashboard/overview");
   }
 

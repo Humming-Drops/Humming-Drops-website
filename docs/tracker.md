@@ -20,9 +20,35 @@ its implementation and verification are complete.
    - Acceptance: all configured test commands exit with code 0. Verified:
      `test:vitest` (5 files / 37 tests), `test:unit` (4 files / 32 tests),
      and `test:smoke` (1 file / 5 tests).
-2. `[ ]` **RR-002 — Implement the template-driven CMS**
-   - Add template selection, structured editing, preview, publish/unpublish,
-     audit trail, and public rendering.
+2. `[x]` **RR-002 — Implement the template-driven CMS**
+   - Added `src/lib/content-validation.ts` (pure field-schema validator,
+     slug validator) and `src/lib/content-storage.ts` (Postgres-backed
+     repository: list templates, create/update draft, publish/unpublish,
+     each writing a `content_audit_logs` row plus a mirrored
+     `administrative_audit_logs` row).
+   - Seeded two structural templates (`announcement-banner`,
+     `simple-page`) via `drizzle/0003_seed_content_templates.sql` — no
+     client copy is implied, only field definitions.
+   - Admin UI: `/admin/content` (list + empty state), `/admin/content/new`
+     (template select + dynamic fields + validation errors),
+     `/admin/content/[id]` (edit/preview tabs, save draft,
+     publish/unpublish, audit trail).
+   - API routes under `/api/admin/content/*`, each gated with
+     `requirePermission`/`hasPermission("content:write")` or
+     `"content:publish")` — defense in depth, not UI-hiding alone.
+   - Public rendering at `/content/[slug]`, serving only `status =
+     'published'` pages (404 otherwise).
+   - Fixed `src/app/admin/layout.tsx`: the shell previously gated entry
+     on `leads:read` only, which would have locked out the
+     `content_manager` role entirely. Now the shell accepts any active
+     staff role; each module enforces its own specific permission.
+   - Acceptance: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (6 files / 48 tests, up
+     from 5/37 — added `tests/unit/content-cms.test.ts`), `npm run
+     build` (production build succeeds). NOT VERIFIED: applying
+     `drizzle/0003_seed_content_templates.sql` against a live Postgres
+     instance — no live database credentials are available in this
+     environment (see RR-005).
 3. `[ ]` **RR-003 — Complete the admin modules**
    - Implement subscriptions, payments, content, audit-log, and staff role
      management routes with permission checks.

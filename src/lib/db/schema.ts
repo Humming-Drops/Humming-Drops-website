@@ -540,3 +540,17 @@ export const subscriptionAuditLogsRelations = relations(subscriptionAuditLogs, (
   subscription: one(userSubscriptions, { fields: [subscriptionAuditLogs.subscriptionId], references: [userSubscriptions.id] }),
   changedByUser: one(users, { fields: [subscriptionAuditLogs.changedByUserId], references: [users.id] }),
 }));
+
+export const contentTemplatesRelations = relations(contentTemplates, ({ many }) => ({
+  pages: many(contentPages),
+}));
+
+export const contentPagesRelations = relations(contentPages, ({ one, many }) => ({
+  template: one(contentTemplates, { fields: [contentPages.templateId], references: [contentTemplates.id] }),
+  auditLogs: many(contentAuditLogs),
+}));
+
+export const contentAuditLogsRelations = relations(contentAuditLogs, ({ one }) => ({
+  page: one(contentPages, { fields: [contentAuditLogs.pageId], references: [contentPages.id] }),
+  actor: one(users, { fields: [contentAuditLogs.actorUserId], references: [users.id] }),
+}));
