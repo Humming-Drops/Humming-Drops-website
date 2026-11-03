@@ -1,6 +1,7 @@
 import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
+import { validateDatabaseUrl } from "./validate-url";
 
 /**
  * Checks if production PostgreSQL is configured via DATABASE_URL.
@@ -19,11 +20,14 @@ let _db: PostgresJsDatabase<typeof schema> | null = null;
 export function getDatabaseClient(): postgres.Sql {
   if (!_client) {
     const url = process.env.DATABASE_URL;
-    if (!url) {
-      throw new Error(
-        "DATABASE_URL is not configured. Ensure DATABASE_URL is set in your Railway environment."
-      );
+    const validation = validateDatabaseUrl(url, process.env.NODE_ENV);
+    if (!validation.valid) {
+      throw new Error(`Invalid DATABASE_URL configuration: ${validation.errors.join(" ")}`);
     }
+    for (const warning of validation.warnings) {
+      console.warn(`[DATABASE CONFIG WARNING] ${warning}`);
+    }
+    const connectionUrl = url as string; // non-empty and well-formed per validateDatabaseUrl above
 
     const poolMax = process.env.DATABASE_POOL_MAX
       ? parseInt(process.env.DATABASE_POOL_MAX, 10)
@@ -34,7 +38,7 @@ export function getDatabaseClient(): postgres.Sql {
       process.env.DATABASE_SSL === "true" ||
       process.env.NODE_ENV === "production";
 
-    _client = postgres(url, {
+    _client = postgres(connectionUrl, {
       max: poolMax,
       idle_timeout: 30, // 30 seconds idle timeout
       connect_timeout: 5, // 5 seconds connection timeout

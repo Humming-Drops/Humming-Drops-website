@@ -21,6 +21,7 @@ This directory contains standardized, authoritative runbooks defining daily proc
 | **[RB-03](lead-operations-handover.md)** | Bangalore Hub Lead Operations & Manual Confirmation | Hub Coordinators / Ops Team | Processing incoming WhatsApp leads, verifying reference codes, customer confirmation, order status transition |
 | **[RB-04](incident-management.md)** | Incident Management & Troubleshooting Playbooks | On-Call Engineers / Tech Support | Severity definitions, lead file recovery, payment failure triage, API error diagnostics, disaster recovery |
 | **[RB-05](deployment-and-staging.md)** | DevOps, Staging Isolation & Deployment Runbook (HUM-W2-07) | DevOps / Release Engineers | Railway PaaS deployment, multi-stage Dockerfile, staging isolation, secret audit, zero-downtime rollback runbook |
+| **[RB-06](database-migrations.md)** | Database Migration, Backup & Restore Runbook (RR-005) | DevOps / Release Engineers | `DATABASE_URL` validation, migration journal integrity, staging-first application order, `pg_dump`/`pg_restore` procedures, forward-fix rollback policy. **Documented but not yet executed against live infrastructure** — see §8 of the runbook. |
 
 ---
 

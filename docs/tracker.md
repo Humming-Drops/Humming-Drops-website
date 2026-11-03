@@ -129,9 +129,40 @@ its implementation and verification are complete.
      create/update/delete reconciliation paths) against a live database
      and a real Clerk webhook delivery — no live database or Clerk
      environment is available here (see RR-005).
-5. `[ ]` **RR-005 — Verify Railway database operations**
-   - Apply migrations to isolated staging, test backup/restore and rollback,
-     and document the production rollout.
+5. `[/]` **RR-005 — Verify Railway database operations (partially complete — blocked on live credentials)**
+   - **Done, locally verifiable:**
+     - `src/lib/db/validate-url.ts` (`validateDatabaseUrl`): validates scheme,
+       host, and database name; in production, hard-fails a localhost host and
+       warns (non-fatal) if `sslmode` isn't set to `require`/`verify-ca`/
+       `verify-full`. Wired into `src/lib/db/index.ts`'s connection setup so a
+       misconfigured `DATABASE_URL` throws a specific, actionable message
+       instead of an opaque connection error. 8 tests
+       (`tests/unit/db-url-validation.test.ts`).
+     - Migration journal integrity confirmed locally: `npm run db:check`
+       (`drizzle-kit check`) passes — `0001` through `0004` are sequential
+       with no gaps/duplicates between `drizzle/*.sql` and
+       `drizzle/meta/_journal.json`.
+     - `docs/runbooks/database-migrations.md` (RB-06, added to the runbook
+       index): DATABASE_URL validation step, migration order table,
+       staging-first application procedure, `pg_dump`/`pg_restore`
+       commands, and a forward-fix (not automatic down-migration) rollback
+       policy with an emergency-restore fallback requiring explicit
+       owner sign-off.
+   - **Blocked — requires real Railway/Postgres credentials, which are not
+     available in this environment:**
+     - Actually running `npm run db:migrate` against a live staging database.
+     - Actually running the `pg_dump`/`pg_restore` commands documented in
+       RB-06 against Railway's managed Postgres (connection-pooling
+       behavior can require provider-specific flags that can't be
+       confirmed without a live connection).
+     - The post-migration smoke test described in RB-06 §3.
+   - Acceptance so far: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (9 files / 71 tests, up from
+     8/63), `npm run db:check` (passes), `npm run build` succeeds. This
+     task cannot be marked `[x]` complete per the project's own rule
+     ("never execute against production without valid credentials") until
+     someone with real Railway access runs RB-06 §8's checklist and
+     updates it to VERIFIED.
 6. `[ ]` **RR-006 — Enforce production PostgreSQL persistence**
    - Remove JSON/file persistence from production lead and payment paths.
 7. `[ ]` **RR-007 — Harden customer and health APIs**
