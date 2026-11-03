@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { razorpayClient } from "@/lib/razorpay";
 import { paymentRepository } from "@/lib/payment-storage";
 import { leadRepository } from "@/lib/lead-storage";
+import { canTransitionSubscription } from "@/lib/subscription-transitions";
 
 /**
  * POST /api/payments/webhook
@@ -87,11 +88,15 @@ export async function POST(request: Request) {
 
         if (leadRef) {
           const lead = await leadRepository.getLeadByReference(leadRef);
-          if (lead) {
+          if (lead && canTransitionSubscription(lead.status, "confirmed_active")) {
             lead.status = "confirmed_active";
             lead.hasActivePerks = true;
             lead.updatedAt = new Date().toISOString();
             await leadRepository.updateLead(lead);
+          } else if (lead) {
+            console.warn(
+              `[PAYMENTS WEBHOOK] Ignoring illegal transition for lead ${leadRef}: "${lead.status}" -> "confirmed_active".`
+            );
           }
         }
 
@@ -134,11 +139,15 @@ export async function POST(request: Request) {
         // Revoke subscription and MedCity health perks
         if (leadRef) {
           const lead = await leadRepository.getLeadByReference(leadRef);
-          if (lead) {
+          if (lead && canTransitionSubscription(lead.status, "cancelled")) {
             lead.status = "cancelled";
             lead.hasActivePerks = false;
             lead.updatedAt = new Date().toISOString();
             await leadRepository.updateLead(lead);
+          } else if (lead) {
+            console.warn(
+              `[PAYMENTS WEBHOOK] Ignoring illegal transition for lead ${leadRef}: "${lead.status}" -> "cancelled".`
+            );
           }
         }
 

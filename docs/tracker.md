@@ -208,9 +208,63 @@ its implementation and verification are complete.
      `0005_postgres_payment_persistence.sql` actually apply cleanly, in
      order, against a real empty Railway Postgres database — no live
      database is available in this environment (see RR-005 §8).
-7. `[ ]` **RR-007 — Harden customer and health APIs**
-   - Validate pause ranges and status transitions, detect zero-row updates,
-     add audit logging, and enforce clinical health-data permissions.
+7. `[x]` **RR-007 — Harden customer and health APIs**
+   - **Lifecycle transitions were being bypassed, not just unvalidated:**
+     `src/app/api/payments/verify/route.ts` and
+     `src/app/api/payments/webhook/route.ts` set `lead.status` directly with
+     no FSM check at all — unlike the RR-003 admin routes, which already
+     used `canTransitionSubscription`. Both now check it before mutating;
+     an illegal transition (e.g. a stray webhook for an already-cancelled
+     lead) is logged and skipped rather than applied, and the webhook
+     still acks 200 so Razorpay doesn't retry indefinitely.
+   - **Fixed the same payment/lead-binding IDOR flagged in an earlier
+     review of this codebase and never closed:** `verify/route.ts`
+     activated whatever `leadReferenceCode` the client sent, without
+     checking it matched the `leadReferenceCode` actually recorded against
+     the paid order. A valid signature for one (e.g. cheap) order could
+     have activated an unrelated subscription. Now requires
+     `existingOrder.leadReferenceCode === leadReferenceCode` before any
+     activation.
+   - **`/api/customer/me` PATCH** (`src/app/api/customer/me/route.ts`):
+     - `pause` (self-service vacation dates — intentionally distinct from
+       the admin-level `paused` lifecycle status; perks are not revoked):
+       now validates the date range with the same `validatePauseRange`
+       used by the admin subscriptions module, requires the subscription
+       to actually belong to the caller *and* be `confirmed_active` before
+       allowing it, and uses `.returning()` to detect and report a
+       zero-row update instead of returning a false "success".
+     - `delivery_notes`: same ownership + zero-row-detection treatment.
+     - Added `profile` and `address` update types (full name; full address
+       fields, not just notes) — previously unsupported at the API level.
+     - Every mutation now writes an `administrative_audit_logs` row.
+   - **Health data** (`src/app/api/customer/health/route.ts`): added
+     access logging — every read of a customer's own vitals is now an
+     audited event, not just writes. Confirmed there is no public route or
+     `NEXT_PUBLIC_*` path that can reach `health_vitals`.
+   - **Clinical-role permission gap found and fixed:** the legacy
+     `user_role` enum has had a `nutritionist` value since
+     `0000_baseline_schema`, but `0002_rbac_and_cms` never created a
+     matching `application_roles` row for it — meaning no one with that
+     role could ever be granted a permission through the RBAC tables
+     `hasPermission()` actually reads. The only role holding `health:read`
+     was `read_only_auditor`, which is backwards for a clinical permission.
+     `drizzle/0006_nutritionist_health_rbac.sql` adds the role and grants
+     it `health:read`.
+   - Added `GET /api/admin/customers/[userId]/health`
+     (`health:read`-gated, staff-facing, distinct from the owner-only
+     customer route) so a nutritionist can actually use the permission
+     above. Every access is logged with both the viewing staff member and
+     the customer whose records were viewed.
+   - Acceptance: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (10 files / 76 tests — no new
+     pure logic was introduced here beyond what `validatePauseRange` and
+     `canTransitionSubscription` already cover; the new hardening is in
+     route handlers, consistent with how `subscription-admin.ts`/
+     `staff-admin.ts` were tested in RR-003), `npm run db:check` (passes),
+     `npm run build` succeeds. NOT VERIFIED: exercising any of this against
+     a live database/Clerk session, and applying
+     `0006_nutritionist_health_rbac.sql` — no live environment is
+     available here (see RR-005 §8).
 
 ---
 

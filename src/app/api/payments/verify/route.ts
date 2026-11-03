@@ -3,6 +3,7 @@ import { getServerAuthoritativeCheckoutMode } from "@/lib/checkout-config";
 import { razorpayClient } from "@/lib/razorpay";
 import { leadRepository } from "@/lib/lead-storage";
 import { paymentRepository } from "@/lib/payment-storage";
+import { canTransitionSubscription } from "@/lib/subscription-transitions";
 
 /**
  * POST /api/payments/verify
@@ -11,7 +12,10 @@ import { paymentRepository } from "@/lib/payment-storage";
  *
  * GUARDRAIL 1: Server-only HMAC-SHA256 verification using crypto.timingSafeEqual to prevent timing attacks.
  * GUARDRAIL 2: Fail-closed security when RAZORPAY_KEY_SECRET is unconfigured.
- * GUARDRAIL 3: Subscription promotion to confirmed_active with perks activated.
+ * GUARDRAIL 3: Subscription promotion to confirmed_active with perks activated, but only when (a) the
+ *              verified order was actually created for this leadReferenceCode (prevents activating an
+ *              unrelated/unpaid subscription with a signature proven valid for a different order), and
+ *              (b) the subscription's current status legally permits the transition (RR-007).
  */
 export async function POST(request: Request) {
   try {
@@ -65,19 +69,33 @@ export async function POST(request: Request) {
       );
     }
 
-    // Transition subscriber lead to confirmed_active if reference is present
+    // Record verified transaction in ledger
+    const existingOrder = await paymentRepository.getOrder(razorpayOrderId);
+
+    // Transition subscriber lead to confirmed_active, but only if this
+    // order was actually created for this leadReferenceCode. Without this
+    // check, a valid signature for a cheap/unrelated order could be
+    // replayed with a different leadReferenceCode to activate it instead.
     if (leadReferenceCode) {
-      const existingLead = await leadRepository.getLeadByReference(leadReferenceCode);
-      if (existingLead) {
-        existingLead.status = "confirmed_active";
-        existingLead.hasActivePerks = true;
-        existingLead.updatedAt = new Date().toISOString();
-        await leadRepository.updateLead(existingLead);
+      if (!existingOrder || existingOrder.leadReferenceCode !== leadReferenceCode) {
+        console.error(
+          `[SECURITY ALERT] leadReferenceCode "${leadReferenceCode}" does not match the lead reference recorded for order ${razorpayOrderId}. Refusing to activate.`
+        );
+      } else {
+        const existingLead = await leadRepository.getLeadByReference(leadReferenceCode);
+        if (existingLead && canTransitionSubscription(existingLead.status, "confirmed_active")) {
+          existingLead.status = "confirmed_active";
+          existingLead.hasActivePerks = true;
+          existingLead.updatedAt = new Date().toISOString();
+          await leadRepository.updateLead(existingLead);
+        } else if (existingLead) {
+          console.warn(
+            `[PAYMENTS VERIFY] Ignoring illegal transition for lead ${leadReferenceCode}: "${existingLead.status}" -> "confirmed_active".`
+          );
+        }
       }
     }
 
-    // Record verified transaction in ledger
-    const existingOrder = await paymentRepository.getOrder(razorpayOrderId);
     await paymentRepository.recordTransaction({
       id: razorpayPaymentId,
       orderId: razorpayOrderId,
