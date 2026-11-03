@@ -49,9 +49,45 @@ its implementation and verification are complete.
      `drizzle/0003_seed_content_templates.sql` against a live Postgres
      instance — no live database credentials are available in this
      environment (see RR-005).
-3. `[ ]` **RR-003 — Complete the admin modules**
-   - Implement subscriptions, payments, content, audit-log, and staff role
-     management routes with permission checks.
+3. `[x]` **RR-003 — Complete the admin modules**
+   - **Subscriptions** (`/admin/subscriptions`): confirm / cancel / pause
+     (with a `validatePauseRange` range check, tested) / resume, each
+     routed through the existing `canTransitionSubscription` FSM guard
+     (`src/lib/subscription-transitions.ts`) so illegal transitions are
+     rejected, not silently accepted. Every transition writes a
+     `subscription_audit_logs` row with the acting admin's user id. A
+     zero-row `UPDATE` (e.g. a concurrently deleted row) is detected and
+     raised distinctly from "not found" rather than reported as success.
+   - **Payments** (`/admin/payments`): read-only view of orders and
+     transactions through the existing `IPaymentRepository` abstraction.
+     This repository is still file-backed pending RR-006's PostgreSQL
+     migration — the admin page itself needs no change once that lands.
+   - **Content** — already delivered under RR-002.
+   - **Audit log** (`/admin/audit-log`): lists `administrative_audit_logs`
+     (every admin content, subscription, and staff action writes here).
+   - **Staff management** (`/admin/staff`): assign/revoke `user_roles`
+     grants (the actual PostgreSQL RBAC `hasPermission()` reads from) by
+     email + role, independent of the legacy `users.role` enum column.
+   - Fixed a real gap found while building this: `isStaffUser()`
+     (`src/lib/clerk-auth.ts`) now treats "has a `user_roles` grant" as
+     sufficient for entering the `/admin` shell, not just a non-customer
+     legacy enum value — otherwise a role granted only through the new
+     Staff module would never reach the admin area it's supposed to
+     unlock. The shell check stays coarse; every module still enforces
+     its own specific permission via `hasPermission()`/`requirePermission()`
+     on its own routes and API handlers (never UI-hiding alone).
+   - Known limitation carried forward, not fixed here: `users.role` (the
+     legacy enum) and `user_roles` (the RBAC grant table) are two
+     parallel systems that are not auto-synced. A user's enum value does
+     not create a matching `user_roles` row. The Staff module is the
+     correct way to grant real permissions going forward.
+   - Acceptance: `npm run typecheck` (0 errors), `npm run lint` (0
+     warnings/errors), `npm run test:vitest` (7 files / 52 tests, up
+     from 6/48 — added `tests/unit/admin-modules.test.ts`), `npm run
+     build` succeeds. NOT VERIFIED: exercising these admin actions
+     against a live Postgres instance with real staff/customer accounts
+     — no live database or Clerk session is available in this
+     environment (see RR-005).
 4. `[ ]` **RR-004 — Add Clerk lifecycle synchronization**
    - Add signed, idempotent `user.created`, `user.updated`, and `user.deleted`
      reconciliation.

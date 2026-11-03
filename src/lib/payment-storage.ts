@@ -40,6 +40,8 @@ export interface IPaymentRepository {
   getOrder(orderId: string): Promise<PaymentOrderRecord | null>;
   recordTransaction(tx: PaymentTransactionRecord): Promise<void>;
   getTransaction(txId: string): Promise<PaymentTransactionRecord | null>;
+  listOrders(): Promise<PaymentOrderRecord[]>;
+  listTransactions(): Promise<PaymentTransactionRecord[]>;
 }
 
 export class JsonFilePaymentRepository implements IPaymentRepository {
@@ -156,6 +158,30 @@ export class JsonFilePaymentRepository implements IPaymentRepository {
       return data.transactions.find((t) => t.id === txId) || null;
     } catch {
       return null;
+    }
+  }
+
+  async listOrders(): Promise<PaymentOrderRecord[]> {
+    try {
+      const raw = fs.readFileSync(this.paymentsFilePath, "utf8");
+      const data = JSON.parse(raw || '{"orders":[],"transactions":[]}') as {
+        orders: PaymentOrderRecord[];
+      };
+      return [...data.orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    } catch {
+      return [];
+    }
+  }
+
+  async listTransactions(): Promise<PaymentTransactionRecord[]> {
+    try {
+      const raw = fs.readFileSync(this.paymentsFilePath, "utf8");
+      const data = JSON.parse(raw || '{"orders":[],"transactions":[]}') as {
+        transactions: PaymentTransactionRecord[];
+      };
+      return [...data.transactions].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    } catch {
+      return [];
     }
   }
 }

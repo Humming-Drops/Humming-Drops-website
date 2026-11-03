@@ -35,8 +35,17 @@ export default async function AdminOverviewPage() {
           <Link className="rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white" href="/admin/leads">
             Review registrations
           </Link>
+          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/subscriptions">
+            Manage subscriptions
+          </Link>
+          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/payments">
+            View payments
+          </Link>
           <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/content">
             Manage website content
+          </Link>
+          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/staff">
+            Manage staff roles
           </Link>
         </div>
       </div>

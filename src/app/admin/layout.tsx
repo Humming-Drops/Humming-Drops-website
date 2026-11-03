@@ -1,32 +1,17 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
-import { getAppUserByClerkId } from "@/lib/clerk-auth";
-
-const STAFF_ROLES = [
-  "admin",
-  "operations",
-  "nutritionist",
-  "super_admin",
-  "business_admin",
-  "operations_manager",
-  "finance_manager",
-  "content_manager",
-  "read_only_auditor",
-];
+import { isStaffUser } from "@/lib/clerk-auth";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  const appUser = userId ? await getAppUserByClerkId(userId) : null;
-
-  // The shell only confirms the visitor holds some staff role; each admin
-  // module (leads, content, payments, ...) enforces its own specific
-  // permission via requirePermission()/hasPermission() on its own routes.
-  if (!appUser?.isActive || !STAFF_ROLES.includes(appUser.role)) {
+  // The shell only confirms the visitor is some kind of active staff
+  // account; each admin module (leads, content, subscriptions, payments,
+  // staff, audit log, ...) enforces its own specific permission via
+  // requirePermission()/hasPermission() on its own routes.
+  if (!(await isStaffUser())) {
     redirect("/dashboard/overview");
   }
 
@@ -58,6 +43,7 @@ export default async function AdminLayout({
             ["Subscriptions", "/admin/subscriptions"],
             ["Payments", "/admin/payments"],
             ["Content", "/admin/content"],
+            ["Staff", "/admin/staff"],
             ["Audit log", "/admin/audit-log"],
           ].map(([label, href]) => (
             <Link
