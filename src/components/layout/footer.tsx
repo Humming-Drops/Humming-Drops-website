@@ -24,7 +24,7 @@ export function Footer() {
           </div>
 
           <p className="text-sm text-body max-w-sm leading-relaxed font-sans">
-            Daily doorstep morning breakfast boxes of fresh cut fruits, vegetables, mix salad, sprouts, and dry fruits in Bangalore.
+            Doorstep morning breakfast boxes in Bangalore — a fresh fruit &amp; vegetable box 5 days a week, plus a healthy oats meal 2 days a week.
           </p>
 
           <div className="pt-1.5 text-xs text-body/80 border-t border-[#E2ECE4]">

@@ -279,7 +279,7 @@ export function Hero() {
                   </div>
                   <div className="leading-tight">
                     <p className="font-bold">4 Cut Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 2 Veggies</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 3 Veggies</p>
                   </div>
                 </div>
 
@@ -288,8 +288,8 @@ export function Hero() {
                     <Salad className="w-4 h-4 text-emerald-700" />
                   </div>
                   <div className="leading-tight">
-                    <p className="font-bold">Sprouts &amp; Salad</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">+ Dry Fruits</p>
+                    <p className="font-bold">Sprouts &amp; Dry Fruits</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">5 Days a Week</p>
                   </div>
                 </div>
 

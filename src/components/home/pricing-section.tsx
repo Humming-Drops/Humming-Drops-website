@@ -87,31 +87,25 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">4 Varieties of Fruits</strong> — Fresh cut daily</span>
+                    <span><strong className="text-[#132A1C]">Fresh Fruit &amp; Vegetable Box</strong> — 5 days a week</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">2 Varieties of Vegetables</strong> — Crisp &amp; peeled</span>
+                    <span>4 fruit varieties, 3 vegetable varieties, sprouts &amp; dry fruits on box days</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Fresh Mix Salad</strong> — Rich in vitamins</span>
+                    <span><strong className="text-[#132A1C]">Healthy Oats Meal</strong> — 2 days a week</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Fresh Sprouted Pulses</strong> — High plant protein</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
-                    </div>
-                    <span><strong className="text-[#132A1C]">Dry Fruits</strong> — 3 days a week</span>
+                    <span>Oats served with fruits &amp; dry fruits on oats days</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0 mt-0.5">
@@ -196,12 +190,6 @@ export function PricingSection() {
                   Everything in Standard, plus:
                 </span>
                 <ul className="space-y-3 text-sm text-[#405347]">
-                  <li className="flex items-start gap-3 font-semibold text-[#132A1C] bg-amber-50/80 p-2.5 rounded-2xl border border-amber-200/80">
-                    <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-amber-900 shrink-0 mt-0.5">
-                      <Sparkles className="w-3.5 h-3.5" />
-                    </div>
-                    <span><strong className="text-amber-950">Daily Dry Fruits:</strong> Premium almonds &amp; walnuts delivered every day</span>
-                  </li>
                   <li className="flex items-start gap-3 font-semibold text-[#132A1C] bg-emerald-50/80 p-2.5 rounded-2xl border border-emerald-200/80">
                     <div className="w-5 h-5 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-900 shrink-0 mt-0.5">
                       <Sparkles className="w-3.5 h-3.5" />
@@ -218,7 +206,7 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>All 5 daily box pillars (4 Fruits, 2 Veg, Salad &amp; Sprouts)</span>
+                    <span>5-day Fruit &amp; Vegetable Box + 2-day Healthy Oats Meal</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">

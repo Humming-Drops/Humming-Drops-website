@@ -114,7 +114,7 @@ export function TwoPillars() {
 
               {/* 1-Line Core Summary */}
               <p className="text-base text-[#405347] font-normal leading-relaxed pt-1">
-                Fresh fruits, veggies, salad &amp; sprouts delivered every morning before 7:30 AM with zero kitchen prep.
+                Fresh fruit &amp; vegetable box 5 days a week, plus a healthy oats meal 2 days a week — delivered every morning before 7:30 AM with zero kitchen prep.
               </p>
 
               {/* 3 Balanced Highlights */}
@@ -123,13 +123,13 @@ export function TwoPillars() {
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>4 Seasonal Cut Fruits &amp; 2 Crisp Vegetables</span>
+                  <span>4 Seasonal Cut Fruits &amp; 3 Crisp Vegetables</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>Fresh Mix Garden Salad, Sprouted Pulses &amp; Dry Fruits</span>
+                  <span>Mixed Sprouts Portion &amp; Dry Fruits Mix</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">

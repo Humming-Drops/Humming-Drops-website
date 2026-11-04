@@ -11,11 +11,11 @@ import { ClosingCTA } from "@/components/home/closing-cta";
 export const metadata: Metadata = {
   title: "Humming Drops | Healthy Drops, Healthier you",
   description:
-    "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
+    "Morning doorstep delivery in Bangalore: a fresh fruit & vegetable box 5 days a week, plus a healthy oats meal 2 days a week. In partnership with Berrybeats Cafe & MedCity Health Labs.",
   openGraph: {
     title: "Humming Drops | Healthy Drops, Healthier you",
     description:
-      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
+      "Morning doorstep delivery in Bangalore: a fresh fruit & vegetable box 5 days a week, plus a healthy oats meal 2 days a week. In partnership with Berrybeats Cafe & MedCity Health Labs.",
     images: ["/images/humming-drops-box.png"],
   },
 };
