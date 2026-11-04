@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Leaf, Sparkles, Heart, Sun, Check, ChevronRight, ShieldCheck, Apple, Droplets, Utensils } from "lucide-react";
+import { Leaf, Sparkles, Heart, Sun, Check, ChevronRight, ShieldCheck, Apple, Droplets, Utensils, CalendarOff } from "lucide-react";
 import { type PlanTier } from "@/types/plans";
 import {
   HandwrittenAnnotation,
@@ -196,6 +196,12 @@ export function BoxAnatomy() {
           <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
             5 distinct nutritional compartments, freshly prepared every morning and delivered straight to your door.
           </p>
+
+          {/* Sunday Closure Notice */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-sm font-bold shadow-2xs">
+            <CalendarOff className="w-4 h-4 text-amber-600 shrink-0" aria-hidden="true" />
+            <span>We&apos;re closed every Sunday — no deliveries on Sundays</span>
+          </div>
 
           {/* Interactive Standard vs Premium Toggle */}
           <div className="pt-2 flex items-center justify-center w-full max-w-sm mx-auto">
