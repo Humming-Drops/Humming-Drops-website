@@ -131,7 +131,7 @@ export function WhyHummingDrops() {
                   </div>
                   <div>
                     <strong className="text-white block font-bold">Dawn Nutrition by 7:30 AM:</strong>
-                    Fresh fruit &amp; vegetable box 5 days a week, plus a healthy oats meal 2 days a week, delivered to your doorstep.
+                    Fresh fruit &amp; vegetable box 4 days a week, plus a healthy oats meal 2 days a week, delivered to your doorstep.
                   </div>
                 </div>
 

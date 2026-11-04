@@ -16,7 +16,7 @@ export default function PlansPage() {
           Transparent Monthly Plans
         </h1>
         <p className="text-stone-600">
-          Doorstep delivery every morning in Bangalore (closed Sundays). All plans include a 5-day Fresh Fruit &amp; Vegetable Box plus a 2-day Healthy Oats Meal, free MedCity Smiles membership, and free monthly vitals health checkups.
+          Doorstep delivery every morning in Bangalore (closed Sundays). All plans include a 4-day Fresh Fruit &amp; Vegetable Box plus a 2-day Healthy Oats Meal, free MedCity Smiles membership, and free monthly vitals health checkups.
         </p>
       </div>
 

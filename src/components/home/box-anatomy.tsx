@@ -31,7 +31,7 @@ const COMPARTMENTS: Compartment[] = [
   {
     id: "fruits",
     number: "01",
-    name: "4 Varieties of Fruits",
+    name: "5 Varieties of Fruits",
     shortTag: "Essential Vitamins on Box Days",
     icon: Sparkles,
     colorClass: "text-rose-600",
@@ -41,11 +41,11 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-rose-400",
     pulseColor: "bg-rose-400/40",
     hotspot: { x: 30, y: 32 },
-    getFrequency: () => "5 Days a Week",
+    getFrequency: () => "4 Days a Week",
     getShortSummary: () =>
-      "Four rotating seasonal fruits, freshly cut at dawn, included every Fruit & Vegetable Box day for natural vitamins, hydration, and clean energy.",
+      "Five rotating seasonal fruits, freshly cut at dawn, included every Fruit & Vegetable Box day for natural vitamins, hydration, and clean energy.",
     getHighlights: () => [
-      { icon: Apple, text: "4 Rotating Varieties" },
+      { icon: Apple, text: "5 Rotating Varieties" },
       { icon: Droplets, text: "Natural Morning Hydration" },
       { icon: Sparkles, text: "100% Raw Whole Produce" },
     ],
@@ -63,7 +63,7 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-amber-400",
     pulseColor: "bg-amber-400/40",
     hotspot: { x: 74, y: 34 },
-    getFrequency: () => "5 Days a Week",
+    getFrequency: () => "4 Days a Week",
     getShortSummary: () =>
       "Three wholesome raw vegetables, carefully washed, peeled, and sliced to deliver natural dietary fiber and minerals on every box day.",
     getHighlights: () => [
@@ -85,7 +85,7 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-emerald-400",
     pulseColor: "bg-emerald-400/40",
     hotspot: { x: 52, y: 72 },
-    getFrequency: () => "5 Days a Week",
+    getFrequency: () => "4 Days a Week",
     getShortSummary: () =>
       "A nutrient-dense portion of live sprouted pulses, cultivated with strict hygiene, delivering bioavailable morning energy and clean protein on box days.",
     getHighlights: () => [
@@ -182,7 +182,7 @@ export function BoxAnatomy() {
           </h2>
 
           <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
-            5 days a week, a fresh fruit &amp; vegetable box. 2 days a week, a healthy oats meal. Freshly prepared
+            4 days a week, a fresh fruit &amp; vegetable box. 2 days a week, a healthy oats meal. Freshly prepared
             every morning and delivered straight to your door.
           </p>
 
@@ -367,7 +367,7 @@ export function BoxAnatomy() {
                       <span>Weekly Rhythm:</span>
                     </div>
                     <p className="text-[11px] leading-tight text-[#405347]">
-                      <strong>5 days a week:</strong> Fresh Fruit &amp; Vegetable Box. ·{" "}
+                      <strong>4 days a week:</strong> Fresh Fruit &amp; Vegetable Box. ·{" "}
                       <strong>2 days a week:</strong> Healthy Oats Meal.
                     </p>
                   </div>

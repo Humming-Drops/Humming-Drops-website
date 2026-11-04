@@ -278,7 +278,7 @@ export function Hero() {
                     <Apple className="w-4 h-4 text-rose-600" />
                   </div>
                   <div className="leading-tight">
-                    <p className="font-bold">4 Cut Fruits</p>
+                    <p className="font-bold">5 Cut Fruits</p>
                     <p className="text-[11px] text-[#657B6F] font-normal">&amp; 3 Veggies</p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export function Hero() {
                   </div>
                   <div className="leading-tight">
                     <p className="font-bold">Sprouts &amp; Dry Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">5 Days a Week</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">4 Days a Week</p>
                   </div>
                 </div>
 

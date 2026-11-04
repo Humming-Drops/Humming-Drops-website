@@ -345,7 +345,7 @@ export default function SubscribePage() {
             Begin Your Morning Habit
           </h1>
           <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            Fresh Fruit &amp; Vegetable Box 5 days a week, Healthy Oats Meal 2 days a week — delivered every morning
+            Fresh Fruit &amp; Vegetable Box 4 days a week, Healthy Oats Meal 2 days a week — delivered every morning
             from Berrybeats cafe, Bangalore (closed Sundays).
           </p>
         </div>
@@ -853,7 +853,7 @@ export default function SubscribePage() {
                         {activePlan.name} Plan (Monthly)
                       </span>
                       <span className="text-xs text-stone-500 block">
-                        5-Day Box + 2-Day Oats · Bangalore Doorstep Delivery
+                        4-Day Box + 2-Day Oats · Bangalore Doorstep Delivery
                       </span>
                     </div>
                     <span className="font-mono text-xl font-extrabold text-forest-900">

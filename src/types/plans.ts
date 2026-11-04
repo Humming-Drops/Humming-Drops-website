@@ -24,8 +24,8 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
     monthlyPriceINR: 3500,
     tagline: "Fresh fruit & vegetable boxes plus healthy oats meals, with holistic health monitoring",
     boxInclusions: [
-      { title: "Fresh Fruit & Vegetable Box", frequency: "5 Days a Week" },
-      { title: "4 Varieties of Fruits", frequency: "On Box Days" },
+      { title: "Fresh Fruit & Vegetable Box", frequency: "4 Days a Week" },
+      { title: "5 Varieties of Fruits", frequency: "On Box Days" },
       { title: "3 Varieties of Vegetables", frequency: "On Box Days" },
       { title: "Mixed Sprouts Portion", frequency: "On Box Days" },
       { title: "Dry Fruits Mix", frequency: "On Box Days" },
@@ -45,8 +45,8 @@ export const OFFICIAL_PLANS: Record<PlanTier, SubscriptionPlan> = {
     tagline: "Everything in Standard plus curated juices & MedCity Labs discounts",
     isRecommended: true,
     boxInclusions: [
-      { title: "Fresh Fruit & Vegetable Box", frequency: "5 Days a Week" },
-      { title: "4 Varieties of Fruits", frequency: "On Box Days" },
+      { title: "Fresh Fruit & Vegetable Box", frequency: "4 Days a Week" },
+      { title: "5 Varieties of Fruits", frequency: "On Box Days" },
       { title: "3 Varieties of Vegetables", frequency: "On Box Days" },
       { title: "Mixed Sprouts Portion", frequency: "On Box Days" },
       { title: "Dry Fruits Mix", frequency: "On Box Days" },

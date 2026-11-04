@@ -20,7 +20,7 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: "5-Day Box + 2-Day Oats",
+    title: "4-Day Box + 2-Day Oats",
     subtitle: "Fruits, veg, sprouts, nuts & oats",
     bgClass: "bg-mint",
     iconColor: "text-primary",
