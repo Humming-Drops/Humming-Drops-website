@@ -75,9 +75,6 @@ export function PricingSection() {
                   </span>
                   <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
                 </div>
-                <div className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-3 py-1 rounded-full">
-                  <span>Just ~₹116 / day</span>
-                </div>
               </div>
 
               {/* Inclusions List */}

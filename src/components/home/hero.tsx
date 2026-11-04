@@ -258,7 +258,7 @@ export function Hero() {
               {/* Sub-CTA Informational Line */}
               <div className="flex items-center gap-2 text-xs font-semibold text-[#405347] pt-1">
                 <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹116/day
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹3,500/month
                 </span>
                 <span>•</span>
                 <span>Pause or cancel anytime</span>
