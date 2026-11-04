@@ -231,14 +231,14 @@ export function BoxAnatomy() {
               <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-emerald-50">
                 <Image
                   src="/images/humming-drops-box.png"
-                  alt="Authentic Humming Drops 5-Compartment Breakfast Box"
+                  alt="Authentic Humming Drops Fresh Fruit & Vegetable Box"
                   fill
                   sizes="(max-width: 1024px) 100vw, 640px"
                   className="object-cover object-center"
                 />
 
-                {/* Hotspot Beacons */}
-                {COMPARTMENTS.map((c) => {
+                {/* Hotspot Beacons — only the 4 Fruit & Vegetable Box compartments shown in this photo */}
+                {COMPARTMENTS.filter((c) => c.id !== "oats").map((c) => {
                   const isSelected = c.id === activeCompartmentId;
                   return (
                     <button
@@ -279,7 +279,7 @@ export function BoxAnatomy() {
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                   Tap numbers to inspect each fresh compartment
                 </span>
-                <span className="font-medium">5-Compartment Fresh Box</span>
+                <span className="font-medium">4-Compartment Fresh Box</span>
               </div>
             </div>
           </div>

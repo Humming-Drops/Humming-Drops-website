@@ -25,13 +25,13 @@ const WHY_MEDCITY = [
     id: "membership",
     icon: Heart,
     title: "Free With Every Plan",
-    copy: "MedCity Smiles membership is included automatically with both the Standard and Premium Humming Drops subscriptions — no separate sign-up.",
+    copy: "MedCity Smiles membership is included free with both the Standard and Premium Humming Drops subscriptions.",
   },
   {
     id: "checkups",
     icon: Stethoscope,
     title: "Preventative, Not Reactive",
-    copy: "A free monthly checkup — blood sugar, cholesterol, blood pressure — so small changes in your vitals get caught early, not after they become a problem.",
+    copy: "A free monthly checkup — blood sugar, cholesterol, blood pressure — monitored by our community of doctors and clinical nutritionists.",
   },
   {
     id: "doctors",
@@ -185,7 +185,7 @@ export default function MedCitySmilesPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold tracking-wide">
             <Smile className="w-3.5 h-3.5 text-amber-300" />
-            <span>Your Pocket Companion</span>
+            <span>Free With Every Plan</span>
           </div>
           <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold tracking-tight leading-[1.16]">
             Join MedCity Smiles — Free With Your Subscription

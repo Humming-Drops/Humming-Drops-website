@@ -31,7 +31,7 @@ export function Navbar() {
       setScrolled(window.scrollY > 12);
 
       // Determine active section based on scroll position
-      const sections = ["pricing", "journey", "box-experience", "health-community"];
+      const sections = ["pricing", "journey", "box-experience", "medcity-smiles"];
       const scrollPos = window.scrollY + 100;
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);

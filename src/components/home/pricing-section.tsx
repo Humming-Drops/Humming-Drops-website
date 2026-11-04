@@ -166,7 +166,7 @@ export function PricingSection() {
                     Premium Plan
                   </h3>
                   <p className="text-xs sm:text-sm text-[#657B6F] mt-1">
-                    Daily dry fruits + detox juices + exclusive lab perks
+                    Curated juices + exclusive MedCity Labs discounts
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shadow-2xs shrink-0">

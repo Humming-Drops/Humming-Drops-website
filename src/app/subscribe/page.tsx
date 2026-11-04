@@ -758,7 +758,7 @@ export default function SubscribePage() {
                       {
                         id: "standard" as DietaryType,
                         name: "Standard Mix",
-                        desc: "Full wholesome variety: fruits, vegetables, sprouts, mix salad, dry fruits.",
+                        desc: "Full wholesome variety: fruits, vegetables, sprouts, dry fruits & oats meals.",
                       },
                       {
                         id: "vegan" as DietaryType,

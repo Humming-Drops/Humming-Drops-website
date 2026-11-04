@@ -33,7 +33,7 @@ const CARE_PILLARS = [
     id: "mind",
     icon: Smile,
     title: "Mindful Support, Not Just Metrics",
-    copy: "MedCity Smiles pairs your physical checkups with a calm, judgment-free community space.",
+    copy: "MedCity Smiles pairs your physical checkups with a supportive, community-first space for your mental wellbeing.",
   },
 ];
 
