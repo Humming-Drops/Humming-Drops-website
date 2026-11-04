@@ -5,7 +5,7 @@ import { MorningJourney } from "@/components/home/morning-journey";
 import { BoxAnatomy } from "@/components/home/box-anatomy";
 import { PricingSection } from "@/components/home/pricing-section";
 import { WhyHummingDrops } from "@/components/home/why-humming-drops";
-import { HealthCommunityBridge } from "@/components/home/health-community-bridge";
+import { MedCitySmilesSection } from "@/components/home/medcity-smiles-section";
 import { ClosingCTA } from "@/components/home/closing-cta";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function HomePage() {
       <Hero />
 
       {/* 2. MedCity Smiles Community */}
-      <HealthCommunityBridge />
+      <MedCitySmilesSection />
 
       {/* 3. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
       <TwoPillars />
