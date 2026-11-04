@@ -265,6 +265,43 @@ its implementation and verification are complete.
      a live database/Clerk session, and applying
      `0006_nutritionist_health_rbac.sql` — no live environment is
      available here (see RR-005 §8).
+8. `[x]` **RR-008 — Client content revision (2026-11-04 change request)**
+   - Branch: `feat/site-content-revision`. Implemented the client's 8
+     ordered homepage/MedCity Smiles/footer content changes, one commit
+     per item:
+     1. Removed individual per-day pricing (`pricing-section.tsx`,
+        `hero.tsx`).
+     2–3. Removed the old "Nourishing the Body, Cultivating the Mind" /
+        "Cultivate Your Inner Garden" section (`health-community-bridge.tsx`,
+        deleted) and replaced it with a new, brochure-grounded MedCity
+        Smiles section (`medcity-smiles-section.tsx`) in the same homepage
+        slot, above Two Pillars.
+     4. Redesigned `/medcity-smiles` (Hero / Why MedCity Smiles / Monthly
+        Vitals / Community CTA).
+     5. Made the 3-step journey icon/illustration-led instead of
+        text-first, on both mobile and desktop (`morning-journey.tsx`).
+     6. Shortened the footer — dropped the 3-column link-group grid,
+        kept brand block + contact strip + bottom-bar core links
+        (`footer.tsx`, `navigation.ts`).
+     7. Added a prominent Sunday-closure notice to the Daily Breakfast Box
+        section (`box-anatomy.tsx`).
+     8. Updated the weekly plan structure site-wide, from the old
+        6-day everyday-salad model to: Fresh Fruit & Vegetable Box (4
+        fruit varieties, 3 vegetable varieties, mixed sprouts, dry fruits
+        mix) 5 days a week + Healthy Oats Meal (oats with fruits & dry
+        fruits) 2 days a week. Source of truth is `OFFICIAL_PLANS` in
+        `types/plans.ts`; propagated to `pricing-section.tsx`,
+        `box-anatomy.tsx` (compartments reworked, Standard/Premium
+        toggle removed since box composition no longer differs by
+        tier), `/plans`, `/subscribe`, and every other homepage/footer/
+        metadata reference to the old salad-inclusive daily structure.
+   - Plan: `docs/superpowers/plans/2026-11-04-site-content-revision.md`.
+   - Acceptance: `npm run lint` (0 warnings/errors) and `npm run
+     typecheck` (0 errors) after every one of the 8 commits. NOT
+     VERIFIED: live browser preview — the local dev server cannot render
+     any page in this environment (`@clerk/nextjs: Clerk keys are
+     missing`, no `.env.local` present); client/user review of the
+     actual rendered pages is still required before merge.
 
 ---
 
