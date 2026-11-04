@@ -36,13 +36,13 @@ const JOURNEY_STEPS: JourneyStep[] = [
   {
     number: "02",
     title: "Prepared & packed",
-    shortCopy: "Washed, cut, and assembled into 5 crisp compartments with strict culinary hygiene at Berrybeats Cafe.",
+    shortCopy: "Washed, cut, and assembled into your Fruit & Vegetable Box or Healthy Oats Meal with strict culinary hygiene at Berrybeats Cafe.",
     badge: "Culinary Kitchen",
     icon: Utensils,
     accentClass: "text-primary",
     bgLightClass: "bg-mint",
     borderClass: "border-primary/20",
-    highlights: ["Meticulously Washed & Sliced", "5 Balanced Compartments", "Hygienic Food-Grade Packing"],
+    highlights: ["Meticulously Washed & Sliced", "Balanced Daily Nutrition", "Hygienic Food-Grade Packing"],
   },
   {
     number: "03",
@@ -96,7 +96,7 @@ export function MorningJourney() {
         <div className="block sm:hidden max-w-xl mx-auto relative">
           {/* Vertical Dotted Connecting Line */}
           <div
-            className="absolute left-[29px] top-7 bottom-7 w-0 border-l-2 border-dashed border-emerald-300/80 pointer-events-none z-0"
+            className="absolute left-[39px] top-10 bottom-10 w-0 border-l-2 border-dashed border-emerald-300/80 pointer-events-none z-0"
             aria-hidden="true"
           />
 
@@ -108,19 +108,24 @@ export function MorningJourney() {
                   key={step.number}
                   className="p-5 rounded-2xl bg-white border border-[#E2ECE4] shadow-card space-y-3.5 relative"
                 >
-                  {/* Step Number Badge, Icon, Title on one line */}
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-xl bg-emerald-600 text-white font-display font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
-                      {step.number}
-                    </span>
+                  {/* Large Icon Illustration Badge, Number Accent, Title */}
+                  <div className="flex items-center gap-3.5">
                     <div
-                      className={`w-8 h-8 rounded-xl ${step.bgLightClass} ${step.accentClass} flex items-center justify-center shrink-0`}
+                      className={`relative w-[60px] h-[60px] rounded-full ${step.bgLightClass} ${step.accentClass} border-2 ${step.borderClass} flex items-center justify-center shrink-0 shadow-2xs`}
                     >
-                      <StepIcon className="w-4 h-4" />
+                      <StepIcon className="w-7 h-7" strokeWidth={1.75} />
+                      <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-600 text-white font-display font-black text-[10px] flex items-center justify-center shadow-2xs">
+                        {step.number}
+                      </span>
                     </div>
-                    <h3 className="text-base font-bold text-ink leading-tight truncate">
-                      {step.title}
-                    </h3>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-body">
+                        {step.badge}
+                      </span>
+                      <h3 className="text-base font-bold text-ink leading-tight">
+                        {step.title}
+                      </h3>
+                    </div>
                   </div>
 
                   <p className="text-sm text-body leading-relaxed font-sans">
@@ -162,8 +167,8 @@ export function MorningJourney() {
             ========================================================================= */}
         <div className="hidden sm:block">
           <div className="mb-8 sm:mb-10 relative max-w-4xl mx-auto">
-            {/* Subtle connecting track on desktop */}
-            <div className="hidden sm:block absolute top-1/2 left-8 right-8 h-0.5 bg-[#E2ECE4] -translate-y-1/2 z-0" />
+            {/* Connecting path graphic between the 3 icon stops */}
+            <div className="hidden sm:block absolute top-9 left-[16.5%] right-[16.5%] h-0.5 border-t-2 border-dashed border-emerald-300/80 z-0" />
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 relative z-10">
               {JOURNEY_STEPS.map((step, idx) => {
@@ -176,25 +181,27 @@ export function MorningJourney() {
                     onMouseEnter={() => setActiveStepIndex(idx)}
                     onFocus={() => setActiveStepIndex(idx)}
                     onClick={() => setActiveStepIndex(idx)}
-                    className={`p-4 rounded-[20px] border text-left transition-all duration-200 flex flex-col justify-between space-y-2 cursor-pointer ${
+                    className={`p-4 pt-5 rounded-[20px] border text-center transition-all duration-200 flex flex-col items-center space-y-2.5 cursor-pointer ${
                       isActive
                         ? "bg-white border-primary ring-2 ring-primary/20 shadow-md scale-[1.01]"
                         : "bg-white/90 border-[#E2ECE4] hover:bg-white hover:border-primary/40 shadow-2xs"
                     }`}
                     aria-pressed={isActive}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <div
-                        className={`w-8 h-8 rounded-xl ${step.bgLightClass} ${step.accentClass} flex items-center justify-center`}
-                      >
-                        <StepIcon className="w-4 h-4" />
-                      </div>
+                    <div
+                      className={`relative w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
+                        isActive
+                          ? `${step.bgLightClass} ${step.accentClass} ${step.borderClass} scale-105`
+                          : `${step.bgLightClass} ${step.accentClass} border-transparent`
+                      }`}
+                    >
+                      <StepIcon className="w-8 h-8" strokeWidth={1.75} />
                       <span
-                        className={`text-[11px] font-bold px-2 py-0.5 rounded-[20px] ${
-                          isActive ? "bg-primary text-white" : "bg-mint text-body"
+                        className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full font-display font-black text-[10px] flex items-center justify-center shadow-2xs ${
+                          isActive ? "bg-primary text-white" : "bg-emerald-600 text-white"
                         }`}
                       >
-                        Step {step.number}
+                        {step.number}
                       </span>
                     </div>
 
@@ -226,9 +233,9 @@ export function MorningJourney() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-11 h-11 rounded-[20px] ${activeStep.bgLightClass} ${activeStep.accentClass} border ${activeStep.borderClass} flex items-center justify-center font-bold text-lg shadow-2xs`}
+                      className={`w-14 h-14 rounded-full ${activeStep.bgLightClass} ${activeStep.accentClass} border-2 ${activeStep.borderClass} flex items-center justify-center shadow-2xs`}
                     >
-                      <activeStep.icon className="w-5 h-5" />
+                      <activeStep.icon className="w-7 h-7" strokeWidth={1.75} />
                     </div>
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-body">

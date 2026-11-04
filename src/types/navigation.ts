@@ -66,11 +66,6 @@ export const MEDCITY_SMILES_NAV: BrandNavConfig = {
   },
 };
 
-export interface FooterLinkGroup {
-  title: string;
-  links: { label: string; href: string; external?: boolean }[];
-}
-
 export const SHARED_FOOTER_CONFIG = {
   phone: "8618902810",
   whatsapp: "8618902810",
@@ -78,31 +73,4 @@ export const SHARED_FOOTER_CONFIG = {
   website: "www.hummingdrops.com",
   location: "Berrybeats Cafe, Bangalore",
   partners: "In partnership with Berrybeats Cafe & MedCity Health Labs",
-  linkGroups: [
-    {
-      title: "Shop & Plans",
-      links: [
-        { label: "Standard Plan (₹3,500/mo)", href: "/subscribe?plan=standard" },
-        { label: "Premium Plan (₹4,000/mo)", href: "/subscribe?plan=premium" },
-        { label: "What's in the Box", href: "/#box-experience" },
-        { label: "How it Works", href: "/#journey" },
-      ],
-    },
-    {
-      title: "Know More",
-      links: [
-        { label: "About Humming Drops", href: "/about" },
-        { label: "MedCity Smiles Community", href: "/medcity-smiles" },
-        { label: "Contact & Helpline", href: "/contact" },
-      ],
-    },
-    {
-      title: "Subscriber Portal",
-      links: [
-        { label: "Sign In", href: "/login" },
-        { label: "Register", href: "/register" },
-        { label: "Subscriber Dashboard", href: "/dashboard" },
-      ],
-    },
-  ],
 };

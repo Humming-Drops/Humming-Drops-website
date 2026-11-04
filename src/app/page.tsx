@@ -5,17 +5,17 @@ import { MorningJourney } from "@/components/home/morning-journey";
 import { BoxAnatomy } from "@/components/home/box-anatomy";
 import { PricingSection } from "@/components/home/pricing-section";
 import { WhyHummingDrops } from "@/components/home/why-humming-drops";
-import { HealthCommunityBridge } from "@/components/home/health-community-bridge";
+import { MedCitySmilesSection } from "@/components/home/medcity-smiles-section";
 import { ClosingCTA } from "@/components/home/closing-cta";
 
 export const metadata: Metadata = {
   title: "Humming Drops | Healthy Drops, Healthier you",
   description:
-    "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
+    "Morning doorstep delivery in Bangalore: a fresh fruit & vegetable box 4 days a week, plus a healthy oats meal 2 days a week. In partnership with Berrybeats Cafe & MedCity Health Labs.",
   openGraph: {
     title: "Humming Drops | Healthy Drops, Healthier you",
     description:
-      "Daily morning doorstep delivery of fresh mixed cut fruit boxes, crisp vegetables, fresh mix salad, sprouts, and dry fruits. In partnership with Berrybeats Cafe & MedCity Health Labs.",
+      "Morning doorstep delivery in Bangalore: a fresh fruit & vegetable box 4 days a week, plus a healthy oats meal 2 days a week. In partnership with Berrybeats Cafe & MedCity Health Labs.",
     images: ["/images/humming-drops-box.png"],
   },
 };
@@ -27,7 +27,7 @@ export default function HomePage() {
       <Hero />
 
       {/* 2. MedCity Smiles Community */}
-      <HealthCommunityBridge />
+      <MedCitySmilesSection />
 
       {/* 3. Three Equal Pillars: Nutrition, MedCity Smiles & Preventative Health */}
       <TwoPillars />
