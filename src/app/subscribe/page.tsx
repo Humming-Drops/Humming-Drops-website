@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import {
   Check,
   CheckCircle2,
@@ -25,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
+import { isValidPlanTier } from "@/lib/auth-redirects";
 
 interface ConfirmationData {
   leadReferenceCode: string;
@@ -67,17 +70,59 @@ const COMMON_ALLERGIES = [
   "Raw Papaya",
 ];
 
-export default function SubscribePage() {
+function SubscribeFormContent() {
+  const searchParams = useSearchParams();
+  const { user, isLoaded: isUserLoaded } = useUser();
+
+  const planParam = searchParams.get("plan");
+  const initialPlan: PlanTier = isValidPlanTier(planParam) ? planParam : "premium";
+
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isPending, startTransition] = useTransition();
 
-  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier>("premium");
+  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier>(initialPlan);
+
+  // Synchronize plan selection if query parameter changes dynamically
+  useEffect(() => {
+    const currentPlan = searchParams.get("plan");
+    if (isValidPlanTier(currentPlan)) {
+      setSelectedPlanId(currentPlan);
+    }
+  }, [searchParams]);
 
   const [customer, setCustomer] = useState({
     fullName: "",
     phone: "",
     email: "",
   });
+
+  // Prefill authenticated customer information without overwriting user input
+  useEffect(() => {
+    if (!isUserLoaded || !user) return;
+
+    setCustomer((prev) => {
+      const derivedFullName =
+        user.fullName ||
+        `${user.firstName || ""} ${user.lastName || ""}`.trim();
+      const primaryEmail =
+        user.primaryEmailAddress?.emailAddress || "";
+
+      const updatedFullName =
+        prev.fullName.trim() !== "" ? prev.fullName : derivedFullName;
+      const updatedEmail =
+        prev.email.trim() !== "" ? prev.email : primaryEmail;
+
+      if (updatedFullName === prev.fullName && updatedEmail === prev.email) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        fullName: updatedFullName,
+        email: updatedEmail,
+      };
+    });
+  }, [isUserLoaded, user]);
 
   const [deliveryAddress, setDeliveryAddress] = useState({
     flatNo: "",
@@ -1008,5 +1053,22 @@ export default function SubscribePage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function SubscribePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+            <p className="text-sm font-medium text-stone-500">Loading subscription form…</p>
+          </div>
+        </div>
+      }
+    >
+      <SubscribeFormContent />
+    </Suspense>
   );
 }

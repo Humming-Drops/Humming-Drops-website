@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
-import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import { UserButton, useAuth } from "@clerk/nextjs";
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -168,14 +168,12 @@ export function Navbar() {
           {/* Right Actions & Hamburger Toggle */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {!isSignedIn ? (
-              <SignInButton mode="modal">
-                <button
-                  type="button"
-                  className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full cursor-pointer"
-                >
-                  Sign In
-                </button>
-              </SignInButton>
+              <Link
+                href="/login"
+                className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full cursor-pointer"
+              >
+                Sign In
+              </Link>
             ) : (
               <UserButton />
             )}

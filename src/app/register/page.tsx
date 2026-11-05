@@ -9,7 +9,13 @@ export const metadata: Metadata = {
 export default function RegisterPage() {
   return (
     <div className="flex justify-center px-4 py-16">
-      <SignUp path="/register" routing="path" signInUrl="/login" fallbackRedirectUrl="/subscribe" />
-      </div>
+      <SignUp
+        path="/register"
+        routing="path"
+        signInUrl="/login"
+        fallbackRedirectUrl="/subscribe"
+        signInFallbackRedirectUrl="/dashboard/overview"
+      />
+    </div>
   );
 }
