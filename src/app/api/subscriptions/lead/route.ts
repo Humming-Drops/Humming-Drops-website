@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
@@ -233,7 +233,7 @@ export async function POST(request: Request) {
     });
 
     // 8. Construct Verified WhatsApp Handoff
-    const prefilledWhatsAppText = `Hi Humming Drops Bangalore team! I just submitted a breakfast box subscription request (${leadReferenceCode}) for the ${canonicalPlan.name} Plan (â‚¹${canonicalPlan.monthlyPriceINR}/mo). My name is ${fullName} (${normalizedPhone}). Delivery location: ${buildingName}, ${area}. Please confirm my morning schedule.`;
+    const prefilledWhatsAppText = `Hi Humming Drops Bangalore team! I just submitted a breakfast box subscription request (${leadReferenceCode}) for the ${canonicalPlan.name} Plan (₹${canonicalPlan.monthlyPriceINR}/mo). My name is ${fullName} (${normalizedPhone}). Delivery location: ${buildingName}, ${area}. Please confirm my morning schedule.`;
 
     const whatsappRedirectUrl = OFFICIAL_CONTACT.whatsappUrl(prefilledWhatsAppText);
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -95,7 +95,7 @@ export function HealthCommunityBridge() {
           {/* Highlighted Bridge Connection Statement */}
           <div className="p-4 sm:p-5 rounded-2xl bg-[#E6F7F5] border-l-4 border-[#00A88F] text-[#0B3D34] shadow-2xs max-w-2xl mx-auto text-left sm:text-center">
             <p className="text-base sm:text-lg font-medium leading-relaxed font-sans">
-              &ldquo;Just as Humming Drops nourishes your body every morning, your MedCity Smiles hummingbird is here for your mind â€” because real wellness is both.&rdquo;
+              &ldquo;Just as Humming Drops nourishes your body every morning, your MedCity Smiles hummingbird is here for your mind — because real wellness is both.&rdquo;
             </p>
           </div>
         </div>

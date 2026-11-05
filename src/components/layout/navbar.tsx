@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -171,7 +171,7 @@ export function Navbar() {
               <SignInButton mode="modal">
                 <button
                   type="button"
-                  className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
+                  className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full cursor-pointer"
                 >
                   Sign In
                 </button>
@@ -179,17 +179,6 @@ export function Navbar() {
             ) : (
               <UserButton />
             )}
-            {/* Secondary CTA (Sign In - visible on lg screens) */}
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="hidden lg:inline-flex text-content-secondary hover:text-content-primary font-medium"
-            >
-              <Link href={navConfig.secondaryCTA.href}>
-                {navConfig.secondaryCTA.label}
-              </Link>
-            </Button>
 
             {/* Primary CTA (visible from md breakpoint upwards) */}
             <Button
@@ -285,25 +274,41 @@ export function Navbar() {
                 </Link>
               </Button>
 
-              <Button
-                variant="secondary"
-                size="md"
-                asChild
-                className="w-full justify-center min-h-[48px] text-base font-bold"
-              >
-                <Link
-                  href={navConfig.secondaryCTA.href}
-                  onClick={() => setMobileMenuOpen(false)}
+              {!isSignedIn ? (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
                 >
-                  {navConfig.secondaryCTA.label}
-                </Link>
-              </Button>
+                  <Link
+                    href={navConfig.secondaryCTA.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {navConfig.secondaryCTA.label}
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
+                >
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Subscriber Dashboard
+                  </Link>
+                </Button>
+              )}
             </div>
 
             {/* Kitchen & Lab Partner Footnote */}
             <div className="pt-3 border-t border-line-subtle/60 text-center">
               <p className="text-xs text-content-muted">
-                Doorstep Breakfast Delivery Â· In partnership with Berrybeats Cafe &amp; MedCity Health Labs
+                Doorstep Breakfast Delivery · In partnership with Berrybeats Cafe &amp; MedCity Health Labs
               </p>
             </div>
           </div>

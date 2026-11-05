@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { TwoPillars } from "@/components/home/two-pillars";
 import { MorningJourney } from "@/components/home/morning-journey";
@@ -38,7 +38,7 @@ export default function HomePage() {
       {/* 5. What's in the Box: 5-compartment interactive breakdown */}
       <BoxAnatomy />
 
-      {/* 6. Plans: Standard â‚¹3,500 & Premium â‚¹4,000 */}
+      {/* 6. Plans: Standard ₹3,500 & Premium ₹4,000 */}
       <PricingSection />
 
       {/* 7. Why Humming Drops: Morning habit transformation */}

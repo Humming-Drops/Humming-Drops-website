@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Phone, Mail, MapPin, Sparkles, MessageCircle, ExternalLink, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 
 export function ClosingCTA() {
   return (
@@ -75,7 +76,7 @@ export function ClosingCTA() {
 
               {/* Email Contact */}
               <a
-                href="mailto:hummingdrops@gmail.com"
+                href={`mailto:${OFFICIAL_CONTACT.email}`}
                 className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
@@ -83,7 +84,7 @@ export function ClosingCTA() {
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block truncate">Email</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-stone-900 block truncate">hummingdrops</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-stone-900 block truncate">{OFFICIAL_CONTACT.email}</span>
                 </div>
               </a>
 
