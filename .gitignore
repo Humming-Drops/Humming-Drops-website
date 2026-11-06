@@ -20,6 +20,9 @@ data/*.json
 !data/.gitkeep
 scratch/test-leads-fixture/
 
+# Local-disk storage fallback (src/lib/storage.ts, dev/test only)
+.local-storage/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
