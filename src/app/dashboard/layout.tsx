@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description: "Manage your daily breakfast delivery, health vitals, and community access.",
 };
 
+// Every dashboard page reads the signed-in customer's own live data
+// (subscription, payments, health vitals). Must never be statically
+// prerendered -- see src/app/admin/layout.tsx for the same reasoning.
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({
   children,
 }: {
