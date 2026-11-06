@@ -364,10 +364,33 @@ its implementation and verification are complete.
      migrations applied; verified `application_roles` (all 8, including
      the RR-007 `nutritionist` fix) and `content_templates` (both CMS
      seeds) are actually present in the running database.
-   - Security check: `curl /admin` unauthenticated returns no admin
-     dashboard content (no leaked lead/metrics data) whether or not a
-     browser-like `Accept` header is sent — Clerk's `auth.protect()`
-     is genuinely enforced by the running container, not bypassed.
+   - **Critical finding, full route sweep (same day):** systematically
+     curled every page and API route against the running container.
+     Every `/admin/*`, `/dashboard/*`, and permission-gated `/api/*`
+     route returned HTTP 500 — body: `"Clerk: auth() was called but
+     Clerk can't detect usage of clerkMiddleware()"`. Root cause:
+     `middleware.ts` lived at the project root, but this project's
+     pages live under `src/app` — Next.js requires `middleware.ts` at
+     `src/middleware.ts` in that layout, or it is silently never
+     registered. Confirmed via
+     `.next/server/middleware-manifest.json`: `"middleware": {}`,
+     `"sortedMiddleware": []` — empty. `clerkMiddleware()` had never
+     run, for any request, in any environment that used this build.
+     Moved the file to `src/middleware.ts` (separate commit). Rebuilt,
+     re-swept every route: manifest now shows a real registered
+     middleware; every previously-500 route now correctly returns
+     `401` (API) or `404` (page — Clerk's anti-enumeration behavior
+     for an unauthenticated non-browser request) instead of crashing.
+     Public pages (`/`, `/about`, `/plans`, etc.) remain `200`.
+   - This was likely never caught before because no prior session had
+     a working `.env.local` (RR-008's blocker, fixed earlier in this
+     same RR-009) or had run the standalone Docker build — this is the
+     first time any authenticated route in this app has actually been
+     exercised end-to-end against a real build output.
+   - Also audited every route for uniqueness (`find src/app -name
+     "page.tsx" -o -name "route.ts"`, 46 total) — no path collisions —
+     and cross-checked every static `href="/..."` in the codebase
+     against that list — no dead internal links.
    - Local-disk storage fallback: write-permission bug confirmed fixed
      (non-root user can now create `.local-storage/...`). The fallback
      itself only activates when `NODE_ENV !== "production"`
