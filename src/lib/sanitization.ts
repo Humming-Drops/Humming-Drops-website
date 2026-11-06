@@ -11,13 +11,23 @@ import type { DeliveryAddressInput } from "@/types/subscription";
 /**
  * Normalizes raw phone input:
  * - Strips all whitespace, dashes, parentheses, plus signs
- * - Strips leading country code (+91 or 91) or trunk 0
+ * - Strips a leading country code (91) or trunk 0 -- but only when the
+ *   cleaned digit count shows one is actually present (12 or 11
+ *   digits). A real 10-digit mobile number can validly start with the
+ *   digits "91" (e.g. 9123456789); stripping "91" unconditionally
+ *   corrupted those numbers down to 8 digits and rejected them.
  * - Returns a clean 10-digit string
  */
 export function normalizePhone(raw: unknown): string {
   if (typeof raw !== "string") return "";
   const cleaned = raw.replace(/[\s\-\(\)\+]/g, "");
-  return cleaned.replace(/^91/, "").replace(/^0/, "");
+  if (cleaned.length === 12 && cleaned.startsWith("91")) {
+    return cleaned.slice(2);
+  }
+  if (cleaned.length === 11 && cleaned.startsWith("0")) {
+    return cleaned.slice(1);
+  }
+  return cleaned;
 }
 
 /**

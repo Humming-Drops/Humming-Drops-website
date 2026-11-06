@@ -25,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
+import { normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
+import { useAuth, SignInButton } from "@clerk/nextjs";
 
 interface ConfirmationData {
   leadReferenceCode: string;
@@ -68,6 +70,7 @@ const COMMON_ALLERGIES = [
 ];
 
 export default function SubscribePage() {
+  const { isSignedIn } = useAuth();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isPending, startTransition] = useTransition();
 
@@ -115,8 +118,7 @@ export default function SubscribePage() {
       if (!customer.fullName.trim() || customer.fullName.trim().length < 2) {
         newErrors.fullName = "Please enter your full name (minimum 2 characters).";
       }
-      const cleanPhone = customer.phone.replace(/[\s\-\(\)\+]/g, "").replace(/^91/, "").replace(/^0/, "");
-      if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      if (!isValidIndianPhone(normalizePhone(customer.phone))) {
         newErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
       }
       if (!customer.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email.trim())) {
@@ -145,6 +147,7 @@ export default function SubscribePage() {
   };
 
   const handleNext = () => {
+    if (currentStep === 1 && !isSignedIn) return;
     if (validateStep(currentStep)) {
       setSubmitError(null);
       setCurrentStep((prev) => Math.min(prev + 1, 5) as 1 | 2 | 3 | 4 | 5);
@@ -405,6 +408,17 @@ export default function SubscribePage() {
                     Choose the subscription tier that best fits your morning routine.
                   </p>
                 </div>
+
+                {!isSignedIn && (
+                  <div className="flex items-start gap-2.5 rounded-xl border border-forest-200 bg-forest-50/40 px-4 py-3 text-xs text-forest-900">
+                    <Info className="w-4 h-4 mt-0.5 shrink-0" aria-hidden="true" />
+                    <p>
+                      Feel free to browse plans without an account. You&apos;ll need to sign in
+                      before we collect any of your details — we won&apos;t ask for anything
+                      until then.
+                    </p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div
@@ -978,7 +992,20 @@ export default function SubscribePage() {
                 </Link>
               )}
 
-              {currentStep < 5 ? (
+              {currentStep === 1 && !isSignedIn ? (
+                <SignInButton mode="modal">
+                  <Button
+                    type="button"
+                    brand="humming"
+                    variant="primary"
+                    size="md"
+                    className="rounded-full px-6"
+                  >
+                    <span>Sign in to continue</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </SignInButton>
+              ) : currentStep < 5 ? (
                 <Button
                   type="button"
                   onClick={handleNext}
