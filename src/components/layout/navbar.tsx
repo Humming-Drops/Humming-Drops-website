@@ -179,17 +179,6 @@ export function Navbar() {
             ) : (
               <UserButton />
             )}
-            {/* Secondary CTA (Sign In - visible on lg screens) */}
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="hidden lg:inline-flex text-content-secondary hover:text-content-primary font-medium"
-            >
-              <Link href={navConfig.secondaryCTA.href}>
-                {navConfig.secondaryCTA.label}
-              </Link>
-            </Button>
 
             {/* Primary CTA (visible from md breakpoint upwards) */}
             <Button
@@ -285,19 +274,18 @@ export function Navbar() {
                 </Link>
               </Button>
 
-              <Button
-                variant="secondary"
-                size="md"
-                asChild
-                className="w-full justify-center min-h-[48px] text-base font-bold"
-              >
-                <Link
-                  href={navConfig.secondaryCTA.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {navConfig.secondaryCTA.label}
-                </Link>
-              </Button>
+              {!isSignedIn && (
+                <SignInButton mode="modal">
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    className="w-full justify-center min-h-[48px] text-base font-bold"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Button>
+                </SignInButton>
+              )}
             </div>
 
             {/* Kitchen & Lab Partner Footnote */}

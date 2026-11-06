@@ -19,7 +19,6 @@ export interface BrandNavConfig {
   logoAlt: string;
   navItems: NavItem[];
   primaryCTA: NavCTA;
-  secondaryCTA: NavCTA;
 }
 
 export const HUMMING_DROPS_NAV: BrandNavConfig = {
@@ -38,10 +37,6 @@ export const HUMMING_DROPS_NAV: BrandNavConfig = {
     label: "Subscribe Now",
     href: "/subscribe",
   },
-  secondaryCTA: {
-    label: "Sign In",
-    href: "/login",
-  },
 };
 
 export const MEDCITY_SMILES_NAV: BrandNavConfig = {
@@ -59,10 +54,6 @@ export const MEDCITY_SMILES_NAV: BrandNavConfig = {
   primaryCTA: {
     label: "Join Community",
     href: "/subscribe",
-  },
-  secondaryCTA: {
-    label: "Sign In",
-    href: "/login",
   },
 };
 
