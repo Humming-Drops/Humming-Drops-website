@@ -303,6 +303,42 @@ its implementation and verification are complete.
      missing`, no `.env.local` present); client/user review of the
      actual rendered pages is still required before merge.
 
+9. `[/]` **RR-009 — Local dev environment: Clerk config, MongoDB Atlas +
+   Cloudinary scaffolding, local admin bootstrap (2026-11-06)**
+   - Decision (user-confirmed): hybrid persistence, not a Postgres
+     replacement. Postgres/Drizzle remains authoritative for RBAC,
+     payments, subscriptions, and audit logs (FK integrity,
+     transactions, zero-row-update ownership checks all depend on it).
+     MongoDB Atlas is added only as scaffolding for future
+     document-shaped data; no existing feature reads/writes it yet.
+   - Added `.env.local` (gitignored) with the user-supplied Clerk dev
+     instance keys (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`,
+     `CLERK_SECRET_KEY`) and local defaults — this is what was missing
+     and blocking live preview in RR-008. Added `docker-compose.yml`
+     for a local Postgres matching `.env.example`'s `DATABASE_URL`.
+   - Added `src/lib/mongodb.ts` (singleton `MongoClient`, dev-hot-reload
+     safe) and `src/lib/cloudinary.ts` (configured `cloudinary.v2` +
+     `uploadBuffer` helper). Added `mongodb` and `cloudinary` to
+     `package.json` dependencies, plus `MONGODB_URI` /
+     `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` /
+     `CLOUDINARY_API_SECRET` to `.env.example`.
+   - Rejected a Clerk-bypass approach (asked user to confirm; they
+     instead supplied real Clerk dev-instance test keys). Added
+     `scripts/seed-dev-admin.ts` (`npm run db:seed-admin -- <email>`) —
+     looks up a real signed-up Clerk account by email via the Backend
+     SDK, upserts the local `users` row, and grants `super_admin`
+     (exercises the real `hasPermission`/RBAC path instead of skipping
+     it). Hard-fails if `NODE_ENV === "production"`.
+   - Acceptance: `npm run lint` (0 warnings/errors) passes. `npm run
+     typecheck` passes except two expected `TS2307` errors for the
+     `mongodb` and `cloudinary` modules themselves — this sandbox has
+     no network access to `npm install` them. NOT VERIFIED: `npm
+     install`, `npm run db:migrate` against the new local Postgres
+     container, Clerk sign-in/sign-up against the supplied dev keys,
+     and `db:seed-admin` end-to-end — none of these are runnable in
+     this environment. User must run these locally and confirm before
+     this task is marked `[x]`.
+
 ---
 
 ## Tracking Index & Quick Links

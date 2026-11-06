@@ -14,14 +14,17 @@
     "test:vitest": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:check": "drizzle-kit check"
+    "db:check": "drizzle-kit check",
+    "db:seed-admin": "node --env-file=.env.local --loader ./tests/loader.mjs --experimental-strip-types scripts/seed-dev-admin.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.23",
     "clsx": "^2.1.1",
+    "cloudinary": "^2.5.1",
     "drizzle-orm": "^0.45.4",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.475.0",
+    "mongodb": "^6.12.0",
     "next": "^15.2.0",
     "postgres": "^4.0.0",
     "react": "^19.0.0",
