@@ -10,7 +10,7 @@ import {
   userSubscriptions,
   users,
 } from "@/lib/db/schema";
-import { sanitizeString, isValidPincode } from "@/lib/sanitization";
+import { sanitizeString, isValidPincode, normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
 import { validatePauseRange } from "@/lib/subscription-admin";
 
 export async function GET() {
@@ -73,18 +73,38 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Full name must be at least 2 characters." }, { status: 400 });
     }
 
-    const updated = await db
-      .update(profiles)
-      .set({ fullName, updatedAt: new Date() })
-      .where(eq(profiles.userId, user.id))
-      .returning();
-
-    if (updated.length === 0) {
-      return NextResponse.json({ error: "No profile record exists for this account yet." }, { status: 404 });
+    const normalizedPhone = normalizePhone(body.phone);
+    if (!isValidIndianPhone(normalizedPhone)) {
+      return NextResponse.json(
+        { error: "Please enter a valid 10-digit Indian mobile number." },
+        { status: 400 }
+      );
     }
 
-    await logCustomerAction(user.id, "customer.profile_updated", "profile", updated[0].id);
-    return NextResponse.json({ success: true, profile: updated[0] });
+    const [existing] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
+
+    // Upsert: onboarding creates the first row (no profile exists yet
+    // for a brand-new Clerk sign-up); later edits update it in place.
+    const [savedProfile] = existing
+      ? await db
+          .update(profiles)
+          .set({ fullName, phone: normalizedPhone, updatedAt: new Date() })
+          .where(eq(profiles.userId, user.id))
+          .returning()
+      : await db
+          .insert(profiles)
+          .values({ userId: user.id, fullName, phone: normalizedPhone, email: user.email })
+          .returning();
+
+    await db.update(users).set({ phone: normalizedPhone, updatedAt: new Date() }).where(eq(users.id, user.id));
+
+    await logCustomerAction(
+      user.id,
+      existing ? "customer.profile_updated" : "customer.profile_created",
+      "profile",
+      savedProfile.id
+    );
+    return NextResponse.json({ success: true, profile: savedProfile });
   }
 
   if (body.type === "address") {

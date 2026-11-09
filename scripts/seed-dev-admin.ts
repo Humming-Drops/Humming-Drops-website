@@ -1,4 +1,4 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/backend";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { applicationRoles, userRoles, users } from "@/lib/db/schema";
@@ -8,6 +8,12 @@ import { applicationRoles, userRoles, users } from "@/lib/db/schema";
  * real Clerk account by email, so you can sign in normally and reach
  * every admin/CMS route instead of bypassing Clerk auth. Hard-fails
  * outside development so it can never run against a real environment.
+ *
+ * Uses @clerk/backend directly (not @clerk/nextjs/server) -- the
+ * latter pulls in next/server, which only resolves correctly inside
+ * Next's own build pipeline. Run as a bare Node script outside that
+ * pipeline, that import fails with ERR_MODULE_NOT_FOUND. @clerk/backend
+ * is the same SDK Next's helpers wrap, with no such dependency.
  *
  * Usage: npm run db:seed-admin -- you@example.com
  */
@@ -21,7 +27,12 @@ async function main() {
     throw new Error("Usage: npm run db:seed-admin -- <email>");
   }
 
-  const client = await clerkClient();
+  const secretKey = process.env.CLERK_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("CLERK_SECRET_KEY is not set (expected in .env.local).");
+  }
+
+  const client = createClerkClient({ secretKey });
   const { data } = await client.users.getUserList({ emailAddress: [email] });
   const clerkUser = data[0];
   if (!clerkUser) {
