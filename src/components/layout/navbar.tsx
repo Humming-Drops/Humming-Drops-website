@@ -274,7 +274,7 @@ export function Navbar() {
                 </Link>
               </Button>
 
-              {!isSignedIn && (
+              {!isSignedIn ? (
                 <SignInButton mode="modal">
                   <Button
                     variant="secondary"
@@ -285,13 +285,27 @@ export function Navbar() {
                     Sign In
                   </Button>
                 </SignInButton>
+              ) : (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
+                >
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Subscriber Dashboard
+                  </Link>
+                </Button>
               )}
             </div>
 
             {/* Kitchen & Lab Partner Footnote */}
             <div className="pt-3 border-t border-line-subtle/60 text-center">
               <p className="text-xs text-content-muted">
-                Doorstep Breakfast Delivery Â· In partnership with Berrybeats Cafe &amp; MedCity Health Labs
+                Doorstep Breakfast Delivery · In partnership with Berrybeats Cafe &amp; MedCity Health Labs
               </p>
             </div>
           </div>

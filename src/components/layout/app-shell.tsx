@@ -9,6 +9,14 @@ import { MobileStickyBar } from "@/components/layout/mobile-sticky-bar";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
+  const hideMobileStickyBar = Boolean(
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/onboarding") ||
+    pathname?.startsWith("/subscribe") ||
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/register")
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas text-content-primary transition-brand">
@@ -24,7 +32,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
 
       {/* Primary Main Landmark */}
-      <main id="main-content" className="flex-1 flex flex-col pb-24 md:pb-0">
+      <main
+        id="main-content"
+        className={`flex-1 flex flex-col ${hideMobileStickyBar ? "pb-0" : "pb-24 md:pb-0"}`}
+      >
         {children}
       </main>
 
@@ -32,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {!isDashboard && <Footer />}
 
       {/* Mobile-Only Sticky Bottom CTA Bar */}
-      {!isDashboard && <MobileStickyBar />}
+      {!hideMobileStickyBar && <MobileStickyBar />}
     </div>
   );
 }

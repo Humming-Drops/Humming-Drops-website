@@ -2,14 +2,27 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import { useBrandTheme } from "@/components/theme/brand-provider";
 
 export function MobileStickyBar() {
   const [visible, setVisible] = useState(false);
   const { theme } = useBrandTheme();
+  const pathname = usePathname();
+
+  const isExcluded = Boolean(
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/onboarding") ||
+    pathname?.startsWith("/subscribe") ||
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/register")
+  );
 
   useEffect(() => {
+    if (isExcluded) return;
+
     const handleScroll = () => {
       // Show sticky bar only after scrolling past the hero (~360px)
       if (window.scrollY > 360) {
@@ -21,9 +34,9 @@ export function MobileStickyBar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isExcluded]);
 
-  if (!visible) return null;
+  if (isExcluded || !visible) return null;
 
   return (
     <aside
