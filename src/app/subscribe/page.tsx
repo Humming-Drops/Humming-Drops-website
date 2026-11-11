@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useAuth, SignInButton } from "@clerk/nextjs";
 import {
   Check,
   CheckCircle2,
@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { isValidPlanTier } from "@/lib/auth-redirects";
+import { normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
 
 interface ConfirmationData {
   leadReferenceCode: string;
@@ -73,10 +74,10 @@ const COMMON_ALLERGIES = [
 function SubscribeFormContent() {
   const searchParams = useSearchParams();
   const { user, isLoaded: isUserLoaded } = useUser();
+  const { isSignedIn } = useAuth();
 
   const planParam = searchParams.get("plan");
   const initialPlan: PlanTier = isValidPlanTier(planParam) ? planParam : "premium";
-
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isPending, startTransition] = useTransition();
 
@@ -160,8 +161,7 @@ function SubscribeFormContent() {
       if (!customer.fullName.trim() || customer.fullName.trim().length < 2) {
         newErrors.fullName = "Please enter your full name (minimum 2 characters).";
       }
-      const cleanPhone = customer.phone.replace(/[\s\-\(\)\+]/g, "").replace(/^91/, "").replace(/^0/, "");
-      if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      if (!isValidIndianPhone(normalizePhone(customer.phone))) {
         newErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
       }
       if (!customer.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email.trim())) {
@@ -190,6 +190,7 @@ function SubscribeFormContent() {
   };
 
   const handleNext = () => {
+    if (currentStep === 1 && !isSignedIn) return;
     if (validateStep(currentStep)) {
       setSubmitError(null);
       setCurrentStep((prev) => Math.min(prev + 1, 5) as 1 | 2 | 3 | 4 | 5);
@@ -390,7 +391,8 @@ function SubscribeFormContent() {
             Begin Your Morning Habit
           </h1>
           <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            5 fresh compartments delivered every morning from Berrybeats cafe, Bangalore.
+            Fresh Fruit &amp; Vegetable Box 4 days a week, Healthy Oats Meal 2 days a week — delivered every morning
+            from Berrybeats cafe, Bangalore (closed Sundays).
           </p>
         </div>
 
@@ -449,6 +451,17 @@ function SubscribeFormContent() {
                     Choose the subscription tier that best fits your morning routine.
                   </p>
                 </div>
+
+                {!isSignedIn && (
+                  <div className="flex items-start gap-2.5 rounded-xl border border-forest-200 bg-forest-50/40 px-4 py-3 text-xs text-forest-900">
+                    <Info className="w-4 h-4 mt-0.5 shrink-0" aria-hidden="true" />
+                    <p>
+                      Feel free to browse plans without an account. You&apos;ll need to sign in
+                      before we collect any of your details — we won&apos;t ask for anything
+                      until then.
+                    </p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div
@@ -802,7 +815,7 @@ function SubscribeFormContent() {
                       {
                         id: "standard" as DietaryType,
                         name: "Standard Mix",
-                        desc: "Full wholesome variety: fruits, vegetables, sprouts, mix salad, dry fruits.",
+                        desc: "Full wholesome variety: fruits, vegetables, sprouts, dry fruits & oats meals.",
                       },
                       {
                         id: "vegan" as DietaryType,
@@ -897,7 +910,7 @@ function SubscribeFormContent() {
                         {activePlan.name} Plan (Monthly)
                       </span>
                       <span className="text-xs text-stone-500 block">
-                        5 daily compartments · Bangalore Doorstep Delivery
+                        4-Day Box + 2-Day Oats · Bangalore Doorstep Delivery
                       </span>
                     </div>
                     <span className="font-mono text-xl font-extrabold text-forest-900">
@@ -1022,7 +1035,20 @@ function SubscribeFormContent() {
                 </Link>
               )}
 
-              {currentStep < 5 ? (
+              {currentStep === 1 && !isSignedIn ? (
+                <SignInButton mode="modal">
+                  <Button
+                    type="button"
+                    brand="humming"
+                    variant="primary"
+                    size="md"
+                    className="rounded-full px-6"
+                  >
+                    <span>Sign in to continue</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </SignInButton>
+              ) : currentStep < 5 ? (
                 <Button
                   type="button"
                   onClick={handleNext}

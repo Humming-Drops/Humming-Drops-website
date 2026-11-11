@@ -20,8 +20,8 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: "5 Nutritional Pillars",
-    subtitle: "Fruits, veg, salad, sprouts, nuts",
+    title: "4-Day Box + 2-Day Oats",
+    subtitle: "Fruits, veg, sprouts, nuts & oats",
     bgClass: "bg-mint",
     iconColor: "text-primary",
   },

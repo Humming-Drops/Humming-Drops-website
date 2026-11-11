@@ -77,9 +77,14 @@ export async function assignRole(params: { userId: string; roleId: string; actor
 }
 
 export async function revokeRole(params: { userId: string; roleId: string; actorUserId: string }) {
-  await db
+  const revoked = await db
     .delete(userRoles)
-    .where(and(eq(userRoles.userId, params.userId), eq(userRoles.roleId, params.roleId)));
+    .where(and(eq(userRoles.userId, params.userId), eq(userRoles.roleId, params.roleId)))
+    .returning();
+
+  if (revoked.length === 0) {
+    throw new StaffAdminError("That user does not hold this role.");
+  }
 
   await db.insert(administrativeAuditLogs).values({
     actorUserId: params.actorUserId,

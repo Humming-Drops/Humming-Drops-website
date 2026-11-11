@@ -258,7 +258,7 @@ export function Hero() {
               {/* Sub-CTA Informational Line */}
               <div className="flex items-center gap-2 text-xs font-semibold text-[#405347] pt-1">
                 <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹116/day
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹3,500/month
                 </span>
                 <span>•</span>
                 <span>Pause or cancel anytime</span>
@@ -278,8 +278,8 @@ export function Hero() {
                     <Apple className="w-4 h-4 text-rose-600" />
                   </div>
                   <div className="leading-tight">
-                    <p className="font-bold">4 Cut Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 2 Veggies</p>
+                    <p className="font-bold">5 Cut Fruits</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 3 Veggies</p>
                   </div>
                 </div>
 
@@ -288,8 +288,8 @@ export function Hero() {
                     <Salad className="w-4 h-4 text-emerald-700" />
                   </div>
                   <div className="leading-tight">
-                    <p className="font-bold">Sprouts &amp; Salad</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">+ Dry Fruits</p>
+                    <p className="font-bold">Sprouts &amp; Dry Fruits</p>
+                    <p className="text-[11px] text-[#657B6F] font-normal">4 Days a Week</p>
                   </div>
                 </div>
 

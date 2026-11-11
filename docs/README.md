@@ -2,9 +2,10 @@
 
 **Project:** Humming Drops & MedCity Smiles Web Platform  
 **Location:** Bangalore, India  
-**Stack Baseline:** Next.js 15+ (App Router), TypeScript (Strict), Tailwind CSS, Radix UI Primitives, Framer Motion, Drizzle / Supabase PostgreSQL, Razorpay  
+**Stack Baseline:** Next.js 15+ (App Router), React 19, TypeScript (Strict), Tailwind CSS, Radix UI Primitives, Framer Motion, Clerk Auth, Drizzle ORM / Railway PostgreSQL, MongoDB Atlas, Cloudinary, Razorpay  
 **Status:** Authoritative Repository Documentation Gateway  
-**Version:** 1.0  
+**Version:** 1.1  
+**Root Guide:** See [Root README](../README.md) for quickstart and developer onboardings.  
 
 ---
 
@@ -62,14 +63,16 @@ docs/
 │   ├── ADR-005-lead-repository-pattern.md
 │   ├── ADR-006-health-pii-data-isolation.md
 │   ├── ADR-007-client-truth-guardrail.md
-│   └── ADR-008-component-design-system.md
+│   ├── ADR-008-component-design-system.md
+│   └── ADR-009-clerk-application-identity.md
 ├── runbooks/                      # Standard Operating Procedures & Engineering Runbooks
 │   ├── README.md                  # Runbook Index & Escalation Matrix
 │   ├── local-development.md       # RB-01: Engineering Setup & Local Server Guide
 │   ├── build-and-verification.md  # RB-02: Typecheck, Lint, and Automated Test Suite
 │   ├── lead-operations-handover.md# RB-03: Bangalore Hub SOP & WhatsApp Lead Triage (8618902810)
 │   ├── incident-management.md     # RB-04: Emergency Triage, Storage Repair, PII Safeguards
-│   └── deployment-and-staging.md  # RB-05: Vercel Hosting, Custom Domain & DNS Setup
+│   ├── deployment-and-staging.md  # RB-05: Vercel Hosting, Custom Domain & DNS Setup
+│   └── database-migrations.md     # RB-06: Railway PostgreSQL Drizzle Migrations SOP
 └── handover/                      # Client Handover Deliverables
     └── client-handover-spec.md    # Formal Client Handover Specification & Sign-Off Matrix
 ```
@@ -133,6 +136,7 @@ src/
 * **[ADR-006: Health Vitals & PII Isolation](adr/ADR-006-health-pii-data-isolation.md):** Medical test results isolated behind strict authentication boundaries with zero unauthenticated bulk listing.
 * **[ADR-007: Client Truth Guardrail](adr/ADR-007-client-truth-guardrail.md):** Treats the client brochure as absolute ground truth; identifies and isolates unconfirmed operational assumptions (`CIR-01` to `CIR-07`).
 * **[ADR-008: Accessible Component Foundation](adr/ADR-008-component-design-system.md):** Copy-owned primitives built on Radix UI ensuring full WCAG 2.1 AA keyboard and screen reader compliance.
+* **[ADR-009: Clerk Authentication with PostgreSQL Identity](adr/ADR-009-clerk-application-identity.md):** Links Clerk authentication sessions to PostgreSQL user identities with role-based authorization and open-redirect protection.
 
 ---
 
@@ -153,20 +157,16 @@ src/
 
 ## 6. Verification & Quality Assurance Suite
 
-All changes are verified against the automated test suite located in `scratch/`:
+All changes are verified against the automated test suite and strict type checking:
 ```bash
 # Typecheck
-npx tsc --noEmit
+npm run typecheck
 
 # Lint
 npm run lint
 
-# Automated test scripts
-node scratch/test-phase1-guardrails.mjs
-node scratch/test-phase2-design-tokens.mjs
-node scratch/test-phase3-layout.mjs
-node scratch/test-phase4-homepage.mjs
-node scratch/test-phase4-backend-flow.mjs
+# Vitest Automated Test Suites (Unit + Smoke)
+npm run test:vitest
 
 # Production compilation
 npm run build

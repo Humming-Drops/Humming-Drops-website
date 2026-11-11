@@ -2,6 +2,12 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { isStaffUser } from "@/lib/clerk-auth";
 
+// Every admin page reads live, per-staff-member authorized data (leads,
+// payments, audit logs, ...). Must never be statically prerendered --
+// without this, `next build` tries to prerender /admin at build time,
+// before DATABASE_URL or a real session exists, and fails outright.
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({
   children,
 }: {

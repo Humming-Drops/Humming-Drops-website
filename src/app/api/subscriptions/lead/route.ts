@@ -44,8 +44,18 @@ async function generateUniqueReference(): Promise<string> {
  * 4. Sensitive customer inputs validated and sanitized before storage.
  */
 export async function POST(request: Request) {
+  let clerkAuth: Awaited<ReturnType<typeof requireClerkUser>>;
   try {
-    const { clerkUserId, user } = await requireClerkUser();
+    clerkAuth = await requireClerkUser();
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Please sign in before registering for a subscription." },
+      { status: 401 }
+    );
+  }
+  const { clerkUserId, user } = clerkAuth;
+
+  try {
     const authoritativeMode = getServerAuthoritativeCheckoutMode();
 
     let body: any;

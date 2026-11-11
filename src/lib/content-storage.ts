@@ -149,6 +149,7 @@ export async function updateContentPageDraft(params: {
     .set({ title: params.title.trim(), data: params.data, updatedAt: new Date() })
     .where(eq(contentPages.id, params.id))
     .returning();
+  if (!updated) throw new Error("Content page not found.");
 
   await recordAudit(updated.id, params.actorUserId, "updated", { title: updated.title, data: updated.data });
   return updated;
@@ -168,6 +169,7 @@ export async function publishContentPage(id: string, actorUserId: string) {
     })
     .where(eq(contentPages.id, id))
     .returning();
+  if (!updated) throw new Error("Content page not found.");
 
   await recordAudit(updated.id, actorUserId, "published", { title: updated.title });
   return updated;
@@ -182,6 +184,7 @@ export async function unpublishContentPage(id: string, actorUserId: string) {
     .set({ status: "draft", updatedAt: new Date() })
     .where(eq(contentPages.id, id))
     .returning();
+  if (!updated) throw new Error("Content page not found.");
 
   await recordAudit(updated.id, actorUserId, "unpublished", { title: updated.title });
   return updated;

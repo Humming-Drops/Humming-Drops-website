@@ -265,6 +265,146 @@ its implementation and verification are complete.
      a live database/Clerk session, and applying
      `0006_nutritionist_health_rbac.sql` — no live environment is
      available here (see RR-005 §8).
+8. `[x]` **RR-008 — Client content revision (2026-11-04 change request)**
+   - Branch: `feat/site-content-revision`. Implemented the client's 8
+     ordered homepage/MedCity Smiles/footer content changes, one commit
+     per item:
+     1. Removed individual per-day pricing (`pricing-section.tsx`,
+        `hero.tsx`).
+     2–3. Removed the old "Nourishing the Body, Cultivating the Mind" /
+        "Cultivate Your Inner Garden" section (`health-community-bridge.tsx`,
+        deleted) and replaced it with a new, brochure-grounded MedCity
+        Smiles section (`medcity-smiles-section.tsx`) in the same homepage
+        slot, above Two Pillars.
+     4. Redesigned `/medcity-smiles` (Hero / Why MedCity Smiles / Monthly
+        Vitals / Community CTA).
+     5. Made the 3-step journey icon/illustration-led instead of
+        text-first, on both mobile and desktop (`morning-journey.tsx`).
+     6. Shortened the footer — dropped the 3-column link-group grid,
+        kept brand block + contact strip + bottom-bar core links
+        (`footer.tsx`, `navigation.ts`).
+     7. Added a prominent Sunday-closure notice to the Daily Breakfast Box
+        section (`box-anatomy.tsx`).
+     8. Updated the weekly plan structure site-wide, from the old
+        6-day everyday-salad model to: Fresh Fruit & Vegetable Box (4
+        fruit varieties, 3 vegetable varieties, mixed sprouts, dry fruits
+        mix) 5 days a week + Healthy Oats Meal (oats with fruits & dry
+        fruits) 2 days a week. Source of truth is `OFFICIAL_PLANS` in
+        `types/plans.ts`; propagated to `pricing-section.tsx`,
+        `box-anatomy.tsx` (compartments reworked, Standard/Premium
+        toggle removed since box composition no longer differs by
+        tier), `/plans`, `/subscribe`, and every other homepage/footer/
+        metadata reference to the old salad-inclusive daily structure.
+   - Plan: `docs/superpowers/plans/2026-11-04-site-content-revision.md`.
+   - Acceptance: `npm run lint` (0 warnings/errors) and `npm run
+     typecheck` (0 errors) after every one of the 8 commits. NOT
+     VERIFIED: live browser preview — the local dev server cannot render
+     any page in this environment (`@clerk/nextjs: Clerk keys are
+     missing`, no `.env.local` present); client/user review of the
+     actual rendered pages is still required before merge.
+
+9. `[/]` **RR-009 — Local dev environment: Clerk config, MongoDB Atlas +
+   Cloudinary scaffolding, local admin bootstrap (2026-11-06)**
+   - Decision (user-confirmed): hybrid persistence, not a Postgres
+     replacement. Postgres/Drizzle remains authoritative for RBAC,
+     payments, subscriptions, and audit logs (FK integrity,
+     transactions, zero-row-update ownership checks all depend on it).
+     MongoDB Atlas is added only as scaffolding for future
+     document-shaped data; no existing feature reads/writes it yet.
+   - Added `.env.local` (gitignored) with the user-supplied Clerk dev
+     instance keys (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`,
+     `CLERK_SECRET_KEY`) and local defaults — this is what was missing
+     and blocking live preview in RR-008. Added `docker-compose.yml`
+     for a local Postgres matching `.env.example`'s `DATABASE_URL`.
+   - Added `src/lib/mongodb.ts` (singleton `MongoClient`, dev-hot-reload
+     safe) and `src/lib/cloudinary.ts` (configured `cloudinary.v2` +
+     `uploadBuffer` helper). Added `mongodb` and `cloudinary` to
+     `package.json` dependencies, plus `MONGODB_URI` /
+     `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` /
+     `CLOUDINARY_API_SECRET` to `.env.example`.
+   - Rejected a Clerk-bypass approach (asked user to confirm; they
+     instead supplied real Clerk dev-instance test keys). Added
+     `scripts/seed-dev-admin.ts` (`npm run db:seed-admin -- <email>`) —
+     looks up a real signed-up Clerk account by email via the Backend
+     SDK, upserts the local `users` row, and grants `super_admin`
+     (exercises the real `hasPermission`/RBAC path instead of skipping
+     it). Hard-fails if `NODE_ENV === "production"`.
+   - **Update (same day):** actually ran all of this, rather than
+     leaving it as unverified scaffolding. This sandbox has no
+     outbound network of its own, but Docker Desktop's own network
+     path does (confirmed: `docker run node:20-alpine` could reach
+     `registry.npmjs.org`) — used throwaway containers bind-mounting
+     the repo to run `npm install` (regenerating `package-lock.json`,
+     since it had drifted) and all verification commands.
+   - `npm run typecheck` and `npm run lint`: both clean, 0 errors/
+     warnings, including the new `storage.ts`/`mongodb.ts`/
+     `cloudinary.ts`/local-storage route.
+   - `docker compose build app`: failed on the first real attempt —
+     `next build` tried to statically prerender `/admin` and hit
+     `DATABASE_URL is not configured in production`. Root cause:
+     `/admin` and `/dashboard` never had `export const dynamic =
+     "force-dynamic"`, unlike `content/[slug]/page.tsx`, which already
+     needed it for the same reason. Fixed in both layouts (separate
+     commit) — this was a real, pre-existing gap never caught because
+     nobody had run the Dockerfile from HD-186 end-to-end before.
+   - Second failure: the container's non-root `nextjs` user got
+     `EACCES` writing to `.local-storage/` under `/app` — only `.next`
+     and the standalone output were ever `chown`'d to it. Fixed by
+     pre-creating and chowning `.local-storage` in the Dockerfile's
+     runner stage, same as `.next` (separate commit).
+   - `docker compose --env-file .env.local up -d`: all three containers
+     (postgres, mongo, app) come up; postgres reports healthy.
+     `GET /api/health` returns `"persistenceDriver":"postgresql_drizzle"`.
+     `docker exec ... env` confirms the app container actually has the
+     real Clerk publishable key, `DATABASE_URL` pointed at the
+     `postgres` service, and `MONGODB_URI` pointed at the `mongo`
+     service (not `localhost`, which would be wrong from inside a
+     container).
+   - `npm run db:migrate` against the containerized Postgres: all 7
+     migrations applied; verified `application_roles` (all 8, including
+     the RR-007 `nutritionist` fix) and `content_templates` (both CMS
+     seeds) are actually present in the running database.
+   - **Critical finding, full route sweep (same day):** systematically
+     curled every page and API route against the running container.
+     Every `/admin/*`, `/dashboard/*`, and permission-gated `/api/*`
+     route returned HTTP 500 — body: `"Clerk: auth() was called but
+     Clerk can't detect usage of clerkMiddleware()"`. Root cause:
+     `middleware.ts` lived at the project root, but this project's
+     pages live under `src/app` — Next.js requires `middleware.ts` at
+     `src/middleware.ts` in that layout, or it is silently never
+     registered. Confirmed via
+     `.next/server/middleware-manifest.json`: `"middleware": {}`,
+     `"sortedMiddleware": []` — empty. `clerkMiddleware()` had never
+     run, for any request, in any environment that used this build.
+     Moved the file to `src/middleware.ts` (separate commit). Rebuilt,
+     re-swept every route: manifest now shows a real registered
+     middleware; every previously-500 route now correctly returns
+     `401` (API) or `404` (page — Clerk's anti-enumeration behavior
+     for an unauthenticated non-browser request) instead of crashing.
+     Public pages (`/`, `/about`, `/plans`, etc.) remain `200`.
+   - This was likely never caught before because no prior session had
+     a working `.env.local` (RR-008's blocker, fixed earlier in this
+     same RR-009) or had run the standalone Docker build — this is the
+     first time any authenticated route in this app has actually been
+     exercised end-to-end against a real build output.
+   - Also audited every route for uniqueness (`find src/app -name
+     "page.tsx" -o -name "route.ts"`, 46 total) — no path collisions —
+     and cross-checked every static `href="/..."` in the codebase
+     against that list — no dead internal links.
+   - Local-disk storage fallback: write-permission bug confirmed fixed
+     (non-root user can now create `.local-storage/...`). The fallback
+     itself only activates when `NODE_ENV !== "production"`
+     (`assertProductionPersistenceAllowed`) — this containerized run
+     sets `NODE_ENV=production` (matching real Railway deployment) by
+     design, so it correctly refuses to use local-disk storage there.
+     Exercising the fallback path itself therefore requires `npm run
+     dev` (`NODE_ENV=development`) rather than this container, and no
+     feature calls `uploadFile()` yet to click-test end-to-end.
+   - Still NOT VERIFIED: real Clerk sign-in/sign-up in an actual
+     browser against the supplied dev keys, and `npm run db:seed-admin`
+     end-to-end (both require a human in a real browser, which this
+     environment cannot drive). User must do the sign-up step
+     themselves before this task is marked `[x]`.
 
 ---
 

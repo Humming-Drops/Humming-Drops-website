@@ -31,7 +31,7 @@ export function Navbar() {
       setScrolled(window.scrollY > 12);
 
       // Determine active section based on scroll position
-      const sections = ["pricing", "journey", "box-experience", "health-community"];
+      const sections = ["pricing", "journey", "box-experience", "medcity-smiles"];
       const scrollPos = window.scrollY + 100;
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
@@ -280,10 +280,10 @@ export function Navbar() {
                   className="w-full justify-center min-h-[48px] text-base font-bold"
                 >
                   <Link
-                    href={navConfig.secondaryCTA.href}
+                    href="/login"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {navConfig.secondaryCTA.label}
+                    Sign In
                   </Link>
                 </Button>
               ) : (

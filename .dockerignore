@@ -29,6 +29,9 @@ dashboard
 digest.txt
 issues.json
 
+# Local-disk storage fallback (dev/test only; never meaningful in a built image)
+.local-storage
+
 # IDE & OS files
 .vscode
 .idea

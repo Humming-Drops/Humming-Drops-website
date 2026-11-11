@@ -9,50 +9,27 @@ export function Footer() {
     <footer className="border-t border-[#E2ECE4] bg-mint/40 transition-colors mt-auto">
       {/* Main Footer Directory */}
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-7 lg:py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-9">
-          {/* Brand Col (Span 2) */}
-          <div className="lg:col-span-2 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="relative h-9 w-36">
-                <Image
-                  src="/images/humming-drops-logo.png"
-                  alt="Humming Drops Official Logo"
-                  fill
-                  sizes="176px"
-                  className="object-contain object-left"
-                />
-              </div>
-            </div>
-
-            <p className="text-sm text-body max-w-sm leading-relaxed font-sans">
-              Daily doorstep morning breakfast boxes of fresh cut fruits, vegetables, mix salad, sprouts, and dry fruits in Bangalore.
-            </p>
-
-            <div className="pt-1.5 text-xs text-body/80 border-t border-[#E2ECE4]">
-              <p className="font-medium text-ink">{SHARED_FOOTER_CONFIG.partners}</p>
+        {/* Brand Block */}
+        <div className="max-w-md space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="relative h-9 w-36">
+              <Image
+                src="/images/humming-drops-logo.png"
+                alt="Humming Drops Official Logo"
+                fill
+                sizes="176px"
+                className="object-contain object-left"
+              />
             </div>
           </div>
 
-          {/* Link Groups (Stacked on Mobile) */}
-          {SHARED_FOOTER_CONFIG.linkGroups.map((group) => (
-            <div key={group.title} className="space-y-2">
-              <h3 className="font-display font-bold text-sm text-ink tracking-tight">
-                {group.title}
-              </h3>
-              <ul className="space-y-1 text-sm font-sans">
-                {group.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-body hover:text-[#00A88F] hover:underline transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded inline-flex items-center min-h-[32px] py-0.5"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <p className="text-sm text-body max-w-sm leading-relaxed font-sans">
+            Doorstep morning breakfast boxes in Bangalore — a fresh fruit &amp; vegetable box 4 days a week, plus a healthy oats meal 2 days a week.
+          </p>
+
+          <div className="pt-1.5 text-xs text-body/80 border-t border-[#E2ECE4]">
+            <p className="font-medium text-ink">{SHARED_FOOTER_CONFIG.partners}</p>
+          </div>
         </div>
 
         {/* Contact Strip */}

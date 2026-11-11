@@ -1,16 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { profiles, users } from "@/lib/db/schema";
 
 export const metadata: Metadata = {
   title: "Subscriber Dashboard",
   description: "Manage your daily breakfast delivery, health vitals, and community access.",
 };
 
-export default function DashboardLayout({
+// Every dashboard page reads the signed-in customer's own live data
+// (subscription, payments, health vitals). Must never be statically
+// prerendered -- see src/app/admin/layout.tsx for the same reasoning.
+export const dynamic = "force-dynamic";
+
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // First sign-in (no profiles row yet, created at /api/customer/me's
+  // "profile" PATCH) sends every customer through onboarding before
+  // they can reach any dashboard page. /onboarding itself isn't under
+  // this layout, so it's never caught in this redirect.
+  const { userId: clerkUserId } = await auth();
+  if (clerkUserId) {
+    const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
+    if (user) {
+      const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
+      if (!profile) {
+        redirect("/onboarding");
+      }
+    }
+  }
+
   return (
     <div className="flex-1 bg-muted/40 flex flex-col">
       {/* Sub Header Bar */}

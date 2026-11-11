@@ -14,6 +14,7 @@ export function MobileStickyBar() {
   const isExcluded = Boolean(
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/onboarding") ||
     pathname?.startsWith("/subscribe") ||
     pathname?.startsWith("/login") ||
     pathname?.startsWith("/register")
