@@ -173,7 +173,7 @@ export function BoxAnatomy() {
               Meticulously Curated Nutrition
             </span>
             <HandwrittenAnnotation rotation="rotate-2" color="text-emerald-700 hidden sm:inline-flex">
-              Tap any compartment to explore! ✦
+              Tap any compartment to explore!
             </HandwrittenAnnotation>
           </div>
 

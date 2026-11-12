@@ -20,6 +20,7 @@ import {
   Sparkles,
   Leaf,
   Info,
+  Plus,
 } from "lucide-react";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { DietaryType } from "@/types/subscription";
@@ -861,13 +862,18 @@ function SubscribeFormContent() {
                           key={allergy}
                           type="button"
                           onClick={() => toggleAllergy(allergy)}
-                          className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all ${
                             isSelected
                               ? "bg-forest-900 text-white border-forest-900 shadow-xs"
                               : "bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-300"
                           }`}
                         >
-                          {allergy} {isSelected ? "✓" : "+"}
+                          <span>{allergy}</span>
+                          {isSelected ? (
+                            <Check className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                          ) : (
+                            <Plus className="w-3.5 h-3.5 shrink-0 opacity-60" aria-hidden="true" />
+                          )}
                         </button>
                       );
                     })}

@@ -196,12 +196,14 @@ export default function DashboardDeliveryPage() {
           <div className="flex flex-col sm:items-end gap-2 shrink-0">
             <span className="text-xs text-content-muted">Current status:</span>
             {isPausedTomorrow ? (
-              <Badge className="bg-amber-100 text-amber-900 border-amber-300 text-xs px-3 py-1 font-semibold">
-                ⏸ Delivery Paused
+              <Badge className="bg-amber-100 text-amber-900 border-amber-300 text-xs px-3 py-1 font-semibold inline-flex items-center gap-1.5">
+                <PauseCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Delivery Paused</span>
               </Badge>
             ) : (
-              <Badge className="bg-emerald-100 text-emerald-900 border-emerald-300 text-xs px-3 py-1 font-semibold">
-                ✓ Active · Scheduled for Morning
+              <Badge className="bg-emerald-100 text-emerald-900 border-emerald-300 text-xs px-3 py-1 font-semibold inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Active · Scheduled for Morning</span>
               </Badge>
             )}
           </div>

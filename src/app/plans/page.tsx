@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Check, Sparkles } from "lucide-react";
 import { OFFICIAL_PLANS } from "@/types/plans";
 
 export const metadata: Metadata = {
@@ -38,7 +39,7 @@ export default function PlansPage() {
               <ul className="text-sm space-y-2 text-stone-700">
                 {OFFICIAL_PLANS.standard.boxInclusions.map((inc, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="text-forest-700 font-bold">✓</span>
+                    <Check className="w-4 h-4 text-forest-700 shrink-0" aria-hidden="true" />
                     <span><strong>{inc.title}</strong> — {inc.frequency}</span>
                   </li>
                 ))}
@@ -50,7 +51,7 @@ export default function PlansPage() {
               <ul className="text-xs space-y-1.5 text-stone-600">
                 {OFFICIAL_PLANS.standard.communityAndHealthPerks.map((perk, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="text-teal-700 font-bold">✓</span>
+                    <Check className="w-3.5 h-3.5 text-teal-700 shrink-0" aria-hidden="true" />
                     <span>{perk}</span>
                   </li>
                 ))}
@@ -86,7 +87,7 @@ export default function PlansPage() {
               <ul className="text-sm space-y-2 text-stone-800">
                 {OFFICIAL_PLANS.premium.boxInclusions.map((inc, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="text-forest-700 font-bold">✓</span>
+                    <Check className="w-4 h-4 text-forest-700 shrink-0" aria-hidden="true" />
                     <span><strong>{inc.title}</strong> — {inc.frequency}</span>
                   </li>
                 ))}
@@ -98,7 +99,7 @@ export default function PlansPage() {
               <ul className="text-xs space-y-1.5 text-stone-700">
                 {OFFICIAL_PLANS.premium.premiumPerks?.map((perk, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="text-amber-600 font-bold">★</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" aria-hidden="true" />
                     <span>{perk}</span>
                   </li>
                 ))}
