@@ -25,11 +25,11 @@
 
     /* Responsive Sticky-Navbar-Aware Section Scroll Offsets (h-16 = 4rem) */
     --navbar-height: 4rem;
-    --scroll-offset-anchor: 5.5rem;   /* 88px mobile fallback (64px nav + 24px gap) */
-    --scroll-offset-band-14: 2rem;    /* Sections with py-14 (56px) -> 88px to heading */
-    --scroll-offset-band-16: 1.5rem;  /* Sections with py-16 (64px) -> 88px to heading */
-    --scroll-offset-band-8: 3.5rem;   /* Sections with py-8  (32px) -> 88px to heading */
-    --scroll-offset-band-cta: 2rem;   /* CTA bands with py-14 (56px) -> 88px to heading */
+    --scroll-offset-anchor: 5.25rem;  /* 84px mobile fallback (64px nav + 20px gap) */
+    --scroll-offset-band-14: 1.75rem; /* Sections with py-14 (56px) -> 84px to heading */
+    --scroll-offset-band-16: 1.25rem; /* Sections with py-16 (64px) -> 84px to heading */
+    --scroll-offset-band-8: 3.25rem;  /* Sections with py-8  (32px) -> 84px to heading */
+    --scroll-offset-band-cta: 1.75rem;/* CTA bands with py-14 (56px) -> 84px to heading */
 
     /* Canvas & Surface Tokens */
     --bg-canvas: var(--bg);
@@ -243,21 +243,21 @@
   /* Centralized Responsive Anchor Scroll Positioning */
   @media (min-width: 640px) {
     :root {
-      --scroll-offset-anchor: 6rem;   /* 96px tablet fallback (64px nav + 32px gap) */
-      --scroll-offset-band-14: 2rem;  /* sm:py-16 (64px) -> 96px to heading */
-      --scroll-offset-band-16: 1rem;  /* sm:py-20 (80px) -> 96px to heading */
-      --scroll-offset-band-8: 2rem;   /* sm:py-16 (64px) -> 96px to heading */
-      --scroll-offset-band-cta: 2rem; /* sm:py-16 (64px) -> 96px to heading */
+      --scroll-offset-anchor: 5.75rem;   /* 92px tablet fallback (64px nav + 28px gap) */
+      --scroll-offset-band-14: 1.75rem;  /* sm:py-16 (64px) -> 92px to heading */
+      --scroll-offset-band-16: 0.75rem;  /* sm:py-20 (80px) -> 92px to heading */
+      --scroll-offset-band-8: 1.75rem;   /* sm:py-16 (64px) -> 92px to heading */
+      --scroll-offset-band-cta: 1.75rem; /* sm:py-16 (64px) -> 92px to heading */
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --scroll-offset-anchor: 6.75rem;   /* 108px desktop fallback (64px nav + 44px gap) */
-      --scroll-offset-band-14: 0.75rem;  /* lg:py-24 (96px) -> 108px (44px below nav) */
-      --scroll-offset-band-16: 0.75rem;  /* lg:py-24 (96px) -> 108px (44px below nav) */
-      --scroll-offset-band-8: 0.75rem;   /* lg:py-24 (96px) -> 108px (44px below nav) */
-      --scroll-offset-band-cta: 1.75rem; /* lg:py-20 (80px) -> 108px (44px below nav) */
+      --scroll-offset-anchor: 6.25rem;   /* 100px desktop fallback (64px nav + 36px gap) */
+      --scroll-offset-band-14: 0.25rem;  /* lg:py-24 (96px) -> 100px (36px below nav) */
+      --scroll-offset-band-16: 0.25rem;  /* lg:py-24 (96px) -> 100px (36px below nav) */
+      --scroll-offset-band-8: 0.25rem;   /* lg:py-24 (96px) -> 100px (36px below nav) */
+      --scroll-offset-band-cta: 1.25rem; /* lg:py-20 (80px) -> 100px (36px below nav) */
     }
   }
 

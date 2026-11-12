@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-import { handleHashPopState, handleSamePageHashClick } from "@/lib/scroll-navigation";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import {
+  handleHashPopState,
+  handleSamePageHashClick,
+  scrollToElementById,
+} from "@/lib/scroll-navigation";
 
 /**
- * Centralizes smooth same-page hash link scrolling and back/forward hash
- * restoration across server- and client-rendered pages with a single listener pair.
+ * Centralizes smooth same-page hash link scrolling, cross-page hash landing
+ * alignment, and back/forward hash restoration with a single listener pair.
  */
 export function SmoothScrollManager() {
+  const pathname = usePathname();
+  const previousPathRef = useRef<string | null>(null);
+
   useEffect(() => {
     const onDocumentClick = (event: globalThis.MouseEvent) => {
       if (event.defaultPrevented || !(event.target instanceof Element)) return;
@@ -30,6 +38,29 @@ export function SmoothScrollManager() {
       window.removeEventListener("popstate", handleHashPopState);
     };
   }, []);
+
+  // Ensure direct hash URLs and cross-page hash links align with smart navbar state
+  useEffect(() => {
+    const isRouteChange = previousPathRef.current !== null && previousPathRef.current !== pathname;
+    previousPathRef.current = pathname;
+
+    const hashId = window.location.hash.replace(/^#/, "");
+    if (!hashId) return;
+
+    let innerRafId: number | null = null;
+    const outerRafId = window.requestAnimationFrame(() => {
+      innerRafId = window.requestAnimationFrame(() => {
+        scrollToElementById(hashId, { instant: !isRouteChange });
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(outerRafId);
+      if (innerRafId !== null) {
+        window.cancelAnimationFrame(innerRafId);
+      }
+    };
+  }, [pathname]);
 
   return null;
 }
