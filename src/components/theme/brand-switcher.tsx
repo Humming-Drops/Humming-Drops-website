@@ -36,11 +36,12 @@ export function BrandSwitcher({
       role="tablist"
       aria-label="Brand Experience Switcher"
       className={cn(
-        "inline-flex items-center p-1 bg-muted/80 backdrop-blur-sm rounded-pill border border-line-subtle shadow-sm select-none",
+        "inline-flex items-center p-1 bg-forest-50/95 backdrop-blur-sm rounded-pill border border-line-subtle shadow-sm select-none",
         className
       )}
     >
       <button
+        type="button"
         role="tab"
         aria-selected={theme === "humming"}
         onClick={() => handleSelect("humming")}
@@ -48,7 +49,7 @@ export function BrandSwitcher({
           "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900 focus-visible:ring-offset-1",
           theme === "humming"
             ? "text-forest-950 font-bold"
-            : "text-content-secondary hover:text-content-primary"
+            : "text-forest-900 hover:text-forest-950"
         )}
       >
         {theme === "humming" && (
@@ -66,6 +67,7 @@ export function BrandSwitcher({
       </button>
 
       <button
+        type="button"
         role="tab"
         aria-selected={theme === "medcity"}
         onClick={() => handleSelect("medcity")}
@@ -73,7 +75,7 @@ export function BrandSwitcher({
           "relative z-10 flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",
           theme === "medcity"
             ? "text-teal-950 font-bold"
-            : "text-content-secondary hover:text-content-primary"
+            : "text-forest-900 hover:text-teal-950"
         )}
       >
         {theme === "medcity" && (
