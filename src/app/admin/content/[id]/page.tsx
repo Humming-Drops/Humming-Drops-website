@@ -123,7 +123,7 @@ export default function EditContentPage() {
           className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${
             page.status === "published"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-stone-100 text-stone-700 border-stone-200"
+              : "bg-surface-muted text-content-secondary border-line-subtle"
           }`}
         >
           {page.status}
@@ -132,18 +132,26 @@ export default function EditContentPage() {
 
       {actionError && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{actionError}</div>}
 
-      <div className="flex gap-2 border-b border-line-subtle pb-2 text-xs font-semibold">
+      <div className="flex gap-3 border-b border-line-subtle pb-2 text-xs font-semibold" role="tablist" aria-label="Page editor view">
         <button
           type="button"
+          role="tab"
+          aria-selected={mode === "edit"}
           onClick={() => setMode("edit")}
-          className={mode === "edit" ? "text-brand-primary" : "text-content-secondary"}
+          className={`rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 ${
+            mode === "edit" ? "text-brand-primary" : "text-content-secondary hover:text-content-primary"
+          }`}
         >
           Edit
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={mode === "preview"}
           onClick={() => setMode("preview")}
-          className={mode === "preview" ? "text-brand-primary" : "text-content-secondary"}
+          className={`rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 ${
+            mode === "preview" ? "text-brand-primary" : "text-content-secondary hover:text-content-primary"
+          }`}
         >
           Preview
         </button>
@@ -156,12 +164,15 @@ export default function EditContentPage() {
       ) : (
         <div className="space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-content-secondary">Title</label>
+            <label htmlFor="content-edit-title" className="text-xs font-semibold text-content-secondary">
+              Title
+            </label>
             <input
+              id="content-edit-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
             />
             {fieldErrors.title && <p className="text-[11px] text-red-600">{fieldErrors.title}</p>}
           </div>
@@ -178,7 +189,7 @@ export default function EditContentPage() {
               type="button"
               onClick={saveDraft}
               disabled={isSaving}
-              className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white disabled:opacity-60"
+              className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white hover:bg-brand-primary-hover transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
               {isSaving ? "Saving…" : "Save draft"}
             </button>
@@ -186,7 +197,7 @@ export default function EditContentPage() {
               type="button"
               onClick={togglePublish}
               disabled={isPublishing}
-              className="rounded-full border border-line-subtle px-5 py-2.5 text-xs font-semibold text-content-primary disabled:opacity-60"
+              className="rounded-full border border-line-subtle px-5 py-2.5 text-xs font-semibold text-content-primary hover:bg-surface-muted transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 focus-visible:ring-offset-2"
             >
               {isPublishing ? "Working…" : page.status === "published" ? "Unpublish" : "Publish"}
             </button>

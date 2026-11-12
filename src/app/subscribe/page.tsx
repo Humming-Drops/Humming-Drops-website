@@ -750,9 +750,14 @@ function SubscribeFormContent() {
                   <div className="space-y-1">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="block text-xs font-bold text-stone-700">City</label>
-                        <div className="px-3 py-2.5 text-sm rounded-xl border border-stone-200 bg-stone-100 text-stone-700 font-semibold flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-forest-700" />
+                        <span id="city-label" className="block text-xs font-bold text-stone-700">
+                          City
+                        </span>
+                        <div
+                          aria-labelledby="city-label"
+                          className="px-3 py-2.5 text-sm rounded-xl border border-stone-200 bg-stone-100 text-stone-700 font-semibold flex items-center gap-1.5"
+                        >
+                          <MapPin className="w-3.5 h-3.5 text-forest-700" aria-hidden="true" />
                           <span>Bangalore</span>
                         </div>
                       </div>
@@ -958,7 +963,7 @@ function SubscribeFormContent() {
                       <button
                         type="button"
                         onClick={() => setCurrentStep(2)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline"
+                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
                       >
                         Edit
                       </button>
@@ -974,7 +979,7 @@ function SubscribeFormContent() {
                       <button
                         type="button"
                         onClick={() => setCurrentStep(3)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline"
+                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
                       >
                         Edit
                       </button>
@@ -993,7 +998,7 @@ function SubscribeFormContent() {
                       <button
                         type="button"
                         onClick={() => setCurrentStep(4)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline"
+                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
                       >
                         Edit
                       </button>
