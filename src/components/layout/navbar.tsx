@@ -80,8 +80,8 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-40 w-full transition-all duration-300 border-b",
         scrolled
-          ? "bg-white/75 backdrop-blur-md border-[#E2ECE4]/60 shadow-xs"
-          : "bg-transparent border-transparent"
+          ? "bg-canvas/85 backdrop-blur-md border-line-subtle shadow-xs"
+          : "bg-canvas/60 backdrop-blur-sm border-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
@@ -148,10 +148,10 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
+                    "px-3.5 py-2 text-xs font-semibold rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary flex items-center gap-1.5 whitespace-nowrap shrink-0",
                     isActive
-                      ? "text-primary bg-mint font-bold shadow-2xs"
-                      : "text-body hover:text-primary hover:bg-mint/60"
+                      ? "text-brand-primary bg-brand-subtle font-bold shadow-2xs"
+                      : "text-content-secondary hover:text-content-primary hover:bg-muted/70"
                   )}
                 >
                   <span>{item.label}</span>
@@ -166,16 +166,35 @@ export function Navbar() {
           </nav>
 
           {/* Right Actions & Hamburger Toggle */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             {!isSignedIn ? (
               <Link
                 href="/login"
-                className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full cursor-pointer"
+                className="hidden lg:inline-flex items-center px-3.5 py-2 text-xs font-semibold text-content-secondary hover:text-content-primary hover:bg-muted/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
               >
                 Sign In
               </Link>
             ) : (
-              <UserButton />
+              <div className="hidden lg:flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "inline-flex items-center px-3 py-2 text-xs font-semibold rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary",
+                    pathname?.startsWith("/dashboard")
+                      ? "text-brand-primary bg-brand-subtle font-bold"
+                      : "text-content-secondary hover:text-content-primary hover:bg-muted/70"
+                  )}
+                >
+                  Dashboard
+                </Link>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8 ring-2 ring-line-subtle",
+                    },
+                  }}
+                />
+              </div>
             )}
 
             {/* Primary CTA (visible from md breakpoint upwards) */}
@@ -192,7 +211,16 @@ export function Navbar() {
             </Button>
 
             {/* Responsive Hamburger Toggle (visible below lg screens) */}
-            <div className="flex lg:hidden items-center">
+            <div className="flex lg:hidden items-center gap-2">
+              {isSignedIn && (
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8 ring-2 ring-line-subtle",
+                    },
+                  }}
+                />
+              )}
               <Button
                 variant="ghost"
                 size="sm"
@@ -200,12 +228,12 @@ export function Navbar() {
                 aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-navigation-drawer"
-                className="p-2.5 h-12 w-12 min-h-[48px] min-w-[48px] text-content-primary hover:bg-muted flex items-center justify-center rounded-xl"
+                className="p-2 h-11 w-11 min-h-[44px] min-w-[44px] text-content-primary hover:bg-muted flex items-center justify-center rounded-xl"
               >
                 {mobileMenuOpen ? (
-                  <X className="w-6 h-6" aria-hidden="true" />
+                  <X className="w-5 h-5" aria-hidden="true" />
                 ) : (
-                  <Menu className="w-6 h-6" aria-hidden="true" />
+                  <Menu className="w-5 h-5" aria-hidden="true" />
                 )}
               </Button>
             </div>
@@ -215,14 +243,20 @@ export function Navbar() {
 
       {/* Accessible Mobile / Tablet Navigation Drawer */}
       {mobileMenuOpen && (
-        <div
-          id="mobile-navigation-drawer"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile Navigation"
-          className="lg:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
-        >
-          <div className="px-4 pt-4 pb-6 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <>
+          <div
+            aria-hidden="true"
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-x-0 top-16 bottom-0 z-30 bg-forest-950/20 backdrop-blur-xs lg:hidden"
+          />
+          <div
+            id="mobile-navigation-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
+            className="relative z-40 lg:hidden border-t border-line-subtle bg-canvas shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast"
+          >
+            <div className="px-5 pt-4 pb-6 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
             {/* Mobile Brand Switcher (only shown below md where header switcher is hidden) */}
             <div className="flex md:hidden justify-center pb-2 border-b border-line-subtle">
               <BrandSwitcher navigateOnSwitch={true} />
@@ -311,6 +345,7 @@ export function Navbar() {
             </div>
           </div>
         </div>
+        </>
       )}
     </header>
   );

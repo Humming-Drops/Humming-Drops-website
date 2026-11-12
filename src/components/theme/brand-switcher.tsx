@@ -57,8 +57,8 @@ export function BrandSwitcher({
             transition={{ type: "spring", stiffness: 450, damping: 35 }}
           />
         )}
-        <Leaf className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
-        <span className="hidden sm:inline">Humming Drops</span>
+        <Leaf className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
+        <span>Humming Drops</span>
         <span className="text-[10px] text-forest-700 hidden 2xl:inline font-normal">
           · Physical
         </span>
@@ -69,7 +69,7 @@ export function BrandSwitcher({
         aria-selected={theme === "medcity"}
         onClick={() => handleSelect("medcity")}
         className={cn(
-          "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",
+          "relative z-10 flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",
           theme === "medcity"
             ? "text-teal-950 font-bold"
             : "text-content-secondary hover:text-content-primary"
@@ -82,10 +82,10 @@ export function BrandSwitcher({
             transition={{ type: "spring", stiffness: 450, damping: 35 }}
           />
         )}
-        <Heart className="w-3.5 h-3.5 text-teal-600" aria-hidden="true" />
-        <span className="hidden sm:inline">MedCity Smiles</span>
+        <Heart className="w-3.5 h-3.5 text-teal-600 shrink-0" aria-hidden="true" />
+        <span>MedCity Smiles</span>
         <span className="text-[10px] text-teal-700 hidden 2xl:inline font-normal">
-          · Mental & Labs
+          · Mental &amp; Labs
         </span>
       </button>
     </div>
