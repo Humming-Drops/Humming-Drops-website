@@ -39,15 +39,51 @@ function getNavbarHeight(): number {
     : DEFAULT_NAVBAR_HEIGHT;
 }
 
+const NAVBAR_LOCK_LISTENERS = new Set<(locked: boolean) => void>();
+let navbarLockedVisible = false;
+
+/**
+ * Locks the smart navbar into a visible state during and after navbar link
+ * navigation until the user initiates a manual scroll gesture.
+ */
+export function lockNavbarVisible(): void {
+  navbarLockedVisible = true;
+  for (const listener of NAVBAR_LOCK_LISTENERS) {
+    listener(true);
+  }
+}
+
+/**
+ * Releases the navigation-triggered navbar lock so smart hide-on-scroll resumes.
+ */
+export function releaseNavbarLock(): void {
+  if (!navbarLockedVisible) return;
+  navbarLockedVisible = false;
+  for (const listener of NAVBAR_LOCK_LISTENERS) {
+    listener(false);
+  }
+}
+
+export function isNavbarLockedVisible(): boolean {
+  return navbarLockedVisible;
+}
+
+export function subscribeNavbarLock(listener: (locked: boolean) => void): () => void {
+  NAVBAR_LOCK_LISTENERS.add(listener);
+  return () => {
+    NAVBAR_LOCK_LISTENERS.delete(listener);
+  };
+}
+
 function getResponsiveOffsets(): { hiddenGap: number; visibleGap: number } {
   const width = typeof window !== "undefined" ? window.innerWidth : 1280;
   if (width >= 1024) {
-    return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 32 };
-  }
-  if (width >= 640) {
     return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 28 };
   }
-  return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 24 };
+  if (width >= 640) {
+    return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 24 };
+  }
+  return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 20 };
 }
 
 function isHiddenOrDecorative(el: Element): boolean {
@@ -124,7 +160,10 @@ function resolveTargetElement(id: string): HTMLElement | null {
   return document.getElementById(resolvedId) ?? document.getElementById(id);
 }
 
-function computeTargetScrollY(anchorEl: HTMLElement): number {
+function computeTargetScrollY(
+  anchorEl: HTMLElement,
+  options?: { forceVisibleNavbar?: boolean }
+): number {
   if (anchorEl.id === "main-content") {
     return 0;
   }
@@ -139,6 +178,11 @@ function computeTargetScrollY(anchorEl: HTMLElement): number {
 
   const hiddenTargetY = Math.max(0, Math.round(absoluteElementTop - hiddenGap));
   const visibleTargetY = Math.max(0, Math.round(absoluteElementTop - (navbarHeight + visibleGap)));
+
+  // When a navigation click locks the navbar visible, reserve clearance below it
+  if (options?.forceVisibleNavbar ?? isNavbarLockedVisible()) {
+    return visibleTargetY;
+  }
 
   // Near the very top of the page, the smart navbar remains pinned open
   if (hiddenTargetY <= NAVBAR_HIDE_AFTER_Y) {
@@ -162,7 +206,7 @@ function computeTargetScrollY(anchorEl: HTMLElement): number {
 
 export function scrollToElementById(
   id: string,
-  options?: { instant?: boolean; moveFocus?: boolean }
+  options?: { instant?: boolean; moveFocus?: boolean; forceVisibleNavbar?: boolean }
 ): boolean {
   if (typeof document === "undefined") return false;
   const anchorEl = resolveTargetElement(id);
@@ -173,7 +217,9 @@ export function scrollToElementById(
     document.body.style.overflow = "";
   }
 
-  const targetScrollY = computeTargetScrollY(anchorEl);
+  const targetScrollY = computeTargetScrollY(anchorEl, {
+    forceVisibleNavbar: options?.forceVisibleNavbar,
+  });
   const useInstant = Boolean(options?.instant) || prefersReducedMotion();
 
   window.scrollTo({
@@ -248,13 +294,17 @@ export function handleSamePageHashClick(
   event.preventDefault();
   onAfterHandled?.();
 
-  // Prevent pointer clicks inside <header> from locking `:focus-within` / `:focus-visible` open
   const clickedEl =
     event.currentTarget instanceof HTMLElement
       ? event.currentTarget
       : event.target instanceof Element
         ? event.target.closest("a")
         : null;
+  const isNavbarClick = Boolean(clickedEl?.closest("header"));
+  if (isNavbarClick) {
+    lockNavbarVisible();
+  }
+
   const isPointerClick = event.detail !== 0;
   if (isPointerClick && clickedEl instanceof HTMLElement) {
     clickedEl.blur();
@@ -276,7 +326,10 @@ export function handleSamePageHashClick(
 
   // Defer one animation frame so React can unmount any open drawer before measuring layout
   window.requestAnimationFrame(() => {
-    scrollToElementById(hashId, { moveFocus: !isPointerClick });
+    scrollToElementById(hashId, {
+      moveFocus: !isPointerClick,
+      forceVisibleNavbar: isNavbarClick || isNavbarLockedVisible(),
+    });
   });
 
   return true;

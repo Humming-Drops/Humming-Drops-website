@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import {
   handleHashPopState,
   handleSamePageHashClick,
+  isNavbarLockedVisible,
+  lockNavbarVisible,
   scrollToElementById,
 } from "@/lib/scroll-navigation";
 
@@ -26,6 +28,18 @@ export function SmoothScrollManager() {
 
       const href = anchor.getAttribute("href");
       if (!href) return;
+
+      // Lock navbar visible when navigating via any primary left-click link inside <header>
+      if (
+        anchor.closest("header") &&
+        event.button === 0 &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey
+      ) {
+        lockNavbarVisible();
+      }
 
       handleSamePageHashClick(event, href);
     };
@@ -52,7 +66,10 @@ export function SmoothScrollManager() {
     let innerRafId: number | null = null;
     const outerRafId = window.requestAnimationFrame(() => {
       innerRafId = window.requestAnimationFrame(() => {
-        scrollToElementById(hashId, { instant: !isRouteChange });
+        scrollToElementById(hashId, {
+          instant: !isRouteChange,
+          forceVisibleNavbar: isNavbarLockedVisible(),
+        });
       });
     });
 

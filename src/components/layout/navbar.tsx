@@ -11,12 +11,26 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
-import { handleSamePageHashClick } from "@/lib/scroll-navigation";
+import {
+  handleSamePageHashClick,
+  isNavbarLockedVisible,
+  releaseNavbarLock,
+  subscribeNavbarLock,
+} from "@/lib/scroll-navigation";
 import { UserButton, useAuth } from "@clerk/nextjs";
 
 const TOP_VISIBLE_OFFSET = 48;
 const HIDE_AFTER_Y = 72;
 const SCROLL_DELTA_THRESHOLD = 8;
+const MANUAL_SCROLL_KEYS = new Set([
+  "ArrowDown",
+  "ArrowUp",
+  "PageDown",
+  "PageUp",
+  "Home",
+  "End",
+  " ",
+]);
 const TRACKED_SECTIONS = [
   "pricing",
   "journey",
@@ -25,6 +39,13 @@ const TRACKED_SECTIONS = [
   "why-medcity",
   "vitals",
 ] as const;
+
+function isInteractiveOrEditableElement(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable) return true;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON";
+}
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -37,13 +58,74 @@ export function Navbar() {
 
   const lastScrollYRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
+  const navLockedRef = useRef(false);
 
   // Active brand nav config
   const navConfig = theme === "medcity" ? MEDCITY_SMILES_NAV : HUMMING_DROPS_NAV;
 
-  // Smart scroll behavior + active section tracking (throttled via rAF, passive listener)
+  // Smart scroll behavior, navigation lock & active section tracking
   useEffect(() => {
     lastScrollYRef.current = Math.max(0, window.scrollY);
+    navLockedRef.current = isNavbarLockedVisible();
+
+    const detachUnlockListeners = () => {
+      window.removeEventListener("wheel", onUserWheel);
+      window.removeEventListener("touchmove", onUserTouchMove);
+      window.removeEventListener("keydown", onUserKeyDown);
+      window.removeEventListener("pointerdown", onScrollbarPointerDown);
+    };
+
+    const unlockFromUserScroll = () => {
+      if (!navLockedRef.current) return;
+      navLockedRef.current = false;
+      detachUnlockListeners();
+      releaseNavbarLock();
+    };
+
+    const onUserWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) >= 1) {
+        unlockFromUserScroll();
+      }
+    };
+
+    const onUserTouchMove = () => {
+      unlockFromUserScroll();
+    };
+
+    const onUserKeyDown = (e: KeyboardEvent) => {
+      if (e.key === " " && isInteractiveOrEditableElement(e.target)) return;
+      if (MANUAL_SCROLL_KEYS.has(e.key)) {
+        unlockFromUserScroll();
+      }
+    };
+
+    const onScrollbarPointerDown = (e: PointerEvent) => {
+      if (e.clientX >= document.documentElement.clientWidth) {
+        unlockFromUserScroll();
+      }
+    };
+
+    const attachUnlockListeners = () => {
+      window.addEventListener("wheel", onUserWheel, { passive: true });
+      window.addEventListener("touchmove", onUserTouchMove, { passive: true });
+      window.addEventListener("keydown", onUserKeyDown, { passive: true });
+      window.addEventListener("pointerdown", onScrollbarPointerDown, { passive: true });
+    };
+
+    const unsubscribeLock = subscribeNavbarLock((locked) => {
+      navLockedRef.current = locked;
+      if (locked) {
+        setIsNavVisible((prev) => (prev ? prev : true));
+        attachUnlockListeners();
+      } else {
+        detachUnlockListeners();
+      }
+    });
+
+    if (navLockedRef.current) {
+      setIsNavVisible((prev) => (prev ? prev : true));
+      attachUnlockListeners();
+    }
 
     const evaluateScroll = () => {
       rafIdRef.current = null;
@@ -68,6 +150,13 @@ export function Navbar() {
       }
       if (matchedSection || currentY < 300) {
         setActiveSection((prev) => (prev === matchedSection ? prev : matchedSection));
+      }
+
+      // Keep navbar visible while navigation-triggered lock is active
+      if (navLockedRef.current) {
+        lastScrollYRef.current = currentY;
+        setIsNavVisible((prev) => (prev ? prev : true));
+        return;
       }
 
       // Always keep navbar visible near top (also guards iOS rubber-band bounce)
@@ -100,6 +189,8 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      detachUnlockListeners();
+      unsubscribeLock();
       if (rafIdRef.current !== null) {
         window.cancelAnimationFrame(rafIdRef.current);
         rafIdRef.current = null;
