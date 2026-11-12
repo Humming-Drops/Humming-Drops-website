@@ -214,7 +214,7 @@ export function Hero() {
 
             {/* 2. Main Headline with radiant gradient and sun scribble */}
             <motion.div variants={fadeInUp} className="space-y-1">
-              <h1 className="text-[2.35rem] sm:text-5xl lg:text-[3.85rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
+              <h1 className="font-display text-[2.35rem] sm:text-5xl lg:text-[3.75rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
                 <span className="text-[#132A1C]">Healthy Drops,</span>
                 <span className="relative inline-block pb-3.5 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 bg-clip-text text-transparent">
                   Healthier You
@@ -239,7 +239,7 @@ export function Hero() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
                   href="/subscribe?plan=standard"
-                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base shadow-[0_10px_26px_rgba(22,163,74,0.32)] hover:from-emerald-700 hover:to-green-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer group"
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base shadow-[0_10px_26px_rgba(22,163,74,0.32)] hover:from-emerald-700 hover:to-green-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                 >
                   <span>Start Your Morning Plan</span>
                   <ChevronRight className="w-4 h-4 text-white/90 group-hover:translate-x-0.5 transition-transform" />
@@ -248,7 +248,7 @@ export function Hero() {
                 <a
                   href="#box-experience"
                   onClick={handleScrollToSection("box-experience")}
-                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer"
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                 >
                   <span>See what&apos;s inside</span>
                   <ArrowDown className="w-4 h-4 text-emerald-600" />
@@ -256,7 +256,7 @@ export function Hero() {
               </div>
 
               {/* Sub-CTA Informational Line */}
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#405347] pt-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[#405347] pt-1">
                 <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
                   <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹3,500/month
                 </span>
