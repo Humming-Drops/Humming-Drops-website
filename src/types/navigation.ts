@@ -28,9 +28,8 @@ export const HUMMING_DROPS_NAV: BrandNavConfig = {
   logoSrc: "/images/humming-drops-logo.png",
   logoAlt: "Humming Drops Official Logo",
   navItems: [
-    { label: "Plans", href: "/#pricing" },
     { label: "How it works", href: "/#journey" },
-    { label: "MedCity Smiles", href: "/medcity-smiles" },
+    { label: "Plans", href: "/#pricing" },
     { label: "Contact", href: "/contact" },
   ],
   primaryCTA: {
