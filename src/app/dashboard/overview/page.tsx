@@ -45,10 +45,35 @@ export default function DashboardOverviewPage() {
   }, []);
 
   if (accountError) {
-    return <p className="p-6 text-sm text-red-700">{accountError}</p>;
+    return (
+      <div
+        role="alert"
+        className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800"
+      >
+        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
+        <div className="space-y-1">
+          <p className="font-bold">Unable to load your subscriber account</p>
+          <p className="text-xs text-red-700">{accountError}</p>
+        </div>
+      </div>
+    );
   }
   if (!subscriberName || !planName || !refCode) {
-    return <p className="p-6 text-sm text-content-secondary">Loading your subscriber account…</p>;
+    return (
+      <div className="space-y-8 animate-pulse" aria-busy="true" aria-label="Loading subscriber account">
+        <div className="space-y-3 pb-6 border-b border-line-subtle">
+          <div className="h-5 w-44 rounded-full bg-muted" />
+          <div className="h-8 w-64 rounded-xl bg-muted" />
+          <div className="h-4 w-72 max-w-full rounded-lg bg-muted" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+        </div>
+        <div className="h-48 rounded-2xl bg-muted/60 border border-line-subtle" />
+      </div>
+    );
   }
 
   return (

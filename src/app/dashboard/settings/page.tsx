@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AlertCircle } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/admin/status-badge";
 
 interface AccountData {
   user: {
@@ -65,19 +67,40 @@ export default function DashboardSettingsPage() {
     }
   };
 
-  if (error) return <p className="p-6 text-sm text-red-700">{error}</p>;
-  if (!account) return <p className="p-6 text-sm text-content-secondary">Loading your account…</p>;
+  if (error) {
+    return (
+      <div
+        role="alert"
+        className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800"
+      >
+        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
+        <p>{error}</p>
+      </div>
+    );
+  }
+  if (!account) {
+    return (
+      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading profile settings">
+        <div className="h-14 w-56 rounded-xl bg-muted/70" />
+        <div className="h-44 rounded-2xl bg-muted/70 border border-line-subtle" />
+        <div className="h-36 rounded-2xl bg-muted/70 border border-line-subtle" />
+      </div>
+    );
+  }
 
   const subscription = account.subscriptions[0];
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-line-subtle pb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line-subtle pb-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">Account</p>
           <h1 className="font-display text-2xl font-extrabold text-content-primary">Profile &amp; Settings</h1>
         </div>
         <SignOutButton>
-          <button type="button" className="rounded-full border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700">
+          <button
+            type="button"
+            className="rounded-full border border-red-200 bg-red-50 px-4 py-2 min-h-[38px] text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+          >
             Sign out
           </button>
         </SignOutButton>
@@ -90,7 +113,7 @@ export default function DashboardSettingsPage() {
             <button
               type="button"
               onClick={() => setIsEditing(true)}
-              className="text-xs font-semibold text-brand-primary hover:underline"
+              className="text-xs font-semibold text-brand-primary hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
             >
               Edit
             </button>
@@ -175,8 +198,8 @@ export default function DashboardSettingsPage() {
         <h2 className="font-display text-lg font-bold text-content-primary">Subscription</h2>
         {subscription ? (
           <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
-            <div><dt className="text-content-secondary">Plan</dt><dd className="font-semibold">{subscription.subscription.planId}</dd></div>
-            <div><dt className="text-content-secondary">Status</dt><dd className="font-semibold">{subscription.subscription.status}</dd></div>
+            <div><dt className="text-content-secondary">Plan</dt><dd className="font-semibold capitalize">{subscription.subscription.planId}</dd></div>
+            <div><dt className="text-content-secondary">Status</dt><dd className="mt-1"><StatusBadge status={subscription.subscription.status} /></dd></div>
             <div><dt className="text-content-secondary">Reference</dt><dd className="font-mono text-xs">{subscription.subscription.leadReferenceCode}</dd></div>
             <div><dt className="text-content-secondary">Delivery area</dt><dd className="font-semibold">{subscription.address?.area || "Not provided"}</dd></div>
           </dl>

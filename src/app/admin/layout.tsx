@@ -1,6 +1,17 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { isStaffUser } from "@/lib/clerk-auth";
+import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
+
+const ADMIN_NAV_ITEMS: PortalNavItem[] = [
+  { label: "Overview", href: "/admin" },
+  { label: "Leads", href: "/admin/leads" },
+  { label: "Subscriptions", href: "/admin/subscriptions" },
+  { label: "Payments", href: "/admin/payments" },
+  { label: "Content", href: "/admin/content" },
+  { label: "Staff", href: "/admin/staff" },
+  { label: "Audit log", href: "/admin/audit-log" },
+];
 
 // Every admin page reads live, per-staff-member authorized data (leads,
 // payments, audit logs, ...). Must never be statically prerendered --
@@ -35,32 +46,14 @@ export default async function AdminLayout({
           </div>
           <Link
             href="/dashboard/overview"
-            className="text-xs font-semibold text-brand-primary hover:underline"
+            className="text-xs font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             Customer dashboard
           </Link>
         </div>
       </div>
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 md:flex-row md:px-8">
-        <aside className="w-full shrink-0 space-y-1 text-sm font-medium md:w-56">
-          {[
-            ["Overview", "/admin"],
-            ["Leads", "/admin/leads"],
-            ["Subscriptions", "/admin/subscriptions"],
-            ["Payments", "/admin/payments"],
-            ["Content", "/admin/content"],
-            ["Staff", "/admin/staff"],
-            ["Audit log", "/admin/audit-log"],
-          ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="block rounded-xl px-3 py-2 text-content-secondary hover:bg-surface hover:text-brand-primary"
-            >
-              {label}
-            </Link>
-          ))}
-        </aside>
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:py-8 md:flex-row md:gap-8 md:px-8">
+        <PortalNav items={ADMIN_NAV_ITEMS} ariaLabel="Admin Navigation" />
         <main className="min-w-0 flex-1">{children}</main>
       </div>
     </div>
