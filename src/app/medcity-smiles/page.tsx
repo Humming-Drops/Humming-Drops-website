@@ -89,12 +89,12 @@ export default function MedCitySmilesPage() {
                 <span>Get Started with Breakfast Box</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
-              <Link
+              <a
                 href="#vitals"
-                className="inline-flex items-center justify-center px-6 min-h-[48px] rounded-full border-2 border-teal-700/50 hover:border-teal-700 text-teal-900 bg-teal-50 hover:bg-teal-100 font-bold transition-all active:scale-[0.98] w-full sm:w-auto"
+                className="inline-flex items-center justify-center px-6 min-h-[48px] rounded-full border-2 border-teal-700/50 hover:border-teal-700 text-teal-900 bg-teal-50 hover:bg-teal-100 font-bold transition-all active:scale-[0.98] w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
               >
                 See What&apos;s Included
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -104,8 +104,9 @@ export default function MedCitySmilesPage() {
       <section
         id="why-medcity"
         aria-label="Why MedCity Smiles"
-        className="py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E3EFE5]"
+        className="relative py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E3EFE5]"
       >
+        <span id="pillars" className="pointer-events-none absolute top-0 left-0" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">

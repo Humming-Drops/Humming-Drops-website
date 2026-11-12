@@ -45,7 +45,7 @@ export const MEDCITY_SMILES_NAV: BrandNavConfig = {
   logoSrc: "/images/medcity-smiles-logo.png",
   logoAlt: "MedCity Smiles Community Logo",
   navItems: [
-    { label: "Mind & Community", href: "/medcity-smiles#pillars" },
+    { label: "Mind & Community", href: "/medcity-smiles#why-medcity" },
     { label: "Health Vitals", href: "/medcity-smiles#vitals" },
     { label: "Breakfast Box Plans", href: "/plans" },
     { label: "About", href: "/about" },

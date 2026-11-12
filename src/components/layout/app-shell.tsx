@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { MobileStickyBar } from "@/components/layout/mobile-sticky-bar";
+import { SmoothScrollManager } from "@/components/layout/smooth-scroll-manager";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -28,13 +29,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         Skip to main content
       </a>
 
+      {/* Global Smooth Hash Scroll & History Restoration */}
+      <SmoothScrollManager />
+
       {/* Global Brand-Aware Responsive Navbar */}
       <Navbar />
 
       {/* Primary Main Landmark */}
       <main
         id="main-content"
-        className={`flex-1 flex flex-col ${hideMobileStickyBar ? "pb-0" : "pb-24 md:pb-0"}`}
+        tabIndex={-1}
+        className={`flex-1 flex flex-col focus:outline-none ${hideMobileStickyBar ? "pb-0" : "pb-24 md:pb-0"}`}
       >
         {children}
       </main>

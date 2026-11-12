@@ -116,14 +116,6 @@ export function Hero() {
     return () => observer.disconnect();
   }, []);
 
-  const handleScrollToSection = (id: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <section
       aria-label="Welcome to Humming Drops"
@@ -277,7 +269,6 @@ export function Hero() {
 
                 <a
                   href="#box-experience"
-                  onClick={handleScrollToSection("box-experience")}
                   className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                 >
                   <span>See what&apos;s inside</span>

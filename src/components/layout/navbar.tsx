@@ -11,12 +11,20 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
+import { handleSamePageHashClick } from "@/lib/scroll-navigation";
 import { UserButton, useAuth } from "@clerk/nextjs";
 
 const TOP_VISIBLE_OFFSET = 48;
 const HIDE_AFTER_Y = 72;
 const SCROLL_DELTA_THRESHOLD = 8;
-const TRACKED_SECTIONS = ["pricing", "journey", "box-experience", "medcity-smiles"] as const;
+const TRACKED_SECTIONS = [
+  "pricing",
+  "journey",
+  "box-experience",
+  "medcity-smiles",
+  "why-medcity",
+  "vitals",
+] as const;
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -123,11 +131,21 @@ export function Navbar() {
     }
   }, [mobileMenuOpen]);
 
+  const closeMobileMenu = () => {
+    document.body.style.overflow = "";
+    setMobileMenuOpen(false);
+  };
+
   const isNavItemActive = (href: string) => {
-    const isHashMatch =
-      (href === "/#pricing" && activeSection === "pricing") ||
-      (href === "/#journey" && activeSection === "journey");
-    return pathname === href || (pathname === "/" && isHashMatch);
+    const isHomeHashMatch =
+      pathname === "/" &&
+      ((href === "/#pricing" && activeSection === "pricing") ||
+        (href === "/#journey" && activeSection === "journey"));
+    const isMedcityHashMatch =
+      pathname === "/medcity-smiles" &&
+      ((href === "/medcity-smiles#why-medcity" && activeSection === "why-medcity") ||
+        (href === "/medcity-smiles#vitals" && activeSection === "vitals"));
+    return pathname === href || isHomeHashMatch || isMedcityHashMatch;
   };
 
   const isHeaderHidden = !isNavVisible && !mobileMenuOpen;
@@ -333,7 +351,11 @@ export function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={(e) => {
+                        if (!handleSamePageHashClick(e, item.href, closeMobileMenu)) {
+                          closeMobileMenu();
+                        }
+                      }}
                       className={cn(
                         "px-4 py-3.5 rounded-xl text-base font-semibold min-h-[48px] flex items-center justify-between transition-colors",
                         isActive
