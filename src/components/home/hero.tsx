@@ -40,6 +40,36 @@ const floatingBadgeVariants: Variants = {
   }),
 };
 
+const HERO_BENEFITS = [
+  {
+    id: "fruits-veggies",
+    title: "5 Cut Fruits",
+    subtitle: "& 3 Veggies",
+    cardBorder: "border-[#E3EFE5] hover:border-emerald-200",
+    iconBg: "bg-rose-50 border-rose-200",
+    iconColor: "text-rose-600",
+    Icon: Apple,
+  },
+  {
+    id: "sprouts-dry-fruits",
+    title: "Sprouts & Dry Fruits",
+    subtitle: "4 Days a Week",
+    cardBorder: "border-[#E3EFE5] hover:border-amber-200",
+    iconBg: "bg-amber-50 border-amber-200",
+    iconColor: "text-emerald-700",
+    Icon: Salad,
+  },
+  {
+    id: "free-lab-test",
+    title: "Free Lab Test",
+    subtitle: "MedCity Partner",
+    cardBorder: "border-sky-200/80 hover:border-sky-300",
+    iconBg: "bg-sky-50 border-sky-200",
+    iconColor: "text-sky-600",
+    Icon: HeartPulse,
+  },
+] as const;
+
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -267,41 +297,29 @@ export function Hero() {
               </div>
             </motion.div>
 
-            {/* 5. Trust Bar: Horizontally scrollable chip row on mobile with scroll snap / 3-grid on tablet/desktop */}
+            {/* 5. Trust Bar: Responsive stack on mobile, wrapping proportionally on tablet/desktop */}
             <motion.div
               variants={fadeInUp}
               className="pt-3.5 border-t border-[#E3EFE5]"
             >
-              <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-1 sm:pb-0 -mx-5 px-5 sm:mx-0 sm:px-0 no-scrollbar">
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-emerald-200 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
-                    <Apple className="w-4 h-4 text-rose-600" />
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5">
+                {HERO_BENEFITS.map(({ id, title, subtitle, cardBorder, iconBg, iconColor, Icon }) => (
+                  <div
+                    key={id}
+                    className={`min-w-0 w-full sm:w-auto sm:flex-auto flex items-center gap-2.5 bg-white border ${cardBorder} px-3.5 py-2.5 sm:px-3 rounded-2xl shadow-2xs transition-colors`}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className={`w-7 h-7 rounded-xl border ${iconBg} flex items-center justify-center shrink-0`}
+                    >
+                      <Icon className={`w-4 h-4 ${iconColor}`} />
+                    </div>
+                    <div className="min-w-0 flex-1 leading-snug">
+                      <p className="font-bold text-[13px] text-[#132A1C] break-words">{title}</p>
+                      <p className="text-[11px] text-[#657B6F] font-normal">{subtitle}</p>
+                    </div>
                   </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">5 Cut Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 3 Veggies</p>
-                  </div>
-                </div>
-
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-amber-200 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
-                    <Salad className="w-4 h-4 text-emerald-700" />
-                  </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">Sprouts &amp; Dry Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">4 Days a Week</p>
-                  </div>
-                </div>
-
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-sky-200/80 px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-sky-300 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center shrink-0">
-                    <HeartPulse className="w-4 h-4 text-sky-600" />
-                  </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">Free Lab Test</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">MedCity Partner</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
           </motion.div>
