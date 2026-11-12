@@ -30,11 +30,13 @@ export function SmoothScrollManager() {
       handleSamePageHashClick(event, href);
     };
 
-    document.addEventListener("click", onDocumentClick);
+    // Capture phase ensures same-page hash links (including Next.js <Link>) are
+    // intercepted before React/Next delegates call preventDefault and native scrollIntoView.
+    document.addEventListener("click", onDocumentClick, true);
     window.addEventListener("popstate", handleHashPopState);
 
     return () => {
-      document.removeEventListener("click", onDocumentClick);
+      document.removeEventListener("click", onDocumentClick, true);
       window.removeEventListener("popstate", handleHashPopState);
     };
   }, []);

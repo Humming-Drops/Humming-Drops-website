@@ -7,6 +7,11 @@ const DEFAULT_NAVBAR_HEIGHT = 64;
 const NAVBAR_HIDE_AFTER_Y = 72;
 const NAVBAR_DELTA_THRESHOLD = 8;
 
+/**
+ * Target viewport offset from top edge when the smart navbar hides (40-50px spec).
+ */
+const HIDDEN_NAVBAR_TARGET_TOP = 45;
+
 const SECTION_ALIAS_MAP: Record<string, string> = {
   pillars: "why-medcity",
   "box-anatomy": "box-experience",
@@ -26,57 +31,126 @@ export function prefersReducedMotion(): boolean {
 
 function getNavbarHeight(): number {
   if (typeof document === "undefined") return DEFAULT_NAVBAR_HEIGHT;
-  const header = document.querySelector("header");
-  const measured = header?.getBoundingClientRect().height;
-  return measured && measured > 0 ? Math.round(measured) : DEFAULT_NAVBAR_HEIGHT;
+  // Measure only the sticky top bar (`header > div`), ignoring any open mobile drawer panel
+  const topBar = document.querySelector("header > div") ?? document.querySelector("header");
+  const measured = topBar?.getBoundingClientRect().height;
+  return measured && measured > 0 && measured <= 100
+    ? Math.round(measured)
+    : DEFAULT_NAVBAR_HEIGHT;
 }
 
 function getResponsiveOffsets(): { hiddenGap: number; visibleGap: number } {
   const width = typeof window !== "undefined" ? window.innerWidth : 1280;
   if (width >= 1024) {
-    // Desktop: 44px below top edge when navbar hides (~Screenshot 1), 36px below visible navbar
-    return { hiddenGap: 44, visibleGap: 36 };
+    return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 32 };
   }
   if (width >= 640) {
-    // Tablet: 36px when navbar hides, 28px below visible navbar
-    return { hiddenGap: 36, visibleGap: 28 };
+    return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 28 };
   }
-  // Mobile: 24px when navbar hides, 20px below visible navbar
-  return { hiddenGap: 24, visibleGap: 20 };
+  return { hiddenGap: HIDDEN_NAVBAR_TARGET_TOP, visibleGap: 24 };
 }
 
-function computeTargetScrollY(element: HTMLElement): number {
-  const resolvedId = SECTION_ALIAS_MAP[element.id];
-  const anchorEl = resolvedId ? document.getElementById(resolvedId) ?? element : element;
+function isHiddenOrDecorative(el: Element): boolean {
+  if (el.getAttribute("aria-hidden") === "true") return true;
+  if (el.classList.contains("sr-only")) return true;
+  if (el.classList.contains("pointer-events-none")) return true;
 
+  const rect = el.getBoundingClientRect();
+  if (rect.width < 4 || rect.height < 4) return true;
+
+  const style = window.getComputedStyle(el);
+  if (
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    Number.parseFloat(style.opacity) === 0
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function hasVisibleBoxSurface(style: CSSStyleDeclaration): boolean {
+  const hasGradientOrImage = style.backgroundImage !== "none";
+  const bg = style.backgroundColor;
+  const hasOpaqueBg =
+    Boolean(bg) &&
+    bg !== "transparent" &&
+    bg !== "rgba(0, 0, 0, 0)";
+  const borderTop = Number.parseFloat(style.borderTopWidth) || 0;
+  return hasGradientOrImage || hasOpaqueBg || borderTop > 0;
+}
+
+/**
+ * Finds the first meaningful visible UI element inside a destination section
+ * (e.g., introductory badge pill, prominent styled card container, logo/image, or heading),
+ * bypassing invisible layout wrappers and decorative ambient glows.
+ */
+export function findFirstMeaningfulElement(root: HTMLElement): HTMLElement {
+  const explicitAnchor = root.querySelector<HTMLElement>("[data-scroll-anchor]");
+  if (explicitAnchor && !isHiddenOrDecorative(explicitAnchor)) {
+    return explicitAnchor;
+  }
+
+  const semanticTags = new Set(["H1", "H2", "H3", "H4", "IMG", "P", "BUTTON", "A"]);
+
+  function walk(node: Element): HTMLElement | null {
+    for (const child of Array.from(node.children)) {
+      if (!(child instanceof HTMLElement) && child.tagName !== "IMG") continue;
+      if (isHiddenOrDecorative(child)) continue;
+
+      if (child instanceof HTMLElement) {
+        if (semanticTags.has(child.tagName)) {
+          return child;
+        }
+
+        const style = window.getComputedStyle(child);
+        if (hasVisibleBoxSurface(style)) {
+          return child;
+        }
+
+        const nested = walk(child);
+        if (nested) return nested;
+      }
+    }
+    return null;
+  }
+
+  return walk(root) ?? root;
+}
+
+function resolveTargetElement(id: string): HTMLElement | null {
+  const resolvedId = SECTION_ALIAS_MAP[id] ?? id;
+  return document.getElementById(resolvedId) ?? document.getElementById(id);
+}
+
+function computeTargetScrollY(anchorEl: HTMLElement): number {
   if (anchorEl.id === "main-content") {
     return 0;
   }
 
-  const rect = anchorEl.getBoundingClientRect();
+  const firstMeaningfulEl = findFirstMeaningfulElement(anchorEl);
   const currentY = Math.max(0, window.scrollY);
-  const elementTop = rect.top + currentY;
-  const paddingTop = Number.parseFloat(window.getComputedStyle(anchorEl).paddingTop) || 0;
+  const elementViewportTop = firstMeaningfulEl.getBoundingClientRect().top;
+  const absoluteElementTop = elementViewportTop + currentY;
 
-  // Position relative to the first meaningful content inside the section (below internal band padding)
-  const contentTop = elementTop + paddingTop;
   const { hiddenGap, visibleGap } = getResponsiveOffsets();
   const navbarHeight = getNavbarHeight();
 
-  const hiddenTargetY = Math.max(0, Math.round(contentTop - hiddenGap));
-  const visibleTargetY = Math.max(0, Math.round(contentTop - (navbarHeight + visibleGap)));
+  const hiddenTargetY = Math.max(0, Math.round(absoluteElementTop - hiddenGap));
+  const visibleTargetY = Math.max(0, Math.round(absoluteElementTop - (navbarHeight + visibleGap)));
 
-  // Near page top, the smart navbar stays visible so reserve visible-navbar clearance
+  // Near the very top of the page, the smart navbar remains pinned open
   if (hiddenTargetY <= NAVBAR_HIDE_AFTER_Y) {
     return visibleTargetY;
   }
 
-  // Downward scroll hides the smart navbar -> frame content cleanly ~44px from desktop viewport top
+  // Scrolling downward past threshold hides the smart navbar -> land first element ~45px from top
   if (hiddenTargetY > currentY + NAVBAR_DELTA_THRESHOLD) {
     return hiddenTargetY;
   }
 
-  // Upward scroll reveals the smart navbar -> leave breathing room below it
+  // Scrolling upward reveals the smart navbar -> clear navbar height so content stays visible
   if (visibleTargetY < currentY - NAVBAR_DELTA_THRESHOLD) {
     return visibleTargetY;
   }
@@ -88,18 +162,18 @@ function computeTargetScrollY(element: HTMLElement): number {
 
 export function scrollToElementById(
   id: string,
-  options?: { instant?: boolean }
+  options?: { instant?: boolean; moveFocus?: boolean }
 ): boolean {
   if (typeof document === "undefined") return false;
-  const element = document.getElementById(id);
-  if (!element) return false;
+  const anchorEl = resolveTargetElement(id);
+  if (!anchorEl) return false;
 
-  // Release drawer scroll lock before measuring or scrolling
+  // Release drawer scroll lock before measuring viewport geometry
   if (document.body.style.overflow === "hidden") {
     document.body.style.overflow = "";
   }
 
-  const targetScrollY = computeTargetScrollY(element);
+  const targetScrollY = computeTargetScrollY(anchorEl);
   const useInstant = Boolean(options?.instant) || prefersReducedMotion();
 
   window.scrollTo({
@@ -107,9 +181,12 @@ export function scrollToElementById(
     behavior: useInstant ? "auto" : "smooth",
   });
 
-  // Preserve keyboard navigation order for main content or programmatically focusable targets
-  if (id === "main-content" || element.hasAttribute("tabindex")) {
-    element.focus({ preventScroll: true });
+  if (options?.moveFocus || anchorEl.id === "main-content" || anchorEl.hasAttribute("tabindex")) {
+    if (!anchorEl.hasAttribute("tabindex")) {
+      anchorEl.setAttribute("tabindex", "-1");
+      anchorEl.style.outline = "none";
+    }
+    anchorEl.focus({ preventScroll: true });
   }
 
   return true;
@@ -122,9 +199,16 @@ export function scrollToElementById(
  */
 export function handleSamePageHashClick(
   event: Pick<
-    MouseEvent<HTMLAnchorElement>,
-    "defaultPrevented" | "button" | "metaKey" | "ctrlKey" | "shiftKey" | "altKey" | "preventDefault"
-  >,
+    MouseEvent<HTMLAnchorElement> | globalThis.MouseEvent,
+    | "defaultPrevented"
+    | "button"
+    | "metaKey"
+    | "ctrlKey"
+    | "shiftKey"
+    | "altKey"
+    | "preventDefault"
+    | "detail"
+  > & { currentTarget?: EventTarget | null; target?: EventTarget | null },
   href: string,
   onAfterHandled?: () => void
 ): boolean {
@@ -159,10 +243,22 @@ export function handleSamePageHashClick(
   const targetPath = rawPath === "" ? currentPath : normalizePath(rawPath);
   if (targetPath !== currentPath) return false;
 
-  if (!document.getElementById(hashId)) return false;
+  if (!resolveTargetElement(hashId)) return false;
 
   event.preventDefault();
   onAfterHandled?.();
+
+  // Prevent pointer clicks inside <header> from locking `:focus-within` / `:focus-visible` open
+  const clickedEl =
+    event.currentTarget instanceof HTMLElement
+      ? event.currentTarget
+      : event.target instanceof Element
+        ? event.target.closest("a")
+        : null;
+  const isPointerClick = event.detail !== 0;
+  if (isPointerClick && clickedEl instanceof HTMLElement) {
+    clickedEl.blur();
+  }
 
   const nextHash = `#${hashId}`;
   if (window.location.hash !== nextHash) {
@@ -178,8 +274,9 @@ export function handleSamePageHashClick(
     window.history.pushState(existingState, "", `${targetPath}${nextHash}`);
   }
 
+  // Defer one animation frame so React can unmount any open drawer before measuring layout
   window.requestAnimationFrame(() => {
-    scrollToElementById(hashId);
+    scrollToElementById(hashId, { moveFocus: !isPointerClick });
   });
 
   return true;

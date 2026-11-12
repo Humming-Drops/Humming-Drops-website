@@ -23,13 +23,13 @@
     --body: #405347;           /* clean high-contrast body text */
     --radius: 20px;            /* consistent soft-corner border radius */
 
-    /* Responsive Sticky-Navbar-Aware Section Scroll Offsets (h-16 = 4rem) */
+    /* Responsive Section Scroll Offsets (~45px viewport top clearance when smart navbar hides) */
     --navbar-height: 4rem;
-    --scroll-offset-anchor: 5.25rem;  /* 84px mobile fallback (64px nav + 20px gap) */
-    --scroll-offset-band-14: 1.75rem; /* Sections with py-14 (56px) -> 84px to heading */
-    --scroll-offset-band-16: 1.25rem; /* Sections with py-16 (64px) -> 84px to heading */
-    --scroll-offset-band-8: 3.25rem;  /* Sections with py-8  (32px) -> 84px to heading */
-    --scroll-offset-band-cta: 1.75rem;/* CTA bands with py-14 (56px) -> 84px to heading */
+    --scroll-offset-anchor: 2.8125rem;                  /* 45px default fallback */
+    --scroll-offset-band-14: calc(2.8125rem - 3.5rem);  /* py-14 (56px) -> 45px to heading */
+    --scroll-offset-band-16: calc(2.8125rem - 4rem);    /* py-16 (64px) -> 45px to heading */
+    --scroll-offset-band-8: calc(2.8125rem - 2rem);     /* py-8  (32px) -> 45px to card */
+    --scroll-offset-band-cta: calc(2.8125rem - 3.5rem); /* py-14 (56px) -> 45px to badge */
 
     /* Canvas & Surface Tokens */
     --bg-canvas: var(--bg);
@@ -243,21 +243,21 @@
   /* Centralized Responsive Anchor Scroll Positioning */
   @media (min-width: 640px) {
     :root {
-      --scroll-offset-anchor: 5.75rem;   /* 92px tablet fallback (64px nav + 28px gap) */
-      --scroll-offset-band-14: 1.75rem;  /* sm:py-16 (64px) -> 92px to heading */
-      --scroll-offset-band-16: 0.75rem;  /* sm:py-20 (80px) -> 92px to heading */
-      --scroll-offset-band-8: 1.75rem;   /* sm:py-16 (64px) -> 92px to heading */
-      --scroll-offset-band-cta: 1.75rem; /* sm:py-16 (64px) -> 92px to heading */
+      --scroll-offset-anchor: 2.8125rem;
+      --scroll-offset-band-14: calc(2.8125rem - 4rem);  /* sm:py-16 (64px) -> 45px to heading */
+      --scroll-offset-band-16: calc(2.8125rem - 5rem);  /* sm:py-20 (80px) -> 45px to heading */
+      --scroll-offset-band-8: calc(2.8125rem - 4rem);   /* sm:py-16 (64px) -> 45px to card */
+      --scroll-offset-band-cta: calc(2.8125rem - 4rem); /* sm:py-16 (64px) -> 45px to badge */
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --scroll-offset-anchor: 6.25rem;   /* 100px desktop fallback (64px nav + 36px gap) */
-      --scroll-offset-band-14: 0.25rem;  /* lg:py-24 (96px) -> 100px (36px below nav) */
-      --scroll-offset-band-16: 0.25rem;  /* lg:py-24 (96px) -> 100px (36px below nav) */
-      --scroll-offset-band-8: 0.25rem;   /* lg:py-24 (96px) -> 100px (36px below nav) */
-      --scroll-offset-band-cta: 1.25rem; /* lg:py-20 (80px) -> 100px (36px below nav) */
+      --scroll-offset-anchor: 2.8125rem;
+      --scroll-offset-band-14: calc(2.8125rem - 6rem);  /* lg:py-24 (96px) -> 45px to heading */
+      --scroll-offset-band-16: calc(2.8125rem - 6rem);  /* lg:py-24 (96px) -> 45px to heading */
+      --scroll-offset-band-8: calc(2.8125rem - 6rem);   /* lg:py-24 (96px) -> 45px to card */
+      --scroll-offset-band-cta: calc(2.8125rem - 5rem); /* lg:py-20 (80px) -> 45px to badge */
     }
   }
 

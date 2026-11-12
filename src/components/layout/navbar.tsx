@@ -160,7 +160,11 @@ export function Navbar() {
 
   return (
     <header
-      onFocusCapture={() => setIsNavVisible(true)}
+      onFocusCapture={(e) => {
+        if (e.target.matches?.(":focus-visible")) {
+          setIsNavVisible(true);
+        }
+      }}
       className={cn(
         "sticky top-0 z-40 w-full border-b transition-[transform,box-shadow,background-color] duration-300 ease-out motion-reduce:transition-none",
         surfaceClasses,
@@ -169,7 +173,7 @@ export function Navbar() {
           : cn(
               "will-change-transform",
               isHeaderHidden
-                ? "-translate-y-full focus-within:translate-y-0"
+                ? "-translate-y-full has-[:focus-visible]:translate-y-0"
                 : "translate-y-0"
             )
       )}
