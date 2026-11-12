@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
+import { AuthShell, CLERK_AUTH_APPEARANCE } from "@/components/auth/auth-shell";
 
 export const metadata: Metadata = {
   title: "Create Account",
@@ -8,14 +9,19 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="flex justify-center px-4 py-16">
+    <AuthShell
+      badgeText="Start Your Morning Habit"
+      title="Join Humming Drops"
+      subtitle="Create your account to customize your breakfast box and unlock free MedCity Smiles perks."
+    >
       <SignUp
         path="/register"
         routing="path"
         signInUrl="/login"
         fallbackRedirectUrl="/subscribe"
         signInFallbackRedirectUrl="/dashboard/overview"
+        appearance={CLERK_AUTH_APPEARANCE}
       />
-    </div>
+    </AuthShell>
   );
 }

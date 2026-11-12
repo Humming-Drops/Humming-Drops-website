@@ -280,7 +280,7 @@ function SubscribeFormContent() {
   const activePlan = OFFICIAL_PLANS[selectedPlanId];
   if (confirmationData) {
     return (
-      <div className="min-h-screen bg-[#fcfaf5] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-canvas py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto space-y-8">
           <Card className="border-forest-900/10 shadow-lg bg-white overflow-hidden text-center p-8 sm:p-10 space-y-6">
             <div className="w-16 h-16 rounded-full bg-forest-50 border-2 border-forest-900/20 text-forest-800 flex items-center justify-center mx-auto shadow-inner">
@@ -381,7 +381,7 @@ function SubscribeFormContent() {
     );
   }
   return (
-    <div className="min-h-screen bg-[#fcfaf5] py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 bg-forest-50 px-3.5 py-1 rounded-full border border-forest-900/10">
@@ -465,20 +465,22 @@ function SubscribeFormContent() {
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div
+                  <button
+                    type="button"
+                    aria-pressed={selectedPlanId === "standard"}
                     onClick={() => setSelectedPlanId("standard")}
-                    className={`relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "standard"
                         ? "border-forest-900 bg-forest-50/20 shadow-md ring-2 ring-forest-900/10"
                         : "border-stone-200 hover:border-stone-300 bg-white"
                     }`}
                   >
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center gap-2">
                         <h3 className="font-bold text-base text-forest-900">
                           {OFFICIAL_PLANS.standard.name} Plan
                         </h3>
-                        <span className="font-extrabold text-forest-900 text-lg">
+                        <span className="font-extrabold text-forest-900 text-lg shrink-0">
                           ₹{OFFICIAL_PLANS.standard.monthlyPriceINR}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
@@ -497,14 +499,16 @@ function SubscribeFormContent() {
                       ))}
                       <li className="flex items-center gap-2 text-forest-800 font-medium">
                         <Check className="w-3.5 h-3.5 text-forest-700 shrink-0" />
-                        <span>Free MedCity Smiles Membership & Monthly Health Checkup</span>
+                        <span>Free MedCity Smiles Membership &amp; Monthly Health Checkup</span>
                       </li>
                     </ul>
-                  </div>
+                  </button>
 
-                  <div
+                  <button
+                    type="button"
+                    aria-pressed={selectedPlanId === "premium"}
                     onClick={() => setSelectedPlanId("premium")}
-                    className={`relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "premium"
                         ? "border-forest-900 bg-forest-50/30 shadow-md ring-2 ring-forest-900/15"
                         : "border-stone-200 hover:border-stone-300 bg-white"
@@ -517,11 +521,11 @@ function SubscribeFormContent() {
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center gap-2">
                         <h3 className="font-bold text-base text-forest-900">
                           {OFFICIAL_PLANS.premium.name} Plan
                         </h3>
-                        <span className="font-extrabold text-forest-900 text-lg">
+                        <span className="font-extrabold text-forest-900 text-lg shrink-0">
                           ₹{OFFICIAL_PLANS.premium.monthlyPriceINR}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
@@ -549,7 +553,7 @@ function SubscribeFormContent() {
                         <span>Exclusive MedCity Labs Package Discounts</span>
                       </li>
                     </ul>
-                  </div>
+                  </button>
                 </div>
               </div>
             )}
@@ -829,10 +833,12 @@ function SubscribeFormContent() {
                         desc: "Enriched seasonal fruit portions with nuts and seeds.",
                       },
                     ].map((style) => (
-                      <div
+                      <button
+                        type="button"
                         key={style.id}
+                        aria-pressed={dietaryPreferences.dietaryType === style.id}
                         onClick={() => setDietaryPreferences({ ...dietaryPreferences, dietaryType: style.id })}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        className={`text-left p-4 rounded-xl border-2 cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                           dietaryPreferences.dietaryType === style.id
                             ? "border-forest-900 bg-forest-50/30 shadow-sm"
                             : "border-stone-200 hover:border-stone-300 bg-white"
@@ -845,7 +851,7 @@ function SubscribeFormContent() {
                           )}
                         </div>
                         <p className="text-[11px] text-stone-500 leading-snug">{style.desc}</p>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -861,8 +867,9 @@ function SubscribeFormContent() {
                         <button
                           key={allergy}
                           type="button"
+                          aria-pressed={isSelected}
                           onClick={() => toggleAllergy(allergy)}
-                          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all ${
+                          className={`inline-flex items-center gap-1.5 text-xs px-3.5 py-2 min-h-[38px] rounded-full border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                             isSelected
                               ? "bg-forest-900 text-white border-forest-900 shadow-xs"
                               : "bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-300"
@@ -1022,20 +1029,20 @@ function SubscribeFormContent() {
               </div>
             )}
 
-            <div className="flex justify-between items-center pt-8 border-t border-stone-100 mt-6">
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-8 border-t border-stone-100 mt-6">
               {currentStep > 1 ? (
                 <button
                   type="button"
                   onClick={handleBack}
                   disabled={isPending}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" /> Back
                 </button>
               ) : (
                 <Link
                   href="/"
-                  className="text-xs text-stone-500 hover:text-stone-800 transition-colors"
+                  className="inline-flex items-center justify-center sm:justify-start min-h-[44px] px-2 text-xs text-stone-500 hover:text-stone-800 transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                 >
                   ← Cancel &amp; Return
                 </Link>
