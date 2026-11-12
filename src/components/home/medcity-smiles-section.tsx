@@ -107,7 +107,7 @@ export function MedCitySmilesSection() {
               <span className="text-xs text-[#657B6F]">Included free with every plan</span>
               <Link
                 href="/medcity-smiles"
-                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm"
+                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm rounded-lg px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
               >
                 <span>Explore MedCity Smiles</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -148,7 +148,7 @@ export function MedCitySmilesSection() {
 
             <Link
               href="/medcity-smiles"
-              className="inline-flex items-center justify-center gap-2 w-full min-h-[48px] rounded-full bg-white text-[#0D5049] font-extrabold shadow-md hover:bg-teal-50 transition-colors"
+              className="inline-flex items-center justify-center gap-2 w-full min-h-[48px] rounded-full bg-white text-[#0D5049] font-extrabold shadow-md hover:bg-teal-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D5049]"
             >
               <Sparkles className="w-4 h-4" aria-hidden="true" />
               <span>Learn About MedCity Smiles</span>

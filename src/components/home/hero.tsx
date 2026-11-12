@@ -214,7 +214,7 @@ export function Hero() {
 
             {/* 2. Main Headline with radiant gradient and sun scribble */}
             <motion.div variants={fadeInUp} className="space-y-1">
-              <h1 className="font-display text-[2.35rem] sm:text-5xl lg:text-[3.75rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
+              <h1 className="font-display text-[2.35rem] sm:text-5xl lg:text-[3.1rem] xl:text-[3.75rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
                 <span className="text-[#132A1C]">Healthy Drops,</span>
                 <span className="relative inline-block pb-3.5 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 bg-clip-text text-transparent">
                   Healthier You
