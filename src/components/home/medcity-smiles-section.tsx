@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Heart,
   Activity,
@@ -56,6 +57,16 @@ export function MedCitySmilesSection() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <div className="relative h-20 w-44 sm:h-24 sm:w-52 mx-auto">
+            <Image
+              src="/images/medcity-smiles-logo.png"
+              alt="MedCity Smiles Community Official Logo"
+              fill
+              sizes="(max-width: 640px) 176px, 208px"
+              className="object-contain"
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E6F7F5] border border-[#2BB3B1]/30 text-[#0B3D34] text-xs font-bold tracking-wide shadow-2xs">
             <Heart className="w-3.5 h-3.5 text-[#156C63]" aria-hidden="true" />
             <span>In Partnership with MedCity Health Labs</span>

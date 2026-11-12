@@ -12,7 +12,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10">
           {/* Brand Block */}
           <div className="md:col-span-5 space-y-3.5">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Link
                 href="/"
                 className="relative h-9 w-36 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
@@ -22,7 +22,21 @@ export function Footer() {
                   src="/images/humming-drops-logo.png"
                   alt="Humming Drops Official Logo"
                   fill
-                  sizes="176px"
+                  sizes="144px"
+                  className="object-contain object-left"
+                />
+              </Link>
+              <span className="h-7 w-px bg-line-subtle shrink-0" aria-hidden="true" />
+              <Link
+                href="/medcity-smiles"
+                className="relative h-10 w-24 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
+                aria-label="MedCity Smiles Community"
+              >
+                <Image
+                  src="/images/medcity-smiles-logo.png"
+                  alt="MedCity Smiles Community Official Logo"
+                  fill
+                  sizes="96px"
                   className="object-contain object-left"
                 />
               </Link>

@@ -97,7 +97,7 @@ export function Navbar() {
                 <div className="relative h-10 w-36 sm:h-11 sm:w-44 transition-transform duration-fast group-hover:scale-[1.02]">
                   <Image
                     src="/images/humming-drops-logo.png"
-                    alt="Humming Drops Logo"
+                    alt="Humming Drops Official Logo"
                     fill
                     sizes="(max-width: 640px) 144px, 192px"
                     className="object-contain object-left"
@@ -105,24 +105,15 @@ export function Navbar() {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-2.5">
-                  <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center p-1.5 shrink-0 overflow-hidden shadow-xs">
-                    <Image
-                      src="/images/medcity-smiles-logo.png"
-                      alt="MedCity Smiles Logo"
-                      fill
-                      sizes="44px"
-                      className="object-contain p-1"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-display font-extrabold text-lg sm:text-xl text-teal-950 leading-tight tracking-tight">
-                      MedCity Smiles
-                    </span>
-                    <span className="text-[11px] font-sans font-medium text-teal-700 hidden sm:block">
-                      Mental Wellbeing & Community
-                    </span>
-                  </div>
+                <div className="relative h-10 w-28 sm:h-11 sm:w-36 transition-transform duration-fast group-hover:scale-[1.02]">
+                  <Image
+                    src="/images/medcity-smiles-logo.png"
+                    alt="MedCity Smiles Community Official Logo"
+                    fill
+                    sizes="(max-width: 640px) 112px, 144px"
+                    className="object-contain object-left"
+                    priority
+                  />
                 </div>
               )}
             </Link>

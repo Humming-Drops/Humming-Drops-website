@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { Leaf, Heart } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { useBrandTheme } from "./brand-provider";
 import { cn } from "@/lib/utils";
 
@@ -82,7 +83,15 @@ export function BrandSwitcher({
             transition={{ type: "spring", stiffness: 450, damping: 35 }}
           />
         )}
-        <Heart className="w-3.5 h-3.5 text-teal-600 shrink-0" aria-hidden="true" />
+        <span className="relative h-5 w-7 shrink-0" aria-hidden="true">
+          <Image
+            src="/images/medcity-smiles-logo.png"
+            alt=""
+            fill
+            sizes="28px"
+            className="object-contain"
+          />
+        </span>
         <span>MedCity Smiles</span>
         <span className="text-[10px] text-teal-700 hidden 2xl:inline font-normal">
           · Mental &amp; Labs
