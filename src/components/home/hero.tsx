@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, ChevronRight, ChevronDown, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
+import { ArrowDown, ChevronRight, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
@@ -304,16 +304,6 @@ export function Hero() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Small Animated Chevron */}
-        <div className="hidden lg:flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-[#657B6F] pt-2 pointer-events-none max-w-[540px] w-full">
-          <motion.div
-            animate={shouldReduceMotion ? {} : { y: [0, 3, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-4 h-4 text-emerald-600" />
           </motion.div>
         </div>
       </motion.div>
