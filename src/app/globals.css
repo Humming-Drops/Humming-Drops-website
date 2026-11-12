@@ -23,6 +23,14 @@
     --body: #405347;           /* clean high-contrast body text */
     --radius: 20px;            /* consistent soft-corner border radius */
 
+    /* Responsive Sticky-Navbar-Aware Section Scroll Offsets (h-16 = 4rem) */
+    --navbar-height: 4rem;
+    --scroll-offset-anchor: 5.5rem;   /* 88px mobile fallback (64px nav + 24px gap) */
+    --scroll-offset-band-14: 2rem;    /* Sections with py-14 (56px) -> 88px to heading */
+    --scroll-offset-band-16: 1.5rem;  /* Sections with py-16 (64px) -> 88px to heading */
+    --scroll-offset-band-8: 3.5rem;   /* Sections with py-8  (32px) -> 88px to heading */
+    --scroll-offset-band-cta: 2rem;   /* CTA bands with py-14 (56px) -> 88px to heading */
+
     /* Canvas & Surface Tokens */
     --bg-canvas: var(--bg);
     --bg-surface: #ffffff;
@@ -230,6 +238,70 @@
   ::selection {
     background-color: var(--primary-brand-subtle);
     color: var(--primary-brand-text);
+  }
+
+  /* Centralized Responsive Anchor Scroll Positioning */
+  @media (min-width: 640px) {
+    :root {
+      --scroll-offset-anchor: 6rem;   /* 96px tablet fallback (64px nav + 32px gap) */
+      --scroll-offset-band-14: 2rem;  /* sm:py-16 (64px) -> 96px to heading */
+      --scroll-offset-band-16: 1rem;  /* sm:py-20 (80px) -> 96px to heading */
+      --scroll-offset-band-8: 2rem;   /* sm:py-16 (64px) -> 96px to heading */
+      --scroll-offset-band-cta: 2rem; /* sm:py-16 (64px) -> 96px to heading */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --scroll-offset-anchor: 6.75rem;   /* 108px desktop fallback (64px nav + 44px gap) */
+      --scroll-offset-band-14: 0.75rem;  /* lg:py-24 (96px) -> 108px (44px below nav) */
+      --scroll-offset-band-16: 0.75rem;  /* lg:py-24 (96px) -> 108px (44px below nav) */
+      --scroll-offset-band-8: 0.75rem;   /* lg:py-24 (96px) -> 108px (44px below nav) */
+      --scroll-offset-band-cta: 1.75rem; /* lg:py-20 (80px) -> 108px (44px below nav) */
+    }
+  }
+
+  main [id] {
+    scroll-margin-top: var(--scroll-offset-anchor);
+  }
+
+  #main-content {
+    scroll-margin-top: var(--navbar-height);
+  }
+
+  #journey,
+  #three-pillars,
+  #faq,
+  #why-medcity,
+  #pillars,
+  #vitals,
+  #reviews {
+    scroll-margin-top: var(--scroll-offset-band-14);
+  }
+
+  #medcity-hero {
+    scroll-margin-top: var(--scroll-offset-band-14);
+  }
+
+  @media (min-width: 640px) {
+    #medcity-hero {
+      scroll-margin-top: var(--scroll-offset-band-16);
+    }
+  }
+
+  #box-experience,
+  #pricing,
+  #medcity-smiles,
+  #why-humming-drops {
+    scroll-margin-top: var(--scroll-offset-band-16);
+  }
+
+  #contact {
+    scroll-margin-top: var(--scroll-offset-band-8);
+  }
+
+  #community-cta {
+    scroll-margin-top: var(--scroll-offset-band-cta);
   }
 }
 
