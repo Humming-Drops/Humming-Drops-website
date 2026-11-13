@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Heart,
@@ -52,6 +53,17 @@ export default function MedCitySmilesPage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl space-y-6 text-center mx-auto">
+            <div className="relative h-24 w-48 sm:h-28 sm:w-56 mx-auto">
+              <Image
+                src="/images/medcity-smiles-logo.png"
+                alt="MedCity Smiles Community Official Logo"
+                fill
+                sizes="(max-width: 640px) 192px, 224px"
+                className="object-contain"
+                priority
+              />
+            </div>
+
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
               <span>In Collaboration with MedCity Health Labs</span>
@@ -77,12 +89,12 @@ export default function MedCitySmilesPage() {
                 <span>Get Started with Breakfast Box</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
-              <Link
+              <a
                 href="#vitals"
-                className="inline-flex items-center justify-center px-6 min-h-[48px] rounded-full border-2 border-teal-700/50 hover:border-teal-700 text-teal-900 bg-teal-50 hover:bg-teal-100 font-bold transition-all active:scale-[0.98] w-full sm:w-auto"
+                className="inline-flex items-center justify-center px-6 min-h-[48px] rounded-full border-2 border-teal-700/50 hover:border-teal-700 text-teal-900 bg-teal-50 hover:bg-teal-100 font-bold transition-all active:scale-[0.98] w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
               >
                 See What&apos;s Included
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -92,8 +104,9 @@ export default function MedCitySmilesPage() {
       <section
         id="why-medcity"
         aria-label="Why MedCity Smiles"
-        className="py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E3EFE5]"
+        className="relative py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E3EFE5]"
       >
+        <span id="pillars" className="pointer-events-none absolute top-0 left-0" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">

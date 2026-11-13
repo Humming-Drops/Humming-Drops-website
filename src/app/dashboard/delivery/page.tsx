@@ -196,12 +196,14 @@ export default function DashboardDeliveryPage() {
           <div className="flex flex-col sm:items-end gap-2 shrink-0">
             <span className="text-xs text-content-muted">Current status:</span>
             {isPausedTomorrow ? (
-              <Badge className="bg-amber-100 text-amber-900 border-amber-300 text-xs px-3 py-1 font-semibold">
-                ⏸ Delivery Paused
+              <Badge className="bg-amber-100 text-amber-900 border-amber-300 text-xs px-3 py-1 font-semibold inline-flex items-center gap-1.5">
+                <PauseCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Delivery Paused</span>
               </Badge>
             ) : (
-              <Badge className="bg-emerald-100 text-emerald-900 border-emerald-300 text-xs px-3 py-1 font-semibold">
-                ✓ Active · Scheduled for Morning
+              <Badge className="bg-emerald-100 text-emerald-900 border-emerald-300 text-xs px-3 py-1 font-semibold inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Active · Scheduled for Morning</span>
               </Badge>
             )}
           </div>
@@ -259,27 +261,35 @@ export default function DashboardDeliveryPage() {
           </div>
 
           <form onSubmit={handleSaveVacation} className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-content-secondary uppercase tracking-wider">
+                <label
+                  htmlFor="vacation-start"
+                  className="block text-[11px] font-semibold text-content-secondary uppercase tracking-wider"
+                >
                   From Date
                 </label>
                 <input
+                  id="vacation-start"
                   type="date"
                   value={vacationStart}
                   onChange={(e) => setVacationStart(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-line-subtle text-xs bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600"
+                  className="w-full px-3 py-2.5 min-h-[42px] rounded-xl border border-line-subtle text-xs bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-content-secondary uppercase tracking-wider">
+                <label
+                  htmlFor="vacation-end"
+                  className="block text-[11px] font-semibold text-content-secondary uppercase tracking-wider"
+                >
                   To Date
                 </label>
                 <input
+                  id="vacation-end"
                   type="date"
                   value={vacationEnd}
                   onChange={(e) => setVacationEnd(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-line-subtle text-xs bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600"
+                  className="w-full px-3 py-2.5 min-h-[42px] rounded-xl border border-line-subtle text-xs bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600"
                 />
               </div>
             </div>
@@ -333,10 +343,14 @@ export default function DashboardDeliveryPage() {
 
           <form onSubmit={handleSaveNotes} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold text-content-secondary uppercase tracking-wider">
+              <label
+                htmlFor="rider-notes"
+                className="block text-[11px] font-semibold text-content-secondary uppercase tracking-wider"
+              >
                 Rider Instructions
               </label>
               <textarea
+                id="rider-notes"
                 rows={3}
                 value={deliveryNotes}
                 onChange={(e) => setDeliveryNotes(e.target.value)}

@@ -5,6 +5,15 @@ import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { profiles, users } from "@/lib/db/schema";
+import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
+
+const DASHBOARD_NAV_ITEMS: PortalNavItem[] = [
+  { label: "Today's Box & Status", href: "/dashboard/overview" },
+  { label: "Delivery Calendar & Pause", href: "/dashboard/delivery" },
+  { label: "Health Vitals", href: "/dashboard/health", accent: "teal" },
+  { label: "MedCity Smiles", href: "/dashboard/community", accent: "teal" },
+  { label: "Settings & Subscription", href: "/dashboard/settings" },
+];
 
 export const metadata: Metadata = {
   title: "Subscriber Dashboard",
@@ -57,43 +66,12 @@ export default async function DashboardLayout({
       </div>
 
       {/* Main dashboard content with sub-nav */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 flex flex-col md:flex-row gap-8 flex-1">
-        {/* Sidebar Nav Shell */}
-        <aside className="w-full md:w-56 space-y-1 text-sm font-medium text-content-secondary shrink-0">
-          <Link
-            href="/dashboard/overview"
-            className="block px-3 py-2 rounded-xl hover:bg-surface hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-          >
-            Today&apos;s Box &amp; Status
-          </Link>
-          <Link
-            href="/dashboard/delivery"
-            className="block px-3 py-2 rounded-xl hover:bg-surface hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-          >
-            Delivery Calendar &amp; Pause
-          </Link>
-          <Link
-            href="/dashboard/health"
-            className="block px-3 py-2 rounded-xl hover:bg-surface hover:text-teal-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
-          >
-            Health Vitals (Protected)
-          </Link>
-          <Link
-            href="/dashboard/community"
-            className="block px-3 py-2 rounded-xl hover:bg-surface hover:text-teal-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
-          >
-            MedCity Smiles Community
-          </Link>
-          <Link
-            href="/dashboard/settings"
-            className="block px-3 py-2 rounded-xl hover:bg-surface hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-          >
-            Settings &amp; Subscription
-          </Link>
-        </aside>
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-5 md:gap-8 flex-1">
+        {/* Responsive Sidebar / Pill Nav */}
+        <PortalNav items={DASHBOARD_NAV_ITEMS} ariaLabel="Dashboard Navigation" />
 
         {/* Dynamic Section View */}
-        <div className="flex-1 bg-surface p-6 sm:p-8 rounded-2xl border border-line-subtle shadow-card">
+        <div className="flex-1 min-w-0 bg-surface p-5 sm:p-8 rounded-2xl border border-line-subtle shadow-card">
           {children}
         </div>
       </div>

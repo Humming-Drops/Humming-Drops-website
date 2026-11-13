@@ -112,7 +112,7 @@ export default function DashboardCommunityPage() {
       </div>
 
       {/* 4 WELLBEING PILLARS STRIP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-teal-50/50 border border-teal-100 space-y-1.5">
           <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center">
             <Brain className="w-4 h-4" />
@@ -156,7 +156,7 @@ export default function DashboardCommunityPage() {
 
       {/* UPCOMING LIVE WEBINARS & CLASSES */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Video className="w-4 h-4 text-teal-700" />
             <h2 className="font-display font-bold text-base sm:text-lg text-stone-900">
@@ -198,7 +198,7 @@ export default function DashboardCommunityPage() {
                     brand="medcity"
                     variant={isRsvpd ? "primary" : "secondary"}
                     size="sm"
-                    className="rounded-full px-5 text-xs whitespace-nowrap self-start sm:self-auto shrink-0 bg-teal-800 hover:bg-teal-900 text-white"
+                    className="rounded-full px-5 text-xs whitespace-nowrap self-start sm:self-auto shrink-0"
                   >
                     {isRsvpd ? (
                       <>

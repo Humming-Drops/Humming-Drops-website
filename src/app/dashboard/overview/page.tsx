@@ -14,6 +14,12 @@ import {
   Users,
   ArrowRight,
   ShieldCheck,
+  Apple,
+  Carrot,
+  Salad,
+  Sprout,
+  Nut,
+  Stethoscope,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,10 +45,35 @@ export default function DashboardOverviewPage() {
   }, []);
 
   if (accountError) {
-    return <p className="p-6 text-sm text-red-700">{accountError}</p>;
+    return (
+      <div
+        role="alert"
+        className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800"
+      >
+        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
+        <div className="space-y-1">
+          <p className="font-bold">Unable to load your subscriber account</p>
+          <p className="text-xs text-red-700">{accountError}</p>
+        </div>
+      </div>
+    );
   }
   if (!subscriberName || !planName || !refCode) {
-    return <p className="p-6 text-sm text-content-secondary">Loading your subscriber account…</p>;
+    return (
+      <div className="space-y-8 animate-pulse" aria-busy="true" aria-label="Loading subscriber account">
+        <div className="space-y-3 pb-6 border-b border-line-subtle">
+          <div className="h-5 w-44 rounded-full bg-muted" />
+          <div className="h-8 w-64 rounded-xl bg-muted" />
+          <div className="h-4 w-72 max-w-full rounded-lg bg-muted" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+          <div className="h-32 rounded-2xl bg-muted/70 border border-line-subtle" />
+        </div>
+        <div className="h-48 rounded-2xl bg-muted/60 border border-line-subtle" />
+      </div>
+    );
   }
 
   return (
@@ -57,7 +88,7 @@ export default function DashboardOverviewPage() {
             <span className="text-xs text-content-muted font-mono">{refCode}</span>
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">
-            Good morning, {subscriberName} ✦
+            Good morning, {subscriberName}
           </h1>
           <p className="text-xs sm:text-sm text-content-secondary font-sans">
             Your {planName} is prepared fresh daily at Berrybeats Cafe, Bangalore.
@@ -147,9 +178,10 @@ export default function DashboardOverviewPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Compartment 1: Fruits */}
           <div className="p-5 rounded-2xl border border-line-subtle bg-surface space-y-2 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">
-                🍎 4 Fruits Every Day
+            <div className="flex items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full">
+                <Apple className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>4 Fruits Every Day</span>
               </span>
               <span className="text-[11px] text-content-muted">Vital Hydration</span>
             </div>
@@ -161,9 +193,10 @@ export default function DashboardOverviewPage() {
 
           {/* Compartment 2: Vegetables */}
           <div className="p-5 rounded-2xl border border-line-subtle bg-surface space-y-2 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                🥕 2 Veggies Every Day
+            <div className="flex items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full">
+                <Carrot className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>2 Veggies Every Day</span>
               </span>
               <span className="text-[11px] text-content-muted">Prebiotic Fiber</span>
             </div>
@@ -175,9 +208,10 @@ export default function DashboardOverviewPage() {
 
           {/* Compartment 3: Salad */}
           <div className="p-5 rounded-2xl border border-line-subtle bg-surface space-y-2 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-                🥗 Fresh Mix Salad
+            <div className="flex items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                <Salad className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Fresh Mix Salad</span>
               </span>
               <span className="text-[11px] text-content-muted">Micro-Nutrients</span>
             </div>
@@ -189,9 +223,10 @@ export default function DashboardOverviewPage() {
 
           {/* Compartment 4: Sprouts */}
           <div className="p-5 rounded-2xl border border-line-subtle bg-surface space-y-2 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">
-                🌱 Fresh Sprouts
+            <div className="flex items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full">
+                <Sprout className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Fresh Sprouts</span>
               </span>
               <span className="text-[11px] text-content-muted">Living Enzymes</span>
             </div>
@@ -203,9 +238,10 @@ export default function DashboardOverviewPage() {
 
           {/* Compartment 5: Dry Fruits */}
           <div className="p-5 rounded-2xl border border-line-subtle bg-surface space-y-2 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-stone-700 bg-stone-100 px-2 py-0.5 rounded-full">
-                🥜 Dry Fruits (Daily)
+            <div className="flex items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-stone-700 bg-stone-100 px-2.5 py-0.5 rounded-full">
+                <Nut className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Dry Fruits (Daily)</span>
               </span>
               <span className="text-[11px] text-brand-primary font-semibold">Premium Perk</span>
             </div>
@@ -218,8 +254,9 @@ export default function DashboardOverviewPage() {
           {/* Quick Perks Card */}
           <div className="p-5 rounded-2xl border border-teal-200 bg-teal-50/40 space-y-2 shadow-xs flex flex-col justify-between">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-800">
-                🩺 Free Clinical Benefit
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-800">
+                <Stethoscope className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Free Clinical Benefit</span>
               </span>
               <h3 className="font-bold text-sm text-teal-950">MedCity Vitals Screening</h3>
               <p className="text-xs text-teal-800/80 leading-relaxed font-sans">

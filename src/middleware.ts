@@ -1,6 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
-import { isSafeRedirectUrl } from "@/lib/auth-redirects";
+import {
+  buildRegisterRedirectUrl,
+  isSafeRedirectUrl,
+} from "@/lib/auth-redirects";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -9,6 +12,10 @@ const isProtectedRoute = createRouteMatcher([
   "/api/payments/order",
   "/api/payments/verify",
   "/api/customer(.*)",
+]);
+
+const isSubscribeRoute = createRouteMatcher([
+  "/subscribe(.*)",
 ]);
 
 const isAuthRoute = createRouteMatcher([
@@ -25,7 +32,9 @@ function hasConfiguredClerkKeys(): boolean {
 }
 
 const clerkHandler = clerkMiddleware(async (auth, request) => {
-  // Prevent open-redirect exploits on login/register routes
+  const { userId } = await auth();
+
+  // 1. Sanitize incoming redirect_url on auth routes to prevent open redirect exploits
   if (isAuthRoute(request)) {
     const redirectParam = request.nextUrl.searchParams.get("redirect_url");
     if (redirectParam && !isSafeRedirectUrl(redirectParam)) {
@@ -37,8 +46,24 @@ const clerkHandler = clerkMiddleware(async (auth, request) => {
       });
       return NextResponse.redirect(cleanUrl);
     }
+
+    // If an already authenticated customer visits /register, redirect them forward
+    if (userId && request.nextUrl.pathname === "/register") {
+      const safeTarget = redirectParam && isSafeRedirectUrl(redirectParam)
+        ? redirectParam
+        : "/subscribe";
+      return NextResponse.redirect(new URL(safeTarget, request.url));
+    }
   }
 
+  // 2. Gating for /subscribe: Unauthenticated visitors must register or sign in first
+  if (!userId && isSubscribeRoute(request)) {
+    const planParam = request.nextUrl.searchParams.get("plan");
+    const registerUrl = buildRegisterRedirectUrl(request.url, planParam);
+    return NextResponse.redirect(registerUrl);
+  }
+
+  // 3. Enforce existing protection for dashboard, admin, onboarding, and payment APIs
   if (isProtectedRoute(request)) {
     await auth.protect();
   }

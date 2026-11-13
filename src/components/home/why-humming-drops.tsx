@@ -32,7 +32,7 @@ export function WhyHummingDrops() {
             </HandwrittenAnnotation>
           </div>
 
-          <h2 className="text-[2rem] sm:text-4xl lg:text-5xl font-extrabold text-[#132A1C] tracking-tight leading-tight">
+          <h2 className="font-display text-[2rem] sm:text-4xl lg:text-5xl font-extrabold text-[#132A1C] tracking-tight leading-tight">
             Wellness isn&apos;t one big change. <br className="hidden sm:inline" />
             It&apos;s made of{" "}
             <span className="relative inline-block text-emerald-700 pb-2">
@@ -62,7 +62,7 @@ export function WhyHummingDrops() {
                 <span className="text-xs text-stone-500 font-semibold">Without Humming Drops</span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-stone-900 leading-snug">
+              <h3 className="font-display text-xl sm:text-2xl font-extrabold text-stone-900 leading-snug">
                 Morning friction gets in the way of your nutrition
               </h3>
 
@@ -119,7 +119,7 @@ export function WhyHummingDrops() {
                 <span className="text-xs text-emerald-300 font-bold">With Humming Drops</span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+              <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white leading-snug">
                 Your daily nutrition &amp; mental wellness, ready when you wake up
               </h3>
 

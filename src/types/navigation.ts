@@ -28,9 +28,8 @@ export const HUMMING_DROPS_NAV: BrandNavConfig = {
   logoSrc: "/images/humming-drops-logo.png",
   logoAlt: "Humming Drops Official Logo",
   navItems: [
-    { label: "Plans", href: "/#pricing" },
     { label: "How it works", href: "/#journey" },
-    { label: "MedCity Smiles", href: "/medcity-smiles" },
+    { label: "Plans", href: "/#pricing" },
     { label: "Contact", href: "/contact" },
   ],
   primaryCTA: {
@@ -46,7 +45,7 @@ export const MEDCITY_SMILES_NAV: BrandNavConfig = {
   logoSrc: "/images/medcity-smiles-logo.png",
   logoAlt: "MedCity Smiles Community Logo",
   navItems: [
-    { label: "Mind & Community", href: "/medcity-smiles#pillars" },
+    { label: "Mind & Community", href: "/medcity-smiles#why-medcity" },
     { label: "Health Vitals", href: "/medcity-smiles#vitals" },
     { label: "Breakfast Box Plans", href: "/plans" },
     { label: "About", href: "/about" },

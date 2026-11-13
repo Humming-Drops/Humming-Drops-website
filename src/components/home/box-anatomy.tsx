@@ -173,11 +173,11 @@ export function BoxAnatomy() {
               Meticulously Curated Nutrition
             </span>
             <HandwrittenAnnotation rotation="rotate-2" color="text-emerald-700 hidden sm:inline-flex">
-              Tap any compartment to explore! ✦
+              Tap any compartment to explore!
             </HandwrittenAnnotation>
           </div>
 
-          <h2 className="text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
             What is Inside Your Daily Box?
           </h2>
 
@@ -201,10 +201,11 @@ export function BoxAnatomy() {
             return (
               <button
                 key={c.id}
+                type="button"
                 onMouseEnter={() => setActiveCompartmentId(c.id)}
                 onFocus={() => setActiveCompartmentId(c.id)}
                 onClick={() => setActiveCompartmentId(c.id)}
-                className={`shrink-0 snap-start flex items-center gap-2 px-4 py-3 min-h-[48px] rounded-full text-xs sm:text-sm font-bold transition-all border cursor-pointer whitespace-nowrap ${
+                className={`shrink-0 snap-start flex items-center gap-2 px-4 py-3 min-h-[48px] rounded-full text-xs sm:text-sm font-bold transition-all border cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                   isSelected
                     ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
                     : "bg-white text-[#405347] border-[#E3EFE5] hover:bg-emerald-50 hover:text-emerald-800"
@@ -228,7 +229,7 @@ export function BoxAnatomy() {
           {/* Left Column: Interactive Image with Hotspots */}
           <div className="lg:col-span-7 flex flex-col">
             <div className="relative rounded-3xl p-3 sm:p-4 bg-white border border-[#E3EFE5] shadow-card overflow-hidden flex-1 flex flex-col justify-between">
-              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-emerald-50">
+              <div className="relative w-full aspect-[3/2] rounded-2xl overflow-hidden bg-emerald-50">
                 <Image
                   src="/images/humming-drops-box.png"
                   alt="Authentic Humming Drops Fresh Fruit & Vegetable Box"
@@ -243,6 +244,7 @@ export function BoxAnatomy() {
                   return (
                     <button
                       key={c.id}
+                      type="button"
                       onMouseEnter={() => setActiveCompartmentId(c.id)}
                       onFocus={() => setActiveCompartmentId(c.id)}
                       onClick={() => setActiveCompartmentId(c.id)}
@@ -250,7 +252,7 @@ export function BoxAnatomy() {
                         top: `${c.hotspot.y}%`,
                         left: `${c.hotspot.x}%`,
                       }}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 group focus:outline-none z-20 cursor-pointer"
+                      className="absolute -translate-x-1/2 -translate-y-1/2 group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 z-20 cursor-pointer"
                       aria-label={`Select compartment ${c.number}: ${c.name}`}
                     >
                       {isSelected && !shouldReduceMotion && (
@@ -308,7 +310,7 @@ export function BoxAnatomy() {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#657B6F]">
                           Compartment {activeCompartment.number} of 05
                         </span>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-[#132A1C] leading-tight">
+                        <h3 className="font-display text-xl sm:text-2xl font-extrabold text-[#132A1C] leading-tight">
                           {activeCompartment.name}
                         </h3>
                       </div>

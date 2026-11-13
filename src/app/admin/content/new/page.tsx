@@ -98,14 +98,17 @@ export default function NewContentPage() {
       {formError && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{formError}</div>}
 
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-content-secondary">Template</label>
+        <label htmlFor="content-template" className="text-xs font-semibold text-content-secondary">
+          Template
+        </label>
         <select
+          id="content-template"
           value={templateId}
           onChange={(e) => {
             setTemplateId(e.target.value);
             setData({});
           }}
-          className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
+          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
         >
           {templates.map((t) => (
             <option key={t.id} value={t.id}>
@@ -117,15 +120,16 @@ export default function NewContentPage() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-content-secondary">
+        <label htmlFor="content-slug" className="text-xs font-semibold text-content-secondary">
           URL slug <span className="text-red-600">*</span>
         </label>
         <input
+          id="content-slug"
           type="text"
           value={slug}
           onChange={(e) => setSlug(e.target.value.toLowerCase())}
           placeholder="e.g. monsoon-delivery-update"
-          className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm font-mono"
+          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
         />
         <p className="text-[11px] text-content-secondary">
           Lowercase letters, numbers, and hyphens only. Published at /content/{slug || "<slug>"}
@@ -134,14 +138,15 @@ export default function NewContentPage() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-content-secondary">
+        <label htmlFor="content-title" className="text-xs font-semibold text-content-secondary">
           Title <span className="text-red-600">*</span>
         </label>
         <input
+          id="content-title"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm"
+          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
         />
         {fieldErrors.title && <p className="text-[11px] text-red-600">{fieldErrors.title}</p>}
       </div>
@@ -158,7 +163,7 @@ export default function NewContentPage() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white disabled:opacity-60"
+        className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white hover:bg-brand-primary-hover transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
       >
         {isSubmitting ? "Saving…" : "Save draft"}
       </button>

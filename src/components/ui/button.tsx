@@ -30,11 +30,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       if (brand === "humming") {
         switch (variant) {
           case "primary":
-            return "bg-leaf-500 text-white hover:bg-leaf-600 active:bg-leaf-700 shadow-sm";
+            return "bg-leaf-500 text-white hover:bg-leaf-600 active:bg-leaf-700 hover:-translate-y-0.5 active:translate-y-0 shadow-sm";
           case "secondary":
-            return "bg-forest-50 text-forest-900 hover:bg-forest-100 active:bg-forest-200 border border-forest-200";
+            return "bg-forest-50 text-forest-900 hover:bg-forest-100 active:bg-forest-200 border border-forest-200 hover:-translate-y-0.5 active:translate-y-0 shadow-2xs";
           case "outline":
-            return "border-2 border-leaf-500 text-leaf-700 hover:bg-forest-50 active:bg-forest-100";
+            return "border-2 border-leaf-500 text-leaf-700 bg-transparent hover:bg-forest-50 active:bg-forest-100 hover:-translate-y-0.5 active:translate-y-0";
           case "ghost":
             return "text-forest-900 hover:bg-forest-50 active:bg-forest-100";
           case "link":
@@ -45,11 +45,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       if (brand === "medcity") {
         switch (variant) {
           case "primary":
-            return "bg-teal-700 text-white hover:bg-teal-800 active:bg-teal-900 shadow-sm";
+            return "bg-teal-700 text-white hover:bg-teal-800 active:bg-teal-900 hover:-translate-y-0.5 active:translate-y-0 shadow-sm";
           case "secondary":
-            return "bg-teal-50 text-teal-900 hover:bg-teal-100 active:bg-teal-200 border border-teal-200";
+            return "bg-teal-50 text-teal-900 hover:bg-teal-100 active:bg-teal-200 border border-teal-200 hover:-translate-y-0.5 active:translate-y-0 shadow-2xs";
           case "outline":
-            return "border-2 border-teal-700 text-teal-700 hover:bg-teal-50 active:bg-teal-100";
+            return "border-2 border-teal-700 text-teal-700 bg-transparent hover:bg-teal-50 active:bg-teal-100 hover:-translate-y-0.5 active:translate-y-0";
           case "ghost":
             return "text-teal-900 hover:bg-teal-50 active:bg-teal-100";
           case "link":
@@ -62,9 +62,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         case "primary":
           return "bg-brand-primary text-brand-contrast hover:bg-brand-hover hover:-translate-y-0.5 shadow-sm active:translate-y-0 active:opacity-95";
         case "secondary":
-          return "bg-white text-brand-primary border border-brand-primary/40 hover:bg-brand-subtle hover:border-brand-primary hover:-translate-y-0.5 shadow-2xs active:translate-y-0";
+          return "bg-surface text-brand-primary border border-brand-primary/35 hover:bg-brand-subtle hover:border-brand-primary hover:-translate-y-0.5 shadow-2xs active:translate-y-0";
         case "outline":
-          return "border border-brand-primary text-brand-primary bg-transparent hover:bg-brand-subtle hover:-translate-y-0.5 active:translate-y-0";
+          return "border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-subtle hover:-translate-y-0.5 active:translate-y-0";
         case "ghost":
           return "text-content-primary hover:bg-brand-subtle hover:text-brand-primary";
         case "link":
@@ -78,15 +78,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         case "sm":
           return "h-9 px-4 text-xs font-semibold rounded-full gap-1.5";
         case "lg":
-          return "h-12 px-7 text-base font-semibold rounded-full gap-2.5";
+          return "min-h-[48px] h-12 px-7 text-base font-semibold rounded-full gap-2.5";
         case "md":
         default:
-          return "h-11 px-5.5 text-sm font-semibold rounded-full gap-2";
+          return "min-h-[44px] h-11 px-6 text-sm font-semibold rounded-full gap-2";
       }
     };
 
     const combinedClasses = cn(
-      "inline-flex items-center justify-center font-display transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
+      "inline-flex items-center justify-center font-display transition-all duration-fast ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-canvas active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
       getVariantClasses(),
       getSizeClasses(),
       className
