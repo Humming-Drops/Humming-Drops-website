@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --loader ./tests/loader.mjs --experimental-strip-types tests/runner.mjs",
+    "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:smoke": "vitest run tests/smoke",
     "test:vitest": "vitest run",
