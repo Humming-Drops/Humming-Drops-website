@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
+import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { ContentValidationFailure, createContentPage, listContentPages } from "@/lib/content-storage";
 
 export async function GET() {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const appUser = await getAppUserByClerkId(clerkUserId);
+  const appUser = await getAppUserById(clerkUserId);
   if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const body = await request.json().catch(() => null);

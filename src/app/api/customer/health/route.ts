@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, getAppUserByClerkId } from "@/lib/auth/server";
+import { auth, getAppUserById } from "@/lib/auth/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { administrativeAuditLogs, healthVitals } from "@/lib/db/schema";
@@ -16,7 +16,7 @@ export async function GET() {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await getAppUserByClerkId(userId);
+  const user = await getAppUserById(userId);
   if (!user) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const vitals = await db.select().from(healthVitals).where(eq(healthVitals.userId, user.id));

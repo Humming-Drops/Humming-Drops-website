@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
             Reset Password
           </h1>
           <p className="text-sm text-content-secondary">
-            Account sign-in and password recovery are securely managed through Clerk on our sign-in screen.
+            Account sign-in and credentials are securely managed through our subscriber portal.
           </p>
         </div>
 

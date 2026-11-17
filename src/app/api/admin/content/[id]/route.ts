@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
+import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import {
   ContentValidationFailure,
   getContentPageById,
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const appUser = await getAppUserByClerkId(clerkUserId);
+  const appUser = await getAppUserById(clerkUserId);
   if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const { id } = await params;

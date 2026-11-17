@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { administrativeAuditLogs, healthVitals } from "@/lib/db/schema";
-import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
+import { getAppUserById, hasPermission } from "@/lib/auth/server";
 
 /**
  * GET /api/admin/customers/[userId]/health
@@ -22,7 +22,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ use
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const staffUser = await getAppUserByClerkId(clerkUserId);
+  const staffUser = await getAppUserById(clerkUserId);
   if (!staffUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const { userId: targetUserId } = await params;

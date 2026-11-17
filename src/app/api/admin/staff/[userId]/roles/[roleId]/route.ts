@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
+import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { revokeRole } from "@/lib/staff-admin";
 
 export async function DELETE(
@@ -13,7 +13,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const appUser = await getAppUserByClerkId(clerkUserId);
+  const appUser = await getAppUserById(clerkUserId);
   if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const { userId, roleId } = await params;

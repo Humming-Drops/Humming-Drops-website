@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, getAppUserByClerkId } from "@/lib/auth/server";
+import { auth, getAppUserById } from "@/lib/auth/server";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
@@ -17,7 +17,7 @@ export async function GET() {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await getAppUserByClerkId(userId);
+  const user = await getAppUserById(userId);
   if (!user) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
@@ -59,7 +59,7 @@ export async function PATCH(request: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = await getAppUserByClerkId(userId);
+  const user = await getAppUserById(userId);
   if (!user) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const body = await request.json().catch(() => null);

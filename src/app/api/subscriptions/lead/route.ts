@@ -3,7 +3,7 @@ import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/chec
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
 import { leadRepository } from "@/lib/lead-storage";
-import { getAppUserByClerkId, requireClerkUser, auth } from "@/lib/auth/server";
+import { getAppUserById, requireAuthUser, auth } from "@/lib/auth/server";
 import {
   normalizePhone,
   isValidIndianPhone,
@@ -43,16 +43,16 @@ async function generateUniqueReference(): Promise<string> {
  * 4. Sensitive customer inputs validated and sanitized before storage.
  */
 export async function POST(request: Request) {
-  let clerkAuth: Awaited<ReturnType<typeof requireClerkUser>>;
+  let authContext: Awaited<ReturnType<typeof requireAuthUser>>;
   try {
-    clerkAuth = await requireClerkUser();
+    authContext = await requireAuthUser();
   } catch {
     return NextResponse.json(
       { success: false, error: "Please sign in before registering for a subscription." },
       { status: 401 }
     );
   }
-  const { clerkUserId, user } = clerkAuth;
+  const { user } = authContext;
 
   try {
     const authoritativeMode = getServerAuthoritativeCheckoutMode();
@@ -213,7 +213,7 @@ export async function POST(request: Request) {
 
     // 7. Persist to Repository
     const persistedRecord = await leadRepository.createLead({
-      clerkUserId,
+      userId: user.id,
       leadReferenceCode,
       planId: canonicalPlan.id,
       planName: canonicalPlan.name,
@@ -308,13 +308,13 @@ export async function POST(request: Request) {
  * GET /api/subscriptions/lead?ref=HD-REG-...
  * Quick lookup helper with RBAC / admin gating to prevent unauthenticated PII leakage.
  */
-async function isClerkAuthorized(): Promise<boolean> {
+async function isStaffAuthorized(): Promise<boolean> {
   const { userId } = await auth();
   if (!userId) return false;
-  const appUser = await getAppUserByClerkId(userId);
+  const appUser = await getAppUserById(userId);
   return Boolean(
     appUser?.isActive &&
-      ["admin", "operations", "nutritionist"].includes(appUser.role)
+      ["admin", "super_admin", "staff", "operations", "nutritionist"].includes(appUser.role)
   );
 }
 
@@ -322,7 +322,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get("ref");
-    const authorized = await isClerkAuthorized();
+    const authorized = await isStaffAuthorized();
 
     if (!ref) {
       // Listing all leads strictly requires administrative credentials

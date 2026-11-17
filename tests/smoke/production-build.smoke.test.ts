@@ -63,6 +63,7 @@ describe("Production Build Smoke Tests", () => {
       path.join(appDir, "dashboard", "health", "page.tsx"),
       path.join(appDir, "dashboard", "community", "page.tsx"),
       path.join(appDir, "dashboard", "settings", "page.tsx"),
+      path.join(appDir, "admin", "login", "page.tsx"),
     ];
 
     const expectedApiRoutes = [
@@ -71,6 +72,10 @@ describe("Production Build Smoke Tests", () => {
       path.join(appDir, "api", "payments", "order", "route.ts"),
       path.join(appDir, "api", "payments", "verify", "route.ts"),
       path.join(appDir, "api", "payments", "webhook", "route.ts"),
+      path.join(appDir, "api", "auth", "login", "route.ts"),
+      path.join(appDir, "api", "auth", "register", "route.ts"),
+      path.join(appDir, "api", "auth", "logout", "route.ts"),
+      path.join(appDir, "api", "auth", "me", "route.ts"),
     ];
 
     for (const pageFile of expectedPages) {

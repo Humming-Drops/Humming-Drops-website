@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.17-38b2ac?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle%20ORM-0.45.4-C5F74F?style=flat&logo=drizzle)](https://orm.drizzle.team/)
-[![Clerk Auth](https://img.shields.io/badge/Clerk-7.9.23-6C47FF?style=flat&logo=clerk)](https://clerk.com/)
+[![Native Auth](https://img.shields.io/badge/Auth-Native%2048h%20Session-15803D?style=flat)](#key-features)
 [![Vitest](https://img.shields.io/badge/Vitest-3.0.5-FCC72B?style=flat&logo=vitest)](https://vitest.dev/)
 [![License](https://img.shields.io/badge/License-Private%20%2F%20Proprietary-red)](#license)
 
@@ -103,23 +103,23 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 │   │   ├── admin/               # Administrative back-office (/subscriptions, /leads, /payments, /staff)
 │   │   ├── content/             # Editorial CMS articles and community stories
 │   │   └── api/                 # Secure Route Handlers
+│   │       ├── auth/            # Native authentication endpoints (login, register, logout, me)
 │   │       ├── admin/           # Administrative endpoints (RBAC-guarded)
 │   │       ├── customer/        # Customer profile, subscription & health vitals
 │   │       ├── payments/        # Razorpay order creation, verification, and webhooks
-│   │       ├── subscriptions/   # Lead ingestion and referral queries
-│   │       └── webhooks/        # Clerk identity synchronization webhooks
+│   │       └── subscriptions/   # Lead ingestion and referral queries
 │   ├── components/              # Modular UI components
 │   │   ├── home/                # Editorial hero, BoxAnatomy, MorningJourney, WhyUs, etc.
 │   │   ├── layout/              # Navbar, Footer, MobileDrawer, ThemeSwitcher
 │   │   ├── theme/               # ThemeProvider and client hydration scripts
 │   │   └── ui/                  # Accessible design tokens & Radix UI primitives
 │   ├── lib/                     # Server-authoritative logic, database clients, helpers
+│   │   ├── auth/                # Native session tokens (48h), scrypt password hashing & RBAC
 │   │   ├── auth-redirects.ts    # Open-redirect prevention & plan tier validators
 │   │   ├── checkout-config.ts   # Server vs client checkout strategy configuration
-│   │   ├── clerk-auth.ts        # Clerk session & backend identity helpers
 │   │   ├── lead-storage.ts      # Hybrid repository (PostgreSQL vs JSON fallback)
 │   │   └── db/                  # Drizzle ORM schema, relations, and connection pool
-│   ├── middleware.ts            # Clerk edge middleware protecting private routes
+│   ├── middleware.ts            # Edge middleware protecting private routes and enforcing 48h session expiry
 │   └── types/                   # Shared TypeScript domain contracts (plans, health, theme)
 └── tests/                       # Vitest automated test suites
     ├── unit/                    # Unit tests (pricing invariants, auth redirects, lead transitions)
@@ -167,13 +167,10 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 | `CHECKOUT_MODE` | Server | Authoritative checkout mode (`assisted_lead` \| `online_gateway`) | `assisted_lead` |
 | `NEXT_PUBLIC_CHECKOUT_MODE` | Client Hint | UI presentation hint for payment vs WhatsApp button | `assisted_lead` |
 | `DATABASE_URL` | Server | PostgreSQL connection string (Railway or local Postgres) | `postgresql://...` |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Client | Clerk publishable frontend key | `pk_test_...` |
-| `CLERK_SECRET_KEY` | Server | Clerk private backend API secret | `sk_test_...` |
-| `CLERK_WEBHOOK_SIGNING_SECRET` | Server | Clerk SVIX webhook signing secret | `whsec_...` |
+| `SESSION_SECRET` | Server | High-entropy HMAC-SHA256 signing secret (48h auto-expiry) | `min_32_characters_secret` |
 | `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Client | Razorpay public key ID | `rzp_test_...` |
 | `RAZORPAY_KEY_SECRET` | Server | Razorpay private key secret | `your_secret` |
 | `RAZORPAY_WEBHOOK_SECRET` | Server | Razorpay webhook cryptographic HMAC secret | `your_secret` |
-| `MONGODB_URI` | Server | MongoDB Atlas connection string (CMS content) | `mongodb+srv://...` |
 | `CLOUDINARY_CLOUD_NAME` | Universal | Cloudinary cloud identifier | `your_cloud_name` |
 | `CLOUDINARY_API_KEY` | Server | Cloudinary API access key | `your_api_key` |
 | `CLOUDINARY_API_SECRET` | Server | Cloudinary API access secret | `your_api_secret` |

@@ -3,31 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, Sparkles } from "lucide-react";
 
-export const CLERK_AUTH_APPEARANCE = {
-  variables: {
-    colorPrimary: "#15803D",
-    colorBackground: "#ffffff",
-    colorText: "#132A1C",
-    colorTextSecondary: "#405347",
-    colorInputBackground: "#ffffff",
-    colorInputText: "#132A1C",
-    borderRadius: "0.75rem",
-  },
-  elements: {
-    rootBox: "w-full flex justify-center",
-    card: "w-full shadow-card border border-[#E2ECE4] rounded-3xl",
-    headerTitle: "font-display font-extrabold text-[#132A1C]",
-    headerSubtitle: "text-[#405347]",
-    formButtonPrimary:
-      "rounded-full font-bold bg-[#15803D] hover:bg-[#144518] shadow-sm transition-colors normal-case text-sm",
-    socialButtonsBlockButton:
-      "rounded-xl border-[#E2ECE4] hover:bg-[#ECFDF3] transition-colors",
-    formFieldInput:
-      "rounded-xl border-[#E2ECE4] focus:border-[#15803D] focus:ring-2 focus:ring-[#15803D]/20",
-    footerActionLink: "text-[#15803D] hover:text-[#144518] font-semibold",
-  },
-};
-
 interface AuthShellProps {
   badgeText: string;
   title: string;
@@ -85,7 +60,7 @@ export function AuthShell({ badgeText, title, subtitle, children }: AuthShellPro
 
         <p className="text-center text-xs text-content-muted flex items-center justify-center gap-1.5">
           <ShieldCheck className="w-3.5 h-3.5 text-brand-primary shrink-0" aria-hidden="true" />
-          <span>Secured by Clerk · Fresh morning delivery across Bangalore</span>
+          <span>Encrypted Session Security · Fresh morning delivery across Bangalore</span>
         </p>
       </div>
     </div>

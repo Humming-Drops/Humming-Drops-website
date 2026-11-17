@@ -93,25 +93,11 @@ export async function requireAuthUser() {
   return current;
 }
 
-/**
- * Backward-compatible alias for existing endpoints that previously used Clerk.
- */
-export async function requireClerkUser() {
-  const { user, session } = await requireAuthUser();
-  return {
-    clerkUserId: user.id,
-    user: {
-      id: user.id,
-      email: user.email,
-      fullName: session.fullName || user.email,
-    },
-  };
-}
 
 /**
- * Resolves user by their ID (matches either PostgreSQL UUID or legacy clerkUserId).
+ * Resolves user by their PostgreSQL UUID (with fallback to legacy clerkUserId).
  */
-export async function getAppUserByClerkId(identifier: string) {
+export async function getAppUserById(identifier: string) {
   if (!identifier) return null;
 
   try {
@@ -136,6 +122,11 @@ export async function getAppUserByClerkId(identifier: string) {
     return null;
   }
 }
+
+/**
+ * Backward-compatible alias
+ */
+export const getAppUserByClerkId = getAppUserById;
 
 /**
  * Checks whether the current user has any of the specified roles.
