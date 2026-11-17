@@ -36,18 +36,14 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# NEXT_PUBLIC_* values must be present at build time -- Next.js inlines
-# them into the client bundle and the root layout's ClerkProvider
-# needs the publishable key to render static pages during the build.
-# These are never secrets, so baking them into image layers is safe.
+# NEXT_PUBLIC_* values present at build time are inlined by Next.js into
+# the client bundle. These are non-sensitive configuration defaults.
 ARG NEXT_PUBLIC_APP_URL
 ARG NEXT_PUBLIC_CHECKOUT_MODE
 ARG NEXT_PUBLIC_RAZORPAY_KEY_ID
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV NEXT_PUBLIC_CHECKOUT_MODE=$NEXT_PUBLIC_CHECKOUT_MODE
 ENV NEXT_PUBLIC_RAZORPAY_KEY_ID=$NEXT_PUBLIC_RAZORPAY_KEY_ID
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 
 # Build Next.js application with standalone output mode
 RUN npm run build
