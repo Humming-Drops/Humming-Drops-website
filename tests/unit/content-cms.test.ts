@@ -95,3 +95,28 @@ describe("isValidContentSlug", () => {
     assert.equal(isValidContentSlug(""), false);
   });
 });
+
+describe("Content CMS Storage & Template Availability", () => {
+  it("provides active templates with valid schemas", async () => {
+    const { listActiveTemplates, listContentPages, getPublishedPageBySlug } = await import(
+      "../../src/lib/content-storage"
+    );
+
+    const templates = await listActiveTemplates();
+    assert.ok(templates.length >= 2);
+
+    const announcement = templates.find((t) => t.slug === "announcement-banner");
+    assert.ok(announcement);
+    assert.equal(isContentTemplateSchema(announcement.schema), true);
+
+    const simplePage = templates.find((t) => t.slug === "simple-page");
+    assert.ok(simplePage);
+    assert.equal(isContentTemplateSchema(simplePage.schema), true);
+
+    const pages = await listContentPages();
+    assert.ok(Array.isArray(pages));
+
+    const missingPage = await getPublishedPageBySlug("non-existent-page-slug-123");
+    assert.equal(missingPage, null);
+  });
+});

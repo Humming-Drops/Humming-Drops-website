@@ -1,5 +1,5 @@
 import { desc, eq } from "drizzle-orm";
-import { db } from "@/lib/db";
+import { db, isDatabaseConfigured } from "@/lib/db";
 import { contentAuditLogs, contentPages, contentTemplates, administrativeAuditLogs } from "@/lib/db/schema";
 import {
   isContentTemplateSchema,
@@ -8,6 +8,42 @@ import {
   type ContentTemplateSchema,
   type ContentValidationError,
 } from "@/lib/content-validation";
+
+const DEFAULT_CONTENT_TEMPLATES = [
+  {
+    id: "00000000-0000-0000-0000-000000000001",
+    slug: "announcement-banner",
+    name: "Announcement Banner",
+    description: "A short site-wide banner, e.g. a delivery-area update or a scheduled pause notice.",
+    isActive: true,
+    createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+    schema: {
+      fields: [
+        { key: "headline", label: "Headline", type: "text" as const, required: true, maxLength: 120 },
+        { key: "body", label: "Body", type: "richtext" as const, required: true, maxLength: 500 },
+        { key: "ctaLabel", label: "CTA label", type: "text" as const, required: false, maxLength: 40 },
+        { key: "ctaUrl", label: "CTA link", type: "url" as const, required: false },
+      ],
+    },
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000002",
+    slug: "simple-page",
+    name: "Simple Page",
+    description: "A single-column page with a title, body copy, and an optional image.",
+    isActive: true,
+    createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+    schema: {
+      fields: [
+        { key: "heading", label: "Heading", type: "text" as const, required: true, maxLength: 150 },
+        { key: "body", label: "Body", type: "richtext" as const, required: true, maxLength: 5000 },
+        { key: "imageUrl", label: "Image URL", type: "image_url" as const, required: false },
+      ],
+    },
+  },
+];
 
 export class ContentValidationFailure extends Error {
   errors: ContentValidationError[];
@@ -34,6 +70,9 @@ async function getTemplateSchemaOrThrow(templateId: string): Promise<ContentTemp
 }
 
 export async function listActiveTemplates() {
+  if (!isDatabaseConfigured()) {
+    return DEFAULT_CONTENT_TEMPLATES;
+  }
   return db
     .select()
     .from(contentTemplates)
@@ -42,6 +81,9 @@ export async function listActiveTemplates() {
 }
 
 export async function listContentPages() {
+  if (!isDatabaseConfigured()) {
+    return [];
+  }
   return db
     .select({
       page: contentPages,
@@ -54,6 +96,9 @@ export async function listContentPages() {
 }
 
 export async function getContentPageById(id: string) {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
   const [row] = await db
     .select({ page: contentPages, template: contentTemplates })
     .from(contentPages)
@@ -64,6 +109,9 @@ export async function getContentPageById(id: string) {
 }
 
 export async function getPublishedPageBySlug(slug: string) {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
   const [row] = await db
     .select({ page: contentPages, template: contentTemplates })
     .from(contentPages)
@@ -73,6 +121,17 @@ export async function getPublishedPageBySlug(slug: string) {
 
   if (!row || row.page.status !== "published") return null;
   return row;
+}
+
+export async function listAuditLogsForPage(pageId: string) {
+  if (!isDatabaseConfigured()) {
+    return [];
+  }
+  return db
+    .select()
+    .from(contentAuditLogs)
+    .where(eq(contentAuditLogs.pageId, pageId))
+    .orderBy(desc(contentAuditLogs.createdAt));
 }
 
 async function recordAudit(pageId: string, actorUserId: string | null, action: string, snapshot: unknown) {
@@ -188,12 +247,4 @@ export async function unpublishContentPage(id: string, actorUserId: string) {
 
   await recordAudit(updated.id, actorUserId, "unpublished", { title: updated.title });
   return updated;
-}
-
-export async function listAuditLogsForPage(pageId: string) {
-  return db
-    .select()
-    .from(contentAuditLogs)
-    .where(eq(contentAuditLogs.pageId, pageId))
-    .orderBy(desc(contentAuditLogs.createdAt));
 }

@@ -4,10 +4,13 @@ import * as schema from "./schema";
 import { validateDatabaseUrl } from "./validate-url";
 
 /**
- * Checks if production PostgreSQL is configured via DATABASE_URL.
+ * Checks if production PostgreSQL is configured via valid DATABASE_URL.
  */
 export const isDatabaseConfigured = (): boolean => {
-  return Boolean(process.env.DATABASE_URL && process.env.DATABASE_URL.trim() !== "");
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === "") {
+    return false;
+  }
+  return validateDatabaseUrl(process.env.DATABASE_URL, process.env.NODE_ENV).valid;
 };
 
 // Singleton connection & ORM instances
