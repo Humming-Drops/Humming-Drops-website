@@ -134,10 +134,10 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const verifiedEmail = user.primaryEmailAddress?.emailAddress?.trim().toLowerCase();
+    const verifiedEmail = user.email?.trim().toLowerCase();
     if (!verifiedEmail || verifiedEmail !== email) {
       return NextResponse.json(
-        { success: false, error: "Registration email must match your verified Clerk account email.", field: "customer.email" },
+        { success: false, error: "Registration email must match your verified account email.", field: "customer.email" },
         { status: 400 }
       );
     }

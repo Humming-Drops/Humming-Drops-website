@@ -76,7 +76,7 @@ export async function createSessionToken(
   const signatureBuffer = await crypto.subtle.sign(
     "HMAC",
     key,
-    enc.encode(payloadPart)
+    enc.encode(payloadPart) as unknown as BufferSource
   );
 
   const signaturePart = base64UrlEncode(new Uint8Array(signatureBuffer));
@@ -106,8 +106,8 @@ export async function verifySessionToken(
     const isValid = await crypto.subtle.verify(
       "HMAC",
       key,
-      signatureBytes,
-      enc.encode(payloadPart)
+      signatureBytes as unknown as BufferSource,
+      enc.encode(payloadPart) as unknown as BufferSource
     );
 
     if (!isValid) {

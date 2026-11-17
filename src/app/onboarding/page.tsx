@@ -30,7 +30,7 @@ export default async function OnboardingPage() {
             Tell us your name and mobile number so we can set up your account.
           </p>
         </div>
-        <OnboardingForm defaultEmail={user.email} />
+        <OnboardingForm defaultEmail={current.user.email} />
       </div>
     </div>
   );

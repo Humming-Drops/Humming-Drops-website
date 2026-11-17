@@ -1062,7 +1062,7 @@ function SubscribeFormContent() {
                   asChild
                   className="rounded-full px-6"
                 >
-                  <Link href={`/login?redirect_url=${encodeURIComponent(`/subscribe?plan=${selectedPlan}`)}`}>
+                  <Link href={`/login?redirect_url=${encodeURIComponent(`/subscribe?plan=${selectedPlanId}`)}`}>
                     <span>Sign in to continue</span>
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
