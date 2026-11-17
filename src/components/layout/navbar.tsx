@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
-import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import { UserButton, useAuth } from "@clerk/nextjs";
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -168,14 +168,12 @@ export function Navbar() {
           {/* Right Actions & Hamburger Toggle */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {!isSignedIn ? (
-              <SignInButton mode="modal">
-                <button
-                  type="button"
-                  className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
-                >
-                  Sign In
-                </button>
-              </SignInButton>
+              <Link
+                href="/login"
+                className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
+              >
+                Sign In
+              </Link>
             ) : (
               <UserButton />
             )}
@@ -275,16 +273,16 @@ export function Navbar() {
               </Button>
 
               {!isSignedIn ? (
-                <SignInButton mode="modal">
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    className="w-full justify-center min-h-[48px] text-base font-bold"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
+                >
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                     Sign In
-                  </Button>
-                </SignInButton>
+                  </Link>
+                </Button>
               ) : (
                 <Button
                   variant="secondary"

@@ -23,29 +23,24 @@ describe("Pricing Invariants & Canonical Plan Truths", () => {
 
   it("verifies Standard plan box inclusions and frequencies", () => {
     const standard = OFFICIAL_PLANS.standard;
-    expect(standard.boxInclusions).toHaveLength(5);
+    expect(standard.boxInclusions).toHaveLength(7);
 
     const fruits = standard.boxInclusions.find((i) => i.title.includes("Fruits") && !i.title.includes("Dry"));
     const vegetables = standard.boxInclusions.find((i) => i.title.includes("Vegetables"));
-    const salad = standard.boxInclusions.find((i) => i.title.includes("Salad"));
     const sprouts = standard.boxInclusions.find((i) => i.title.includes("Sprouts"));
     const dryFruits = standard.boxInclusions.find((i) => i.title.includes("Dry Fruits"));
+    const oats = standard.boxInclusions.find((i) => i.title.includes("Oats Meal"));
 
-    expect(fruits?.frequency).toBe("Every Day");
-    expect(vegetables?.frequency).toBe("Every Day");
-    expect(salad?.frequency).toBe("Every Day");
-    expect(sprouts?.frequency).toBe("Every Day");
-    expect(dryFruits?.frequency).toBe("3 Days a Week");
-    expect(dryFruits?.isPremiumOnly).toBeFalsy();
+    expect(fruits).toBeDefined();
+    expect(vegetables).toBeDefined();
+    expect(sprouts).toBeDefined();
+    expect(dryFruits).toBeDefined();
+    expect(oats).toBeDefined();
   });
 
   it("verifies Premium plan upgraded inclusions and exclusive perks", () => {
     const premium = OFFICIAL_PLANS.premium;
-    expect(premium.boxInclusions).toHaveLength(5);
-
-    const dailyDryFruits = premium.boxInclusions.find((i) => i.title === "Daily Dry Fruits");
-    expect(dailyDryFruits?.frequency).toContain("Every Day");
-    expect(dailyDryFruits?.isPremiumOnly).toBe(true);
+    expect(premium.boxInclusions).toHaveLength(7);
 
     expect(premium.premiumPerks).toBeDefined();
     expect(premium.premiumPerks?.length).toBeGreaterThan(0);

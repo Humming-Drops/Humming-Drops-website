@@ -4,16 +4,19 @@ import { isSafeRedirectUrl } from "@/lib/auth-redirects";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
-  "/admin(.*)",
   "/onboarding(.*)",
   "/api/payments/order",
   "/api/payments/verify",
   "/api/customer(.*)",
+  "/api/admin(.*)",
 ]);
 
 const isAuthRoute = createRouteMatcher([
   "/login(.*)",
   "/register(.*)",
+  "/admin/login(.*)",
+  "/sso-callback(.*)",
+  "/forgot-password(.*)",
 ]);
 
 function hasConfiguredClerkKeys(): boolean {

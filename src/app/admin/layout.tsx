@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { isStaffUser } from "@/lib/clerk-auth";
+import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
 
 // Every admin page reads live, per-staff-member authorized data (leads,
 // payments, audit logs, ...). Must never be statically prerendered --
@@ -13,12 +13,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // The shell only confirms the visitor is some kind of active staff
-  // account; each admin module (leads, content, subscriptions, payments,
-  // staff, audit log, ...) enforces its own specific permission via
-  // requirePermission()/hasPermission() on its own routes.
+  // If the visitor is not authenticated or lacks staff privileges,
+  // gracefully render the dedicated Operations Console sign-in portal.
   if (!(await isStaffUser())) {
-    redirect("/dashboard/overview");
+    return <AdminSignInPortal />;
   }
 
   return (
