@@ -16,21 +16,8 @@ services:
       timeout: 5s
       retries: 10
 
-  # Local MongoDB, standing in for MongoDB Atlas for local testing only.
-  # No existing feature reads/writes it yet (see src/lib/mongodb.ts).
-  mongo:
-    image: mongo:7
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_dev_data:/data/db
-
-  # The app itself, containerized the same way it deploys on Railway
-  # (multi-stage Dockerfile, standalone Next.js output). For local
-  # testing only -- points DATABASE_URL/MONGODB_URI at the compose
-  # service names instead of localhost, since "localhost" inside this
-  # container means the container itself, not the host.
+  # The app itself, containerized for local multi-service testing or Railway deployment
+  # (multi-stage Dockerfile, standalone Next.js output).
   app:
     build:
       context: .
@@ -38,20 +25,16 @@ services:
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
         NEXT_PUBLIC_CHECKOUT_MODE: ${NEXT_PUBLIC_CHECKOUT_MODE:-assisted_lead}
         NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID:-rzp_test_placeholder_key}
-        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     env_file:
       - .env.local
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/hummingdrops_dev
-      MONGODB_URI: mongodb://mongo:27017/hummingdrops_dev
+      SESSION_SECRET: ${SESSION_SECRET:-hummingdrops_secure_session_signing_secret_2026_dev_key_super_entropy}
     ports:
       - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
-      mongo:
-        condition: service_started
 
 volumes:
   postgres_dev_data:
-  mongo_dev_data:
