@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth/client";
-import { User, LogOut, LayoutDashboard, Shield, Settings } from "lucide-react";
+import { User, LogOut, LayoutDashboard, Settings } from "lucide-react";
 
 export function UserNav() {
   const { user, logout } = useAuth();
@@ -35,7 +35,6 @@ export function UserNav() {
         .toUpperCase()
     : user.email.substring(0, 2).toUpperCase();
 
-  const isStaff = user.role !== "customer";
 
   return (
     <div className="relative" ref={menuRef}>
@@ -58,7 +57,7 @@ export function UserNav() {
             <p className="text-[11px] text-content-muted truncate">
               {user.email}
             </p>
-            {isStaff && (
+            {user.role !== "customer" && (
               <span className="inline-block mt-1 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-forest-50 text-forest-800 rounded">
                 {user.role}
               </span>
@@ -83,17 +82,6 @@ export function UserNav() {
               <Settings className="w-3.5 h-3.5 text-content-muted" />
               <span>Settings & Profile</span>
             </Link>
-
-            {isStaff && (
-              <Link
-                href="/admin"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-brand-primary hover:bg-forest-50 transition-colors"
-              >
-                <Shield className="w-3.5 h-3.5 text-brand-primary" />
-                <span>Operations Console</span>
-              </Link>
-            )}
           </div>
 
           <div className="pt-1 border-t border-line-subtle/70">

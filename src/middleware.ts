@@ -61,14 +61,46 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(safeTarget, request.url));
   }
 
-  // 4. Gating for /subscribe: Unauthenticated visitors must sign in or register first
+  // 4. Admin Portal Protection: Completely hidden from unauthenticated visitors and standard customers
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+  const isAdminLogin = pathname === "/admin/login";
+
+  if (isAdminRoute) {
+    if (isAdminLogin) {
+      // If already signed in with staff / super_admin role, forward to target or /admin
+      if (session && session.role !== "customer") {
+        const redirectParam = request.nextUrl.searchParams.get("redirect_url");
+        const safeTarget =
+          redirectParam && isSafeRedirectUrl(redirectParam)
+            ? redirectParam
+            : "/admin";
+        return NextResponse.redirect(new URL(safeTarget, request.url));
+      }
+      return NextResponse.next();
+    }
+
+    // Unauthenticated access to /admin or any /admin/* sub-page redirects to /admin/login
+    const fullAdminPath = pathname + request.nextUrl.search;
+    if (!session) {
+      const adminLoginUrl = new URL("/admin/login", request.url);
+      adminLoginUrl.searchParams.set("redirect_url", fullAdminPath);
+      return NextResponse.redirect(adminLoginUrl);
+    }
+
+    // Standard subscribers/customers attempting to access admin portal are redirected to their dashboard
+    if (session.role === "customer") {
+      return NextResponse.redirect(new URL("/dashboard/overview", request.url));
+    }
+  }
+
+  // 5. Gating for /subscribe: Unauthenticated visitors must sign in or register first
   if (!session && (pathname === "/subscribe" || pathname.startsWith("/subscribe/"))) {
     const planParam = request.nextUrl.searchParams.get("plan");
     const registerUrl = buildRegisterRedirectUrl(request.url, planParam);
     return NextResponse.redirect(registerUrl);
   }
 
-  // 5. Enforce protection for dashboard, onboarding, and private APIs
+  // 6. Enforce protection for dashboard, onboarding, and private APIs
   if (isMatch(pathname, PROTECTED_PREFIXES)) {
     if (!session) {
       if (pathname.startsWith("/api/")) {
@@ -78,8 +110,9 @@ export async function middleware(request: NextRequest) {
         );
       }
 
+      const fullSubpagePath = pathname + request.nextUrl.search;
       const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect_url", pathname);
+      loginUrl.searchParams.set("redirect_url", fullSubpagePath);
       return NextResponse.redirect(loginUrl);
     }
 

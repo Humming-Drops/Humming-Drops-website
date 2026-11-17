@@ -15,6 +15,7 @@ import {
   Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isSafeRedirectUrl } from "@/lib/auth-redirects";
 import { useAuth } from "@/lib/auth/client";
 
 export function AdminSignInPortal() {
@@ -53,8 +54,13 @@ export function AdminSignInPortal() {
         return;
       }
 
-      // Hard redirect so server-side AdminLayout re-evaluates isStaffUser()
-      window.location.href = "/admin";
+      // Hard redirect to requested subpage or /admin
+      const redirectParam = new URLSearchParams(window.location.search).get("redirect_url");
+      const safeTarget =
+        redirectParam && isSafeRedirectUrl(redirectParam)
+          ? redirectParam
+          : "/admin";
+      window.location.href = safeTarget;
     } catch {
       setError("Unable to authenticate with operations console. Please try again.");
     } finally {
