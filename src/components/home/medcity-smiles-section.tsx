@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Heart,
   Activity,
@@ -56,6 +57,16 @@ export function MedCitySmilesSection() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <div className="relative h-20 w-44 sm:h-24 sm:w-52 mx-auto">
+            <Image
+              src="/images/medcity-smiles-logo.png"
+              alt="MedCity Smiles Community Official Logo"
+              fill
+              sizes="(max-width: 640px) 176px, 208px"
+              className="object-contain"
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E6F7F5] border border-[#2BB3B1]/30 text-[#0B3D34] text-xs font-bold tracking-wide shadow-2xs">
             <Heart className="w-3.5 h-3.5 text-[#156C63]" aria-hidden="true" />
             <span>In Partnership with MedCity Health Labs</span>
@@ -96,7 +107,7 @@ export function MedCitySmilesSection() {
               <span className="text-xs text-[#657B6F]">Included free with every plan</span>
               <Link
                 href="/medcity-smiles"
-                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm"
+                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm rounded-lg px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
               >
                 <span>Explore MedCity Smiles</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -137,7 +148,7 @@ export function MedCitySmilesSection() {
 
             <Link
               href="/medcity-smiles"
-              className="inline-flex items-center justify-center gap-2 w-full min-h-[48px] rounded-full bg-white text-[#0D5049] font-extrabold shadow-md hover:bg-teal-50 transition-colors"
+              className="inline-flex items-center justify-center gap-2 w-full min-h-[48px] rounded-full bg-white text-[#0D5049] font-extrabold shadow-md hover:bg-teal-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D5049]"
             >
               <Sparkles className="w-4 h-4" aria-hidden="true" />
               <span>Learn About MedCity Smiles</span>

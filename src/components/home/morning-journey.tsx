@@ -81,7 +81,7 @@ export function MorningJourney() {
             </HandwrittenAnnotation>
           </div>
 
-          <h2 className="text-[1.75rem] sm:text-3xl lg:text-4xl font-extrabold text-ink tracking-tight leading-[1.18]">
+          <h2 className="font-display text-[1.75rem] sm:text-3xl lg:text-4xl font-extrabold text-ink tracking-tight leading-[1.18]">
             How Your Morning Box Reaches You
           </h2>
 
@@ -178,10 +178,11 @@ export function MorningJourney() {
                 return (
                   <button
                     key={step.number}
+                    type="button"
                     onMouseEnter={() => setActiveStepIndex(idx)}
                     onFocus={() => setActiveStepIndex(idx)}
                     onClick={() => setActiveStepIndex(idx)}
-                    className={`p-4 pt-5 rounded-[20px] border text-center transition-all duration-200 flex flex-col items-center space-y-2.5 cursor-pointer ${
+                    className={`p-4 pt-5 rounded-[20px] border text-center transition-all duration-200 flex flex-col items-center space-y-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       isActive
                         ? "bg-white border-primary ring-2 ring-primary/20 shadow-md scale-[1.01]"
                         : "bg-white/90 border-[#E2ECE4] hover:bg-white hover:border-primary/40 shadow-2xs"
@@ -241,7 +242,7 @@ export function MorningJourney() {
                       <span className="text-[10px] font-bold uppercase tracking-wider text-body">
                         Step {activeStep.number} of 03 · {activeStep.badge}
                       </span>
-                      <h3 className="text-xl sm:text-2xl font-bold text-ink">
+                      <h3 className="font-display text-xl sm:text-2xl font-bold text-ink">
                         {activeStep.title}
                       </h3>
                     </div>
@@ -277,9 +278,10 @@ export function MorningJourney() {
                   {JOURNEY_STEPS.map((_, i) => (
                     <button
                       key={i}
+                      type="button"
                       onClick={() => setActiveStepIndex(i)}
-                      className={`h-2 rounded-full transition-all cursor-pointer ${
-                        i === activeStepIndex ? "w-6 bg-primary" : "w-2 bg-[#E2ECE4] hover:bg-primary/40"
+                      className={`h-2.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                        i === activeStepIndex ? "w-7 bg-primary" : "w-2.5 bg-[#E2ECE4] hover:bg-primary/40"
                       }`}
                       aria-label={`Jump to step ${i + 1}`}
                     />

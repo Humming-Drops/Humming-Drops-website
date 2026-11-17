@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { Activity, ArrowRight, Apple, Heart, Sparkles, Check, ShieldCheck, Smile, Sun } from "lucide-react";
+import { Activity, ArrowRight, Apple, Heart, Sparkles, Check, ShieldCheck, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
@@ -176,9 +177,15 @@ export function TwoPillars() {
               </div>
 
               <div className="flex items-center gap-4 pt-1">
-                {/* 56px soft aqua circle icon */}
-                <div className="w-14 h-14 rounded-full bg-[#E6F7F5] border border-[#B2EBF2]/80 flex items-center justify-center text-[#00A88F] shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                  <Smile className="w-7 h-7 text-[#00A88F]" />
+                {/* MedCity Smiles Community brand emblem */}
+                <div className="relative w-16 h-14 rounded-2xl bg-white border border-[#B2EBF2]/80 flex items-center justify-center p-1.5 shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                  <Image
+                    src="/images/medcity-smiles-logo.png"
+                    alt="MedCity Smiles Community Logo"
+                    fill
+                    sizes="64px"
+                    className="object-contain p-1"
+                  />
                 </div>
                 <div>
                   <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">

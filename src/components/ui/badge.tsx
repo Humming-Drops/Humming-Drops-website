@@ -19,9 +19,9 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const getVariantClasses = () => {
       switch (variant) {
         case "brand":
-          return "bg-brand-subtle text-brand-text border border-brand-subtle/80";
+          return "bg-brand-subtle text-brand-text border border-brand-primary/20 shadow-2xs";
         case "accent":
-          return "bg-accent-citrus-subtle text-accent-citrus-text border border-accent-citrus-subtle";
+          return "bg-accent-citrus-subtle text-accent-citrus-text border border-accent-citrus/25 shadow-2xs";
         case "outline":
           return "border border-line-strong text-content-primary bg-transparent";
         case "success":
@@ -41,12 +41,12 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const getSizeClasses = () => {
       switch (size) {
         case "sm":
-          return "text-[11px] font-semibold py-0.5 px-2 gap-1 rounded-pill";
+          return "text-[11px] font-semibold py-0.5 px-2.5 gap-1 rounded-pill";
         case "lg":
-          return "text-sm font-semibold py-1 px-3.5 gap-2 rounded-pill";
+          return "text-sm font-semibold py-1.5 px-4 gap-2 rounded-pill";
         case "md":
         default:
-          return "text-xs font-semibold py-1 px-2.5 gap-1.5 rounded-pill";
+          return "text-xs font-semibold py-1 px-3 gap-1.5 rounded-pill";
       }
     };
 
@@ -54,7 +54,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center font-sans tracking-tight transition-colors select-none",
+          "inline-flex items-center justify-center font-sans tracking-tight whitespace-nowrap transition-colors select-none",
           getVariantClasses(),
           getSizeClasses(),
           className

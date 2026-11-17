@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, ChevronRight, ChevronDown, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
+import { ArrowDown, ChevronRight, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
@@ -39,6 +39,36 @@ const floatingBadgeVariants: Variants = {
     },
   }),
 };
+
+const HERO_BENEFITS = [
+  {
+    id: "fruits-veggies",
+    title: "5 Cut Fruits",
+    subtitle: "& 3 Veggies",
+    cardBorder: "border-[#E3EFE5] hover:border-emerald-200",
+    iconBg: "bg-rose-50 border-rose-200",
+    iconColor: "text-rose-600",
+    Icon: Apple,
+  },
+  {
+    id: "sprouts-dry-fruits",
+    title: "Sprouts & Dry Fruits",
+    subtitle: "4 Days a Week",
+    cardBorder: "border-[#E3EFE5] hover:border-amber-200",
+    iconBg: "bg-amber-50 border-amber-200",
+    iconColor: "text-emerald-700",
+    Icon: Salad,
+  },
+  {
+    id: "free-lab-test",
+    title: "Free Lab Test",
+    subtitle: "MedCity Partner",
+    cardBorder: "border-sky-200/80 hover:border-sky-300",
+    iconBg: "bg-sky-50 border-sky-200",
+    iconColor: "text-sky-600",
+    Icon: HeartPulse,
+  },
+] as const;
 
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
@@ -85,14 +115,6 @@ export function Hero() {
     observer.observe(video);
     return () => observer.disconnect();
   }, []);
-
-  const handleScrollToSection = (id: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <section
@@ -214,7 +236,7 @@ export function Hero() {
 
             {/* 2. Main Headline with radiant gradient and sun scribble */}
             <motion.div variants={fadeInUp} className="space-y-1">
-              <h1 className="text-[2.35rem] sm:text-5xl lg:text-[3.85rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
+              <h1 className="font-display text-[2.35rem] sm:text-5xl lg:text-[3.1rem] xl:text-[3.75rem] font-extrabold tracking-tight flex flex-col gap-1 leading-[1.12] text-left">
                 <span className="text-[#132A1C]">Healthy Drops,</span>
                 <span className="relative inline-block pb-3.5 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 bg-clip-text text-transparent">
                   Healthier You
@@ -239,7 +261,7 @@ export function Hero() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
                   href="/subscribe?plan=standard"
-                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base shadow-[0_10px_26px_rgba(22,163,74,0.32)] hover:from-emerald-700 hover:to-green-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer group"
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base shadow-[0_10px_26px_rgba(22,163,74,0.32)] hover:from-emerald-700 hover:to-green-700 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                 >
                   <span>Start Your Morning Plan</span>
                   <ChevronRight className="w-4 h-4 text-white/90 group-hover:translate-x-0.5 transition-transform" />
@@ -247,8 +269,7 @@ export function Hero() {
 
                 <a
                   href="#box-experience"
-                  onClick={handleScrollToSection("box-experience")}
-                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer"
+                  className="w-full sm:w-auto min-h-[50px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-emerald-600/30 bg-white text-emerald-800 font-bold text-base hover:bg-emerald-50 hover:border-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                 >
                   <span>See what&apos;s inside</span>
                   <ArrowDown className="w-4 h-4 text-emerald-600" />
@@ -256,7 +277,7 @@ export function Hero() {
               </div>
 
               {/* Sub-CTA Informational Line */}
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#405347] pt-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[#405347] pt-1">
                 <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
                   <Sparkles className="w-3.5 h-3.5 text-amber-500 inline" /> Plans from ₹3,500/month
                 </span>
@@ -267,53 +288,31 @@ export function Hero() {
               </div>
             </motion.div>
 
-            {/* 5. Trust Bar: Horizontally scrollable chip row on mobile with scroll snap / 3-grid on tablet/desktop */}
+            {/* 5. Trust Bar: Responsive stack on mobile, wrapping proportionally on tablet/desktop */}
             <motion.div
               variants={fadeInUp}
               className="pt-3.5 border-t border-[#E3EFE5]"
             >
-              <div className="flex sm:grid sm:grid-cols-3 gap-2.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-1 sm:pb-0 -mx-5 px-5 sm:mx-0 sm:px-0 no-scrollbar">
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-emerald-200 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
-                    <Apple className="w-4 h-4 text-rose-600" />
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5">
+                {HERO_BENEFITS.map(({ id, title, subtitle, cardBorder, iconBg, iconColor, Icon }) => (
+                  <div
+                    key={id}
+                    className={`min-w-0 w-full sm:w-auto sm:flex-auto flex items-center gap-2.5 bg-white border ${cardBorder} px-3.5 py-2.5 sm:px-3 rounded-2xl shadow-2xs transition-colors`}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className={`w-7 h-7 rounded-xl border ${iconBg} flex items-center justify-center shrink-0`}
+                    >
+                      <Icon className={`w-4 h-4 ${iconColor}`} />
+                    </div>
+                    <div className="min-w-0 flex-1 leading-snug">
+                      <p className="font-bold text-[13px] text-[#132A1C] break-words">{title}</p>
+                      <p className="text-[11px] text-[#657B6F] font-normal">{subtitle}</p>
+                    </div>
                   </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">5 Cut Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">&amp; 3 Veggies</p>
-                  </div>
-                </div>
-
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-[#E3EFE5] px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-amber-200 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
-                    <Salad className="w-4 h-4 text-emerald-700" />
-                  </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">Sprouts &amp; Dry Fruits</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">4 Days a Week</p>
-                  </div>
-                </div>
-
-                <div className="shrink-0 snap-start flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C] bg-white border border-sky-200/80 px-3.5 py-2.5 rounded-2xl shadow-2xs hover:border-sky-300 transition-colors whitespace-nowrap">
-                  <div className="w-7 h-7 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center shrink-0">
-                    <HeartPulse className="w-4 h-4 text-sky-600" />
-                  </div>
-                  <div className="leading-tight">
-                    <p className="font-bold">Free Lab Test</p>
-                    <p className="text-[11px] text-[#657B6F] font-normal">MedCity Partner</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Small Animated Chevron */}
-        <div className="hidden lg:flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-[#657B6F] pt-2 pointer-events-none max-w-[540px] w-full">
-          <motion.div
-            animate={shouldReduceMotion ? {} : { y: [0, 3, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-4 h-4 text-emerald-600" />
           </motion.div>
         </div>
       </motion.div>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Phone, Mail, MapPin, Sparkles, MessageCircle, ExternalLink, Heart } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin, Sparkles, MessageCircle, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 
@@ -20,7 +20,7 @@ export function ClosingCTA() {
       />
 
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 text-white text-center relative overflow-hidden shadow-floating">
+        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 bg-gradient-to-br from-emerald-700 via-emerald-800 to-forest-900 text-white text-center relative overflow-hidden shadow-floating">
           {/* Subtle background blur circles */}
           <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-amber-400/15 rounded-full blur-2xl pointer-events-none" />
@@ -49,7 +49,7 @@ export function ClosingCTA() {
                 href="https://wa.me/918618902810"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40"
+                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-[#25D366] flex items-center justify-center shrink-0">
                   <MessageCircle className="w-4 h-4 fill-[#25D366] stroke-white" />
@@ -63,7 +63,7 @@ export function ClosingCTA() {
               {/* Phone Contact */}
               <a
                 href="tel:8618902810"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40"
+                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4" />
@@ -77,7 +77,7 @@ export function ClosingCTA() {
               {/* Email Contact */}
               <a
                 href={`mailto:${OFFICIAL_CONTACT.email}`}
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40"
+                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
@@ -93,7 +93,7 @@ export function ClosingCTA() {
                 href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40"
+                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
