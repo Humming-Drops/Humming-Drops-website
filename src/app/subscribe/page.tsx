@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useUser, useAuth, SignInButton } from "@clerk/nextjs";
+import { useUser, useAuth } from "@/lib/auth/client";
 import {
   Check,
   CheckCircle2,
@@ -1054,18 +1054,19 @@ function SubscribeFormContent() {
               )}
 
               {currentStep === 1 && !isSignedIn ? (
-                <SignInButton mode="modal">
-                  <Button
-                    type="button"
-                    brand="humming"
-                    variant="primary"
-                    size="md"
-                    className="rounded-full px-6"
-                  >
+                <Button
+                  type="button"
+                  brand="humming"
+                  variant="primary"
+                  size="md"
+                  asChild
+                  className="rounded-full px-6"
+                >
+                  <Link href={`/login?redirect_url=${encodeURIComponent(`/subscribe?plan=${selectedPlan}`)}`}>
                     <span>Sign in to continue</span>
                     <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </SignInButton>
+                  </Link>
+                </Button>
               ) : currentStep < 5 ? (
                 <Button
                   type="button"

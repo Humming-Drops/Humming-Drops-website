@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { isStaffUser } from "@/lib/clerk-auth";
+import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
+
+const ADMIN_NAV_ITEMS: PortalNavItem[] = [
+  { label: "Overview", href: "/admin" },
+  { label: "Leads", href: "/admin/leads" },
+  { label: "Subscriptions", href: "/admin/subscriptions" },
+  { label: "Payments", href: "/admin/payments" },
+  { label: "Content", href: "/admin/content" },
+  { label: "Staff", href: "/admin/staff" },
+  { label: "Audit log", href: "/admin/audit-log" },
+];
 
 // Every admin page reads live, per-staff-member authorized data (leads,
 // payments, audit logs, ...). Must never be statically prerendered --

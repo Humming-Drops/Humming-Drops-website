@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { BrandThemeProvider } from "@/components/theme/brand-provider";
+import { AuthProvider } from "@/lib/auth/client";
 import { AppShell } from "@/components/layout/app-shell";
-import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,11 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="humming" className={`${inter.variable} ${plusJakarta.variable}`}>
       <body className="min-h-screen bg-canvas text-content-primary antialiased transition-brand">
-        <ClerkProvider>
+        <AuthProvider>
           <BrandThemeProvider>
             <AppShell>{children}</AppShell>
           </BrandThemeProvider>
-        </ClerkProvider>
+        </AuthProvider>
       </body>
     </html>
   );

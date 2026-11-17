@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/admin/status-badge";
 
@@ -19,6 +19,7 @@ interface AccountData {
 }
 
 export default function DashboardSettingsPage() {
+  const { logout } = useAuth();
   const [account, setAccount] = useState<AccountData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -96,14 +97,13 @@ export default function DashboardSettingsPage() {
           <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">Account</p>
           <h1 className="font-display text-2xl font-extrabold text-content-primary">Profile &amp; Settings</h1>
         </div>
-        <SignOutButton>
-          <button
-            type="button"
-            className="rounded-full border border-red-200 bg-red-50 px-4 py-2 min-h-[38px] text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
-          >
-            Sign out
-          </button>
-        </SignOutButton>
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="rounded-full border border-red-200 bg-red-50 px-4 py-2 min-h-[38px] text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+        >
+          Sign out
+        </button>
       </div>
 
       <section className="rounded-2xl border border-line-subtle bg-surface p-6">

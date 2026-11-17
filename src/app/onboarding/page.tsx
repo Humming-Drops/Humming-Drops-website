@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { profiles, users } from "@/lib/db/schema";
+import { getCurrentUser } from "@/lib/auth/server";
 import { OnboardingForm } from "./onboarding-form";
 
 // Reads the signed-in user's own account state; never prerendered --
@@ -10,18 +7,12 @@ import { OnboardingForm } from "./onboarding-form";
 export const dynamic = "force-dynamic";
 
 export default async function OnboardingPage() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) {
+  const current = await getCurrentUser();
+  if (!current) {
     redirect("/login");
   }
 
-  const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
-  if (!user) {
-    redirect("/login");
-  }
-
-  const [existingProfile] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
-  if (existingProfile) {
+  if (current.profile) {
     redirect("/dashboard/overview");
   }
 

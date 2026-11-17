@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { profiles, users } from "@/lib/db/schema";
+import { getCurrentUser } from "@/lib/auth/server";
 import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 
 const DASHBOARD_NAV_ITEMS: PortalNavItem[] = [
@@ -34,14 +31,10 @@ export default async function DashboardLayout({
   // "profile" PATCH) sends every customer through onboarding before
   // they can reach any dashboard page. /onboarding itself isn't under
   // this layout, so it's never caught in this redirect.
-  const { userId: clerkUserId } = await auth();
-  if (clerkUserId) {
-    const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
-    if (user) {
-      const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
-      if (!profile) {
-        redirect("/onboarding");
-      }
+  const current = await getCurrentUser();
+  if (current) {
+    if (!current.profile) {
+      redirect("/onboarding");
     }
   }
 

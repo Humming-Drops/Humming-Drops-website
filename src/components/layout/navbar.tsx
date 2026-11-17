@@ -11,7 +11,42 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
-import { UserButton, useAuth } from "@clerk/nextjs";
+import {
+  handleSamePageHashClick,
+  isNavbarLockedVisible,
+  releaseNavbarLock,
+  subscribeNavbarLock,
+} from "@/lib/scroll-navigation";
+import { useAuth } from "@/lib/auth/client";
+import { UserNav } from "@/components/layout/user-nav";
+
+const TOP_VISIBLE_OFFSET = 48;
+const HIDE_AFTER_Y = 72;
+const SCROLL_DELTA_THRESHOLD = 8;
+const MANUAL_SCROLL_KEYS = new Set([
+  "ArrowDown",
+  "ArrowUp",
+  "PageDown",
+  "PageUp",
+  "Home",
+  "End",
+  " ",
+]);
+const TRACKED_SECTIONS = [
+  "pricing",
+  "journey",
+  "box-experience",
+  "medcity-smiles",
+  "why-medcity",
+  "vitals",
+] as const;
+
+function isInteractiveOrEditableElement(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable) return true;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON";
+}
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -326,13 +361,7 @@ export function Navbar() {
                 >
                   Dashboard
                 </Link>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8 ring-2 ring-line-subtle",
-                    },
-                  }}
-                />
+                <UserNav />
               </div>
             )}
 
@@ -351,15 +380,7 @@ export function Navbar() {
 
             {/* Responsive Hamburger Toggle (visible below lg screens) */}
             <div className="flex lg:hidden items-center gap-2">
-              {isSignedIn && (
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8 ring-2 ring-line-subtle",
-                    },
-                  }}
-                />
-              )}
+              {isSignedIn && <UserNav />}
               <Button
                 variant="ghost"
                 size="sm"
@@ -474,13 +495,9 @@ export function Navbar() {
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Subscriber Dashboard
-                    </Link>
-                  </Button>
+                    Subscriber Dashboard
+                  </Link>
+                </Button>
                 )}
               </div>
 
