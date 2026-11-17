@@ -3,8 +3,7 @@ import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/chec
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
 import { leadRepository } from "@/lib/lead-storage";
-import { getAppUserByClerkId, requireClerkUser } from "@/lib/clerk-auth";
-import { auth } from "@clerk/nextjs/server";
+import { getAppUserByClerkId, requireClerkUser, auth } from "@/lib/auth/server";
 import {
   normalizePhone,
   isValidIndianPhone,

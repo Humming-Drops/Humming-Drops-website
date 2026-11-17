@@ -1,87 +1,99 @@
-import { createClerkClient } from "@clerk/backend";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { applicationRoles, userRoles, users } from "@/lib/db/schema";
+import { applicationRoles, profiles, userRoles, users } from "@/lib/db/schema";
+import { hashPassword } from "@/lib/auth/password";
 
 /**
- * Local-dev-only bootstrap: grants the `super_admin` RBAC role to a
- * real Clerk account by email, so you can sign in normally and reach
- * every admin/CMS route instead of bypassing Clerk auth. Hard-fails
- * outside development so it can never run against a real environment.
+ * Local-dev bootstrap: creates or updates a staff user with `super_admin` RBAC role
+ * and native password hash directly in PostgreSQL.
  *
- * Uses @clerk/backend directly (not @clerk/nextjs/server) -- the
- * latter pulls in next/server, which only resolves correctly inside
- * Next's own build pipeline. Run as a bare Node script outside that
- * pipeline, that import fails with ERR_MODULE_NOT_FOUND. @clerk/backend
- * is the same SDK Next's helpers wrap, with no such dependency.
- *
- * Usage: npm run db:seed-admin -- you@example.com
+ * Usage: npm run db:seed-admin -- [email] [password]
+ * Example: npm run db:seed-admin -- admin@hummingdrops.dev Admin@HummingDrops2026
  */
 async function main() {
   if (process.env.NODE_ENV === "production") {
     throw new Error("Refusing to run seed-dev-admin in production.");
   }
 
-  const email = process.argv[2];
-  if (!email) {
-    throw new Error("Usage: npm run db:seed-admin -- <email>");
-  }
+  const email = (process.argv[2] || "admin@hummingdrops.dev").trim().toLowerCase();
+  const password = process.argv[3] || "Admin@HummingDrops2026";
 
-  const secretKey = process.env.CLERK_SECRET_KEY;
-  if (!secretKey) {
-    throw new Error("CLERK_SECRET_KEY is not set (expected in .env.local).");
-  }
+  console.log(`Seeding admin account: ${email}...`);
 
-  const client = createClerkClient({ secretKey });
-  const { data } = await client.users.getUserList({ emailAddress: [email] });
-  const clerkUser = data[0];
-  if (!clerkUser) {
-    throw new Error(
-      `No Clerk user found for ${email}. Sign up at /register (or your Clerk dev instance) first, then re-run this script.`
-    );
-  }
+  const passwordHash = await hashPassword(password);
 
-  const [existing] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const [existing] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
 
   const [appUser] = existing
     ? await db
         .update(users)
-        .set({ clerkUserId: clerkUser.id, isActive: true, updatedAt: new Date() })
+        .set({
+          passwordHash,
+          role: "super_admin",
+          isActive: true,
+          updatedAt: new Date(),
+        })
         .where(eq(users.id, existing.id))
         .returning()
     : await db
         .insert(users)
-        .values({ email, clerkUserId: clerkUser.id, role: "admin", isActive: true })
+        .values({
+          email,
+          passwordHash,
+          role: "super_admin",
+          isActive: true,
+        })
         .returning();
 
+  // Ensure profile exists
+  const [profile] = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.userId, appUser.id))
+    .limit(1);
+
+  if (!profile) {
+    await db.insert(profiles).values({
+      userId: appUser.id,
+      fullName: "Platform Super Admin",
+      email,
+      phone: "8618902810",
+    });
+  }
+
+  // Ensure super_admin role is linked
   const [superAdminRole] = await db
     .select()
     .from(applicationRoles)
     .where(eq(applicationRoles.slug, "super_admin"))
     .limit(1);
 
-  if (!superAdminRole) {
-    throw new Error(
-      "super_admin role not found. Run `npm run db:migrate` first (0002_rbac_and_cms.sql seeds it)."
-    );
+  if (superAdminRole) {
+    const [existingRole] = await db
+      .select()
+      .from(userRoles)
+      .where(eq(userRoles.userId, appUser.id))
+      .limit(1);
+
+    if (!existingRole) {
+      await db.insert(userRoles).values({
+        userId: appUser.id,
+        roleId: superAdminRole.id,
+      });
+    }
   }
 
-  const [alreadyGranted] = await db
-    .select()
-    .from(userRoles)
-    .where(eq(userRoles.userId, appUser.id))
-    .limit(1);
-
-  if (!alreadyGranted) {
-    await db.insert(userRoles).values({ userId: appUser.id, roleId: superAdminRole.id });
-  }
-
-  console.log(`Granted super_admin to ${email} (user id ${appUser.id}).`);
+  console.log(`✅ Success! Seeded super_admin user:`);
+  console.log(`- Email: ${email}`);
+  console.log(`- Password: ${password}`);
+  console.log(`- Role: ${appUser.role}`);
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error instanceof Error ? error.message : error);
-    process.exit(1);
-  });
+main().catch((err) => {
+  console.error("Seed error:", err);
+  process.exit(1);
+});

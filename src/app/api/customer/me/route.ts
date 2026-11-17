@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, getAppUserByClerkId } from "@/lib/auth/server";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
@@ -14,10 +14,10 @@ import { sanitizeString, isValidPincode, normalizePhone, isValidIndianPhone } fr
 import { validatePauseRange } from "@/lib/subscription-admin";
 
 export async function GET() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
+  const user = await getAppUserByClerkId(userId);
   if (!user) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
@@ -56,10 +56,10 @@ async function logCustomerAction(userId: string, action: string, resourceType: s
 }
 
 export async function PATCH(request: Request) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [user] = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
+  const user = await getAppUserByClerkId(userId);
   if (!user) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const body = await request.json().catch(() => null);

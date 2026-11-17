@@ -1,44 +1,40 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import {
   buildRegisterRedirectUrl,
   isSafeRedirectUrl,
 } from "@/lib/auth-redirects";
+import {
+  SESSION_COOKIE_NAME,
+  verifySessionToken,
+} from "@/lib/auth/session";
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/onboarding(.*)",
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/onboarding",
   "/api/payments/order",
   "/api/payments/verify",
-  "/api/customer(.*)",
-  "/api/admin(.*)",
-]);
+  "/api/customer",
+  "/api/admin",
+];
 
-const isSubscribeRoute = createRouteMatcher([
-  "/subscribe(.*)",
-]);
+const AUTH_PREFIXES = [
+  "/login",
+  "/register",
+  "/admin/login",
+  "/forgot-password",
+];
 
-const isAuthRoute = createRouteMatcher([
-  "/login(.*)",
-  "/register(.*)",
-  "/admin/login(.*)",
-  "/sso-callback(.*)",
-  "/forgot-password(.*)",
-]);
-
-function hasConfiguredClerkKeys(): boolean {
-  const pubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  const secKey = process.env.CLERK_SECRET_KEY;
-  if (!pubKey || !secKey) return false;
-  if (pubKey.includes("placeholder") || secKey.includes("placeholder")) return false;
-  return true;
+function isMatch(pathname: string, prefixes: string[]): boolean {
+  return prefixes.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/")
+  );
 }
 
-const clerkHandler = clerkMiddleware(async (auth, request) => {
-  const { userId } = await auth();
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
   // 1. Sanitize incoming redirect_url on auth routes to prevent open redirect exploits
-  if (isAuthRoute(request)) {
+  if (isMatch(pathname, AUTH_PREFIXES)) {
     const redirectParam = request.nextUrl.searchParams.get("redirect_url");
     if (redirectParam && !isSafeRedirectUrl(redirectParam)) {
       const cleanUrl = new URL(request.nextUrl.pathname, request.url);
@@ -49,73 +45,61 @@ const clerkHandler = clerkMiddleware(async (auth, request) => {
       });
       return NextResponse.redirect(cleanUrl);
     }
-
-    // If an already authenticated customer visits /register, redirect them forward
-    if (userId && request.nextUrl.pathname === "/register") {
-      const safeTarget = redirectParam && isSafeRedirectUrl(redirectParam)
-        ? redirectParam
-        : "/subscribe";
-      return NextResponse.redirect(new URL(safeTarget, request.url));
-    }
   }
 
-  // 2. Gating for /subscribe: Unauthenticated visitors must register or sign in first
-  if (!userId && isSubscribeRoute(request)) {
+  // 2. Read and verify session token from cookies
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  const session = await verifySessionToken(sessionCookie);
+
+  // 3. If authenticated user visits /register or /login, redirect forward
+  if (session && (pathname === "/login" || pathname === "/register")) {
+    const redirectParam = request.nextUrl.searchParams.get("redirect_url");
+    const safeTarget =
+      redirectParam && isSafeRedirectUrl(redirectParam)
+        ? redirectParam
+        : "/dashboard/overview";
+    return NextResponse.redirect(new URL(safeTarget, request.url));
+  }
+
+  // 4. Gating for /subscribe: Unauthenticated visitors must sign in or register first
+  if (!session && (pathname === "/subscribe" || pathname.startsWith("/subscribe/"))) {
     const planParam = request.nextUrl.searchParams.get("plan");
     const registerUrl = buildRegisterRedirectUrl(request.url, planParam);
     return NextResponse.redirect(registerUrl);
   }
 
-  // 3. Enforce existing protection for dashboard, admin, onboarding, and payment APIs
-  if (isProtectedRoute(request)) {
-    await auth.protect();
-  }
-});
+  // 5. Enforce protection for dashboard, onboarding, and private APIs
+  if (isMatch(pathname, PROTECTED_PREFIXES)) {
+    if (!session) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { success: false, error: "Authentication required." },
+          { status: 401 }
+        );
+      }
 
-export default async function middleware(request: NextRequest, event: NextFetchEvent) {
-  // Sanitize open-redirects on auth routes even without Clerk keys
-  if (isAuthRoute(request)) {
-    const redirectParam = request.nextUrl.searchParams.get("redirect_url");
-    if (redirectParam && !isSafeRedirectUrl(redirectParam)) {
-      const cleanUrl = new URL(request.nextUrl.pathname, request.url);
-      request.nextUrl.searchParams.forEach((val, key) => {
-        if (key !== "redirect_url") {
-          cleanUrl.searchParams.set(key, val);
-        }
-      });
-      return NextResponse.redirect(cleanUrl);
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect_url", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Role-based protection for /api/admin
+    if (pathname.startsWith("/api/admin")) {
+      if (session.role === "customer") {
+        return NextResponse.json(
+          { success: false, error: "Access denied. Administrator privileges required." },
+          { status: 403 }
+        );
+      }
     }
   }
 
-  if (!hasConfiguredClerkKeys()) {
-    // If Clerk keys are missing or placeholders in this deployment:
-    // Keep public pages accessible, and gracefully guard protected routes.
-    if (isProtectedRoute(request)) {
-      return NextResponse.json(
-        { error: "Authentication service not configured. Please set Clerk credentials in project environment variables." },
-        { status: 503 }
-      );
-    }
-    return NextResponse.next();
-  }
-
-  try {
-    return await clerkHandler(request, event);
-  } catch (error) {
-    console.error("Clerk middleware invocation failed:", error);
-    if (isProtectedRoute(request)) {
-      return NextResponse.json(
-        { error: "Authentication service unavailable." },
-        { status: 503 }
-      );
-    }
-    return NextResponse.next();
-  }
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|png|jpg|jpeg|gif|svg|webp|ico|mp4|webm|woff2?|ttf|map|json)).*)",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],
 };
