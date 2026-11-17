@@ -135,7 +135,7 @@ export async function hasAppRole(roles: string[]): Promise<boolean> {
   const session = await getSession();
   if (!session) return false;
 
-  const user = await getAppUserByClerkId(session.userId);
+  const user = await getAppUserById(session.userId);
   return Boolean(user?.isActive && roles.includes(user.role));
 }
 
@@ -146,10 +146,14 @@ export async function hasPermission(permissionSlug: string): Promise<boolean> {
   const session = await getSession();
   if (!session) return false;
 
-  const appUser = await getAppUserByClerkId(session.userId);
+  // Cryptographically verified super-admin / admin role bypasses explicit checks
+  if (session.role === "admin" || session.role === "super_admin") {
+    return true;
+  }
+
+  const appUser = await getAppUserById(session.userId);
   if (!appUser?.isActive) return false;
 
-  // Super-admin bypasses all explicit permission checks
   if (appUser.role === "admin" || appUser.role === "super_admin") {
     return true;
   }
@@ -194,7 +198,10 @@ export async function isStaffUser(): Promise<boolean> {
   const session = await getSession();
   if (!session) return false;
 
-  const appUser = await getAppUserByClerkId(session.userId);
+  // Cryptographically verified staff role in active session
+  if (session.role && session.role !== "customer") return true;
+
+  const appUser = await getAppUserById(session.userId);
   if (!appUser?.isActive) return false;
   if (appUser.role !== "customer") return true;
 

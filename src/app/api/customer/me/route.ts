@@ -84,7 +84,7 @@ export async function PATCH(request: Request) {
     const [existing] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
 
     // Upsert: onboarding creates the first row (no profile exists yet
-    // for a brand-new Clerk sign-up); later edits update it in place.
+    // for a brand-new sign-up); later edits update it in place.
     const [savedProfile] = existing
       ? await db
           .update(profiles)

@@ -16,13 +16,13 @@ import { getAppUserById, hasPermission } from "@/lib/auth/server";
  * access by staff is always an auditable event, not just mutation.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ userId: string }> }) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!(await hasPermission("health:read"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const staffUser = await getAppUserById(clerkUserId);
+  const staffUser = await getAppUserById(userId);
   if (!staffUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const { userId: targetUserId } = await params;

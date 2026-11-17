@@ -51,7 +51,6 @@ export interface PersistedLeadRecord {
 
 export interface CreateLeadDTO {
   userId?: string;
-  clerkUserId?: string;
   leadReferenceCode: string;
   planId: PlanTier;
   planName: string;
@@ -274,8 +273,6 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
         .where(
           data.userId
             ? eq(users.id, data.userId)
-            : data.clerkUserId
-            ? eq(users.clerkUserId, data.clerkUserId)
             : eq(users.phone, data.customer.phone.trim())
         )
         .limit(1);

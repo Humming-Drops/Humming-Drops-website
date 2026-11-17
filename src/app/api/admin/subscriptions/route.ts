@@ -4,8 +4,8 @@ import { hasPermission } from "@/lib/auth/server";
 import { listSubscriptionsForAdmin } from "@/lib/subscription-admin";
 
 export async function GET() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!(await hasPermission("subscriptions:manage"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

@@ -4,8 +4,8 @@ import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { ContentValidationFailure, createContentPage, listContentPages } from "@/lib/content-storage";
 
 export async function GET() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!(await hasPermission("content:write"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -15,13 +15,13 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!(await hasPermission("content:write"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const appUser = await getAppUserById(clerkUserId);
+  const appUser = await getAppUserById(userId);
   if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const body = await request.json().catch(() => null);

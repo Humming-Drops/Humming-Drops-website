@@ -4,13 +4,13 @@ import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { unpublishContentPage } from "@/lib/content-storage";
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!(await hasPermission("content:publish"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const appUser = await getAppUserById(clerkUserId);
+  const appUser = await getAppUserById(userId);
   if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
 
   const { id } = await params;
