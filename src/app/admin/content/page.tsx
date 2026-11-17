@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { hasPermission } from "@/lib/clerk-auth";
+import { hasPermission } from "@/lib/auth/server";
 import { listContentPages } from "@/lib/content-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
 

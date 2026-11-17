@@ -1,4 +1,4 @@
-import { hasPermission } from "@/lib/clerk-auth";
+import { hasPermission } from "@/lib/auth/server";
 import { paymentRepository } from "@/lib/payment-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
 

@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { administrativeAuditLogs, healthVitals } from "@/lib/db/schema";
-import { getAppUserByClerkId, hasPermission } from "@/lib/clerk-auth";
+import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
 
 /**
  * GET /api/admin/customers/[userId]/health

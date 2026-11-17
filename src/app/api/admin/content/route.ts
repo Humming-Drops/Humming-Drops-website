@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/clerk-auth";
+import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
 import { ContentValidationFailure, createContentPage, listContentPages } from "@/lib/content-storage";
 
 export async function GET() {

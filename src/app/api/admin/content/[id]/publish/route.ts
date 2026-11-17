@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { getAppUserByClerkId, hasPermission } from "@/lib/clerk-auth";
+import { getAppUserByClerkId, hasPermission } from "@/lib/auth/server";
 import { publishContentPage } from "@/lib/content-storage";
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {

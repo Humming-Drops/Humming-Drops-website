@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server";
-import { hasPermission } from "@/lib/clerk-auth";
+import { hasPermission } from "@/lib/auth/server";
 import { listActiveTemplates } from "@/lib/content-storage";
 
 export async function GET() {

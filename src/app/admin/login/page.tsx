@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { isStaffUser } from "@/lib/clerk-auth";
+import { isStaffUser } from "@/lib/auth/server";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
 
 export const metadata: Metadata = {

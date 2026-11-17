@@ -49,14 +49,14 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 
 - **Dual-Brand Dynamic Theming:** Seamless CSS custom-property switching between the verdant botanical green of **Humming Drops** (`#144518`) and the mindful restorative teal of **MedCity Smiles** (`#156C63`).
 - **End-to-End Subscription Onboarding:** Interactive 5-step onboarding funnel with plan parameter preservation (`?plan=standard` / `?plan=premium`), dietary preferences, delivery slot selection, and health baseline intake.
-- **Robust Identity & Authentication Gate:** Powered by **Clerk** (`@clerk/nextjs`), enforcing protected route middleware (`/subscribe`, `/dashboard`, `/admin`, `/onboarding`) with built-in open-redirect sanitization (`isSafeRedirectUrl`).
+- **Robust Identity & Authentication Gate:** Native PostgreSQL session authentication with `crypto.scrypt` password hashing, Web Crypto HMAC-SHA256 session signatures, and an enforced **48-hour auto-session expiration** requiring secure re-authentication. Edge middleware guards `/subscribe`, `/dashboard`, `/admin`, and `/onboarding` with open-redirect sanitization (`isSafeRedirectUrl`).
 - **Pluggable Checkout Architecture (Strategy Pattern):**
   - **Mode A (Online Gateway):** Direct Razorpay checkout modal with cryptographic HMAC-SHA256 signature verification.
   - **Mode B (Assisted Lead Registration):** Frictionless lead capture with WhatsApp concierge handoff to the Bangalore dispatch team (`+91 8618902810`).
 - **Customer Portal & Health Tracking:** Subscriber dashboard displaying delivery schedules, monthly health test reports, nutritionist consultations, and community event RSVPs.
 - **Administrative Portal & RBAC:** Comprehensive back-office dashboard covering subscription management, lead triage, payment audit logs, staff role assignments, and content moderation.
-- **Editorial Content CMS:** Articles, nutrition guides, and community announcements backed by MongoDB Atlas and optimized media delivery via Cloudinary.
-- **Hybrid Persistence Layer:** PostgreSQL 16+ on Railway managed DB via Drizzle ORM with an automatic local zero-network JSON fallback for rapid offline development.
+- **Editorial Content CMS:** Articles, nutrition guides, and community announcements with optimized media delivery via Cloudinary.
+- **Persistence Layer:** PostgreSQL 16+ on Railway managed DB via Drizzle ORM with an automatic local zero-network JSON fallback for rapid offline development.
 
 ---
 
@@ -68,9 +68,8 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 | **Language** | [TypeScript 5.7.3](https://www.typescriptlang.org/) (Strict Mode: `noImplicitAny`, strict null checks) |
 | **UI & Styling** | [React 19](https://react.dev/), [Tailwind CSS 3.4](https://tailwindcss.com/), Radix UI Primitives, [Lucide React](https://lucide.dev/) |
 | **Animation** | [Framer Motion 12](https://www.framer.com/motion/) (smooth transitions under 300ms, respecting `prefers-reduced-motion`) |
-| **Authentication** | [Clerk](https://clerk.com/) (`@clerk/nextjs@7.9.23`) with Edge Middleware |
+| **Authentication** | Native PostgreSQL Session Auth (`crypto.scrypt`, HMAC-SHA256, 48-hour auto-session timeout) |
 | **Primary Database** | [PostgreSQL 16+](https://www.postgresql.org/) (Railway Managed DB) with [Drizzle ORM](https://orm.drizzle.team/) & `drizzle-kit` |
-| **Document Store & CMS** | [MongoDB Atlas](https://www.mongodb.com/atlas) (`mongodb@6.12.0`) for editorial and CMS content |
 | **Media Storage** | [Cloudinary](https://cloudinary.com/) (`cloudinary@2.5.1`) for responsive images |
 | **Payments** | [Razorpay](https://razorpay.com/) (Orders API, Webhooks, HMAC-SHA256 verification) |
 | **Testing** | [Vitest 3.0.5](https://vitest.dev/) for unit and smoke verification suites |

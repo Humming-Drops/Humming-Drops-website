@@ -1,4 +1,4 @@
-import { hasPermission } from "@/lib/clerk-auth";
+import { hasPermission } from "@/lib/auth/server";
 import { StaffClient } from "./staff-client";
 
 export default async function AdminStaffPage() {

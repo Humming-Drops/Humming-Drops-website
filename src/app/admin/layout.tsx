@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { isStaffUser } from "@/lib/clerk-auth";
+import { isStaffUser } from "@/lib/auth/server";
 import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
 
