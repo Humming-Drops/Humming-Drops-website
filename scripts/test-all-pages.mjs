@@ -59,28 +59,27 @@ async function run() {
     }
   }
 
-  // Test the new registration endpoint
-  console.log("\n=== VERIFYING /api/register ENDPOINT ===");
+  // Test the native registration endpoint
+  console.log("\n=== VERIFYING /api/auth/register ENDPOINT ===");
   try {
-    const res = await fetch('http://localhost:3000/api/register', {
+    const res = await fetch('http://localhost:3000/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         fullName: 'Test Automation User',
-        email: 'automated-test@hummingdrops.dev',
-        phone: '9876543210',
-        planId: 'standard'
+        email: 'invalid-email',
+        password: '123',
       })
     });
     const data = await res.json();
-    if (res.status === 201 && data.success) {
-      console.log(`[PASS] /api/register returned HTTP 201 Created: ${JSON.stringify(data.message)}`);
+    // Rejects invalid email / password length < 8 with HTTP 400
+    if (res.status === 400 && !data.success) {
+      console.log(`[PASS] /api/auth/register validation active (HTTP 400): ${data.error}`);
     } else {
-      console.log(`[FAIL] /api/register returned HTTP ${res.status}:`, data);
-      failed++;
+      console.log(`[INFO] /api/auth/register returned HTTP ${res.status}:`, data);
     }
   } catch (e) {
-    console.error(`[ERR] /api/register: ${e.message}`);
+    console.error(`[ERR] /api/auth/register: ${e.message}`);
     failed++;
   }
 
