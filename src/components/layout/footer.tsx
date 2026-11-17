@@ -6,41 +6,101 @@ import { SHARED_FOOTER_CONFIG } from "@/types/navigation";
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#E2ECE4] bg-mint/40 transition-colors mt-auto">
+    <footer className="border-t border-line-subtle bg-brand-subtle/35 transition-colors mt-auto">
       {/* Main Footer Directory */}
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-7 lg:py-10">
-        {/* Brand Block */}
-        <div className="max-w-md space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="relative h-9 w-36">
-              <Image
-                src="/images/humming-drops-logo.png"
-                alt="Humming Drops Official Logo"
-                fill
-                sizes="176px"
-                className="object-contain object-left"
-              />
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-10 lg:py-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10">
+          {/* Brand Block */}
+          <div className="md:col-span-5 space-y-3.5">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/"
+                className="relative h-9 w-36 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                aria-label="Humming Drops Home"
+              >
+                <Image
+                  src="/images/humming-drops-logo.png"
+                  alt="Humming Drops Official Logo"
+                  fill
+                  sizes="144px"
+                  className="object-contain object-left"
+                />
+              </Link>
+              <span className="h-7 w-px bg-line-subtle shrink-0" aria-hidden="true" />
+              <Link
+                href="/medcity-smiles"
+                className="relative h-10 w-24 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
+                aria-label="MedCity Smiles Community"
+              >
+                <Image
+                  src="/images/medcity-smiles-logo.png"
+                  alt="MedCity Smiles Community Official Logo"
+                  fill
+                  sizes="96px"
+                  className="object-contain object-left"
+                />
+              </Link>
+            </div>
+
+            <p className="text-sm text-content-secondary max-w-sm leading-relaxed font-sans">
+              Doorstep morning breakfast boxes in Bangalore — a fresh fruit &amp; vegetable box 4 days a week, plus a healthy oats meal 2 days a week.
+            </p>
+
+            <div className="pt-2.5 text-xs border-t border-line-subtle max-w-sm">
+              <p className="font-medium text-content-primary">{SHARED_FOOTER_CONFIG.partners}</p>
             </div>
           </div>
 
-          <p className="text-sm text-body max-w-sm leading-relaxed font-sans">
-            Doorstep morning breakfast boxes in Bangalore — a fresh fruit &amp; vegetable box 4 days a week, plus a healthy oats meal 2 days a week.
-          </p>
-
-          <div className="pt-1.5 text-xs text-body/80 border-t border-[#E2ECE4]">
-            <p className="font-medium text-ink">{SHARED_FOOTER_CONFIG.partners}</p>
+          {/* Quick Navigation */}
+          <div className="md:col-span-3 space-y-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-content-muted font-display">
+              Explore
+            </h2>
+            <nav aria-label="Footer Navigation" className="grid grid-cols-2 sm:grid-cols-1 gap-1.5 text-sm font-sans">
+              <Link
+                href="/plans"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                Subscription Plans
+              </Link>
+              <Link
+                href="/#journey"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="/medcity-smiles"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                MedCity Smiles
+              </Link>
+              <Link
+                href="/about"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                Contact Support
+              </Link>
+            </nav>
           </div>
-        </div>
 
-        {/* Contact Strip */}
-        <div className="mt-7 pt-5 border-t border-[#E2ECE4]">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs sm:text-sm text-body font-sans">
-            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-6 w-full lg:w-auto">
+          {/* Contact & Kitchen Hub */}
+          <div className="md:col-span-4 space-y-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-content-muted font-display">
+              Connect &amp; Kitchen Hub
+            </h2>
+            <div className="flex flex-col gap-1 text-sm text-content-secondary font-sans">
               <a
                 href={`tel:${SHARED_FOOTER_CONFIG.phone}`}
-                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+                className="flex items-center gap-2.5 hover:text-brand-primary font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
-                <Phone className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <Phone className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
                 <span>+91 {SHARED_FOOTER_CONFIG.phone}</span>
               </a>
 
@@ -48,7 +108,7 @@ export function Footer() {
                 href={`https://wa.me/91${SHARED_FOOTER_CONFIG.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 hover:text-primary font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+                className="flex items-center gap-2.5 hover:text-brand-primary font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
                 <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" aria-hidden="true" />
                 <span>WhatsApp: {SHARED_FOOTER_CONFIG.whatsapp}</span>
@@ -56,9 +116,9 @@ export function Footer() {
 
               <a
                 href={`mailto:${SHARED_FOOTER_CONFIG.email}`}
-                className="flex items-center gap-2.5 hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded min-h-[44px] py-1"
+                className="flex items-center gap-2.5 hover:text-brand-primary font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
-                <Mail className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <Mail className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
                 <span>{SHARED_FOOTER_CONFIG.email}</span>
               </a>
 
@@ -66,38 +126,46 @@ export function Footer() {
                 href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-body hover:text-primary min-h-[44px] py-1"
+                className="flex items-center gap-2.5 hover:text-brand-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
-                <MapPin className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                <MapPin className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
                 <span>{SHARED_FOOTER_CONFIG.location}</span>
               </a>
-            </div>
-
-            <div className="text-xs text-body font-medium pt-2 lg:pt-0">
-              Humming Drops · MedCity Smiles
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Copyright Bar */}
-      <div className="border-t border-[#E2ECE4] bg-white py-3.5">
+      <div className="border-t border-line-subtle bg-surface py-4">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-body font-sans text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-content-secondary font-sans text-center sm:text-left">
             <p>
               © {new Date().getFullYear()} Humming Drops. All rights reserved. · Bangalore Doorstep Nutrition
             </p>
-            <div className="flex flex-wrap justify-center gap-4 font-medium">
-              <Link href="/about" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 font-medium">
+              <Link
+                href="/about"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
                 About
               </Link>
-              <Link href="/medcity-smiles" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+              <Link
+                href="/medcity-smiles"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
                 MedCity Smiles
               </Link>
-              <Link href="/contact" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+              <Link
+                href="/contact"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
                 Contact
               </Link>
-              <Link href="/subscribe?plan=standard" className="hover:text-[#00A88F] hover:underline transition-all min-h-[32px] inline-flex items-center">
+              <Link
+                href="/subscribe?plan=standard"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
                 Subscribe
               </Link>
             </div>

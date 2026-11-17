@@ -11,9 +11,9 @@
     /* ==========================================================================
        Design Tokens - Radiant & Fresh Morning Wellness Palette
        ========================================================================== */
-    --primary: #15803D;        /* rich vibrant emerald (WCAG AA >= 4.5:1 on white) */
+    --primary: #15803D;        /* rich vibrant emerald (WCAG AA >= 4.5:1 on cream) */
     --primary-bright: #22C55E; /* vibrant fresh leaf green */
-    --bg: #FCFDF9;             /* bright, clean, warm morning paper canvas */
+    --bg: #FDFCF7;             /* warm morning paper cream canvas */
     --mint: #F0FDF4;           /* soft fresh dewy mint container */
     --citrus: #F59E0B;         /* warm golden citrus accent */
     --berry: #F43F5E;          /* fresh raspberry pop */
@@ -22,6 +22,14 @@
     --ink: #132A1C;            /* deep soft forest heading color */
     --body: #405347;           /* clean high-contrast body text */
     --radius: 20px;            /* consistent soft-corner border radius */
+
+    /* Responsive Section Scroll Offsets (~45px viewport top clearance when smart navbar hides) */
+    --navbar-height: 4rem;
+    --scroll-offset-anchor: 2.8125rem;                  /* 45px default fallback */
+    --scroll-offset-band-14: calc(2.8125rem - 3.5rem);  /* py-14 (56px) -> 45px to heading */
+    --scroll-offset-band-16: calc(2.8125rem - 4rem);    /* py-16 (64px) -> 45px to heading */
+    --scroll-offset-band-8: calc(2.8125rem - 2rem);     /* py-8  (32px) -> 45px to card */
+    --scroll-offset-band-cta: calc(2.8125rem - 3.5rem); /* py-14 (56px) -> 45px to badge */
 
     /* Canvas & Surface Tokens */
     --bg-canvas: var(--bg);
@@ -32,10 +40,10 @@
 
     /* Brand Identity Tokens */
     --primary-brand: var(--primary);
-    --primary-brand-hover: #166534;
+    --primary-brand-hover: #144518; /* Official Humming Drops Forest Green on hover */
     --primary-brand-subtle: var(--mint);
     --primary-brand-subtle-hover: #DCFCE7;
-    --primary-brand-text: var(--ink);
+    --primary-brand-text: #144518;  /* AAA contrast forest green on subtle mint */
     --primary-brand-contrast: #ffffff;
 
     /* Secondary Brand Accent */
@@ -46,16 +54,16 @@
     /* Text & Typography Tokens */
     --text-primary: var(--ink);
     --text-secondary: var(--body);
-    --text-muted: #657B6F;
+    --text-muted: #5A7063;     /* WCAG AA >= 4.5:1 muted sage */
     --text-inverse: #ffffff;
 
     /* Borders & Dividers */
-    --border-subtle: #E3EFE5;
+    --border-subtle: #E2ECE4;
     --border-strong: #C4E0CA;
     --border-interactive: var(--primary);
 
     /* Accessibility Focus Rings */
-    --focus-ring: var(--primary-bright);
+    --focus-ring: var(--primary);
     --focus-ring-offset: var(--bg);
 
     /* Produce & Nutritional Accent Tokens */
@@ -197,16 +205,27 @@
     font-size: 16px;
   }
 
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
   h1 {
-    font-size: clamp(32px, 8vw, 38px);
+    font-size: clamp(1.875rem, 4.5vw, 2.5rem);
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 
   h2 {
-    font-size: clamp(26px, 7vw, 30px);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
     line-height: 1.2;
     letter-spacing: -0.015em;
+  }
+
+  h3 {
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
   /* Universal Keyboard Focus Ring (WCAG 2.1 AA compliant) */
@@ -220,12 +239,80 @@
     background-color: var(--primary-brand-subtle);
     color: var(--primary-brand-text);
   }
+
+  /* Centralized Responsive Anchor Scroll Positioning */
+  @media (min-width: 640px) {
+    :root {
+      --scroll-offset-anchor: 2.8125rem;
+      --scroll-offset-band-14: calc(2.8125rem - 4rem);  /* sm:py-16 (64px) -> 45px to heading */
+      --scroll-offset-band-16: calc(2.8125rem - 5rem);  /* sm:py-20 (80px) -> 45px to heading */
+      --scroll-offset-band-8: calc(2.8125rem - 4rem);   /* sm:py-16 (64px) -> 45px to card */
+      --scroll-offset-band-cta: calc(2.8125rem - 4rem); /* sm:py-16 (64px) -> 45px to badge */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --scroll-offset-anchor: 2.8125rem;
+      --scroll-offset-band-14: calc(2.8125rem - 6rem);  /* lg:py-24 (96px) -> 45px to heading */
+      --scroll-offset-band-16: calc(2.8125rem - 6rem);  /* lg:py-24 (96px) -> 45px to heading */
+      --scroll-offset-band-8: calc(2.8125rem - 6rem);   /* lg:py-24 (96px) -> 45px to card */
+      --scroll-offset-band-cta: calc(2.8125rem - 5rem); /* lg:py-20 (80px) -> 45px to badge */
+    }
+  }
+
+  main [id] {
+    scroll-margin-top: var(--scroll-offset-anchor);
+  }
+
+  #main-content {
+    scroll-margin-top: var(--navbar-height);
+  }
+
+  #journey,
+  #three-pillars,
+  #faq,
+  #why-medcity,
+  #pillars,
+  #vitals,
+  #reviews {
+    scroll-margin-top: var(--scroll-offset-band-14);
+  }
+
+  #medcity-hero {
+    scroll-margin-top: var(--scroll-offset-band-14);
+  }
+
+  @media (min-width: 640px) {
+    #medcity-hero {
+      scroll-margin-top: var(--scroll-offset-band-16);
+    }
+  }
+
+  #box-experience,
+  #pricing,
+  #medcity-smiles,
+  #why-humming-drops {
+    scroll-margin-top: var(--scroll-offset-band-16);
+  }
+
+  #contact {
+    scroll-margin-top: var(--scroll-offset-band-8);
+  }
+
+  #community-cta {
+    scroll-margin-top: var(--scroll-offset-band-cta);
+  }
 }
 
 /* ==========================================================================
    Reduced Motion Accessibility Handling
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
   *,
   *::before,
   *::after {

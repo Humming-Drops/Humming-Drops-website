@@ -76,10 +76,11 @@ export function FAQSection() {
                   type="button"
                   onClick={() => toggleFAQ(index)}
                   aria-expanded={isOpen}
-                  className="w-full min-h-[48px] py-4 sm:py-5 px-5 sm:px-6 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-ink hover:text-primary transition-colors cursor-pointer"
+                  className="w-full min-h-[48px] py-4 sm:py-5 px-5 sm:px-6 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-ink hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-inset"
                 >
                   <span>{faq.question}</span>
                   <div
+                    aria-hidden="true"
                     className={`w-7 h-7 rounded-full bg-mint flex items-center justify-center shrink-0 transition-transform duration-200 ${
                       isOpen ? "rotate-180 bg-primary text-white" : "text-body"
                     }`}

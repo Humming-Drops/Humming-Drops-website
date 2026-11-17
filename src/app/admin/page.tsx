@@ -29,22 +29,37 @@ export default async function AdminOverviewPage() {
           </div>
         ))}
       </div>
-      <div className="rounded-2xl border border-line-subtle bg-surface p-6">
+      <div className="rounded-2xl border border-line-subtle bg-surface p-6 shadow-card">
         <h3 className="font-display text-lg font-bold text-content-primary">Next actions</h3>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link className="rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white" href="/admin/leads">
+          <Link
+            className="inline-flex items-center min-h-[38px] rounded-full bg-brand-primary hover:bg-brand-hover px-4 py-2 text-xs font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            href="/admin/leads"
+          >
             Review registrations
           </Link>
-          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/subscriptions">
+          <Link
+            className="inline-flex items-center min-h-[38px] rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            href="/admin/subscriptions"
+          >
             Manage subscriptions
           </Link>
-          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/payments">
+          <Link
+            className="inline-flex items-center min-h-[38px] rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            href="/admin/payments"
+          >
             View payments
           </Link>
-          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/content">
+          <Link
+            className="inline-flex items-center min-h-[38px] rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            href="/admin/content"
+          >
             Manage website content
           </Link>
-          <Link className="rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary" href="/admin/staff">
+          <Link
+            className="inline-flex items-center min-h-[38px] rounded-full border border-line-subtle px-4 py-2 text-xs font-semibold text-content-primary hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            href="/admin/staff"
+          >
             Manage staff roles
           </Link>
         </div>

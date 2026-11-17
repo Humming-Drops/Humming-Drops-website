@@ -32,15 +32,15 @@ export default function ContactPage() {
           {/* Phone Row */}
           <a
             href={`tel:${OFFICIAL_CONTACT.phone}`}
-            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all"
+            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
                 <Phone className="w-5 h-5" />
               </div>
-              <div className="text-left">
+              <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Phone Support</span>
-                <span className="text-sm sm:text-base font-extrabold text-stone-900">{OFFICIAL_CONTACT.phone}</span>
+                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">{OFFICIAL_CONTACT.phone}</span>
               </div>
             </div>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full shrink-0">
@@ -53,15 +53,15 @@ export default function ContactPage() {
             href="https://wa.me/918618902810"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-emerald-200/80 shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-400 active:scale-[0.99] transition-all"
+            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-emerald-200/80 shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-400 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center shrink-0">
                 <MessageCircle className="w-5 h-5 fill-[#25D366] stroke-white" />
               </div>
-              <div className="text-left">
+              <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">WhatsApp Support</span>
-                <span className="text-sm sm:text-base font-extrabold text-stone-900">+91 8618902810</span>
+                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">+91 8618902810</span>
               </div>
             </div>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full shrink-0 flex items-center gap-1">
@@ -73,9 +73,9 @@ export default function ContactPage() {
           {/* Email Row */}
           <a
             href={`mailto:${OFFICIAL_CONTACT.email}`}
-            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all"
+            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5" />
               </div>
@@ -94,15 +94,15 @@ export default function ContactPage() {
             href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all"
+            className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
-              <div className="text-left">
+              <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Bangalore Kitchen</span>
-                <span className="text-xs sm:text-sm font-bold text-stone-900">{OFFICIAL_CONTACT.kitchenLocation}</span>
+                <span className="text-xs sm:text-sm font-bold text-stone-900 truncate block">{OFFICIAL_CONTACT.kitchenLocation}</span>
               </div>
             </div>
             <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1.5 rounded-full shrink-0 flex items-center gap-1">

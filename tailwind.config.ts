@@ -201,6 +201,7 @@ const config: Config = {
          Spacing Scale & Section Padding
          ====================================================================== */
       spacing: {
+        5.5: "1.375rem",
         18: "4.5rem",
         22: "5.5rem",
         26: "6.5rem",
@@ -228,6 +229,8 @@ const config: Config = {
          Elevation & Multi-Stop Shadows
          ====================================================================== */
       boxShadow: {
+        "2xs": "0 1px 2px 0 rgba(20, 69, 24, 0.04)",
+        xs: "0 1px 3px 0 rgba(20, 69, 24, 0.06), 0 1px 2px -1px rgba(20, 69, 24, 0.04)",
         card: "var(--shadow-card)",
         raised: "var(--shadow-raised)",
         floating: "var(--shadow-floating)",

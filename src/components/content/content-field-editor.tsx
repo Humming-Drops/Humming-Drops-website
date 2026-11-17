@@ -20,44 +20,51 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
       {fields.map((field) => {
         const value = data[field.key];
         const error = fieldErrors[field.key];
+        const fieldId = `content-field-${field.key}`;
 
         return (
           <div key={field.key} className="space-y-1.5">
-            <label className="text-xs font-semibold text-content-secondary">
+            <label htmlFor={fieldId} className="text-xs font-semibold text-content-secondary">
               {field.label}
               {field.required && <span className="text-red-600"> *</span>}
             </label>
 
             {field.type === "richtext" ? (
               <textarea
+                id={fieldId}
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
                 rows={5}
                 maxLength={field.maxLength}
-                className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
               />
             ) : field.type === "boolean" ? (
-              <input
-                type="checkbox"
-                checked={Boolean(value)}
-                onChange={(e) => onChange(field.key, e.target.checked)}
-                className="h-4 w-4"
-              />
+              <div className="pt-0.5">
+                <input
+                  id={fieldId}
+                  type="checkbox"
+                  checked={Boolean(value)}
+                  onChange={(e) => onChange(field.key, e.target.checked)}
+                  className="h-4 w-4 rounded border-line-subtle text-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                />
+              </div>
             ) : field.type === "number" ? (
               <input
+                id={fieldId}
                 type="number"
                 value={typeof value === "number" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value === "" ? undefined : Number(e.target.value))}
-                className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
               />
             ) : (
               <input
+                id={fieldId}
                 type="text"
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
                 maxLength={field.maxLength}
                 placeholder={field.type === "url" || field.type === "image_url" ? "https://" : undefined}
-                className="w-full rounded-xl border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
               />
             )}
 

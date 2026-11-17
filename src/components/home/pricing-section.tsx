@@ -41,6 +41,7 @@ export function PricingSection() {
           {/* 1. STANDARD PLAN CARD */}
           <div
             onMouseEnter={() => setHighlightedPlan("standard")}
+            onFocus={() => setHighlightedPlan("standard")}
             className={cn(
               "rounded-3xl p-6 sm:p-8 md:p-9 border transition-all duration-300 flex flex-col justify-between relative bg-white shadow-card",
               highlightedPlan === "standard"
@@ -142,6 +143,7 @@ export function PricingSection() {
           {/* 2. PREMIUM PLAN CARD */}
           <div
             onMouseEnter={() => setHighlightedPlan("premium")}
+            onFocus={() => setHighlightedPlan("premium")}
             className={cn(
               "rounded-3xl p-6 sm:p-8 md:p-9 border-2 transition-all duration-300 flex flex-col justify-between relative bg-white shadow-card mt-4 sm:mt-0",
               highlightedPlan === "premium"
@@ -255,7 +257,7 @@ export function PricingSection() {
               href="https://wa.me/918618902810"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
               <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
               <span>WhatsApp: 8618902810</span>
@@ -263,7 +265,7 @@ export function PricingSection() {
 
             <a
               href="tel:8618902810"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Call: 8618902810</span>
