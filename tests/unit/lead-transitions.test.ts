@@ -111,8 +111,9 @@ describe("Finite State Machine Transitions", () => {
   });
 });
 
+import os from "os";
 describe("Lead Repository Invariants", () => {
-  const tempTestDir = path.join(process.cwd(), "scratch", "test-leads-fixture");
+  const tempTestDir = path.join(os.tmpdir(), "test-leads-fixture");
   const tempTestFile = path.join(tempTestDir, "test-leads.json");
 
   beforeEach(() => {

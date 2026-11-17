@@ -11,41 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HUMMING_DROPS_NAV, MEDCITY_SMILES_NAV } from "@/types/navigation";
 import { cn } from "@/lib/utils";
-import {
-  handleSamePageHashClick,
-  isNavbarLockedVisible,
-  releaseNavbarLock,
-  subscribeNavbarLock,
-} from "@/lib/scroll-navigation";
 import { UserButton, useAuth } from "@clerk/nextjs";
-
-const TOP_VISIBLE_OFFSET = 48;
-const HIDE_AFTER_Y = 72;
-const SCROLL_DELTA_THRESHOLD = 8;
-const MANUAL_SCROLL_KEYS = new Set([
-  "ArrowDown",
-  "ArrowUp",
-  "PageDown",
-  "PageUp",
-  "Home",
-  "End",
-  " ",
-]);
-const TRACKED_SECTIONS = [
-  "pricing",
-  "journey",
-  "box-experience",
-  "medcity-smiles",
-  "why-medcity",
-  "vitals",
-] as const;
-
-function isInteractiveOrEditableElement(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (target.isContentEditable) return true;
-  const tag = target.tagName;
-  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON";
-}
 
 export function Navbar() {
   const { theme } = useBrandTheme();
@@ -343,7 +309,7 @@ export function Navbar() {
             {!isSignedIn ? (
               <Link
                 href="/login"
-                className="hidden lg:inline-flex items-center px-3.5 py-2 text-xs font-semibold text-forest-950 hover:text-brand-primary hover:bg-forest-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full whitespace-nowrap"
+                className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
               >
                 Sign In
               </Link>
@@ -486,26 +452,27 @@ export function Navbar() {
                   </Link>
                 </Button>
 
-                {!isSignedIn ? (
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    asChild
-                    className="w-full justify-center min-h-[48px] text-base font-bold"
-                  >
-                    <Link
-                      href="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    asChild
-                    className="w-full justify-center min-h-[48px] text-base font-bold"
+              {!isSignedIn ? (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
+                >
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                    Sign In
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  asChild
+                  className="w-full justify-center min-h-[48px] text-base font-bold"
+                >
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     <Link
                       href="/dashboard"

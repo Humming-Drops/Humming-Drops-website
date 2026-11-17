@@ -7,11 +7,11 @@ import {
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
-  "/admin(.*)",
   "/onboarding(.*)",
   "/api/payments/order",
   "/api/payments/verify",
   "/api/customer(.*)",
+  "/api/admin(.*)",
 ]);
 
 const isSubscribeRoute = createRouteMatcher([
@@ -21,6 +21,9 @@ const isSubscribeRoute = createRouteMatcher([
 const isAuthRoute = createRouteMatcher([
   "/login(.*)",
   "/register(.*)",
+  "/admin/login(.*)",
+  "/sso-callback(.*)",
+  "/forgot-password(.*)",
 ]);
 
 function hasConfiguredClerkKeys(): boolean {
