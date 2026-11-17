@@ -2,7 +2,7 @@
 
 **Project:** Humming Drops & MedCity Smiles Web Platform  
 **Location:** Bangalore, India  
-**Stack Baseline:** Next.js 15+ (App Router), React 19, TypeScript (Strict), Tailwind CSS, Radix UI Primitives, Framer Motion, Clerk Auth, Drizzle ORM / Railway PostgreSQL, MongoDB Atlas, Cloudinary, Razorpay  
+**Stack Baseline:** Next.js 15+ (App Router), React 19, TypeScript (Strict), Tailwind CSS, Radix UI Primitives, Framer Motion, Native PostgreSQL Session Auth (48h), Drizzle ORM / Railway PostgreSQL, Cloudinary, Razorpay  
 **Status:** Authoritative Repository Documentation Gateway  
 **Version:** 1.1  
 **Root Guide:** See [Root README](../README.md) for quickstart and developer onboardings.  
