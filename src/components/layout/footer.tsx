@@ -97,7 +97,7 @@ export function Footer() {
             </h2>
             <div className="flex flex-col gap-1 text-sm text-content-secondary font-sans">
               <a
-                href={`tel:${SHARED_FOOTER_CONFIG.phone}`}
+                href={`tel:+91${SHARED_FOOTER_CONFIG.phone}`}
                 className="flex items-center gap-2.5 hover:text-brand-primary font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
                 <Phone className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
@@ -110,7 +110,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2.5 hover:text-brand-primary font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded min-h-[44px]"
               >
-                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" aria-hidden="true" />
+                <MessageCircle className="w-4 h-4 text-[#0E7A3E] shrink-0" aria-hidden="true" />
                 <span>WhatsApp: {SHARED_FOOTER_CONFIG.whatsapp}</span>
               </a>
 

@@ -44,6 +44,8 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 | PUB-12 | Partly fixed | Contact phone shown and dialled as +91 8618902810 everywhere on `/contact`. Address / Maps source is still unknown (CLIENT INPUT REQUIRED); no contact form. |
 | PUB-13 | Not a bug | Config does not force `no-store`; Next dev mode does. Confirm on a production build. |
 | ADM-11 | Fixed in code | Audit trail re-fetched after save / publish / unpublish; action errors are `role=alert`. Showing the acting user needs an API change. |
+| Browser pass 2026-11-18 | Fixed + verified | New bugs found by real browser use and fixed: (1) /subscribe submitted on the click that opened Review (root cause of CUS-07) -> keyed buttons + guard; (2) colour-contrast failures on 5 pages -> darker primary/WhatsApp/teal/emerald/grey tokens; (3) admin tables not keyboard reachable -> `tabIndex=0` regions; (4) /subscribe field errors lacked ARIA; (5) payments/staff dev jargon removed, amounts shown in rupees; (6) non-subscriber saw "next delivery day"; (7) footer phone link; (8) duplicate header on /login, /register (PUB-11). Result: 72/72 page x viewport combos clean (no overflow, no axe A/AA violations, no console errors). |
+| PUB-11 / PUB-13 / CUS-12 | PUB-11 fixed; PUB-13 not a bug; CUS-12 open | "Subscribe Now" still shows for signed-in users and the logged-out header can flash on load. |
 | All others | Not started | Groups D-G in `PLAN.md` (D = form a11y, F = metadata/layout, G = viewport/axe/live tests). |
 
 ## Bugs

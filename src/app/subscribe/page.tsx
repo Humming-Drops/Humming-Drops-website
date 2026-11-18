@@ -220,10 +220,13 @@ function SubscribeFormContent() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const reviewOpenedAt = React.useRef(0);
+
   const handleNext = () => {
     if (currentStep === 1 && !isSignedIn) return;
     if (validateStep(currentStep)) {
       setSubmitError(null);
+      if (currentStep === 4) reviewOpenedAt.current = Date.now();
       setCurrentStep((prev) => Math.min(prev + 1, 5) as 1 | 2 | 3 | 4 | 5);
       window.scrollTo({ top: 120, behavior: "smooth" });
     }
@@ -252,6 +255,8 @@ function SubscribeFormContent() {
       handleNext();
       return;
     }
+    // A submit fired within the same click that opened the Review step is not a real submit.
+    if (Date.now() - reviewOpenedAt.current < 600) return;
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
       setSubmitError("Please complete all required fields before submitting.");
       return;
@@ -393,7 +398,7 @@ function SubscribeFormContent() {
                 href={confirmationData.whatsappRedirectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-transform hover:-translate-y-0.5"
+                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#0E7A3E] hover:bg-[#0B6A35] text-white font-bold text-sm shadow-md transition-transform hover:-translate-y-0.5"
               >
                 <span>Chat with the team on WhatsApp</span>
                 <ExternalLink className="w-4 h-4" />
@@ -452,7 +457,7 @@ function SubscribeFormContent() {
                       ? "bg-forest-50 text-forest-900 font-bold border border-forest-900/20"
                       : isCompleted
                       ? "text-forest-800"
-                      : "text-stone-400"
+                      : "text-stone-600"
                   }`}
                 >
                   <span
@@ -622,6 +627,8 @@ function SubscribeFormContent() {
                       <User className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         id="fullName"
+                        aria-invalid={errors.fullName ? true : undefined}
+                        aria-describedby={errors.fullName ? "fullName-error" : undefined}
                         type="text"
                         required
                         value={customer.fullName}
@@ -634,7 +641,7 @@ function SubscribeFormContent() {
                         }`}
                       />
                     </div>
-                    {errors.fullName && <p className="text-[11px] text-red-600">{errors.fullName}</p>}
+                    {errors.fullName && <p id="fullName-error" role="alert" className="text-[11px] text-red-700">{errors.fullName}</p>}
                   </div>
 
                   <div className="space-y-1">
@@ -647,6 +654,8 @@ function SubscribeFormContent() {
                       </span>
                       <input
                         id="phone"
+                        aria-invalid={errors.phone ? true : undefined}
+                        aria-describedby={errors.phone ? "phone-error" : undefined}
                         type="tel"
                         required
                         value={customer.phone}
@@ -660,7 +669,7 @@ function SubscribeFormContent() {
                       />
                     </div>
                     {errors.phone ? (
-                      <p className="text-[11px] text-red-600">{errors.phone}</p>
+                      <p id="phone-error" role="alert" className="text-[11px] text-red-700">{errors.phone}</p>
                     ) : (
                       <p className="text-[11px] text-stone-500">
                         10-digit Indian mobile number for daily delivery updates.
@@ -676,11 +685,12 @@ function SubscribeFormContent() {
                       <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         id="email"
+                        aria-invalid={errors.email ? true : undefined}
                         type="email"
                         required
                         value={emailLocked ? accountEmail : customer.email}
                         readOnly={emailLocked}
-                        aria-describedby="email-help"
+                        aria-describedby={errors.email ? "email-error" : "email-help"}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                         placeholder="aditi@example.com"
                         className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
@@ -691,7 +701,7 @@ function SubscribeFormContent() {
                       />
                     </div>
                     {errors.email ? (
-                      <p className="text-[11px] text-red-600">{errors.email}</p>
+                      <p id="email-error" role="alert" className="text-[11px] text-red-700">{errors.email}</p>
                     ) : (
                       <p id="email-help" className="text-[11px] text-stone-500">
                         {emailLocked
@@ -724,6 +734,8 @@ function SubscribeFormContent() {
                     </label>
                     <input
                       id="flatNo"
+                      aria-invalid={errors.flatNo ? true : undefined}
+                      aria-describedby={errors.flatNo ? "flatNo-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.flatNo}
@@ -735,7 +747,7 @@ function SubscribeFormContent() {
                           : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
                       }`}
                     />
-                    {errors.flatNo && <p className="text-[11px] text-red-600">{errors.flatNo}</p>}
+                    {errors.flatNo && <p id="flatNo-error" role="alert" className="text-[11px] text-red-700">{errors.flatNo}</p>}
                   </div>
 
                   <div className="space-y-1">
@@ -744,6 +756,8 @@ function SubscribeFormContent() {
                     </label>
                     <input
                       id="buildingName"
+                      aria-invalid={errors.buildingName ? true : undefined}
+                      aria-describedby={errors.buildingName ? "buildingName-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.buildingName}
@@ -755,7 +769,7 @@ function SubscribeFormContent() {
                           : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
                       }`}
                     />
-                    {errors.buildingName && <p className="text-[11px] text-red-600">{errors.buildingName}</p>}
+                    {errors.buildingName && <p id="buildingName-error" role="alert" className="text-[11px] text-red-700">{errors.buildingName}</p>}
                   </div>
 
                   <div className="sm:col-span-2 space-y-1">
@@ -764,6 +778,8 @@ function SubscribeFormContent() {
                     </label>
                     <input
                       id="streetAddress"
+                      aria-invalid={errors.streetAddress ? true : undefined}
+                      aria-describedby={errors.streetAddress ? "streetAddress-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.streetAddress}
@@ -775,7 +791,7 @@ function SubscribeFormContent() {
                           : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
                       }`}
                     />
-                    {errors.streetAddress && <p className="text-[11px] text-red-600">{errors.streetAddress}</p>}
+                    {errors.streetAddress && <p id="streetAddress-error" role="alert" className="text-[11px] text-red-700">{errors.streetAddress}</p>}
                   </div>
 
                   <div className="space-y-1">
@@ -784,6 +800,8 @@ function SubscribeFormContent() {
                     </label>
                     <input
                       id="area"
+                      aria-invalid={errors.area ? true : undefined}
+                      aria-describedby={errors.area ? "area-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.area}
@@ -795,7 +813,7 @@ function SubscribeFormContent() {
                           : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
                       }`}
                     />
-                    {errors.area && <p className="text-[11px] text-red-600">{errors.area}</p>}
+                    {errors.area && <p id="area-error" role="alert" className="text-[11px] text-red-700">{errors.area}</p>}
                   </div>
 
                   <div className="space-y-1">
@@ -818,6 +836,8 @@ function SubscribeFormContent() {
                         </label>
                         <input
                           id="pincode"
+                          aria-invalid={errors.pincode ? true : undefined}
+                          aria-describedby={errors.pincode ? "pincode-error" : undefined}
                           type="text"
                           maxLength={6}
                           required
@@ -832,7 +852,7 @@ function SubscribeFormContent() {
                         />
                       </div>
                     </div>
-                    {errors.pincode && <p className="text-[11px] text-red-600">{errors.pincode}</p>}
+                    {errors.pincode && <p id="pincode-error" role="alert" className="text-[11px] text-red-700">{errors.pincode}</p>}
                   </div>
 
                   <div className="sm:col-span-2 space-y-1">
@@ -1110,6 +1130,7 @@ function SubscribeFormContent() {
 
               {currentStep === 1 && !isSignedIn ? (
                 <Button
+                  key="signin-btn"
                   type="button"
                   brand="humming"
                   variant="primary"
@@ -1124,6 +1145,7 @@ function SubscribeFormContent() {
                 </Button>
               ) : currentStep < 5 ? (
                 <Button
+                  key="continue-btn"
                   type="button"
                   onClick={handleNext}
                   brand="humming"
@@ -1136,6 +1158,7 @@ function SubscribeFormContent() {
                 </Button>
               ) : (
                 <Button
+                  key="submit-btn"
                   type="submit"
                   disabled={isPending}
                   isLoading={isPending}

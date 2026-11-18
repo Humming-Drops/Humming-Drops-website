@@ -114,7 +114,7 @@ export function MorningJourney() {
                       className={`relative w-[60px] h-[60px] rounded-full ${step.bgLightClass} ${step.accentClass} border-2 ${step.borderClass} flex items-center justify-center shrink-0 shadow-2xs`}
                     >
                       <StepIcon className="w-7 h-7" strokeWidth={1.75} />
-                      <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-600 text-white font-display font-black text-[10px] flex items-center justify-center shadow-2xs">
+                      <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-700 text-white font-display font-black text-[10px] flex items-center justify-center shadow-2xs">
                         {step.number}
                       </span>
                     </div>
@@ -199,7 +199,7 @@ export function MorningJourney() {
                       <StepIcon className="w-8 h-8" strokeWidth={1.75} />
                       <span
                         className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full font-display font-black text-[10px] flex items-center justify-center shadow-2xs ${
-                          isActive ? "bg-primary text-white" : "bg-emerald-600 text-white"
+                          isActive ? "bg-primary text-white" : "bg-emerald-700 text-white"
                         }`}
                       >
                         {step.number}

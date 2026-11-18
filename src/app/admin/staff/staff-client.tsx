@@ -115,7 +115,7 @@ export function StaffClient() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-sm text-content-secondary">PostgreSQL RBAC grants</p>
+        <p className="text-sm text-content-secondary">Roles granted to each staff member</p>
         <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Staff &amp; roles</h2>
       </div>
 
@@ -171,14 +171,14 @@ export function StaffClient() {
         </div>
       </form>
 
-      <div className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card">
+      <div tabIndex={0} role="region" aria-label="Staff table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
         <table className="min-w-full text-left text-sm">
           <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
             <tr>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Phone</th>
-              <th className="px-4 py-3">Legacy role</th>
-              <th className="px-4 py-3">RBAC grants</th>
+              <th className="px-4 py-3">Account type</th>
+              <th className="px-4 py-3">Granted roles</th>
             </tr>
           </thead>
           <tbody>

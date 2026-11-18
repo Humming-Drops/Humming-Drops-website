@@ -191,7 +191,7 @@ export default function PlansPage() {
             Need help customizing allergy exclusions or prefer assisted onboarding via WhatsApp? Reach our morning care desk directly.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 pt-2">
-            <Button variant="primary" size="md" asChild className="bg-[#25D366] hover:bg-[#20ba59]">
+            <Button variant="primary" size="md" asChild className="bg-[#0E7A3E] hover:bg-[#0B6A35]">
               <a
                 href="https://wa.me/918618902810"
                 target="_blank"

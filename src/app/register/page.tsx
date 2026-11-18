@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import { Suspense } from "react";
 import { Loader2, Sparkles, Check, ShieldCheck } from "lucide-react";
 import { CustomerSignUpForm } from "@/components/auth/customer-sign-up-form";
@@ -22,30 +20,6 @@ function FormFallback() {
 export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[#FDFCF7] flex flex-col justify-between selection:bg-forest-100 selection:text-forest-900">
-      {/* Top Navbar Minimal */}
-      <header className="w-full border-b border-[#E2ECE4]/70 bg-white/60 backdrop-blur-sm px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative h-9 w-36 transition-transform group-hover:scale-[1.02]">
-              <Image
-                src="/images/humming-drops-logo.png"
-                alt="Humming Drops Logo"
-                fill
-                priority
-                sizes="144px"
-                className="object-contain object-left"
-              />
-            </div>
-          </Link>
-          <Link
-            href="/"
-            className="text-xs font-semibold text-stone-600 hover:text-forest-900 transition"
-          >
-            &larr; Back to Home
-          </Link>
-        </div>
-      </header>
-
       {/* Main Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 flex items-center">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">

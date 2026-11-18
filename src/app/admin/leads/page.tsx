@@ -11,7 +11,7 @@ export default async function AdminLeadsPage() {
         <p className="text-sm text-content-secondary">Customer registrations</p>
         <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Lead management</h2>
       </div>
-      <div className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card">
+      <div tabIndex={0} role="region" aria-label="Leads table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
         <table className="min-w-full text-left text-sm">
           <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
             <tr>

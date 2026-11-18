@@ -56,8 +56,8 @@ export default function ContactPage() {
             className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-emerald-200/80 shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-400 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center shrink-0">
-                <MessageCircle className="w-5 h-5 fill-[#25D366] stroke-white" />
+              <div className="w-10 h-10 rounded-xl bg-[#0E7A3E]/10 text-[#0E7A3E] flex items-center justify-center shrink-0">
+                <MessageCircle className="w-5 h-5 fill-[#0E7A3E] stroke-white" />
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">WhatsApp Support</span>
@@ -130,7 +130,7 @@ export default function ContactPage() {
             variant="outline"
             size="lg"
             asChild
-            className="w-full justify-center min-h-[48px] text-base font-bold rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white border-transparent shadow-sm"
+            className="w-full justify-center min-h-[48px] text-base font-bold rounded-full bg-[#0E7A3E] hover:bg-[#0B6A35] text-white border-transparent shadow-sm"
           >
             <a
               href="https://wa.me/918618902810"
@@ -138,14 +138,14 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2"
             >
-              <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
+              <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" />
               <span>Chat on WhatsApp</span>
             </a>
           </Button>
         </div>
 
         {/* Delivery Timings Footer Note */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E3EFE5] text-center text-xs text-[#657B6F] flex items-center justify-center gap-2">
+        <div className="p-4 rounded-2xl bg-white border border-[#E3EFE5] text-center text-xs text-[#4F6458] flex items-center justify-center gap-2">
           <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>Fresh morning doorstep arrival before 7:30 AM daily across Bangalore</span>
         </div>

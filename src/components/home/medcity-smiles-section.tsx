@@ -104,7 +104,7 @@ export function MedCitySmilesSection() {
             })}
 
             <div className="pt-2 flex items-center justify-between">
-              <span className="text-xs text-[#657B6F]">Included free with every plan</span>
+              <span className="text-xs text-[#4F6458]">Included free with every plan</span>
               <Link
                 href="/medcity-smiles"
                 className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm rounded-lg px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"

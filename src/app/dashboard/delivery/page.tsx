@@ -199,6 +199,7 @@ export default function DashboardDeliveryPage() {
         )}
       </div>
 
+      {isActive && (
       <section className="p-6 rounded-3xl border border-forest-200 bg-forest-50/40 space-y-5" aria-labelledby="tomorrow-heading">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
@@ -252,6 +253,7 @@ export default function DashboardDeliveryPage() {
           </p>
         )}
       </section>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <section className="p-6 rounded-3xl bg-surface border border-line-subtle space-y-5" aria-labelledby="vacation-heading">

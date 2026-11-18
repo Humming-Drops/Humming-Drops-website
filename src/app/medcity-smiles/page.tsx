@@ -110,7 +110,7 @@ export default function MedCitySmilesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">
-              <Activity className="w-3.5 h-3.5 text-teal-600" />
+              <Activity className="w-3.5 h-3.5 text-teal-700" />
               <span>Mind and Body Health</span>
             </div>
             <h2 className="text-[clamp(28px,4vw,44px)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
@@ -130,10 +130,10 @@ export default function MedCitySmilesPage() {
                   className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-4"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600">
+                    <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-bold text-teal-300">0{i + 1}</span>
+                    <span className="text-xs font-bold text-teal-700">0{i + 1}</span>
                   </div>
                   <h3 className="text-xl font-bold text-teal-950">{item.title}</h3>
                   <p className="text-sm text-stone-600 leading-relaxed font-sans">{item.copy}</p>
@@ -149,7 +149,7 @@ export default function MedCitySmilesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">
-              <Stethoscope className="w-3.5 h-3.5 text-teal-600" />
+              <Stethoscope className="w-3.5 h-3.5 text-teal-700" />
               <span>Included Free</span>
             </div>
             <h2 className="text-[clamp(28px,4vw,44px)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
@@ -174,10 +174,10 @@ export default function MedCitySmilesPage() {
                   key={i}
                   className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-3"
                 >
-                  <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 mb-2">
+                  <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 mb-2">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <div className="text-xs font-bold uppercase text-teal-600 tracking-wider">
+                  <div className="text-xs font-bold uppercase text-teal-700 tracking-wider">
                     {v.frequency} Checkup
                   </div>
                   <h3 className="font-extrabold text-xl text-teal-950">{v.metricName}</h3>

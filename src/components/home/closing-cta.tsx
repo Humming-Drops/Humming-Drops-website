@@ -51,8 +51,8 @@ export function ClosingCTA() {
                 rel="noopener noreferrer"
                 className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-[#25D366] flex items-center justify-center shrink-0">
-                  <MessageCircle className="w-4 h-4 fill-[#25D366] stroke-white" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-[#0E7A3E] flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-4 h-4 fill-[#0E7A3E] stroke-white" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block truncate">WhatsApp</span>
@@ -138,7 +138,7 @@ export function ClosingCTA() {
                 variant="outline"
                 size="md"
                 asChild
-                className="w-full sm:w-auto bg-[#25D366] text-white hover:bg-[#20ba59] border-transparent font-bold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+                className="w-full sm:w-auto bg-[#0E7A3E] text-white hover:bg-[#0B6A35] border-transparent font-bold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
               >
                 <a
                   href="https://wa.me/918618902810"
@@ -146,7 +146,7 @@ export function ClosingCTA() {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-1.5"
                 >
-                  <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
+                  <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" />
                   <span>Chat on WhatsApp</span>
                 </a>
               </Button>

@@ -34,7 +34,7 @@ const COMPARTMENTS: Compartment[] = [
     name: "4 Varieties of Fruits",
     shortTag: "Essential Vitamins, Every Day",
     icon: Sparkles,
-    colorClass: "text-rose-600",
+    colorClass: "text-rose-700",
     bgLightClass: "bg-rose-50",
     borderClass: "border-rose-200",
     gradientClass: "from-rose-500/10 via-rose-50/40 to-white",
@@ -206,7 +206,7 @@ export function BoxAnatomy() {
                 onClick={() => setActiveCompartmentId(c.id)}
                 className={`shrink-0 snap-start flex items-center gap-2 px-4 py-3 min-h-[48px] rounded-full text-xs sm:text-sm font-bold transition-all border cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                   isSelected
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    ? "bg-emerald-700 text-white border-emerald-700 shadow-sm"
                     : "bg-white text-[#405347] border-[#E3EFE5] hover:bg-emerald-50 hover:text-emerald-800"
                 }`}
                 aria-pressed={isSelected}
@@ -258,7 +258,7 @@ export function BoxAnatomy() {
                       <span
                         className={`relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full font-display font-black text-xs shadow-md transition-all duration-200 ${
                           isSelected
-                            ? `bg-emerald-600 text-white ring-4 ring-white ${c.ringClass} scale-110 shadow-lg`
+                            ? `bg-emerald-700 text-white ring-4 ring-white ${c.ringClass} scale-110 shadow-lg`
                             : "bg-white/95 text-[#132A1C] border border-[#E3EFE5] hover:scale-110 hover:bg-emerald-50"
                         }`}
                       >
@@ -270,7 +270,7 @@ export function BoxAnatomy() {
               </div>
 
               {/* Bottom Interactive Bar */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#657B6F]">
+              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#4F6458]">
                 <span className="font-bold text-[#132A1C] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                   Tap numbers to inspect each fresh compartment
@@ -301,7 +301,7 @@ export function BoxAnatomy() {
                         {activeCompartment.number}
                       </span>
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#657B6F]">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#4F6458]">
                           Compartment {activeCompartment.number} of 05
                         </span>
                         <h3 className="font-display text-xl sm:text-2xl font-extrabold text-[#132A1C] leading-tight">
@@ -322,7 +322,7 @@ export function BoxAnatomy() {
                   {/* Frequency Badge */}
                   <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-[#132A1C]">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                    <span className="text-[#657B6F]">Frequency:</span>
+                    <span className="text-[#4F6458]">Frequency:</span>
                     <span className="font-bold text-emerald-800">
                       {activeCompartment.getFrequency()}
                     </span>
@@ -364,7 +364,7 @@ export function BoxAnatomy() {
                         onClick={() => setActiveCompartmentId(c.id)}
                         className={`w-8 h-8 rounded-full text-xs font-bold transition-all flex items-center justify-center cursor-pointer ${
                           c.id === activeCompartment.id
-                            ? "bg-emerald-600 text-white shadow-2xs"
+                            ? "bg-emerald-700 text-white shadow-2xs"
                             : "bg-emerald-50 text-[#132A1C] hover:bg-emerald-100"
                         }`}
                         title={c.name}
@@ -395,7 +395,7 @@ export function BoxAnatomy() {
         </div>
 
         {/* Seasonal Disclaimer */}
-        <p className="text-xs text-center text-[#657B6F] mt-8 max-w-2xl mx-auto">
+        <p className="text-xs text-center text-[#4F6458] mt-8 max-w-2xl mx-auto">
           * Daily fruit and vegetable varieties rotate based on morning market freshness and seasonal peak to ensure natural diversity.
         </p>
       </div>

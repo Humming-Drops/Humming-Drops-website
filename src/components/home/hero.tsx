@@ -307,7 +307,7 @@ export function Hero() {
                     </div>
                     <div className="min-w-0 flex-1 leading-snug">
                       <p className="font-bold text-[13px] text-[#132A1C] break-words">{title}</p>
-                      <p className="text-[11px] text-[#657B6F] font-normal">{subtitle}</p>
+                      <p className="text-[11px] text-[#4F6458] font-normal">{subtitle}</p>
                     </div>
                   </div>
                 ))}

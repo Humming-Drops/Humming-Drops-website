@@ -59,7 +59,7 @@ export function PricingSection() {
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#132A1C] font-display">
                     Standard Plan
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#657B6F] mt-1">
+                  <p className="text-xs sm:text-sm text-[#4F6458] mt-1">
                     Daily fresh fruits, greens &amp; regular health tracking
                   </p>
                 </div>
@@ -74,7 +74,7 @@ export function PricingSection() {
                   <span className="font-display text-4xl sm:text-5xl font-black text-[#132A1C]">
                     ₹3,500
                   </span>
-                  <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
+                  <span className="text-sm font-semibold text-[#4F6458]">/ month</span>
                 </div>
               </div>
 
@@ -167,7 +167,7 @@ export function PricingSection() {
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#132A1C] font-display">
                     Premium Plan
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#657B6F] mt-1">
+                  <p className="text-xs sm:text-sm text-[#4F6458] mt-1">
                     Curated juices + exclusive MedCity Labs discounts
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export function PricingSection() {
                   <span className="font-display text-4xl sm:text-5xl font-black text-[#132A1C]">
                     ₹4,000
                   </span>
-                  <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
+                  <span className="text-sm font-semibold text-[#4F6458]">/ month</span>
                 </div>
               </div>
 
@@ -257,9 +257,9 @@ export function PricingSection() {
               href="https://wa.me/918618902810"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#0E7A3E] text-white text-sm font-bold shadow-xs hover:bg-[#0B6A35] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
-              <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
+              <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" />
               <span>WhatsApp: 8618902810</span>
             </a>
 

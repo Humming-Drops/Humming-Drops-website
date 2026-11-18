@@ -50,7 +50,7 @@ Single source of truth first, then apply everywhere.
 ## Group D — Forms & accessibility (P1/P2, WCAG 2.1 AA, CLAUDE.md §6.7)
 - [x] **PUB-05 / CUS-10 / ADM-04** (done for sign-in, sign-up, settings, admin new-page slug; subscribe already had inline errors; `/admin/content/[id]` editor + shared `form-field.tsx` not done) Shared accessible field-error pattern: all errors inline per field, `aria-invalid`, `aria-describedby`, `role="alert"`/live region, focus first invalid field, scroll error into view. Apply to register, login, subscribe, settings phone, admin content slug (+ `pattern`/client validation, auto-slugify from title, fix helper echo).
   Files: new `src/components/ui/form-field.tsx`; `src/components/auth/{customer-sign-in-form,customer-sign-up-form,admin-sign-in-portal}.tsx`, `src/app/subscribe/page.tsx`, `src/app/dashboard/settings/page.tsx`, `src/app/admin/content/new/page.tsx`, `src/app/admin/content/[id]/page.tsx`, `src/components/content/content-field-editor.tsx`, `src/app/api/auth/register/route.ts` (return all field errors, not one at a time).
-- [ ] Visible focus rings and contrast audit (4.5:1) fixes found in Group G. Files: `src/styles`/global CSS, `tailwind.config.ts`, `src/components/ui/*`.
+- [x] Visible focus rings and contrast audit (4.5:1) fixes found in Group G (contrast fixed: primary token, WhatsApp green, teal/emerald chips, grey-green text, stepper labels). Files: `src/styles`/global CSS, `tailwind.config.ts`, `src/components/ui/*`.
 
 ## Group E — Missing pages & stubs (P2)
 - [x] **PUB-03** `/forgot-password`: until reset is implemented, remove the disabled input and show contact instructions (hummingdrops@gmail.com / 8618902810). A real reset flow is out of Phase-1 scope → needs your confirmation.
@@ -62,7 +62,7 @@ Single source of truth first, then apply everywhere.
 ## Group F — Layout, metadata, performance, admin UX (P2/P3)
 - [x] **PUB-10 / ADM-10** Fix title template (`%s | Humming Drops`, no double suffix), 404 title "Page not found", per-page admin titles, OG/Twitter metadata on inner pages.
   Files: `src/app/layout.tsx`, `src/app/{contact,subscribe,plans,about,admin/*}` metadata, `src/app/not-found.tsx`.
-- [ ] **PUB-11 / CUS-12** Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
+- [~] **PUB-11 (done: duplicate header removed on /login and /register) / CUS-12 (not done)** Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
   Files: `src/components/auth/auth-shell.tsx`, `src/components/layout/{navbar,user-nav,app-shell,mobile-sticky-bar}.tsx`, `src/lib/auth/client.tsx`.
 - [x] **PUB-13** (not a bug: no config forces no-store; Next dev mode sends it; re-check on a production build) Allow caching on static marketing pages in production (ISR/`revalidate`), keep `no-store` for authenticated/API. Verify it is dev-only first. Files: `next.config.mjs`, page-level `export const revalidate`.
 - [ ] **CUS-01 / CUS-13** Document single-cookie behavior; super_admin visiting `/login` → `/admin`; confirm `/onboarding` redirect is intended (or remove route). Files: `src/lib/auth-redirects.ts`, `src/middleware.ts`, `src/app/onboarding/page.tsx`.
@@ -72,9 +72,9 @@ Single source of truth first, then apply everywhere.
   Files: `src/app/admin/layout.tsx`, `src/components/layout/app-shell.tsx`, `src/app/admin/{audit-log,content,page}/page.tsx`, `src/app/loading.tsx`.
 
 ## Group G — Verification gaps (P1, run before and after fixes)
-- [~] Get a reliable viewport method (playwright-core installed in scratchpad, drives system Chrome; not yet run) (Chrome DevTools device emulation or Playwright) and test 375 / 768 / 1440 on every route.
-- [ ] axe-core + keyboard-only pass on all routes; log findings and fix under Group D.
-- [~] Re-run full route sweep (API sweep done live; browser sweep BLOCKED: Chrome extension not connected) (public, customer, admin) in Chrome after Groups A–F; update `BUGS.md` statuses.
+- [x] Get a reliable viewport method (Chrome extension cannot resize the viewport; used headless Chrome over the DevTools protocol at 375/768/1440, 72 page/viewport combos) (Chrome DevTools device emulation or Playwright) and test 375 / 768 / 1440 on every route.
+- [x] axe-core (WCAG 2.1 A/AA) on all routes at 3 viewports: 0 violations after fixes. Keyboard focus-indicator audit (login, home, plans, register, contact, dashboard delivery/settings, subscribe, admin leads): all focusable elements show a focus style.
+- [x] Re-run full route sweep (API sweep + Chrome browser sweep done live 2026-11-18) (public, customer, admin) in Chrome after Groups A–F; update `BUGS.md` statuses.
 - [ ] Add regression tests under `tests/` for: no `passwordHash` in staff API, draft content not served, `/api/auth/me` logged-out status, duplicate-lead handling, content 400s.
 - [ ] Update `docs/tracker.md` and clean up QA test data.
 
@@ -94,7 +94,23 @@ API checks run with curl against the real DB, all PASS:
 - ADM-02: anonymous `/content/<draft>` exposes no title/template/page id (slug only as URL echo). ADM-03: unknown and draft slugs now return HTTP 404 (fixed live by scoping `loading.tsx` to admin/dashboard).
 - Customer: register with leading-0 phone OK; pending state; duplicate lead -> 409 with existing reference (also while active); pause rejected while pending, accepted when active, reversed range rejected; email mismatch rejected; customer blocked from admin API (403).
 - CUS-14: `/api/auth/me` logged out -> 200 `authenticated:false` (by design).
-Not yet run: browser UI checks (Chrome extension not connected), viewport 375/768/1440, axe, keyboard pass.
+Browser checks: see "Browser test log" below.
+
+## Browser test log (2026-11-18, Chrome extension + headless Chrome via DevTools protocol)
+Chrome extension (real clicks/typing, signed in as admin / customers):
+- Titles: admin pages each have their own title; 404 title "Page not found | Humming Drops"; no doubled suffix.
+- Login: wrong password -> alert linked to both inputs (`aria-invalid`, `aria-describedby`); correct login lands on dashboard.
+- CUS-02: dashboard shows correct state for none / pending (reference + WhatsApp, "not active yet") / active (box contents from brochure, delivery placeholder). No fake "Active", dispatch timeline or invented times.
+- CUS-04: pause tomorrow persists across reload; resume removes it; quick-pause blocked when a vacation range exists; empty rider note rejected; saved note persists; vacation clear works.
+- CUS-10: invalid phone on settings -> `role=alert` error linked to the input.
+- CUS-09 / CUS-07 / CUS-08 / PUB-06: `/subscribe` no default plan; Continue without plan shows error; phone prefilled; email read-only; deliberate duplicate submit shows 409 message in view. BUG FOUND + FIXED: clicking Continue on step 4 submitted the form immediately (same button node switched from type=button to type=submit mid-click). Fixed with distinct React keys + guard; re-verified: Review step is shown and nothing is submitted.
+- PUB-05: sign-up with empty/invalid fields -> all 5 errors at once, focus on first invalid field, ids/aria links verified.
+- ADM-04: admin slug field: auto-slugify from title, invalid slug -> focus, `aria-invalid`, linked error.
+- ADM-11 / ADM-03 / ADM-02: CMS create -> edit -> publish -> public page 200 -> unpublish -> anonymous 404 with no content leak; audit trail updated 1 -> 2 -> 3 without reload.
+- ADM-07: customer opening /admin or /admin/staff is redirected to /dashboard/overview (no admin shell).
+Headless Chrome sweep (72 page x viewport combinations at true 375 / 768 / 1440 px, public + customer + admin): 0 horizontal overflow, 0 console errors, 0 axe WCAG 2.1 A/AA violations after fixes.
+Fixed in this pass: colour-contrast failures (home, plans, contact, medcity, subscribe stepper), scrollable admin tables not keyboard-focusable, ARIA wiring on /subscribe fields, payments/staff developer jargon, footer tel link, non-subscribers seeing a "next delivery day" card, duplicate header on /login and /register.
+Limits: Chrome extension cannot resize the viewport (layout checks used headless Chrome); no screen-reader testing; auth pages were tested with generated test accounts only.
 
 ## Decisions recorded
 - Box contents: **brochure is authoritative** (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium). The 2026-11-04 "4-day box + 2-day oats" content was removed everywhere.

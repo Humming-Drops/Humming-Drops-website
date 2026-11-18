@@ -107,7 +107,7 @@ export function TwoPillars() {
                   <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">
                     Daily Fresh Nutrition
                   </h3>
-                  <p className="text-xs text-[#657B6F] font-medium mt-0.5">
+                  <p className="text-xs text-[#4F6458] font-medium mt-0.5">
                     Prepared fresh at dawn by Berrybeats Cafe
                   </p>
                 </div>
@@ -191,7 +191,7 @@ export function TwoPillars() {
                   <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">
                     MedCity Smiles Companion
                   </h3>
-                  <p className="text-xs text-[#657B6F] font-medium mt-0.5">
+                  <p className="text-xs text-[#4F6458] font-medium mt-0.5">
                     Your personal pocket companion for mental wellness
                   </p>
                 </div>
@@ -267,7 +267,7 @@ export function TwoPillars() {
                   <h3 className="text-[clamp(1.35rem,2.5vw,1.65rem)] font-extrabold text-[#132A1C] font-display leading-tight">
                     MedCity Labs
                   </h3>
-                  <p className="text-xs text-[#657B6F] font-medium mt-0.5">
+                  <p className="text-xs text-[#4F6458] font-medium mt-0.5">
                     Preventative health support
                   </p>
                 </div>
