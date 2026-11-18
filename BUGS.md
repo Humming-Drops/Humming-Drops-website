@@ -20,10 +20,10 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 ## Fix status (updated as work proceeds)
 | ID | Status | Notes |
 |---|---|---|
-| ADM-01 | Fixed in code, independently reviewed (static) | Explicit safe columns in `src/lib/staff-admin.ts`; regression test added. Live API check pending (DB down). |
-| ADM-02 | Fixed in code, live check pending | Draft filter moved into SQL (`getPublishedPageBySlug`). Could not reproduce the RSC payload leak without DB; re-check live. |
-| ADM-03 | Not fixed (framework limit) | Root `src/app/loading.tsx` streams a 200 before `notFound()`; real 404 needs removing/scoping that loader (Group F). |
-| ADM-05 / 06 / 09 | Fixed in code, live check pending | UUID/`templateId` validation -> 400; unified `{success:false,error}` envelope via `src/lib/api-response.ts`; bad subscription id -> 400 JSON. |
+| ADM-01 | FIXED, live-verified | Explicit safe columns in `src/lib/staff-admin.ts`; regression test added. Live API check pending (DB down). |
+| ADM-02 | FIXED, live-verified | Draft filter moved into SQL (`getPublishedPageBySlug`). Could not reproduce the RSC payload leak without DB; re-check live. |
+| ADM-03 | FIXED, live-verified | Root loader moved to `components/layout/page-loading.tsx` and applied only to `admin/` and `dashboard/`; unknown/draft `/content/<slug>` now returns HTTP 404. |
+| ADM-05 / 06 / 09 | FIXED, live-verified | UUID/`templateId` validation -> 400; unified `{success:false,error}` envelope via `src/lib/api-response.ts`; bad subscription id -> 400 JSON. |
 | Verifier follow-ups | Fixed in code | Verifier agent #2 passed Group A and flagged same-class gaps: UUID checks on role-revoke, customer-health and staff POST `roleId`; non-string `email`/`title` no longer 500; role-revoke returns 404 JSON; unified envelope applied to all `/api/admin/*` routes. `/api/customer/*` envelope left as is. |
 | ADM-07 | Not reproducible by code review | Middleware redirects customers and `AdminLayout` renders sign-in portal (never children) for non-staff. Confirm live. |
 | CUS-14 | Resolved by decision | `authenticated:false` with 200 is the documented session-probe contract; commented in code. |
@@ -34,7 +34,7 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 | PUB-04 | Fixed in code | New `/terms` and `/privacy` pages with PLACEHOLDER legal text; register + footer link to them. Legal wording is CLIENT CONTENT REQUIRED. |
 | CUS-04 | Fixed in code | Pause / vacation / rider notes now await the real `PATCH /api/customer/me`, show server errors, are disabled unless active; empty note rejected. |
 | CUS-07 / 08 / PUB-06 | Fixed in code | Enter key can no longer submit before Review; no default plan; phone prefilled from profile; account email read-only; submit error is `role=alert` and scrolled into view. |
-| CUS-09 | Fixed in code, live check pending | `DuplicateLeadError` in the Postgres repo -> API returns 409 with existing reference. No DB unique index yet (small race window). |
+| CUS-09 | FIXED, live-verified (409, incl. while active) | `DuplicateLeadError` in the Postgres repo -> API returns 409 with existing reference. No DB unique index yet (small race window). |
 | PUB-07 | Fixed in code | Any valid 6-digit pincode accepted; "Bangalore" removed from review/confirmation copy (serviceability confirmed by team). Server still stores city "Bangalore". |
 | PUB-08 (subscribe) / PUB-09 / PUB-02 (subscribe) | Fixed in code | Rs 3,500 formatting, "Mode B" wording, "Client Favorite", free-delivery row, "closed Sundays", "Bangalore delivery policy" removed from `/subscribe`. |
 | PUB-01 / CUS-06 | Fixed in code | Plan data (`src/types/plans.ts`, `lead-storage` canonical plans) and all pages now use brochure contents; oats / 4-day / 5 fruits / 3 veg removed from home, plans, subscribe, footer, metadata. Premium card on `/plans` lists only extras. Test updated. |

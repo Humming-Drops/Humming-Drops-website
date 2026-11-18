@@ -72,9 +72,9 @@ Single source of truth first, then apply everywhere.
   Files: `src/app/admin/layout.tsx`, `src/components/layout/app-shell.tsx`, `src/app/admin/{audit-log,content,page}/page.tsx`, `src/app/loading.tsx`.
 
 ## Group G — Verification gaps (P1, run before and after fixes)
-- [ ] Get a reliable viewport method (Chrome DevTools device emulation or Playwright) and test 375 / 768 / 1440 on every route.
+- [~] Get a reliable viewport method (playwright-core installed in scratchpad, drives system Chrome; not yet run) (Chrome DevTools device emulation or Playwright) and test 375 / 768 / 1440 on every route.
 - [ ] axe-core + keyboard-only pass on all routes; log findings and fix under Group D.
-- [ ] Re-run full route sweep (public, customer, admin) in Chrome after Groups A–F; update `BUGS.md` statuses.
+- [~] Re-run full route sweep (API sweep done live; browser sweep BLOCKED: Chrome extension not connected) (public, customer, admin) in Chrome after Groups A–F; update `BUGS.md` statuses.
 - [ ] Add regression tests under `tests/` for: no `passwordHash` in staff API, draft content not served, `/api/auth/me` logged-out status, duplicate-lead handling, content 400s.
 - [ ] Update `docs/tracker.md` and clean up QA test data.
 
@@ -85,6 +85,16 @@ Single source of truth first, then apply everywhere.
 4. D (forms/a11y) → `fix(a11y): …`
 5. E, F → `fix(pages): …`, `chore(meta): …`
 6. G verification → `test: …`, tracker update
+
+## Live test log (2026-11-18, Postgres via docker compose, dev server :3001)
+API checks run with curl against the real DB, all PASS:
+- ADM-01 `/api/admin/staff` has no passwordHash/clerkUserId; keys are id/email/phone/role/isActive/roles.
+- ADM-05/06/09: bad uuid -> 400, bad templateId -> 400, unknown subscription -> 404, unified `{success:false,error}`.
+- Staff POST/DELETE validation (non-string email 400, bad roleId 400, bad ids 400, unknown grant 404); customer-health bad id 400.
+- ADM-02: anonymous `/content/<draft>` exposes no title/template/page id (slug only as URL echo). ADM-03: unknown and draft slugs now return HTTP 404 (fixed live by scoping `loading.tsx` to admin/dashboard).
+- Customer: register with leading-0 phone OK; pending state; duplicate lead -> 409 with existing reference (also while active); pause rejected while pending, accepted when active, reversed range rejected; email mismatch rejected; customer blocked from admin API (403).
+- CUS-14: `/api/auth/me` logged out -> 200 `authenticated:false` (by design).
+Not yet run: browser UI checks (Chrome extension not connected), viewport 375/768/1440, axe, keyboard pass.
 
 ## Decisions recorded
 - Box contents: **brochure is authoritative** (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium). The 2026-11-04 "4-day box + 2-day oats" content was removed everywhere.
