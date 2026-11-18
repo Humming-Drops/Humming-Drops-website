@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
+import { apiError } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { hasPermission } from "@/lib/auth/server";
 import { listSubscriptionsForAdmin } from "@/lib/subscription-admin";
 
 export async function GET() {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return apiError("Unauthorized", 401);
   if (!(await hasPermission("subscriptions:manage"))) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return apiError("Forbidden", 403);
   }
 
   const rows = await listSubscriptionsForAdmin();

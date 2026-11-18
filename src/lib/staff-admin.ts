@@ -10,7 +10,7 @@ export async function listAssignableRoles() {
 
 export async function findUserByEmail(email: string) {
   const [user] = await db
-    .select()
+    .select({ id: users.id, email: users.email })
     .from(users)
     .where(eq(users.email, email.trim().toLowerCase()))
     .limit(1);
@@ -35,8 +35,15 @@ export async function listStaffWithRoles() {
 
   const grantedUserIds = [...new Set(grants.map((g) => g.userId))];
 
+  // Explicit safe columns only: never select passwordHash / clerkUserId here.
   const staffUsers = await db
-    .select()
+    .select({
+      id: users.id,
+      email: users.email,
+      phone: users.phone,
+      role: users.role,
+      isActive: users.isActive,
+    })
     .from(users)
     .where(
       grantedUserIds.length > 0

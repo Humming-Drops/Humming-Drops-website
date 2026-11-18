@@ -162,7 +162,7 @@ export function AdminSignInPortal() {
                       autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@hummingdrops.dev"
+                      placeholder="you@example.com"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                     />
                   </div>
@@ -224,12 +224,14 @@ export function AdminSignInPortal() {
               </form>
 
               {/* Developer Helper */}
+              {process.env.NODE_ENV === "development" && (
               <div className="mt-6 pt-5 border-t border-stone-800 text-center">
                 <div className="inline-flex items-center gap-1.5 text-[11px] text-stone-400">
                   <Terminal className="w-3.5 h-3.5 text-stone-500" />
                   <span>Default Admin: admin@hummingdrops.dev</span>
                 </div>
               </div>
+              )}
             </>
           )}
 

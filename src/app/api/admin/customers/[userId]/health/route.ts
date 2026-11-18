@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiError, isUuid } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
@@ -17,15 +18,16 @@ import { getAppUserById, hasPermission } from "@/lib/auth/server";
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return apiError("Unauthorized", 401);
   if (!(await hasPermission("health:read"))) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return apiError("Forbidden", 403);
   }
 
   const staffUser = await getAppUserById(userId);
-  if (!staffUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
+  if (!staffUser) return apiError("Application account not linked", 404);
 
   const { userId: targetUserId } = await params;
+  if (!isUuid(targetUserId)) return apiError("Invalid customer id.", 400);
   const vitals = await db.select().from(healthVitals).where(eq(healthVitals.userId, targetUserId));
 
   await db.insert(administrativeAuditLogs).values({

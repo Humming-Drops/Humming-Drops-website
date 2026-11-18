@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db, isDatabaseConfigured } from "@/lib/db";
 import { contentAuditLogs, contentPages, contentTemplates, administrativeAuditLogs } from "@/lib/db/schema";
 import {
@@ -116,11 +116,10 @@ export async function getPublishedPageBySlug(slug: string) {
     .select({ page: contentPages, template: contentTemplates })
     .from(contentPages)
     .innerJoin(contentTemplates, eq(contentTemplates.id, contentPages.templateId))
-    .where(eq(contentPages.slug, slug))
+    .where(and(eq(contentPages.slug, slug), eq(contentPages.status, "published")))
     .limit(1);
 
-  if (!row || row.page.status !== "published") return null;
-  return row;
+  return row ?? null;
 }
 
 export async function listAuditLogsForPage(pageId: string) {
