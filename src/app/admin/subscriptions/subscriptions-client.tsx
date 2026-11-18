@@ -72,7 +72,7 @@ export function SubscriptionsClient() {
   }
   if (!rows) {
     return (
-      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading subscriptions">
+      <div className="space-y-6 animate-pulse" role="status" aria-busy="true" aria-label="Loading subscriptions">
         <div className="space-y-2">
           <div className="h-4 w-36 rounded bg-muted/70" />
           <div className="h-8 w-48 rounded-xl bg-muted/70" />

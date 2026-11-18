@@ -296,6 +296,8 @@ its implementation and verification are complete.
         tier), `/plans`, `/subscribe`, and every other homepage/footer/
         metadata reference to the old salad-inclusive daily structure.
    - Plan: `docs/superpowers/plans/2026-11-04-site-content-revision.md`.
+
+> **SUPERSEDED 2026-11-18:** the 4-day box + 2-day oats plan described in the entry above was replaced by the client brochure plan (4 fruits, 2 vegetables, fresh mix salad and fresh sprouts daily; dry fruits 3 days a week on Standard, daily on Premium) by decision of the project owner. See `BUGS.md` / `PLAN.md`.
    - Acceptance: `npm run lint` (0 warnings/errors) and `npm run
      typecheck` (0 errors) after every one of the 8 commits. NOT
      VERIFIED: live browser preview — the local dev server cannot render
@@ -847,3 +849,12 @@ its implementation and verification are complete.
 * [x] **TC-182:** Multi-stage Dockerfile builds with zero secret leakage and lean footprint (< 150MB).
 * [ ] **TC-183:** Live production domain loads over HTTPS with A+ SSL rating.
 * [ ] **TC-184:** Test transaction executes end-to-end on isolated staging infrastructure.
+
+---
+
+## QA fix & verification pass — 2026-11-18 (branch `fix/qa-bugs`)
+
+- Fixed every bug from the 2026-11-17 QA report except items that need client content or an owner decision; 13 further bugs found during testing were also fixed. Status of each: `BUGS.md`. Checklist: `PLAN.md`.
+- Verification: 103 unit tests, `tsc`, lint; live API checks against Postgres (incl. 5-way parallel duplicate-registration race); real-click browser journey (register -> subscribe -> pending -> admin confirm -> active -> pause -> audit log); headless-Chrome sweep of 81 page x viewport (375 / 768 / 1440) combinations with 0 overflow, 0 console errors, 0 axe WCAG 2.1 A/AA violations.
+- Not covered: screen-reader testing; production build smoke test beyond the existing unit smoke test.
+- Open (client / owner input): password reset flow, legal text, street address, delivery window / cutoff / sessions, pincode serviceability.

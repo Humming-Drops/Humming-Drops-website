@@ -152,7 +152,7 @@ export function AdminSignInPortal() {
                     Staff Email
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-500">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
                       <Mail className="w-4 h-4" />
                     </div>
                     <input
@@ -163,7 +163,7 @@ export function AdminSignInPortal() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                     />
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export function AdminSignInPortal() {
                     Password
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-500">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
                       <Lock className="w-4 h-4" />
                     </div>
                     <input
@@ -187,13 +187,13 @@ export function AdminSignInPortal() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Staff security credentials"
-                      className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-500 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                      className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? "Hide password" : "Show password"}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-500 hover:text-stone-300 transition"
+                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-300 transition"
                     >
                       {showPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -207,7 +207,7 @@ export function AdminSignInPortal() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2 mt-2"
+                  className="w-full h-11 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2 mt-2"
                 >
                   {loading ? (
                     <>
@@ -227,7 +227,7 @@ export function AdminSignInPortal() {
               {process.env.NODE_ENV === "development" && (
               <div className="mt-6 pt-5 border-t border-stone-800 text-center">
                 <div className="inline-flex items-center gap-1.5 text-[11px] text-stone-400">
-                  <Terminal className="w-3.5 h-3.5 text-stone-500" />
+                  <Terminal className="w-3.5 h-3.5 text-stone-400" />
                   <span>Default Admin: admin@hummingdrops.dev</span>
                 </div>
               </div>

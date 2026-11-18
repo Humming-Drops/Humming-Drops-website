@@ -81,7 +81,7 @@ export default function DashboardSettingsPage() {
   }
   if (!account) {
     return (
-      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading profile settings">
+      <div className="space-y-6 animate-pulse" role="status" aria-busy="true" aria-label="Loading profile settings">
         <div className="h-14 w-56 rounded-xl bg-muted/70" />
         <div className="h-44 rounded-2xl bg-muted/70 border border-line-subtle" />
         <div className="h-36 rounded-2xl bg-muted/70 border border-line-subtle" />

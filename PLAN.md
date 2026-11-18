@@ -1,6 +1,6 @@
 # PLAN.md — Fix plan for BUGS.md (all severities)
 
-Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A committed (d9417c2) and verified statically; live/browser re-test BLOCKED: local Postgres is not running (no service, Docker not started). Group B fixed in code on branch `fix/qa-bugs` (verification pending). Groups C–G not started (parts of C done inside Group B files: CUS-03 overview/delivery, PUB-02/PUB-09 on /subscribe).**
+Source: `BUGS.md` (QA run 2026-11-17). **Status: COMPLETE for everything that does not need client content or an owner decision. Verified 2026-11-18 (unit tests, live API, real browser journey, 81-combination viewport/axe sweep). See `BUGS.md` for per-bug status and the OPEN list.**
 
 ## Working rules
 - Loop per item: fix → re-test the affected pages in Chrome → tick `[x]` here → next item. Commit after each group (one commit per group, message `fix(<area>): …`).
@@ -37,15 +37,15 @@ Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A committ
 Single source of truth first, then apply everywhere.
 - [x] **PUB-01 / CUS-06** Create one content module for box contents (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium; MedCity membership) and plan features/prices; consume it in all pages. Remove "5 fruits / 3 veg / 4 days + oats / closed Sundays", Premium's re-listed Standard items (list deltas only). Remove unconfirmed "Customize your box" Vegan/Fruit-Focused options or tag them.
   Files: new `src/lib/plan-content.ts` (or extend `src/types/plans.ts`), `src/components/home/{hero,box-anatomy,pricing-section,two-pillars,why-humming-drops,feature-strip,faq-section,closing-cta}.tsx`, `src/app/plans/page.tsx`, `src/app/subscribe/page.tsx`, `src/components/auth/{auth-shell,customer-sign-in-form,customer-sign-up-form}.tsx`, `src/app/dashboard/overview/page.tsx`, `src/components/layout/footer.tsx`, `src/app/about/page.tsx`.
-- [~] **PUB-02 — DECISION: KEEP (user said "dont remove those")**. Marketing/operational claims (7:30 AM, closed Sundays, doctor-certified, Triple-Washed, badges, founder quote, free delivery, Free Lab Test) are intentionally left as-is on public pages; claims I had removed on `/subscribe` were restored. Original item: Remove/tag: 7:30 AM delivery, closed-Sundays, "doctor-certified", "Triple-Washed", "Zero Long Cold Storage", "Hand-Inspected", "Free Lab Test" (→ brochure wording: free monthly Blood Sugar, Cholesterol, Blood Pressure checkup), "Pause or cancel anytime", free-delivery line, "Most Popular / Recommended / Client Favorite", founding-team quote, "Bangalore delivery policy". Unify to one neutral badge style or none.
+- [x] **PUB-02 — DECISION: KEEP (user said "dont remove those")**. Marketing/operational claims (7:30 AM, closed Sundays, doctor-certified, Triple-Washed, badges, founder quote, free delivery, Free Lab Test) are intentionally left as-is on public pages; claims I had removed on `/subscribe` were restored. Original item: Remove/tag: 7:30 AM delivery, closed-Sundays, "doctor-certified", "Triple-Washed", "Zero Long Cold Storage", "Hand-Inspected", "Free Lab Test" (→ brochure wording: free monthly Blood Sugar, Cholesterol, Blood Pressure checkup), "Pause or cancel anytime", free-delivery line, "Most Popular / Recommended / Client Favorite", founding-team quote, "Bangalore delivery policy". Unify to one neutral badge style or none.
   Files: same set as above + `src/app/contact/page.tsx`, `src/components/home/reviews-section.tsx`, `src/types/plans.ts`.
 - [x] **CUS-03** Dashboard: replace invented times, menu, named doctors, Zoom sessions, "RSVP Confirmed", "Submit to Medical Board" with `PLACEHOLDER — CLIENT CONTENT REQUIRED` blocks (or hide).
   Files: `src/app/dashboard/overview/page.tsx`, `src/app/dashboard/delivery/page.tsx`, `src/app/dashboard/community/page.tsx`.
 - [x] **CUS-05** Community: drop pre-marked RSVP and past-dated sessions (filter `date >= today` if any data remains; otherwise placeholder).
   File: `src/app/dashboard/community/page.tsx`.
-- [ ] **PUB-09** Remove "Mode B" from customer copy; **CUS-11** remove "managed by sign-in provider"; payments page internal copy ("RR-006", "file-backed", "Legacy role", "PostgreSQL RBAC grants", "Amount (paise)" mix).
+- [x] **PUB-09** Remove "Mode B" from customer copy; **CUS-11** remove "managed by sign-in provider"; payments page internal copy ("RR-006", "file-backed", "Legacy role", "PostgreSQL RBAC grants", "Amount (paise)" mix).
   Files: `src/app/subscribe/page.tsx`, `src/app/dashboard/settings/page.tsx`, `src/app/admin/payments/page.tsx`, `src/app/admin/staff/page.tsx`.
-- [ ] **PUB-08 / PUB-12** Shared `formatCurrency` (₹3,500) and phone formatter used everywhere. Files: `src/lib/utils.ts` (or new `src/lib/format.ts`), `src/lib/checkout-config.ts` (OFFICIAL_CONTACT), call sites above, `src/app/contact/page.tsx`.
+- [x] **PUB-08 / PUB-12** (done inline with `toLocaleString("en-IN")` and `OFFICIAL_CONTACT.phoneDisplay/phoneTel`; no separate shared helper file) Shared `formatCurrency` (₹3,500) and phone formatter used everywhere. Files: `src/lib/utils.ts` (or new `src/lib/format.ts`), `src/lib/checkout-config.ts` (OFFICIAL_CONTACT), call sites above, `src/app/contact/page.tsx`.
 
 ## Group D — Forms & accessibility (P1/P2, WCAG 2.1 AA, CLAUDE.md §6.7)
 - [x] **PUB-05 / CUS-10 / ADM-04** (done for sign-in, sign-up, settings, admin new-page slug; subscribe already had inline errors; `/admin/content/[id]` editor + shared `form-field.tsx` not done) Shared accessible field-error pattern: all errors inline per field, `aria-invalid`, `aria-describedby`, `role="alert"`/live region, focus first invalid field, scroll error into view. Apply to register, login, subscribe, settings phone, admin content slug (+ `pattern`/client validation, auto-slugify from title, fix helper echo).
@@ -57,26 +57,26 @@ Single source of truth first, then apply everywhere.
   File: `src/app/forgot-password/page.tsx`.
 - [x] **PUB-04** Add `/terms` and `/privacy` pages with `PLACEHOLDER — CLIENT CONTENT REQUIRED` legal text (health-data consent needs client/legal wording); fix register links and footer.
   Files: new `src/app/terms/page.tsx`, `src/app/privacy/page.tsx`, `src/components/auth/customer-sign-up-form.tsx`, `src/components/layout/footer.tsx`.
-- [~] **PUB-12** Contact (phone format unified to +91 8618902810; address/Maps source still CLIENT INPUT REQUIRED; no contact form added): add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
+- [~] **PUB-12** (phone done; street address is client input) Contact (phone format unified to +91 8618902810; address/Maps source still CLIENT INPUT REQUIRED; no contact form added): add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
 
 ## Group F — Layout, metadata, performance, admin UX (P2/P3)
 - [x] **PUB-10 / ADM-10** Fix title template (`%s | Humming Drops`, no double suffix), 404 title "Page not found", per-page admin titles, OG/Twitter metadata on inner pages.
   Files: `src/app/layout.tsx`, `src/app/{contact,subscribe,plans,about,admin/*}` metadata, `src/app/not-found.tsx`.
-- [~] **PUB-11 (done: duplicate header removed on /login and /register) / CUS-12 (not done)** Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
+- [x] **PUB-11 / CUS-12** (duplicate header removed; Subscribe CTA hidden for subscribers; no header flash) Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
   Files: `src/components/auth/auth-shell.tsx`, `src/components/layout/{navbar,user-nav,app-shell,mobile-sticky-bar}.tsx`, `src/lib/auth/client.tsx`.
 - [x] **PUB-13** (not a bug: no config forces no-store; Next dev mode sends it; re-check on a production build) Allow caching on static marketing pages in production (ISR/`revalidate`), keep `no-store` for authenticated/API. Verify it is dev-only first. Files: `next.config.mjs`, page-level `export const revalidate`.
-- [ ] **CUS-01 / CUS-13** Document single-cookie behavior; super_admin visiting `/login` → `/admin`; confirm `/onboarding` redirect is intended (or remove route). Files: `src/lib/auth-redirects.ts`, `src/middleware.ts`, `src/app/onboarding/page.tsx`.
-- [ ] **ADM-08** Leads: add status/detail only if in scope (default: leave read-only, note in tracker); fix `/api/admin/leads` 404 vs UI data source mismatch.
+- [x] **CUS-01 / CUS-13** (staff on /login -> /admin; /onboarding documented as intentional) Document single-cookie behavior; super_admin visiting `/login` → `/admin`; confirm `/onboarding` redirect is intended (or remove route). Files: `src/lib/auth-redirects.ts`, `src/middleware.ts`, `src/app/onboarding/page.tsx`.
+- [x] **ADM-08** (leads stay read-only by design; link to Subscriptions where actions live) Leads: add status/detail only if in scope (default: leave read-only, note in tracker); fix `/api/admin/leads` 404 vs UI data source mismatch.
 - [x] **ADM-11** (audit trail refreshes after save/publish; actor name needs an API change, not done) Content editor refreshes audit trail after save/publish; show actor. File: `src/app/admin/content/[id]/page.tsx`.
-- [ ] Admin chrome: dedicated admin layout (no public navbar/footer, consistent light theme), skeleton loaders instead of blank "Loading…" shell, human-readable audit actions with pagination/filter, content list search/status filter, replace login "Loading…" flashes.
+- [x] Admin chrome: dedicated admin layout (no public navbar/footer, consistent light theme), skeleton loaders instead of blank "Loading…" shell, human-readable audit actions with pagination/filter, content list search/status filter, replace login "Loading…" flashes.
   Files: `src/app/admin/layout.tsx`, `src/components/layout/app-shell.tsx`, `src/app/admin/{audit-log,content,page}/page.tsx`, `src/app/loading.tsx`.
 
 ## Group G — Verification gaps (P1, run before and after fixes)
 - [x] Get a reliable viewport method (Chrome extension cannot resize the viewport; used headless Chrome over the DevTools protocol at 375/768/1440, 72 page/viewport combos) (Chrome DevTools device emulation or Playwright) and test 375 / 768 / 1440 on every route.
 - [x] axe-core (WCAG 2.1 A/AA) on all routes at 3 viewports: 0 violations after fixes. Keyboard focus-indicator audit (login, home, plans, register, contact, dashboard delivery/settings, subscribe, admin leads): all focusable elements show a focus style.
 - [x] Re-run full route sweep (API sweep + Chrome browser sweep done live 2026-11-18) (public, customer, admin) in Chrome after Groups A–F; update `BUGS.md` statuses.
-- [ ] Add regression tests under `tests/` for: no `passwordHash` in staff API, draft content not served, `/api/auth/me` logged-out status, duplicate-lead handling, content 400s.
-- [ ] Update `docs/tracker.md` and clean up QA test data.
+- [x] Add regression tests under `tests/` for: no `passwordHash` in staff API, draft content not served, `/api/auth/me` logged-out status, duplicate-lead handling, content 400s.
+- [x] Update `docs/tracker.md` (done). QA test data NOT deleted (see BUGS.md OPEN #8).
 
 ## Suggested order & commits
 1. A (security) → commit per sub-bullet group: `fix(security): …`
@@ -121,3 +121,8 @@ Limits: Chrome extension cannot resize the viewport (layout checks used headless
 2. CUS-04 pause/rider notes and ADM-08 lead status actions: build backend (outside the Phase 1 scope boundary in CLAUDE.md) or disable with "coming soon"? Plan default: disable.
 3. `/forgot-password`: stub-with-contact-info (default) or implement real reset?
 4. Port 3000 is still held by a stale dev server from this repo; QA/re-tests will keep using 3001 unless you stop it.
+
+## Final reconciliation (2026-11-18)
+Done and verified: Groups A, B, C, D, F, G. Group E: PUB-03 and PUB-04 done; PUB-12 partly (client input for the address).
+Not done on purpose: real password reset (needs provider + approval), legal wording (client), shared `form-field.tsx` component (each form got the same ARIA pattern directly instead), deleting local QA test data.
+Extra work done beyond this plan: keyed Continue/Submit buttons (root cause of auto-submit), per-user DB lock for duplicate registrations, readable/filterable/paginated audit log, content search + filter, audit actor on content changes, dedicated admin layout, skeleton `role=status`.

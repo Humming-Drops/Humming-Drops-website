@@ -60,7 +60,7 @@ export default function DashboardDeliveryPage() {
     );
   }
   if (!account) {
-    return <div className="h-48 rounded-2xl bg-muted/60 animate-pulse" aria-busy="true" aria-label="Loading delivery settings" />;
+    return <div className="h-48 rounded-2xl bg-muted/60 animate-pulse" role="status" aria-busy="true" aria-label="Loading delivery settings" />;
   }
 
   const isActive = account.state === "active";

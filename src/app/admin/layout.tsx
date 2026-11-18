@@ -2,6 +2,7 @@ import Link from "next/link";
 import { isStaffUser } from "@/lib/auth/server";
 import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
+import { AdminSignOutButton } from "@/components/admin/admin-sign-out-button";
 
 const ADMIN_NAV_ITEMS: PortalNavItem[] = [
   { label: "Overview", href: "/admin" },
@@ -42,12 +43,21 @@ export default async function AdminLayout({
               Humming Drops Admin
             </h1>
           </div>
-          <Link
-            href="/dashboard/overview"
-            className="text-xs font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-          >
-            Customer dashboard
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="text-xs font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            >
+              View website
+            </Link>
+            <Link
+              href="/dashboard/overview"
+              className="text-xs font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            >
+              Customer dashboard
+            </Link>
+            <AdminSignOutButton />
+          </div>
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:py-8 md:flex-row md:gap-8 md:px-8">

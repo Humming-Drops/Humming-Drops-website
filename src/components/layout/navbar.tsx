@@ -50,7 +50,7 @@ function isInteractiveOrEditableElement(target: EventTarget | null): boolean {
 
 export function Navbar() {
   const { theme } = useBrandTheme();
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded, user: authUser } = useAuth();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -63,6 +63,11 @@ export function Navbar() {
 
   // Active brand nav config
   const navConfig = theme === "medcity" ? MEDCITY_SMILES_NAV : HUMMING_DROPS_NAV;
+
+  // Signed-in users who already have a pending/active subscription do not need a "Subscribe" CTA.
+  const hideSubscribeCta = Boolean(
+    isSignedIn && authUser?.hasOpenSubscription && /subscribe/i.test(navConfig.primaryCTA.label)
+  );
 
   // Smart scroll behavior, navigation lock & active section tracking
   useEffect(() => {
@@ -341,7 +346,9 @@ export function Navbar() {
 
           {/* Right Actions & Hamburger Toggle */}
           <div className="flex items-center gap-2 shrink-0">
-            {!isSignedIn ? (
+            {!isLoaded ? (
+              <span aria-hidden="true" className="hidden lg:inline-block h-8 w-16" />
+            ) : !isSignedIn ? (
               <Link
                 href="/login"
                 className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
@@ -366,17 +373,19 @@ export function Navbar() {
             )}
 
             {/* Primary CTA (visible from md breakpoint upwards) */}
-            <Button
+            {!hideSubscribeCta && (
+              <Button
               variant="primary"
               size="sm"
               asChild
-              className={cn("hidden md:inline-flex shadow-sm gap-1.5 whitespace-nowrap", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
+              className={cn("hidden md:inline-flex shadow-sm gap-1.5 whitespace-nowrap", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white", !isLoaded && "invisible")}
             >
               <Link href={navConfig.primaryCTA.href}>
                 <span>{navConfig.primaryCTA.label}</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
-            </Button>
+              </Button>
+            )}
 
             {/* Responsive Hamburger Toggle (visible below lg screens) */}
             <div className="flex lg:hidden items-center gap-2">
@@ -458,6 +467,7 @@ export function Navbar() {
 
               {/* Mobile CTAs */}
               <div className="pt-2 border-t border-line-subtle space-y-3">
+                {!hideSubscribeCta && (
                 <Button
                   variant="primary"
                   size="lg"
@@ -472,6 +482,7 @@ export function Navbar() {
                     <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                   </Link>
                 </Button>
+                )}
 
               {!isSignedIn ? (
                 <Button

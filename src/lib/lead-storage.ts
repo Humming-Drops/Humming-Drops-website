@@ -20,7 +20,7 @@ import {
   dietaryPreferences,
   subscriptionAuditLogs,
 } from "@/lib/db/schema";
-import { and, eq, desc, inArray } from "drizzle-orm";
+import { and, eq, desc, inArray, sql } from "drizzle-orm";
 
 /**
  * Thrown when a user who already holds an open registration/subscription
@@ -335,6 +335,8 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
       }
 
       // 1b. Duplicate guard (CUS-09): one open registration per account.
+      // Serialize concurrent submissions for the same user so two requests cannot both pass the check.
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${user.id}))`);
       const [openSub] = await tx
         .select({ ref: userSubscriptions.leadReferenceCode })
         .from(userSubscriptions)

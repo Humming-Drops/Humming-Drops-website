@@ -1,54 +1,90 @@
-# BUGS.md — Humming Drops & MedCity Smiles QA (2026-11-17)
+# BUGS.md — Humming Drops & MedCity Smiles QA
 
-Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a stale dev server), local Postgres `hummingdrops_dev`, `CHECKOUT_MODE=assisted_lead`. Auth is native session auth (Clerk was removed). Fix progress is tracked in the **Fix status** table below and in `PLAN.md`.
+Original QA run: 2026-11-17. Fix + verification pass: 2026-11-18 on branch `fix/qa-bugs`.
+Fix plan and checklist: `PLAN.md`. Original bug descriptions are kept at the bottom of this file.
 
-**Coverage limits (read first)**
-- **Responsive 768 / 375 px was NOT verified.** `resize_window` did not change the viewport (stayed 1536 wide) and iframes are blocked by `X-Frame-Options`. Needs a manual or device-emulation pass.
-- No axe-core run; keyboard focus and contrast were checked by eye only.
-- "Screenshot ref" = viewport + page + state description. The Chrome extension did not save image files, so no image paths exist.
-- The shared browser cookie jar was overwritten between agents (single session cookie per browser); agents worked around it via `127.0.0.1` / `qa-cust.localhost`.
-- Test data left in DB: customer `qa.customer@example.com`, lead `HD-REG-2026-71182`, draft CMS page `qa-test-banner` (id 90ff5b35-78f8-4139-8f80-7c5d4a47864a), admin `admin@hummingdrops.dev`.
+**How things were verified (2026-11-18):** unit tests (103 pass), `tsc`, lint; live API checks with `curl` against the real Postgres database (including a 5-way parallel race test); real clicks and typing through the Claude Chrome extension; and a headless-Chrome sweep of 81 page x viewport combinations (public, customer and admin pages at true 375 / 768 / 1440 px widths) checking horizontal overflow, console errors and axe-core WCAG 2.1 A/AA violations — final result 81/81 clean. The Chrome extension cannot resize the browser viewport, so layouts were checked with headless Chrome driven over the DevTools protocol.
 
-## Summary
-| Severity | Count |
-|---|---|
-| Critical | 2 (ADM-01, CUS-02) |
-| High | 6 (PUB-01, PUB-02, CUS-03, CUS-04, CUS-05, ADM-02) |
-| Medium | 12 (PUB-03, PUB-04, PUB-06, CUS-07–10, ADM-03–07) |
-| Low / Info | 16 (PUB-05, 07–13, CUS-01, 11–14, ADM-08–11) |
+**Legend:** VERIFIED = fixed and confirmed live (API and/or browser). CODE = fixed and covered by unit tests / review but not separately exercised live. DECISION = intentionally not changed. OPEN = not fixed.
 
-## Fix status (updated as work proceeds)
-| ID | Status | Notes |
-|---|---|---|
-| ADM-01 | FIXED, live-verified | Explicit safe columns in `src/lib/staff-admin.ts`; regression test added. Live API check pending (DB down). |
-| ADM-02 | FIXED, live-verified | Draft filter moved into SQL (`getPublishedPageBySlug`). Could not reproduce the RSC payload leak without DB; re-check live. |
-| ADM-03 | FIXED, live-verified | Root loader moved to `components/layout/page-loading.tsx` and applied only to `admin/` and `dashboard/`; unknown/draft `/content/<slug>` now returns HTTP 404. |
-| ADM-05 / 06 / 09 | FIXED, live-verified | UUID/`templateId` validation -> 400; unified `{success:false,error}` envelope via `src/lib/api-response.ts`; bad subscription id -> 400 JSON. |
-| Verifier follow-ups | Fixed in code | Verifier agent #2 passed Group A and flagged same-class gaps: UUID checks on role-revoke, customer-health and staff POST `roleId`; non-string `email`/`title` no longer 500; role-revoke returns 404 JSON; unified envelope applied to all `/api/admin/*` routes. `/api/customer/*` envelope left as is. |
-| ADM-07 | Not reproducible by code review | Middleware redirects customers and `AdminLayout` renders sign-in portal (never children) for non-staff. Confirm live. |
-| CUS-14 | Resolved by decision | `authenticated:false` with 200 is the documented session-probe contract; commented in code. |
-| Dev admin hint | Fixed | Shown only when `NODE_ENV === "development"`; placeholder made generic. |
-| CUS-02 | Fixed in code | `useSubscriberAccount` hook derives none / pending / active / paused / ended from the real status; overview shows the right card per state and only shows delivery/box content when `confirmed_active`. |
-| CUS-03 / CUS-05 | Fixed in code | Overview, delivery and community: invented times, cutoff, menu names, named doctors, Zoom sessions, pre-set RSVP, past-dated sessions and the fake "Ask a doctor" form removed; PLACEHOLDER notes + real WhatsApp links instead. |
-| PUB-03 | Fixed in code | `/forgot-password` now shows email / WhatsApp / phone contact (no disabled input). Real reset flow still needs your decision. |
-| PUB-04 | Fixed in code | New `/terms` and `/privacy` pages with PLACEHOLDER legal text; register + footer link to them. Legal wording is CLIENT CONTENT REQUIRED. |
-| CUS-04 | Fixed in code | Pause / vacation / rider notes now await the real `PATCH /api/customer/me`, show server errors, are disabled unless active; empty note rejected. |
-| CUS-07 / 08 / PUB-06 | Fixed in code | Enter key can no longer submit before Review; no default plan; phone prefilled from profile; account email read-only; submit error is `role=alert` and scrolled into view. |
-| CUS-09 | FIXED, live-verified (409, incl. while active) | `DuplicateLeadError` in the Postgres repo -> API returns 409 with existing reference. No DB unique index yet (small race window). |
-| PUB-07 | Fixed in code | Any valid 6-digit pincode accepted; "Bangalore" removed from review/confirmation copy (serviceability confirmed by team). Server still stores city "Bangalore". |
-| PUB-08 (subscribe) / PUB-09 / PUB-02 (subscribe) | Fixed in code | Rs 3,500 formatting, "Mode B" wording, "Client Favorite", free-delivery row, "closed Sundays", "Bangalore delivery policy" removed from `/subscribe`. |
-| PUB-01 / CUS-06 | Fixed in code | Plan data (`src/types/plans.ts`, `lead-storage` canonical plans) and all pages now use brochure contents; oats / 4-day / 5 fruits / 3 veg removed from home, plans, subscribe, footer, metadata. Premium card on `/plans` lists only extras. Test updated. |
-| PUB-02 | Left as-is by decision | User chose to keep unconfirmed marketing/operational claims. Items previously removed on `/subscribe` were restored. |
-| PUB-10 / ADM-10 | Fixed in code | Removed duplicate "| Humming Drops" suffixes (contact, subscribe, CMS pages); 404 title "Page not found"; every admin page has its own title; root OpenGraph/Twitter baseline for inner pages. Visual title check pending (needs running app). |
-| PUB-05 / CUS-10 / ADM-04 / CUS-11 | Fixed in code (axe/keyboard run pending) | Sign-up validates all fields at once with an error summary linking to each field, `aria-invalid` + `aria-describedby`, focus on first invalid; sign-in error linked to both inputs; settings error is `role=alert` and linked to name/phone, email field now labelled, "managed by sign-in provider" removed; admin new-page slug validated client-side, auto-slugified from title, errors inline + alert scrolled into view. |
-| PUB-12 | Partly fixed | Contact phone shown and dialled as +91 8618902810 everywhere on `/contact`. Address / Maps source is still unknown (CLIENT INPUT REQUIRED); no contact form. |
-| PUB-13 | Not a bug | Config does not force `no-store`; Next dev mode does. Confirm on a production build. |
-| ADM-11 | Fixed in code | Audit trail re-fetched after save / publish / unpublish; action errors are `role=alert`. Showing the acting user needs an API change. |
-| Browser pass 2026-11-18 | Fixed + verified | New bugs found by real browser use and fixed: (1) /subscribe submitted on the click that opened Review (root cause of CUS-07) -> keyed buttons + guard; (2) colour-contrast failures on 5 pages -> darker primary/WhatsApp/teal/emerald/grey tokens; (3) admin tables not keyboard reachable -> `tabIndex=0` regions; (4) /subscribe field errors lacked ARIA; (5) payments/staff dev jargon removed, amounts shown in rupees; (6) non-subscriber saw "next delivery day"; (7) footer phone link; (8) duplicate header on /login, /register (PUB-11). Result: 72/72 page x viewport combos clean (no overflow, no axe A/AA violations, no console errors). |
-| PUB-11 / PUB-13 / CUS-12 | PUB-11 fixed; PUB-13 not a bug; CUS-12 open | "Subscribe Now" still shows for signed-in users and the logged-out header can flash on load. |
-| All others | Not started | Groups D-G in `PLAN.md` (D = form a11y, F = metadata/layout, G = viewport/axe/live tests). |
+## Status of every bug from the original QA report
 
-## Bugs
+| ID | Sev | Status | What was done / how it was checked |
+|---|---|---|---|
+| ADM-01 | Critical | VERIFIED | Staff API selects explicit safe columns; live: no `passwordHash` / `clerkUserId`. Regression test. |
+| CUS-02 | Critical | VERIFIED | Dashboard derives none / pending / active / paused / ended from the real status. Browser: none, pending and active each correct; no fake "Active", timeline or times. Unit test for the mapping. |
+| PUB-01 | High | VERIFIED | Brochure box contents everywhere (home, plans, subscribe, register, dashboard, seed data); oats / 4-day / 5-fruit content removed. Premium card lists only extras. |
+| PUB-02 | High | DECISION | You said keep the unconfirmed marketing claims (7:30 AM, closed Sundays, doctor-certified, Triple-Washed, badges, founder quote, free delivery). Left as-is; four I had removed on `/subscribe` were restored. |
+| CUS-03 | High | VERIFIED | Invented times, menu, doctors, Zoom sessions, RSVP and "Submit to Medical Board" removed; PLACEHOLDER notes instead (overview, delivery, community). |
+| CUS-04 | High | VERIFIED | Pause / vacation / rider notes call the real API, show errors, are disabled unless active; persisted across reload in the browser. Quick-pause no longer overwrites a vacation range. |
+| CUS-05 | High | VERIFIED | Past-dated sessions, pre-set RSVP and fake question form removed. |
+| ADM-02 | High | VERIFIED | Draft filter is in the SQL query; anonymous page shows no draft title / template / id. |
+| PUB-03 | Med | CODE | `/forgot-password` shows email / WhatsApp / phone instead of a disabled field. A real reset flow needs your decision (see Open). |
+| PUB-04 | Med | VERIFIED | `/terms` and `/privacy` exist with PLACEHOLDER legal text; register + footer link to them. Real legal wording is client content. |
+| PUB-06 | Med | VERIFIED | Account email is read-only on `/subscribe`, server rejects a mismatch (400), submit error is an alert scrolled into view. |
+| CUS-07 | Med | VERIFIED | Root cause found in the browser: the Continue button turned into the submit button during the click and submitted the form. Fixed with keyed buttons + guard; Review step now shows without submitting. |
+| CUS-08 | Med | VERIFIED | No default plan; Continue without a plan shows an error; saved phone prefilled (leading-0 numbers accepted). |
+| CUS-09 | Med | VERIFIED | Duplicate registration -> 409 with existing reference (also while active). Race closed with a per-user database lock: 5 simultaneous submits -> exactly 1 created. Re-registering after cancel works. |
+| CUS-10 | Med | VERIFIED | Settings error is `role=alert`, linked to name / phone with `aria-invalid` / `aria-describedby`. |
+| ADM-03 | Med | VERIFIED | Unknown and draft `/content/<slug>` return HTTP 404 (loader moved off the root so `notFound()` sets the status). |
+| ADM-04 | Med | VERIFIED | Admin slug: auto-slugify, client validation, focus + linked inline error, alert scrolled into view. |
+| ADM-05 | Med | VERIFIED | Bad content id -> 400 JSON (was 500). |
+| ADM-06 | Med | VERIFIED | Bad `templateId` -> 400 (was 500). |
+| ADM-07 | Med | VERIFIED | Customer opening `/admin` or `/admin/staff` is redirected server-side; admin shell never rendered. APIs 403. |
+| PUB-05 | Low | VERIFIED | Sign-up shows all errors at once with a linked summary; sign-in error linked to both inputs; focus moves to first invalid field. |
+| PUB-07 | Low | CODE | Any valid 6-digit pincode accepted; "Bangalore" removed from review/confirmation copy. Server still stores city "Bangalore". |
+| PUB-08 | Low | VERIFIED | Prices shown as Rs 3,500 / 4,000 everywhere. |
+| PUB-09 | Low | VERIFIED | "Mode B" wording removed. |
+| PUB-10 | Low | VERIFIED | Single title suffix, 404 title, per-page admin titles, OpenGraph baseline. |
+| PUB-11 | Low | VERIFIED | Duplicate header bar removed from `/login` and `/register`. |
+| PUB-12 | Low | PARTLY | Contact phone is +91 8618902810 everywhere and the footer `tel:` link matches. Street address / Maps source is still unknown (client input); no contact form. |
+| PUB-13 | Low | NOT A BUG | Config does not force `no-store`; Next dev mode does. Re-check on a production build. |
+| CUS-01 | Low | VERIFIED | Staff visiting `/login` or `/register` while signed in are sent to `/admin`; customers to the dashboard. |
+| CUS-06 | Low | VERIFIED | Unconfirmed diet styles are labelled as preferences needing team confirmation. |
+| CUS-11 | Low | VERIFIED | "managed by sign-in provider" removed; email field labelled. |
+| CUS-12 | Low | VERIFIED | "Subscribe Now" hidden for signed-in users with a pending / active / paused subscription, shown otherwise; no logged-out header flash while the session loads. |
+| CUS-13 | Low | DECISION | `/onboarding` is only for accounts with no profile; documented in code. |
+| CUS-14 | Low | DECISION | `/api/auth/me` returns 200 with `authenticated:false` on purpose (session probe). |
+| ADM-08 | Low | CODE | Leads page stays read-only by design and now links to Subscriptions where confirm / pause / cancel exist. |
+| ADM-09 | Low | VERIFIED | All `/api/admin/*` routes use `{success:false,error}`; bad subscription id -> 400, unknown -> 404. |
+| ADM-10 | Low | VERIFIED | Per-page admin titles. |
+| ADM-11 | Low | VERIFIED | Audit trail refreshes after save / publish without reload and now shows who made each change. |
+
+## Bugs found during the 2026-11-18 testing (not in the original report) — all fixed
+
+| # | Bug | Found by | Fix | Verified |
+|---|---|---|---|---|
+| N1 | `/subscribe` submitted the form on the click that opened the Review step | Real mouse clicks in Chrome | Distinct React keys for Continue / Submit + guard | Browser |
+| N2 | Colour-contrast failures (home, plans, contact, MedCity, subscribe stepper, admin login) | axe in Chrome | Darker primary token, WhatsApp green, teal / emerald chips, muted grey-green text, stepper labels, admin login button | Sweep |
+| N3 | Admin tables scrollable but not keyboard-focusable | axe | `tabIndex=0` focusable regions with labels | Sweep |
+| N4 | `/subscribe` field errors had no `aria-invalid` / `aria-describedby` | Browser DOM inspection | ARIA wiring on all fields | Browser |
+| N5 | Developer jargon on admin pages (RR-006, "file-backed", "Legacy role", "RBAC grants"); payments shown in paise | Browser | Rewritten; amounts in rupees | Browser |
+| N6 | Non-subscribers saw a "Next delivery day" card with a date | Browser | Card hidden unless active | Browser |
+| N7 | Footer phone link lacked +91 | DOM check | `tel:+91...` | DOM |
+| N8 | Sign-up rejected leading-0 phone numbers the server accepts | Verifier review | Reuse server phone validation | Browser |
+| N9 | Loading skeletons used `aria-label` on a plain div (axe: aria-prohibited-attr) | Final sweep | `role="status"` on all 6 skeletons | Sweep |
+| N10 | Admin console showed the public navbar and footer | Browser | Dedicated admin layout with View website / Customer dashboard / Sign out | Browser |
+| N11 | Audit log: raw action codes, no filter, no paging, customer health reads drowned everything | Browser | Readable names, resource links, kind filter, pagination | Browser + API |
+| N12 | Content list had no search or status filter | Browser | Search + status filter (garbage params handled) | Browser + API |
+| N13 | Duplicate-registration check could race (two parallel submits both passed) | Reasoning, then test | Advisory lock per user inside the transaction | 5-way parallel test |
+
+## OPEN — not fixed (needs a decision or client content)
+
+1. **Real password reset** (PUB-03): needs an email / SMS provider and your go-ahead. Until then the page shows contact details.
+2. **Real legal text** for `/terms` and `/privacy` (PUB-04): client / legal wording required, especially for health data.
+3. **Contact street address / Maps location** (PUB-12): not in the brochure.
+4. **Delivery window, pause cutoff, community sessions, serviceability by pincode**: shown as `PLACEHOLDER — CLIENT CONTENT REQUIRED`.
+5. **Unconfirmed marketing claims** kept by your decision (PUB-02). Note CLAUDE.md says to tag unconfirmed claims; you chose to keep them.
+6. **Database seed text** in `lead-storage.ts` (the plan rows) was rewritten to brochure wording and dropped "Doctor-approved" and two invented feature lines — say if you want them back.
+7. **No screen-reader testing** was done; keyboard focus indicators were checked on login, home, plans, register, contact, dashboard delivery / settings, subscribe and admin leads.
+8. **Test data** left in the local dev database (accounts `ui.*`, `live.test.*`, `e2e.*`, `journey.tester.*`, `nosub.*`, leads and a draft CMS page) plus the earlier QA data. Safe to delete; not deleted because audit records reference them.
+9. **Stale docs**: `docs/tracker.md` still describes the old oats plan in an older entry (superseded note added).
+
+---
+
+# Original QA report (2026-11-17), for reference
+
+## Original bug descriptions
 
 ### Critical
 **ADM-01 — Password hashes exposed by staff API** · `GET /api/admin/staff` (admin session)

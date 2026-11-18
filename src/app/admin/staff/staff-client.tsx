@@ -101,7 +101,7 @@ export function StaffClient() {
   }
   if (!staff) {
     return (
-      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading staff roles">
+      <div className="space-y-6 animate-pulse" role="status" aria-busy="true" aria-label="Loading staff roles">
         <div className="space-y-2">
           <div className="h-4 w-36 rounded bg-muted/70" />
           <div className="h-8 w-44 rounded-xl bg-muted/70" />

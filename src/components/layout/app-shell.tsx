@@ -10,6 +10,8 @@ import { SmoothScrollManager } from "@/components/layout/smooth-scroll-manager";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
+  // The operations console has its own header; public navbar/footer would only add noise.
+  const isAdmin = Boolean(pathname?.startsWith("/admin"));
   const hideMobileStickyBar = Boolean(
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/dashboard") ||
@@ -33,7 +35,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <SmoothScrollManager />
 
       {/* Global Brand-Aware Responsive Navbar */}
-      <Navbar />
+      {!isAdmin && <Navbar />}
 
       {/* Primary Main Landmark */}
       <main
@@ -45,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Shared Footer on Public Routes */}
-      {!isDashboard && <Footer />}
+      {!isDashboard && !isAdmin && <Footer />}
 
       {/* Mobile-Only Sticky Bottom CTA Bar */}
       {!hideMobileStickyBar && <MobileStickyBar />}

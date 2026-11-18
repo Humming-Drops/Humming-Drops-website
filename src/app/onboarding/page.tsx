@@ -12,6 +12,8 @@ export default async function OnboardingPage() {
     redirect("/login");
   }
 
+  // Intentional: sign-up creates the profile, so /onboarding is only for accounts that have none
+  // (e.g. created outside the sign-up form). Everyone else goes straight to the dashboard.
   if (current.profile) {
     redirect("/dashboard/overview");
   }

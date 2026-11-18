@@ -10,6 +10,7 @@ export interface AuthUser {
   phone?: string | null;
   role: string;
   isActive: boolean;
+  hasOpenSubscription?: boolean;
 }
 
 interface AuthContextType {

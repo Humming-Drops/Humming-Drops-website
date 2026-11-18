@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { db, isDatabaseConfigured } from "@/lib/db";
-import { contentAuditLogs, contentPages, contentTemplates, administrativeAuditLogs } from "@/lib/db/schema";
+import { contentAuditLogs, contentPages, contentTemplates, administrativeAuditLogs, users } from "@/lib/db/schema";
 import {
   isContentTemplateSchema,
   isValidContentSlug,
@@ -127,8 +127,14 @@ export async function listAuditLogsForPage(pageId: string) {
     return [];
   }
   return db
-    .select()
+    .select({
+      id: contentAuditLogs.id,
+      action: contentAuditLogs.action,
+      createdAt: contentAuditLogs.createdAt,
+      actorEmail: users.email,
+    })
     .from(contentAuditLogs)
+    .leftJoin(users, eq(users.id, contentAuditLogs.actorUserId))
     .where(eq(contentAuditLogs.pageId, pageId))
     .orderBy(desc(contentAuditLogs.createdAt));
 }

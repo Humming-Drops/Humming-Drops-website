@@ -176,7 +176,7 @@ export default function DashboardOverviewPage() {
 
   if (!account) {
     return (
-      <div className="space-y-8 animate-pulse" aria-busy="true" aria-label="Loading subscriber account">
+      <div className="space-y-8 animate-pulse" role="status" aria-busy="true" aria-label="Loading subscriber account">
         <div className="space-y-3 pb-6 border-b border-line-subtle">
           <div className="h-5 w-44 rounded-full bg-muted" />
           <div className="h-8 w-64 rounded-xl bg-muted" />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
 
@@ -10,6 +11,13 @@ export default async function AdminLeadsPage() {
       <div>
         <p className="text-sm text-content-secondary">Customer registrations</p>
         <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Lead management</h2>
+        <p className="mt-1 text-sm text-content-secondary">
+          This list is read-only. To confirm, pause or cancel a registration, open{" "}
+          <Link href="/admin/subscriptions" className="font-semibold text-brand-primary hover:underline">
+            Subscriptions
+          </Link>
+          .
+        </p>
       </div>
       <div tabIndex={0} role="region" aria-label="Leads table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
         <table className="min-w-full text-left text-sm">

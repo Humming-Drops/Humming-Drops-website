@@ -34,7 +34,7 @@ export default function DashboardHealthPage() {
         <p>Health data is loaded from your authenticated account and is never sourced from browser storage.</p>
       </div>
       {state === "loading" && (
-        <div className="space-y-3 animate-pulse" aria-busy="true" aria-label="Loading health records">
+        <div className="space-y-3 animate-pulse" role="status" aria-busy="true" aria-label="Loading health records">
           <div className="h-24 rounded-2xl bg-muted/70 border border-line-subtle" />
         </div>
       )}

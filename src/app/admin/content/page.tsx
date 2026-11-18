@@ -4,7 +4,11 @@ import { hasPermission } from "@/lib/auth/server";
 import { listContentPages } from "@/lib/content-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
 
-export default async function AdminContentPage() {
+export default async function AdminContentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}) {
   const canWrite = await hasPermission("content:write");
 
   if (!canWrite) {
@@ -15,7 +19,15 @@ export default async function AdminContentPage() {
     );
   }
 
-  const rows = await listContentPages();
+  const params = await searchParams;
+  const q = (params.q ?? "").trim().toLowerCase().slice(0, 80);
+  const status = ["draft", "published", "archived"].includes(params.status ?? "") ? (params.status as string) : "";
+  const allRows = await listContentPages();
+  const rows = allRows.filter(
+    ({ page }) =>
+      (!status || page.status === status) &&
+      (!q || page.title.toLowerCase().includes(q) || page.slug.toLowerCase().includes(q))
+  );
 
   return (
     <div className="space-y-6">
@@ -31,6 +43,43 @@ export default async function AdminContentPage() {
           New page
         </Link>
       </div>
+
+      <form method="get" className="flex flex-wrap items-end gap-3">
+        <div className="space-y-1">
+          <label htmlFor="content-search" className="block text-xs font-semibold text-content-secondary">
+            Search title or slug
+          </label>
+          <input
+            id="content-search"
+            name="q"
+            type="search"
+            defaultValue={params.q ?? ""}
+            className="w-56 rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+          />
+        </div>
+        <div className="space-y-1">
+          <label htmlFor="content-status" className="block text-xs font-semibold text-content-secondary">
+            Status
+          </label>
+          <select
+            id="content-status"
+            name="status"
+            defaultValue={status}
+            className="rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+          >
+            <option value="">All</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-1"
+        >
+          Filter
+        </button>
+      </form>
 
       <div tabIndex={0} role="region" aria-label="Content pages table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
         <table className="min-w-full text-left text-sm">
@@ -70,8 +119,8 @@ export default async function AdminContentPage() {
         </table>
         {rows.length === 0 && (
           <EmptyTableState
-            title="No content pages yet"
-            description="Create your first page from a template to get started."
+            title={allRows.length === 0 ? "No content pages yet" : "No pages match your filter"}
+            description={allRows.length === 0 ? "Create your first page from a template to get started." : "Try a different search or status."}
           />
         )}
       </div>
