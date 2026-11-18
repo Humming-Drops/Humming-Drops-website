@@ -31,7 +31,7 @@ export default function ContactPage() {
         <div className="space-y-3 w-full">
           {/* Phone Row */}
           <a
-            href={`tel:${OFFICIAL_CONTACT.phone}`}
+            href={`tel:${OFFICIAL_CONTACT.phoneTel}`}
             className="w-full min-h-[56px] p-4 rounded-2xl bg-white border border-[#E3EFE5] shadow-card flex items-center justify-between gap-3.5 hover:border-emerald-300 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
             <div className="flex items-center gap-3 min-w-0">
@@ -40,7 +40,7 @@ export default function ContactPage() {
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Phone Support</span>
-                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">{OFFICIAL_CONTACT.phone}</span>
+                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">{OFFICIAL_CONTACT.phoneDisplay}</span>
               </div>
             </div>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full shrink-0">
@@ -61,7 +61,7 @@ export default function ContactPage() {
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">WhatsApp Support</span>
-                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">+91 8618902810</span>
+                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">{OFFICIAL_CONTACT.phoneDisplay}</span>
               </div>
             </div>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full shrink-0 flex items-center gap-1">

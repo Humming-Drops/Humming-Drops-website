@@ -56,6 +56,17 @@ export default function EditContentPage() {
       .catch((err) => setLoadError(err.message));
   }, [params.id]);
 
+  const refreshAuditLogs = async () => {
+    try {
+      const res = await fetch(`/api/admin/content/${params.id}`);
+      if (!res.ok) return;
+      const json = await res.json();
+      setAuditLogs(json.auditLogs ?? []);
+    } catch {
+      // The audit trail is informational; a failed refresh must not break the save.
+    }
+  };
+
   const saveDraft = async () => {
     setActionError(null);
     setFieldErrors({});
@@ -77,6 +88,7 @@ export default function EditContentPage() {
         return;
       }
       setPage(json.page);
+      void refreshAuditLogs();
     } catch {
       setActionError("Network error saving the draft.");
     } finally {
@@ -97,6 +109,7 @@ export default function EditContentPage() {
         return;
       }
       setPage(json.page);
+      void refreshAuditLogs();
     } catch {
       setActionError(`Network error trying to ${action} the page.`);
     } finally {
@@ -130,7 +143,7 @@ export default function EditContentPage() {
         </span>
       </div>
 
-      {actionError && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{actionError}</div>}
+      {actionError && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{actionError}</div>}
 
       <div className="flex gap-3 border-b border-line-subtle pb-2 text-xs font-semibold" role="tablist" aria-label="Page editor view">
         <button

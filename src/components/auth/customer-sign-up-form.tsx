@@ -18,6 +18,7 @@ import {
 import { isSafeRedirectUrl } from "@/lib/auth-redirects";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/client";
+import { isValidIndianPhone, normalizePhone } from "@/lib/sanitization";
 
 export function CustomerSignUpForm() {
   const router = useRouter();
@@ -39,18 +40,28 @@ export function CustomerSignUpForm() {
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const invalid = (field: string) => (fieldErrors[field] ? true : undefined);
+  const describedBy = (field: string) => (fieldErrors[field] ? `${field}-error` : undefined);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!agreeTerms) {
-      setError("Please accept the terms and morning delivery guidelines to proceed.");
-      return;
-    }
+    const found: Record<string, string> = {};
+    if (!firstName.trim()) found.firstName = "Enter your first name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) found.email = "Enter a valid email address.";
+    if (phone.trim() && !isValidIndianPhone(normalizePhone(phone))) found.phone = "Enter a valid 10-digit Indian mobile number, or leave it blank.";
+    if (password.length < 8) found.password = "Password must be at least 8 characters long.";
+    if (!agreeTerms) found.terms = "Please accept the terms to continue.";
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+    setFieldErrors(found);
+    const firstInvalid = Object.keys(found)[0];
+    if (firstInvalid) {
+      setError(null);
+      const targetId = firstInvalid === "terms" ? "agreeTerms" : firstInvalid;
+      requestAnimationFrame(() => document.getElementById(targetId)?.focus());
       return;
     }
 
@@ -113,8 +124,26 @@ export function CustomerSignUpForm() {
         </div>
       )}
 
+      {Object.keys(fieldErrors).length > 0 && (
+        <div
+          role="alert"
+          className="mb-6 rounded-2xl border border-red-200 bg-red-50/80 p-4 text-sm text-red-800"
+        >
+          <p className="font-bold">Please fix the following:</p>
+          <ul className="mt-2 list-disc pl-5 space-y-1">
+            {Object.entries(fieldErrors).map(([field, message]) => (
+              <li key={field} id={`${field}-error`}>
+                <a href={`#${field === "terms" ? "agreeTerms" : field}`} className="underline font-semibold">
+                  {message}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Main Form */}
-      <form onSubmit={handleSignUp} className="space-y-4">
+      <form onSubmit={handleSignUp} noValidate className="space-y-4">
         {/* Name Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -130,6 +159,8 @@ export function CustomerSignUpForm() {
               </div>
               <input
                 id="firstName"
+                aria-invalid={invalid("firstName")}
+                aria-describedby={describedBy("firstName")}
                 type="text"
                 required
                 autoComplete="given-name"
@@ -151,7 +182,6 @@ export function CustomerSignUpForm() {
             <input
               id="lastName"
               type="text"
-              required
               autoComplete="family-name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -175,6 +205,8 @@ export function CustomerSignUpForm() {
             </div>
             <input
               id="email"
+              aria-invalid={invalid("email")}
+              aria-describedby={describedBy("email")}
               type="email"
               required
               autoComplete="email"
@@ -200,6 +232,8 @@ export function CustomerSignUpForm() {
             </div>
             <input
               id="phone"
+              aria-invalid={invalid("phone")}
+              aria-describedby={describedBy("phone")}
               type="tel"
               autoComplete="tel"
               value={phone}
@@ -224,6 +258,8 @@ export function CustomerSignUpForm() {
             </div>
             <input
               id="password"
+              aria-invalid={invalid("password")}
+              aria-describedby={describedBy("password")}
               type={showPassword ? "text" : "password"}
               required
               autoComplete="new-password"
@@ -254,8 +290,10 @@ export function CustomerSignUpForm() {
         <div className="pt-2">
           <label className="flex items-start gap-2.5 cursor-pointer select-none">
             <input
+              id="agreeTerms"
               type="checkbox"
-              required
+              aria-invalid={invalid("terms")}
+              aria-describedby={describedBy("terms")}
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
               className="mt-1 h-4 w-4 rounded border-stone-300 text-forest-700 focus:ring-forest-600 transition"

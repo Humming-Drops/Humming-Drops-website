@@ -74,6 +74,7 @@ export function CustomerSignInForm() {
       {/* Error alert */}
       {error && (
         <div
+          id="auth-error"
           role="alert"
           className="mb-6 rounded-2xl border border-red-200 bg-red-50/80 p-4 flex items-start gap-3 text-sm text-red-800 animate-in fade-in"
         >
@@ -99,6 +100,8 @@ export function CustomerSignInForm() {
               id="email"
               type="email"
               required
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? "auth-error" : undefined}
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -131,6 +134,8 @@ export function CustomerSignInForm() {
               id="password"
               type={showPassword ? "text" : "password"}
               required
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? "auth-error" : undefined}
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

@@ -48,7 +48,7 @@ Single source of truth first, then apply everywhere.
 - [ ] **PUB-08 / PUB-12** Shared `formatCurrency` (₹3,500) and phone formatter used everywhere. Files: `src/lib/utils.ts` (or new `src/lib/format.ts`), `src/lib/checkout-config.ts` (OFFICIAL_CONTACT), call sites above, `src/app/contact/page.tsx`.
 
 ## Group D — Forms & accessibility (P1/P2, WCAG 2.1 AA, CLAUDE.md §6.7)
-- [ ] **PUB-05 / CUS-10 / ADM-04** Shared accessible field-error pattern: all errors inline per field, `aria-invalid`, `aria-describedby`, `role="alert"`/live region, focus first invalid field, scroll error into view. Apply to register, login, subscribe, settings phone, admin content slug (+ `pattern`/client validation, auto-slugify from title, fix helper echo).
+- [x] **PUB-05 / CUS-10 / ADM-04** (done for sign-in, sign-up, settings, admin new-page slug; subscribe already had inline errors; `/admin/content/[id]` editor + shared `form-field.tsx` not done) Shared accessible field-error pattern: all errors inline per field, `aria-invalid`, `aria-describedby`, `role="alert"`/live region, focus first invalid field, scroll error into view. Apply to register, login, subscribe, settings phone, admin content slug (+ `pattern`/client validation, auto-slugify from title, fix helper echo).
   Files: new `src/components/ui/form-field.tsx`; `src/components/auth/{customer-sign-in-form,customer-sign-up-form,admin-sign-in-portal}.tsx`, `src/app/subscribe/page.tsx`, `src/app/dashboard/settings/page.tsx`, `src/app/admin/content/new/page.tsx`, `src/app/admin/content/[id]/page.tsx`, `src/components/content/content-field-editor.tsx`, `src/app/api/auth/register/route.ts` (return all field errors, not one at a time).
 - [ ] Visible focus rings and contrast audit (4.5:1) fixes found in Group G. Files: `src/styles`/global CSS, `tailwind.config.ts`, `src/components/ui/*`.
 
@@ -57,17 +57,17 @@ Single source of truth first, then apply everywhere.
   File: `src/app/forgot-password/page.tsx`.
 - [x] **PUB-04** Add `/terms` and `/privacy` pages with `PLACEHOLDER — CLIENT CONTENT REQUIRED` legal text (health-data consent needs client/legal wording); fix register links and footer.
   Files: new `src/app/terms/page.tsx`, `src/app/privacy/page.tsx`, `src/components/auth/customer-sign-up-form.tsx`, `src/components/layout/footer.tsx`.
-- [ ] **PUB-12** Contact: add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
+- [~] **PUB-12** Contact (phone format unified to +91 8618902810; address/Maps source still CLIENT INPUT REQUIRED; no contact form added): add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
 
 ## Group F — Layout, metadata, performance, admin UX (P2/P3)
 - [x] **PUB-10 / ADM-10** Fix title template (`%s | Humming Drops`, no double suffix), 404 title "Page not found", per-page admin titles, OG/Twitter metadata on inner pages.
   Files: `src/app/layout.tsx`, `src/app/{contact,subscribe,plans,about,admin/*}` metadata, `src/app/not-found.tsx`.
 - [ ] **PUB-11 / CUS-12** Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
   Files: `src/components/auth/auth-shell.tsx`, `src/components/layout/{navbar,user-nav,app-shell,mobile-sticky-bar}.tsx`, `src/lib/auth/client.tsx`.
-- [ ] **PUB-13** Allow caching on static marketing pages in production (ISR/`revalidate`), keep `no-store` for authenticated/API. Verify it is dev-only first. Files: `next.config.mjs`, page-level `export const revalidate`.
+- [x] **PUB-13** (not a bug: no config forces no-store; Next dev mode sends it; re-check on a production build) Allow caching on static marketing pages in production (ISR/`revalidate`), keep `no-store` for authenticated/API. Verify it is dev-only first. Files: `next.config.mjs`, page-level `export const revalidate`.
 - [ ] **CUS-01 / CUS-13** Document single-cookie behavior; super_admin visiting `/login` → `/admin`; confirm `/onboarding` redirect is intended (or remove route). Files: `src/lib/auth-redirects.ts`, `src/middleware.ts`, `src/app/onboarding/page.tsx`.
 - [ ] **ADM-08** Leads: add status/detail only if in scope (default: leave read-only, note in tracker); fix `/api/admin/leads` 404 vs UI data source mismatch.
-- [ ] **ADM-11** Content editor refreshes audit trail after save/publish; show actor. File: `src/app/admin/content/[id]/page.tsx`.
+- [x] **ADM-11** (audit trail refreshes after save/publish; actor name needs an API change, not done) Content editor refreshes audit trail after save/publish; show actor. File: `src/app/admin/content/[id]/page.tsx`.
 - [ ] Admin chrome: dedicated admin layout (no public navbar/footer, consistent light theme), skeleton loaders instead of blank "Loading…" shell, human-readable audit actions with pagination/filter, content list search/status filter, replace login "Loading…" flashes.
   Files: `src/app/admin/layout.tsx`, `src/components/layout/app-shell.tsx`, `src/app/admin/{audit-log,content,page}/page.tsx`, `src/app/loading.tsx`.
 

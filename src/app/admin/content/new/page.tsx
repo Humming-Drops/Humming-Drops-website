@@ -1,9 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ContentFieldEditor } from "@/components/content/content-field-editor";
-import type { ContentTemplateSchema } from "@/lib/content-validation";
+import { isValidContentSlug, type ContentTemplateSchema } from "@/lib/content-validation";
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)
+    .replace(/-+$/g, "");
+}
 
 interface TemplateOption {
   id: string;
@@ -24,6 +34,12 @@ export default function NewContentPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [slugTouched, setSlugTouched] = useState(false);
+  const formErrorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (formError) formErrorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [formError]);
 
   useEffect(() => {
     fetch("/api/admin/content/templates")
@@ -43,6 +59,19 @@ export default function NewContentPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+
+    const local: Record<string, string> = {};
+    if (!title.trim()) local.title = "Enter a title.";
+    if (!isValidContentSlug(slug)) {
+      local.slug = "Use 3-80 characters: lowercase letters, numbers and single hyphens (e.g. monsoon-update).";
+    }
+    if (Object.keys(local).length > 0) {
+      setFieldErrors(local);
+      const first = local.slug ? "content-slug" : "content-title";
+      requestAnimationFrame(() => document.getElementById(first)?.focus());
+      return;
+    }
+
     setFieldErrors({});
     setIsSubmitting(true);
 
@@ -95,7 +124,11 @@ export default function NewContentPage() {
         <h2 className="font-display text-3xl font-extrabold text-content-primary">New page</h2>
       </div>
 
-      {formError && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{formError}</div>}
+      {formError && (
+        <div ref={formErrorRef} role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+          {formError}
+        </div>
+      )}
 
       <div className="space-y-1.5">
         <label htmlFor="content-template" className="text-xs font-semibold text-content-secondary">
@@ -127,14 +160,24 @@ export default function NewContentPage() {
           id="content-slug"
           type="text"
           value={slug}
-          onChange={(e) => setSlug(e.target.value.toLowerCase())}
+          onChange={(e) => {
+            setSlugTouched(true);
+            setSlug(e.target.value.toLowerCase());
+          }}
+          aria-invalid={fieldErrors.slug ? true : undefined}
+          aria-describedby={fieldErrors.slug ? "content-slug-help content-slug-error" : "content-slug-help"}
           placeholder="e.g. monsoon-delivery-update"
           className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
         />
-        <p className="text-[11px] text-content-secondary">
-          Lowercase letters, numbers, and hyphens only. Published at /content/{slug || "<slug>"}
+        <p id="content-slug-help" className="text-[11px] text-content-secondary">
+          Lowercase letters, numbers, and hyphens only.
+          {isValidContentSlug(slug) ? ` Published at /content/${slug}` : ""}
         </p>
-        {fieldErrors.slug && <p className="text-[11px] text-red-600">{fieldErrors.slug}</p>}
+        {fieldErrors.slug && (
+          <p id="content-slug-error" role="alert" className="text-[11px] text-red-700">
+            {fieldErrors.slug}
+          </p>
+        )}
       </div>
 
       <div className="space-y-1.5">
@@ -145,10 +188,19 @@ export default function NewContentPage() {
           id="content-title"
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (!slugTouched) setSlug(slugify(e.target.value));
+          }}
+          aria-invalid={fieldErrors.title ? true : undefined}
+          aria-describedby={fieldErrors.title ? "content-title-error" : undefined}
           className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
         />
-        {fieldErrors.title && <p className="text-[11px] text-red-600">{fieldErrors.title}</p>}
+        {fieldErrors.title && (
+          <p id="content-title-error" role="alert" className="text-[11px] text-red-700">
+            {fieldErrors.title}
+          </p>
+        )}
       </div>
 
       {selectedTemplate && (

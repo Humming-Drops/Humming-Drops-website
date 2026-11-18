@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   description:
     "Morning doorstep delivery in Bangalore: a fresh box of fruits, vegetables, salad and sprouts every day. In partnership with Berrybeats Cafe & MedCity Health Labs.",
   openGraph: {
+    siteName: "Humming Drops",
+    type: "website",
+    locale: "en_IN",
     title: "Humming Drops | Healthy Drops, Healthier you",
     description:
       "Morning doorstep delivery in Bangalore: a fresh box of fruits, vegetables, salad and sprouts every day. In partnership with Berrybeats Cafe & MedCity Health Labs.",

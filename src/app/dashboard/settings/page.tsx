@@ -131,6 +131,8 @@ export default function DashboardSettingsPage() {
                 type="text"
                 required
                 minLength={2}
+                aria-invalid={saveError ? true : undefined}
+                aria-describedby={saveError ? "profile-error" : undefined}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-3 py-2.5 text-sm rounded-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
@@ -148,6 +150,8 @@ export default function DashboardSettingsPage() {
                   id="phone"
                   type="tel"
                   required
+                  aria-invalid={saveError ? true : undefined}
+                  aria-describedby={saveError ? "profile-error" : undefined}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full px-3 py-2.5 text-sm rounded-r-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
@@ -155,8 +159,9 @@ export default function DashboardSettingsPage() {
               </div>
             </div>
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-content-secondary">Email (managed by sign-in provider)</label>
+              <label htmlFor="accountEmail" className="block text-xs font-bold text-content-secondary">Email (cannot be changed here)</label>
               <input
+                id="accountEmail"
                 type="email"
                 disabled
                 value={account.user.email}
@@ -164,7 +169,11 @@ export default function DashboardSettingsPage() {
               />
             </div>
 
-            {saveError ? <p className="text-xs text-red-600">{saveError}</p> : null}
+            {saveError ? (
+              <p id="profile-error" role="alert" className="text-xs text-red-700">
+                {saveError}
+              </p>
+            ) : null}
 
             <div className="flex items-center gap-3 pt-1">
               <Button type="submit" variant="primary" size="sm" isLoading={isSaving} className="rounded-full">

@@ -40,6 +40,10 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 | PUB-01 / CUS-06 | Fixed in code | Plan data (`src/types/plans.ts`, `lead-storage` canonical plans) and all pages now use brochure contents; oats / 4-day / 5 fruits / 3 veg removed from home, plans, subscribe, footer, metadata. Premium card on `/plans` lists only extras. Test updated. |
 | PUB-02 | Left as-is by decision | User chose to keep unconfirmed marketing/operational claims. Items previously removed on `/subscribe` were restored. |
 | PUB-10 / ADM-10 | Fixed in code | Removed duplicate "| Humming Drops" suffixes (contact, subscribe, CMS pages); 404 title "Page not found"; every admin page has its own title; root OpenGraph/Twitter baseline for inner pages. Visual title check pending (needs running app). |
+| PUB-05 / CUS-10 / ADM-04 / CUS-11 | Fixed in code (axe/keyboard run pending) | Sign-up validates all fields at once with an error summary linking to each field, `aria-invalid` + `aria-describedby`, focus on first invalid; sign-in error linked to both inputs; settings error is `role=alert` and linked to name/phone, email field now labelled, "managed by sign-in provider" removed; admin new-page slug validated client-side, auto-slugified from title, errors inline + alert scrolled into view. |
+| PUB-12 | Partly fixed | Contact phone shown and dialled as +91 8618902810 everywhere on `/contact`. Address / Maps source is still unknown (CLIENT INPUT REQUIRED); no contact form. |
+| PUB-13 | Not a bug | Config does not force `no-store`; Next dev mode does. Confirm on a production build. |
+| ADM-11 | Fixed in code | Audit trail re-fetched after save / publish / unpublish; action errors are `role=alert`. Showing the acting user needs an API change. |
 | All others | Not started | Groups D-G in `PLAN.md` (D = form a11y, F = metadata/layout, G = viewport/axe/live tests). |
 
 ## Bugs
