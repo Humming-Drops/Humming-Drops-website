@@ -1,7 +1,7 @@
 # BUGS.md — Humming Drops & MedCity Smiles QA
 
 Original QA run: 2026-11-17. Fix + verification pass: 2026-11-18 on branch `fix/qa-bugs`.
-Fix plan and checklist: `PLAN.md`. Original bug descriptions are kept at the bottom of this file.
+**Session handover: `docs/handover/CHECKPOINT-2026-11-18.md` (read first).** Fix plan and checklist: `PLAN.md`. Re-runnable checks: `scripts/qa/`. Original bug descriptions are kept at the bottom of this file.
 
 **How things were verified (2026-11-18):** unit tests (103 pass), `tsc`, lint; live API checks with `curl` against the real Postgres database (including a 5-way parallel race test); real clicks and typing through the Claude Chrome extension; and a headless-Chrome sweep of 81 page x viewport combinations (public, customer and admin pages at true 375 / 768 / 1440 px widths) checking horizontal overflow, console errors and axe-core WCAG 2.1 A/AA violations — final result 81/81 clean. The Chrome extension cannot resize the browser viewport, so layouts were checked with headless Chrome driven over the DevTools protocol.
 

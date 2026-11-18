@@ -1,5 +1,7 @@
 # PLAN.md — Fix plan for BUGS.md (all severities)
 
+> **Session handover: `docs/handover/CHECKPOINT-2026-11-18.md` (read first).** Per-bug status: `BUGS.md`. Re-runnable checks: `scripts/qa/`.
+
 Source: `BUGS.md` (QA run 2026-11-17). **Status: COMPLETE for everything that does not need client content or an owner decision. Verified 2026-11-18 (unit tests, live API, real browser journey, 81-combination viewport/axe sweep). See `BUGS.md` for per-bug status and the OPEN list.**
 
 ## Working rules
