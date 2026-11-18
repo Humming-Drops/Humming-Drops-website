@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { leadRepository } from "@/lib/lead-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
 
@@ -47,3 +48,7 @@ export default async function AdminLeadsPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Leads",
+};

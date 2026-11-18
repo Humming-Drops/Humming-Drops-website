@@ -21,26 +21,26 @@ describe("Pricing Invariants & Canonical Plan Truths", () => {
     expect(premiumPrice - standardPrice).toBe(500);
   });
 
-  it("verifies Standard plan box inclusions and frequencies", () => {
+  it("verifies Standard plan box inclusions and frequencies (brochure)", () => {
     const standard = OFFICIAL_PLANS.standard;
-    expect(standard.boxInclusions).toHaveLength(7);
+    expect(standard.boxInclusions).toHaveLength(5);
 
-    const fruits = standard.boxInclusions.find((i) => i.title.includes("Fruits") && !i.title.includes("Dry"));
-    const vegetables = standard.boxInclusions.find((i) => i.title.includes("Vegetables"));
-    const sprouts = standard.boxInclusions.find((i) => i.title.includes("Sprouts"));
-    const dryFruits = standard.boxInclusions.find((i) => i.title.includes("Dry Fruits"));
-    const oats = standard.boxInclusions.find((i) => i.title.includes("Oats Meal"));
-
-    expect(fruits).toBeDefined();
-    expect(vegetables).toBeDefined();
-    expect(sprouts).toBeDefined();
-    expect(dryFruits).toBeDefined();
-    expect(oats).toBeDefined();
+    const find = (text: string) => standard.boxInclusions.find((i) => i.title.includes(text));
+    expect(find("4 Varieties of Fruits")?.frequency).toBe("Every Day");
+    expect(find("2 Varieties of Vegetables")?.frequency).toBe("Every Day");
+    expect(find("Fresh Mix Salad")?.frequency).toBe("Every Day");
+    expect(find("Fresh Sprouts")?.frequency).toBe("Every Day");
+    expect(find("Dry Fruits")?.frequency).toBe("3 Days a Week");
+    expect(standard.boxInclusions.some((i) => /oats/i.test(i.title))).toBe(false);
   });
 
   it("verifies Premium plan upgraded inclusions and exclusive perks", () => {
     const premium = OFFICIAL_PLANS.premium;
-    expect(premium.boxInclusions).toHaveLength(7);
+    expect(premium.boxInclusions).toHaveLength(5);
+
+    const dryFruits = premium.boxInclusions.find((i) => i.title.includes("Dry Fruits"));
+    expect(dryFruits?.frequency).toBe("Every Day");
+    expect(dryFruits?.isPremiumOnly).toBe(true);
 
     expect(premium.premiumPerks).toBeDefined();
     expect(premium.premiumPerks?.length).toBeGreaterThan(0);

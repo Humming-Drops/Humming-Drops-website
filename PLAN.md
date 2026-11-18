@@ -35,9 +35,9 @@ Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A committ
 
 ## Group C — Content truth: brochure vs. invented claims (P1)
 Single source of truth first, then apply everywhere.
-- [ ] **PUB-01 / CUS-06** Create one content module for box contents (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium; MedCity membership) and plan features/prices; consume it in all pages. Remove "5 fruits / 3 veg / 4 days + oats / closed Sundays", Premium's re-listed Standard items (list deltas only). Remove unconfirmed "Customize your box" Vegan/Fruit-Focused options or tag them.
+- [x] **PUB-01 / CUS-06** Create one content module for box contents (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium; MedCity membership) and plan features/prices; consume it in all pages. Remove "5 fruits / 3 veg / 4 days + oats / closed Sundays", Premium's re-listed Standard items (list deltas only). Remove unconfirmed "Customize your box" Vegan/Fruit-Focused options or tag them.
   Files: new `src/lib/plan-content.ts` (or extend `src/types/plans.ts`), `src/components/home/{hero,box-anatomy,pricing-section,two-pillars,why-humming-drops,feature-strip,faq-section,closing-cta}.tsx`, `src/app/plans/page.tsx`, `src/app/subscribe/page.tsx`, `src/components/auth/{auth-shell,customer-sign-in-form,customer-sign-up-form}.tsx`, `src/app/dashboard/overview/page.tsx`, `src/components/layout/footer.tsx`, `src/app/about/page.tsx`.
-- [ ] **PUB-02** Remove/tag: 7:30 AM delivery, closed-Sundays, "doctor-certified", "Triple-Washed", "Zero Long Cold Storage", "Hand-Inspected", "Free Lab Test" (→ brochure wording: free monthly Blood Sugar, Cholesterol, Blood Pressure checkup), "Pause or cancel anytime", free-delivery line, "Most Popular / Recommended / Client Favorite", founding-team quote, "Bangalore delivery policy". Unify to one neutral badge style or none.
+- [~] **PUB-02 — DECISION: KEEP (user said "dont remove those")**. Marketing/operational claims (7:30 AM, closed Sundays, doctor-certified, Triple-Washed, badges, founder quote, free delivery, Free Lab Test) are intentionally left as-is on public pages; claims I had removed on `/subscribe` were restored. Original item: Remove/tag: 7:30 AM delivery, closed-Sundays, "doctor-certified", "Triple-Washed", "Zero Long Cold Storage", "Hand-Inspected", "Free Lab Test" (→ brochure wording: free monthly Blood Sugar, Cholesterol, Blood Pressure checkup), "Pause or cancel anytime", free-delivery line, "Most Popular / Recommended / Client Favorite", founding-team quote, "Bangalore delivery policy". Unify to one neutral badge style or none.
   Files: same set as above + `src/app/contact/page.tsx`, `src/components/home/reviews-section.tsx`, `src/types/plans.ts`.
 - [x] **CUS-03** Dashboard: replace invented times, menu, named doctors, Zoom sessions, "RSVP Confirmed", "Submit to Medical Board" with `PLACEHOLDER — CLIENT CONTENT REQUIRED` blocks (or hide).
   Files: `src/app/dashboard/overview/page.tsx`, `src/app/dashboard/delivery/page.tsx`, `src/app/dashboard/community/page.tsx`.
@@ -60,7 +60,7 @@ Single source of truth first, then apply everywhere.
 - [ ] **PUB-12** Contact: add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
 
 ## Group F — Layout, metadata, performance, admin UX (P2/P3)
-- [ ] **PUB-10 / ADM-10** Fix title template (`%s | Humming Drops`, no double suffix), 404 title "Page not found", per-page admin titles, OG/Twitter metadata on inner pages.
+- [x] **PUB-10 / ADM-10** Fix title template (`%s | Humming Drops`, no double suffix), 404 title "Page not found", per-page admin titles, OG/Twitter metadata on inner pages.
   Files: `src/app/layout.tsx`, `src/app/{contact,subscribe,plans,about,admin/*}` metadata, `src/app/not-found.tsx`.
 - [ ] **PUB-11 / CUS-12** Remove stacked duplicate header/logo + "Back to Home" in auth shell; hide "Subscribe Now" for logged-in users with a pending/active subscription; remove logged-out header flash (server-provided session state or skeleton).
   Files: `src/components/auth/auth-shell.tsx`, `src/components/layout/{navbar,user-nav,app-shell,mobile-sticky-bar}.tsx`, `src/lib/auth/client.tsx`.
@@ -85,6 +85,10 @@ Single source of truth first, then apply everywhere.
 4. D (forms/a11y) → `fix(a11y): …`
 5. E, F → `fix(pages): …`, `chore(meta): …`
 6. G verification → `test: …`, tracker update
+
+## Decisions recorded
+- Box contents: **brochure is authoritative** (4 fruits, 2 veg, salad, sprouts daily; dry fruits 3 days/wk Standard, daily Premium). The 2026-11-04 "4-day box + 2-day oats" content was removed everywhere.
+- Unconfirmed marketing/operational claims: **keep, do not remove** (user decision).
 
 ## Open questions for you
 1. Unconfirmed operational facts: tag as placeholders (plan default) or remove entirely?

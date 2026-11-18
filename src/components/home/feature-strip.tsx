@@ -20,8 +20,8 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: "4-Day Box + 2-Day Oats",
-    subtitle: "Fruits, veg, sprouts, nuts & oats",
+    title: "A Fresh Box, Every Day",
+    subtitle: "Fruits, veg, salad, sprouts & dry fruits",
     bgClass: "bg-mint",
     iconColor: "text-primary",
   },

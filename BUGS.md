@@ -37,7 +37,10 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 | CUS-09 | Fixed in code, live check pending | `DuplicateLeadError` in the Postgres repo -> API returns 409 with existing reference. No DB unique index yet (small race window). |
 | PUB-07 | Fixed in code | Any valid 6-digit pincode accepted; "Bangalore" removed from review/confirmation copy (serviceability confirmed by team). Server still stores city "Bangalore". |
 | PUB-08 (subscribe) / PUB-09 / PUB-02 (subscribe) | Fixed in code | Rs 3,500 formatting, "Mode B" wording, "Client Favorite", free-delivery row, "closed Sundays", "Bangalore delivery policy" removed from `/subscribe`. |
-| All others | Not started | Groups C-G in `PLAN.md`. |
+| PUB-01 / CUS-06 | Fixed in code | Plan data (`src/types/plans.ts`, `lead-storage` canonical plans) and all pages now use brochure contents; oats / 4-day / 5 fruits / 3 veg removed from home, plans, subscribe, footer, metadata. Premium card on `/plans` lists only extras. Test updated. |
+| PUB-02 | Left as-is by decision | User chose to keep unconfirmed marketing/operational claims. Items previously removed on `/subscribe` were restored. |
+| PUB-10 / ADM-10 | Fixed in code | Removed duplicate "| Humming Drops" suffixes (contact, subscribe, CMS pages); 404 title "Page not found"; every admin page has its own title; root OpenGraph/Twitter baseline for inner pages. Visual title check pending (needs running app). |
+| All others | Not started | Groups D-G in `PLAN.md` (D = form a11y, F = metadata/layout, G = viewport/axe/live tests). |
 
 ## Bugs
 

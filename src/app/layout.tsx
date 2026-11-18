@@ -40,6 +40,15 @@ export const metadata: Metadata = {
     "Berrybeats Cafe",
   ],
   authors: [{ name: "Humming Drops" }],
+  openGraph: {
+    siteName: "Humming Drops",
+    type: "website",
+    locale: "en_IN",
+    images: ["/images/humming-drops-box.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
 
@@ -67,3 +68,7 @@ export default async function AdminOverviewPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Overview",
+};

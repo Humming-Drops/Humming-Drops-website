@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 
 export const metadata: Metadata = {
-  title: "Contact Us & Bangalore Kitchen | Humming Drops",
+  title: "Contact Us & Bangalore Kitchen",
   description: "Get in touch with Humming Drops and MedCity Smiles in Bangalore. Doorstep breakfast delivery support.",
 };
 

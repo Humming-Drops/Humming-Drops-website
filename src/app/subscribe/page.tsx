@@ -358,7 +358,7 @@ function SubscribeFormContent() {
               <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
               <div>
                 <strong className="font-semibold block mb-0.5">Registration Status: Not Yet Active</strong>
-                Your subscription starts only after our team confirms it with you. No payment was charged today.
+                Per our Bangalore delivery policy, subscriptions start only after our coordinator confirms your morning delivery route and time slot. No payment was charged today.
               </div>
             </div>
 
@@ -428,8 +428,8 @@ function SubscribeFormContent() {
             Begin Your Morning Habit
           </h1>
           <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            Fresh fruits, vegetables, salad and sprouts in your daily breakfast box, prepared at Berrybeats cafe,
-            Bangalore. Delivery details are confirmed by our team after you register.
+            Fresh fruits, vegetables, salad and sprouts in your daily breakfast box, delivered every morning
+            from Berrybeats cafe, Bangalore (closed Sundays).
           </p>
         </div>
 
@@ -550,6 +550,12 @@ function SubscribeFormContent() {
                         : "border-stone-200 hover:border-stone-300 bg-white"
                     }`}
                   >
+                    <div className="absolute -top-3 right-4">
+                      <span className="bg-forest-900 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
+                        Client Favorite
+                      </span>
+                    </div>
+
                     <div className="space-y-2">
                       <div className="flex justify-between items-center gap-2">
                         <h3 className="font-bold text-base text-forest-900">
@@ -985,6 +991,10 @@ function SubscribeFormContent() {
                     <div className="flex justify-between">
                       <span>Monthly Subscription Fee:</span>
                       <span className="font-bold text-stone-800">{inr(activePlan.monthlyPriceINR)}</span>
+                    </div>
+                    <div className="flex justify-between text-forest-800">
+                      <span>Morning Delivery Fee:</span>
+                      <span className="font-bold">FREE (Complimentary)</span>
                     </div>
                     <div className="flex justify-between text-teal-800">
                       <span>MedCity Smiles Membership &amp; Monthly Health Checkup:</span>

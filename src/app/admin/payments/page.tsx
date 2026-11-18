@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { hasPermission } from "@/lib/auth/server";
 import { paymentRepository } from "@/lib/payment-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
@@ -110,3 +111,7 @@ export default async function AdminPaymentsPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Payments",
+};

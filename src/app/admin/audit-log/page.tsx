@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { hasPermission } from "@/lib/auth/server";
 import { listAdministrativeAuditLogs } from "@/lib/audit-log";
 import { EmptyTableState } from "@/components/admin/status-badge";
@@ -57,3 +58,7 @@ export default async function AdminAuditLogPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Audit Log",
+};

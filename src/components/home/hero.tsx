@@ -43,8 +43,8 @@ const floatingBadgeVariants: Variants = {
 const HERO_BENEFITS = [
   {
     id: "fruits-veggies",
-    title: "5 Cut Fruits",
-    subtitle: "& 3 Veggies",
+    title: "4 Cut Fruits",
+    subtitle: "& 2 Veggies",
     cardBorder: "border-[#E3EFE5] hover:border-emerald-200",
     iconBg: "bg-rose-50 border-rose-200",
     iconColor: "text-rose-600",
@@ -52,8 +52,8 @@ const HERO_BENEFITS = [
   },
   {
     id: "sprouts-dry-fruits",
-    title: "Sprouts & Dry Fruits",
-    subtitle: "4 Days a Week",
+    title: "Salad & Sprouts",
+    subtitle: "Every Day",
     cardBorder: "border-[#E3EFE5] hover:border-amber-200",
     iconBg: "bg-amber-50 border-amber-200",
     iconColor: "text-emerald-700",

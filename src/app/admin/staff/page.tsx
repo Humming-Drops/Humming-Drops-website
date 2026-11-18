@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { hasPermission } from "@/lib/auth/server";
 import { StaffClient } from "./staff-client";
 
@@ -13,3 +14,7 @@ export default async function AdminStaffPage() {
 
   return <StaffClient />;
 }
+
+export const metadata: Metadata = {
+  title: "Admin Staff",
+};

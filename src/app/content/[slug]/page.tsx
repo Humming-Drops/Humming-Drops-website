@@ -12,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const row = await getPublishedPageBySlug(slug);
-  return { title: row ? `${row.page.title} — Humming Drops` : "Page not found" };
+  return { title: row ? row.page.title : "Page not found" };
 }
 
 export default async function PublicContentPage({

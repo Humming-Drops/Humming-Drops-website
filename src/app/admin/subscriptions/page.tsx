@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { hasPermission } from "@/lib/auth/server";
 import { SubscriptionsClient } from "./subscriptions-client";
 
@@ -13,3 +14,7 @@ export default async function AdminSubscriptionsPage() {
 
   return <SubscriptionsClient />;
 }
+
+export const metadata: Metadata = {
+  title: "Admin Subscriptions",
+};

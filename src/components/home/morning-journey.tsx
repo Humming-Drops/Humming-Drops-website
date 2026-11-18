@@ -36,7 +36,7 @@ const JOURNEY_STEPS: JourneyStep[] = [
   {
     number: "02",
     title: "Prepared & packed",
-    shortCopy: "Washed, cut, and assembled into your Fruit & Vegetable Box or Healthy Oats Meal with strict culinary hygiene at Berrybeats Cafe.",
+    shortCopy: "Washed, cut, and assembled into your daily breakfast box with strict culinary hygiene at Berrybeats Cafe.",
     badge: "Culinary Kitchen",
     icon: Utensils,
     accentClass: "text-primary",

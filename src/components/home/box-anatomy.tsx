@@ -21,7 +21,7 @@ interface Compartment {
   gradientClass: string;
   ringClass: string;
   pulseColor: string;
-  hotspot: { x: number; y: number };
+  hotspot?: { x: number; y: number };
   getFrequency: () => string;
   getShortSummary: () => string;
   getHighlights: () => { icon: React.ElementType; text: string }[];
@@ -31,8 +31,8 @@ const COMPARTMENTS: Compartment[] = [
   {
     id: "fruits",
     number: "01",
-    name: "5 Varieties of Fruits",
-    shortTag: "Essential Vitamins on Box Days",
+    name: "4 Varieties of Fruits",
+    shortTag: "Essential Vitamins, Every Day",
     icon: Sparkles,
     colorClass: "text-rose-600",
     bgLightClass: "bg-rose-50",
@@ -41,11 +41,11 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-rose-400",
     pulseColor: "bg-rose-400/40",
     hotspot: { x: 30, y: 32 },
-    getFrequency: () => "4 Days a Week",
+    getFrequency: () => "Every Day",
     getShortSummary: () =>
-      "Five rotating seasonal fruits, freshly cut at dawn, included every Fruit & Vegetable Box day for natural vitamins, hydration, and clean energy.",
+      "Four rotating seasonal fruits, freshly cut, included in your box every day for natural vitamins, hydration, and clean energy.",
     getHighlights: () => [
-      { icon: Apple, text: "5 Rotating Varieties" },
+      { icon: Apple, text: "4 Rotating Varieties" },
       { icon: Droplets, text: "Natural Morning Hydration" },
       { icon: Sparkles, text: "100% Raw Whole Produce" },
     ],
@@ -53,7 +53,7 @@ const COMPARTMENTS: Compartment[] = [
   {
     id: "vegetables",
     number: "02",
-    name: "3 Varieties of Vegetables",
+    name: "2 Varieties of Vegetables",
     shortTag: "Crisp Morning Crunch",
     icon: Leaf,
     colorClass: "text-amber-600",
@@ -63,19 +63,40 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-amber-400",
     pulseColor: "bg-amber-400/40",
     hotspot: { x: 74, y: 34 },
-    getFrequency: () => "4 Days a Week",
+    getFrequency: () => "Every Day",
     getShortSummary: () =>
-      "Three wholesome raw vegetables, carefully washed, peeled, and sliced to deliver natural dietary fiber and minerals on every box day.",
+      "Two wholesome raw vegetables, carefully washed, peeled, and sliced to deliver natural dietary fiber and minerals every day.",
     getHighlights: () => [
-      { icon: Leaf, text: "3 Wholesome Crisp Cuts" },
+      { icon: Leaf, text: "2 Wholesome Crisp Cuts" },
       { icon: Sparkles, text: "Dietary Fiber & Essential Minerals" },
       { icon: Check, text: "Triple-Washed, Peeled & Ready" },
     ],
   },
   {
-    id: "sprouts",
+    id: "salad",
     number: "03",
-    name: "Mixed Sprouts Portion",
+    name: "Fresh Mix Salad",
+    shortTag: "Garden-Fresh Crunch",
+    icon: Leaf,
+    colorClass: "text-green-700",
+    bgLightClass: "bg-green-50",
+    borderClass: "border-green-200",
+    gradientClass: "from-green-500/10 via-green-50/40 to-white",
+    ringClass: "ring-green-400",
+    pulseColor: "bg-green-400/40",
+    getFrequency: () => "Every Day",
+    getShortSummary: () =>
+      "A fresh mix salad included in your box every day, prepared fresh each morning.",
+    getHighlights: () => [
+      { icon: Leaf, text: "Fresh Mix Salad" },
+      { icon: Check, text: "Included Every Day" },
+      { icon: Sparkles, text: "Prepared Fresh" },
+    ],
+  },
+  {
+    id: "sprouts",
+    number: "04",
+    name: "Fresh Sprouts",
     shortTag: "Living Plant Goodness",
     icon: Leaf,
     colorClass: "text-emerald-700",
@@ -85,9 +106,9 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-emerald-400",
     pulseColor: "bg-emerald-400/40",
     hotspot: { x: 52, y: 72 },
-    getFrequency: () => "4 Days a Week",
+    getFrequency: () => "Every Day",
     getShortSummary: () =>
-      "A nutrient-dense portion of live sprouted pulses, cultivated with strict hygiene, delivering bioavailable morning energy and clean protein on box days.",
+      "A nutrient-dense portion of live sprouted pulses, cultivated with strict hygiene, delivering bioavailable morning energy and clean protein every day.",
     getHighlights: () => [
       { icon: Leaf, text: "Live Sprouted Pulses" },
       { icon: Sparkles, text: "Bioavailable Plant Protein" },
@@ -96,8 +117,8 @@ const COMPARTMENTS: Compartment[] = [
   },
   {
     id: "dry-fruits",
-    number: "04",
-    name: "Dry Fruits Mix",
+    number: "05",
+    name: "Dry Fruits",
     shortTag: "Brain Fuel & Cognitive Stamina",
     icon: Sun,
     colorClass: "text-amber-700",
@@ -107,35 +128,13 @@ const COMPARTMENTS: Compartment[] = [
     ringClass: "ring-amber-500",
     pulseColor: "bg-amber-500/40",
     hotspot: { x: 80, y: 72 },
-    getFrequency: () => "Included on Both Box & Oats Days",
+    getFrequency: () => "3 Days a Week (Standard) · Every Day (Premium)",
     getShortSummary: () =>
-      "A wholesome dry fruits mix included with your Fruit & Vegetable Box and alongside your Healthy Oats Meal, for sustained stamina.",
+      "A wholesome dry fruits serving: 3 days a week on the Standard plan and every day on the Premium plan, for sustained stamina.",
     getHighlights: () => [
       { icon: Sparkles, text: "Wholesome Dry Fruit Serving" },
-      { icon: Check, text: "Included Every Delivery Day" },
+      { icon: Check, text: "Daily with Premium" },
       { icon: Heart, text: "Brain & Heart Vitality" },
-    ],
-  },
-  {
-    id: "oats",
-    number: "05",
-    name: "Healthy Oats Meal",
-    shortTag: "A Wholesome Weekly Change-Up",
-    icon: Utensils,
-    colorClass: "text-orange-700",
-    bgLightClass: "bg-orange-50",
-    borderClass: "border-orange-200",
-    gradientClass: "from-orange-500/10 via-orange-50/40 to-white",
-    ringClass: "ring-orange-400",
-    pulseColor: "bg-orange-400/40",
-    hotspot: { x: 50, y: 50 },
-    getFrequency: () => "2 Days a Week",
-    getShortSummary: () =>
-      "A nutritious oats-based breakfast meal, served with fruits and dry fruits, replacing the Fruit & Vegetable Box on 2 days of the week.",
-    getHighlights: () => [
-      { icon: Utensils, text: "Wholesome Oats Base" },
-      { icon: Apple, text: "Served with Fruits" },
-      { icon: Sparkles, text: "Topped with Dry Fruits" },
     ],
   },
 ];
@@ -182,7 +181,7 @@ export function BoxAnatomy() {
           </h2>
 
           <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
-            4 days a week, a fresh fruit &amp; vegetable box. 2 days a week, a healthy oats meal. Freshly prepared
+            4 fruits, 2 vegetables, a fresh mix salad and fresh sprouts every day, plus dry fruits. Freshly prepared
             every morning and delivered straight to your door.
           </p>
 
@@ -214,11 +213,6 @@ export function BoxAnatomy() {
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isSelected ? "text-white" : c.colorClass}`} />
                 <span>{c.name}</span>
-                {c.id === "oats" && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-orange-500 text-white font-black">
-                    2 Days
-                  </span>
-                )}
               </button>
             );
           })}
@@ -232,14 +226,14 @@ export function BoxAnatomy() {
               <div className="relative w-full aspect-[3/2] rounded-2xl overflow-hidden bg-emerald-50">
                 <Image
                   src="/images/humming-drops-box.png"
-                  alt="Authentic Humming Drops Fresh Fruit & Vegetable Box"
+                  alt="Humming Drops fresh breakfast box"
                   fill
                   sizes="(max-width: 1024px) 100vw, 640px"
                   className="object-cover object-center"
                 />
 
-                {/* Hotspot Beacons — only the 4 Fruit & Vegetable Box compartments shown in this photo */}
-                {COMPARTMENTS.filter((c) => c.id !== "oats").map((c) => {
+                {/* Hotspot Beacons — only the compartments visible in this photo */}
+                {COMPARTMENTS.filter((c) => c.hotspot).map((c) => {
                   const isSelected = c.id === activeCompartmentId;
                   return (
                     <button
@@ -249,8 +243,8 @@ export function BoxAnatomy() {
                       onFocus={() => setActiveCompartmentId(c.id)}
                       onClick={() => setActiveCompartmentId(c.id)}
                       style={{
-                        top: `${c.hotspot.y}%`,
-                        left: `${c.hotspot.x}%`,
+                        top: `${c.hotspot!.y}%`,
+                        left: `${c.hotspot!.x}%`,
                       }}
                       className="absolute -translate-x-1/2 -translate-y-1/2 group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 z-20 cursor-pointer"
                       aria-label={`Select compartment ${c.number}: ${c.name}`}
@@ -281,7 +275,7 @@ export function BoxAnatomy() {
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                   Tap numbers to inspect each fresh compartment
                 </span>
-                <span className="font-medium">4-Compartment Fresh Box</span>
+                <span className="font-medium">Fresh Daily Box</span>
               </div>
             </div>
           </div>
@@ -360,20 +354,6 @@ export function BoxAnatomy() {
                     })}
                   </div>
                 </div>
-
-                {/* Weekly Rhythm Notice for Oats */}
-                {activeCompartment.id === "oats" && (
-                  <div className="p-3.5 rounded-2xl bg-orange-50 border border-orange-200 text-xs text-orange-950 space-y-1">
-                    <div className="font-bold flex items-center gap-1.5">
-                      <Utensils className="w-3.5 h-3.5 text-orange-600" />
-                      <span>Weekly Rhythm:</span>
-                    </div>
-                    <p className="text-[11px] leading-tight text-[#405347]">
-                      <strong>4 days a week:</strong> Fresh Fruit &amp; Vegetable Box. ·{" "}
-                      <strong>2 days a week:</strong> Healthy Oats Meal.
-                    </p>
-                  </div>
-                )}
 
                 {/* Quick Compartment Bottom Bar */}
                 <div className="pt-3 border-t border-[#E3EFE5] flex items-center justify-between">

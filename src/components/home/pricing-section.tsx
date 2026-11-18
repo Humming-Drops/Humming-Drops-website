@@ -88,25 +88,25 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Fresh Fruit &amp; Vegetable Box</strong> — 4 days a week</span>
+                    <span><strong className="text-[#132A1C]">Daily Breakfast Box</strong> — every day</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>5 fruit varieties, 3 vegetable varieties, sprouts &amp; dry fruits on box days</span>
+                    <span>4 fruit varieties, 2 vegetable varieties, fresh mix salad &amp; fresh sprouts</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Healthy Oats Meal</strong> — 2 days a week</span>
+                    <span><strong className="text-[#132A1C]">Dry Fruits</strong> — 3 days a week</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>Oats served with fruits &amp; dry fruits on oats days</span>
+                    <span>Free MedCity Smiles community membership</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0 mt-0.5">
@@ -208,7 +208,7 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>4-day Fruit &amp; Vegetable Box + 2-day Healthy Oats Meal</span>
+                    <span>Dry fruits every day, plus the full Standard box</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">

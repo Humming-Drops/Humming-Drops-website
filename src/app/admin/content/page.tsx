@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { hasPermission } from "@/lib/auth/server";
 import { listContentPages } from "@/lib/content-storage";
@@ -77,3 +78,7 @@ export default async function AdminContentPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Content",
+};

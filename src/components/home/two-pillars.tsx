@@ -115,7 +115,7 @@ export function TwoPillars() {
 
               {/* 1-Line Core Summary */}
               <p className="text-base text-[#405347] font-normal leading-relaxed pt-1">
-                Fresh fruit &amp; vegetable box 4 days a week, plus a healthy oats meal 2 days a week — delivered every morning before 7:30 AM with zero kitchen prep.
+                A fresh box of fruits, vegetables, salad and sprouts every day — delivered every morning before 7:30 AM with zero kitchen prep.
               </p>
 
               {/* 3 Balanced Highlights */}
