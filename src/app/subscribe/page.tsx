@@ -63,6 +63,8 @@ interface ConfirmationData {
   createdAt: string;
 }
 
+const inr = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
+
 const COMMON_ALLERGIES = [
   "Peanuts & Tree Nuts",
   "Dairy / Lactose",
@@ -78,11 +80,11 @@ function SubscribeFormContent() {
   const { isSignedIn } = useAuth();
 
   const planParam = searchParams.get("plan");
-  const initialPlan: PlanTier = isValidPlanTier(planParam) ? planParam : "premium";
+  const initialPlan: PlanTier | null = isValidPlanTier(planParam) ? planParam : null;
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isPending, startTransition] = useTransition();
 
-  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier>(initialPlan);
+  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier | null>(initialPlan);
 
   // Synchronize plan selection if query parameter changes dynamically
   useEffect(() => {
@@ -126,6 +128,29 @@ function SubscribeFormContent() {
     });
   }, [isUserLoaded, user]);
 
+  // Prefill the saved phone number from the customer profile (not exposed by useUser).
+  useEffect(() => {
+    if (!isSignedIn) return;
+    let cancelled = false;
+    fetch("/api/customer/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const phone: string | null | undefined = data?.user?.phone ?? data?.user?.profile?.phone;
+        if (!cancelled && phone) {
+          setCustomer((prev) => (prev.phone.trim() ? prev : { ...prev, phone }));
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn]);
+
+  const accountEmail = user?.primaryEmailAddress?.emailAddress || "";
+  const emailLocked = Boolean(isSignedIn && accountEmail);
+
+  const submitErrorRef = React.useRef<HTMLDivElement | null>(null);
+
   const [deliveryAddress, setDeliveryAddress] = useState({
     flatNo: "",
     buildingName: "",
@@ -151,6 +176,10 @@ function SubscribeFormContent() {
   const [confirmationData, setConfirmationData] = useState<ConfirmationData | null>(null);
   const [copiedRef, setCopiedRef] = useState(false);
 
+  useEffect(() => {
+    if (submitError) submitErrorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [submitError]);
+
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -165,7 +194,8 @@ function SubscribeFormContent() {
       if (!isValidIndianPhone(normalizePhone(customer.phone))) {
         newErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
       }
-      if (!customer.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email.trim())) {
+      const effectiveEmail = (emailLocked ? accountEmail : customer.email).trim();
+      if (!effectiveEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
         newErrors.email = "Please enter a valid email address.";
       }
     } else if (step === 3) {
@@ -179,7 +209,7 @@ function SubscribeFormContent() {
         newErrors.streetAddress = "Street address is required.";
       }
       if (!deliveryAddress.area.trim()) {
-        newErrors.area = "Area or neighborhood in Bangalore is required.";
+        newErrors.area = "Area or neighborhood is required.";
       }
       if (!/^[1-9][0-9]{5}$/.test(deliveryAddress.pincode.trim())) {
         newErrors.pincode = "Please enter a valid 6-digit postal pincode.";
@@ -217,12 +247,18 @@ function SubscribeFormContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Implicit submission (e.g. Enter key) must never skip the Review step.
+    if (currentStep < 5) {
+      handleNext();
+      return;
+    }
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
       setSubmitError("Please complete all required fields before submitting.");
       return;
     }
 
     setSubmitError(null);
+    if (!selectedPlanId) return;
 
     startTransition(async () => {
       try {
@@ -231,7 +267,7 @@ function SubscribeFormContent() {
           customer: {
             fullName: customer.fullName.trim(),
             phone: customer.phone.trim(),
-            email: customer.email.trim(),
+            email: (emailLocked ? accountEmail : customer.email).trim(),
           },
           deliveryAddress: {
             flatNo: deliveryAddress.flatNo.trim(),
@@ -277,7 +313,7 @@ function SubscribeFormContent() {
     }
   };
 
-  const activePlan = OFFICIAL_PLANS[selectedPlanId];
+  const activePlan = selectedPlanId ? OFFICIAL_PLANS[selectedPlanId] : null;
   if (confirmationData) {
     return (
       <div className="min-h-screen bg-canvas py-12 px-4 sm:px-6 lg:px-8">
@@ -295,7 +331,7 @@ function SubscribeFormContent() {
                 Welcome to Humming Drops!
               </h1>
               <p className="text-stone-600 text-sm max-w-md mx-auto">
-                Thank you, <strong className="text-stone-800">{confirmationData.customer.fullName}</strong>. Your breakfast box registration has been received by our Bangalore kitchen coordinator.
+                Thank you, <strong className="text-stone-800">{confirmationData.customer.fullName}</strong>. Your breakfast box registration has been received by the Humming Drops team.
               </p>
             </div>
 
@@ -322,7 +358,7 @@ function SubscribeFormContent() {
               <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
               <div>
                 <strong className="font-semibold block mb-0.5">Registration Status: Not Yet Active</strong>
-                Per our Bangalore delivery policy, subscriptions start only after our coordinator confirms your morning delivery route and time slot. No payment was charged today.
+                Your subscription starts only after our team confirms it with you. No payment was charged today.
               </div>
             </div>
 
@@ -334,7 +370,7 @@ function SubscribeFormContent() {
                   <span className="font-bold text-forest-900 text-sm">
                     {confirmationData.plan.name} Plan
                   </span>
-                  <span className="text-stone-500 block">₹{confirmationData.plan.monthlyPriceINR}/month</span>
+                  <span className="text-stone-500 block">{inr(confirmationData.plan.monthlyPriceINR)}/month</span>
                 </div>
                 <div>
                   <span className="text-stone-400 block text-[10px] uppercase font-bold">Contact Phone</span>
@@ -346,7 +382,7 @@ function SubscribeFormContent() {
                   <span className="font-medium text-stone-800">
                     {confirmationData.deliveryAddress.flatNo}, {confirmationData.deliveryAddress.buildingName},{" "}
                     {confirmationData.deliveryAddress.streetAddress}, {confirmationData.deliveryAddress.area},{" "}
-                    Bangalore - {confirmationData.deliveryAddress.pincode}
+                    {confirmationData.deliveryAddress.pincode}
                   </span>
                 </div>
               </div>
@@ -359,7 +395,7 @@ function SubscribeFormContent() {
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-transform hover:-translate-y-0.5"
               >
-                <span>Chat with Bangalore Team on WhatsApp</span>
+                <span>Chat with the team on WhatsApp</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
               <p className="text-[11px] text-stone-500">
@@ -386,14 +422,14 @@ function SubscribeFormContent() {
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 bg-forest-50 px-3.5 py-1 rounded-full border border-forest-900/10">
             <Sparkles className="w-3.5 h-3.5 text-forest-600" />
-            <span>Bangalore Breakfast Box Onboarding</span>
+            <span>Breakfast Box Registration</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-display tracking-tight">
             Begin Your Morning Habit
           </h1>
           <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            Fresh Fruit &amp; Vegetable Box 4 days a week, Healthy Oats Meal 2 days a week — delivered every morning
-            from Berrybeats cafe, Bangalore (closed Sundays).
+            Fresh fruits, vegetables, salad and sprouts in your daily breakfast box, prepared at Berrybeats cafe,
+            Bangalore. Delivery details are confirmed by our team after you register.
           </p>
         </div>
 
@@ -481,7 +517,7 @@ function SubscribeFormContent() {
                           {OFFICIAL_PLANS.standard.name} Plan
                         </h3>
                         <span className="font-extrabold text-forest-900 text-lg shrink-0">
-                          ₹{OFFICIAL_PLANS.standard.monthlyPriceINR}
+                          {inr(OFFICIAL_PLANS.standard.monthlyPriceINR)}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
@@ -514,19 +550,13 @@ function SubscribeFormContent() {
                         : "border-stone-200 hover:border-stone-300 bg-white"
                     }`}
                   >
-                    <div className="absolute -top-3 right-4">
-                      <span className="bg-forest-900 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
-                        Client Favorite
-                      </span>
-                    </div>
-
                     <div className="space-y-2">
                       <div className="flex justify-between items-center gap-2">
                         <h3 className="font-bold text-base text-forest-900">
                           {OFFICIAL_PLANS.premium.name} Plan
                         </h3>
                         <span className="font-extrabold text-forest-900 text-lg shrink-0">
-                          ₹{OFFICIAL_PLANS.premium.monthlyPriceINR}
+                          {inr(OFFICIAL_PLANS.premium.monthlyPriceINR)}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
@@ -555,6 +585,11 @@ function SubscribeFormContent() {
                     </ul>
                   </button>
                 </div>
+                {errors.plan && (
+                  <p role="alert" className="text-xs font-semibold text-red-700">
+                    {errors.plan}
+                  </p>
+                )}
               </div>
             )}
 
@@ -637,7 +672,9 @@ function SubscribeFormContent() {
                         id="email"
                         type="email"
                         required
-                        value={customer.email}
+                        value={emailLocked ? accountEmail : customer.email}
+                        readOnly={emailLocked}
+                        aria-describedby="email-help"
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                         placeholder="aditi@example.com"
                         className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
@@ -647,7 +684,15 @@ function SubscribeFormContent() {
                         }`}
                       />
                     </div>
-                    {errors.email && <p className="text-[11px] text-red-600">{errors.email}</p>}
+                    {errors.email ? (
+                      <p className="text-[11px] text-red-600">{errors.email}</p>
+                    ) : (
+                      <p id="email-help" className="text-[11px] text-stone-500">
+                        {emailLocked
+                          ? "This is your account email. Registrations are linked to it."
+                          : "Use the email you signed in with."}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -662,7 +707,7 @@ function SubscribeFormContent() {
                     Doorstep Delivery Address
                   </h2>
                   <p className="text-xs sm:text-sm text-stone-600">
-                    We deliver fresh morning boxes across Bangalore residences and offices.
+                    Delivery availability for your pincode is confirmed by our team after you register.
                   </p>
                 </div>
 
@@ -814,7 +859,7 @@ function SubscribeFormContent() {
                     Dietary &amp; Health Preferences
                   </h2>
                   <p className="text-xs sm:text-sm text-stone-600">
-                    Customize your breakfast box for allergies or dietary lifestyle.
+                    Tell us about allergies or dietary preferences. Our team will confirm what can be accommodated.
                   </p>
                 </div>
 
@@ -825,17 +870,17 @@ function SubscribeFormContent() {
                       {
                         id: "standard" as DietaryType,
                         name: "Standard Mix",
-                        desc: "Full wholesome variety: fruits, vegetables, sprouts, dry fruits & oats meals.",
+                        desc: "The standard Humming Drops breakfast box.",
                       },
                       {
                         id: "vegan" as DietaryType,
                         name: "100% Vegan",
-                        desc: "Completely plant-derived wholesome whole foods curation.",
+                        desc: "Preference only. Availability is confirmed by our team (CLIENT INPUT REQUIRED).",
                       },
                       {
                         id: "pure_fruit" as DietaryType,
                         name: "Fruit Focused",
-                        desc: "Enriched seasonal fruit portions with nuts and seeds.",
+                        desc: "Preference only. Availability is confirmed by our team (CLIENT INPUT REQUIRED).",
                       },
                     ].map((style) => (
                       <button
@@ -907,7 +952,7 @@ function SubscribeFormContent() {
                 </div>
               </div>
             )}
-            {currentStep === 5 && (
+            {currentStep === 5 && activePlan && (
               <div className="space-y-6">
                 <div className="space-y-1">
                   <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
@@ -928,30 +973,26 @@ function SubscribeFormContent() {
                         {activePlan.name} Plan (Monthly)
                       </span>
                       <span className="text-xs text-stone-500 block">
-                        4-Day Box + 2-Day Oats · Bangalore Doorstep Delivery
+                        Monthly breakfast box subscription
                       </span>
                     </div>
                     <span className="font-mono text-xl font-extrabold text-forest-900">
-                      ₹{activePlan.monthlyPriceINR}
+                      {inr(activePlan.monthlyPriceINR)}
                     </span>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-stone-600">
                     <div className="flex justify-between">
                       <span>Monthly Subscription Fee:</span>
-                      <span className="font-bold text-stone-800">₹{activePlan.monthlyPriceINR}</span>
-                    </div>
-                    <div className="flex justify-between text-forest-800">
-                      <span>Morning Delivery Fee:</span>
-                      <span className="font-bold">FREE (Complimentary)</span>
+                      <span className="font-bold text-stone-800">{inr(activePlan.monthlyPriceINR)}</span>
                     </div>
                     <div className="flex justify-between text-teal-800">
                       <span>MedCity Smiles Membership &amp; Monthly Health Checkup:</span>
                       <span className="font-bold">Included Free</span>
                     </div>
                     <div className="flex justify-between pt-2 border-t border-forest-900/10 text-sm font-extrabold text-forest-950">
-                      <span>Total Amount to Confirm:</span>
-                      <span className="font-mono text-base">₹{activePlan.monthlyPriceINR} / month</span>
+                      <span>Plan price:</span>
+                      <span className="font-mono text-base">{inr(activePlan.monthlyPriceINR)} / month</span>
                     </div>
                   </div>
                 </div>
@@ -988,7 +1029,7 @@ function SubscribeFormContent() {
                       {deliveryAddress.buildingName || "—"}
                     </p>
                     <p className="text-stone-600 line-clamp-2">
-                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area}, Bangalore - {deliveryAddress.pincode}
+                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area} - {deliveryAddress.pincode}
                     </p>
                   </div>
 
@@ -1015,7 +1056,7 @@ function SubscribeFormContent() {
                 <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex items-start gap-2.5">
                   <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="font-bold block">Assisted Doorstep Registration (Mode B)</span>
+                    <span className="font-bold block">Registration with team confirmation</span>
                     <p className="text-amber-800 leading-relaxed">
                       No card charge today. Upon submission, you will receive a reference tracking code and a one-click WhatsApp link to coordinate delivery start date with our team at Berrybeats cafe.
                     </p>
@@ -1023,7 +1064,11 @@ function SubscribeFormContent() {
                 </div>
 
                 {submitError && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2">
+                  <div
+                    ref={submitErrorRef}
+                    role="alert"
+                    className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2"
+                  >
                     <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="font-semibold block">Submission Error:</strong>

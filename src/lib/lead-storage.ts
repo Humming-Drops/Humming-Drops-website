@@ -20,7 +20,26 @@ import {
   dietaryPreferences,
   subscriptionAuditLogs,
 } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { and, eq, desc, inArray } from "drizzle-orm";
+
+/**
+ * Thrown when a user who already holds an open registration/subscription
+ * (pending, active or paused) tries to register another one (CUS-09).
+ */
+export class DuplicateLeadError extends Error {
+  constructor(public readonly existingReference: string | null) {
+    super("An open subscription registration already exists for this account.");
+    this.name = "DuplicateLeadError";
+  }
+}
+
+/** Statuses that count as an "open" registration for duplicate detection. */
+export const OPEN_SUBSCRIPTION_STATUSES = [
+  "registration_submitted",
+  "pending_confirmation",
+  "confirmed_active",
+  "paused",
+] as const;
 
 /**
  * Persisted Subscription Lead Record
@@ -313,6 +332,21 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
 
       if (!user) {
         throw new Error("Failed to resolve or create customer user identity.");
+      }
+
+      // 1b. Duplicate guard (CUS-09): one open registration per account.
+      const [openSub] = await tx
+        .select({ ref: userSubscriptions.leadReferenceCode })
+        .from(userSubscriptions)
+        .where(
+          and(
+            eq(userSubscriptions.userId, user.id),
+            inArray(userSubscriptions.status, [...OPEN_SUBSCRIPTION_STATUSES])
+          )
+        )
+        .limit(1);
+      if (openSub) {
+        throw new DuplicateLeadError(openSub.ref ?? null);
       }
 
       // 2. Insert Lead / Subscription with STRICT INVARIANT: 'pending_confirmation' & hasActivePerks: false

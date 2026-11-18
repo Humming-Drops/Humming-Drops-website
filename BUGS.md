@@ -28,7 +28,16 @@ Environment: Next.js dev server `http://localhost:3001` (port 3000 held by a sta
 | ADM-07 | Not reproducible by code review | Middleware redirects customers and `AdminLayout` renders sign-in portal (never children) for non-staff. Confirm live. |
 | CUS-14 | Resolved by decision | `authenticated:false` with 200 is the documented session-probe contract; commented in code. |
 | Dev admin hint | Fixed | Shown only when `NODE_ENV === "development"`; placeholder made generic. |
-| All others | Not started | Groups B-G in `PLAN.md`. |
+| CUS-02 | Fixed in code | `useSubscriberAccount` hook derives none / pending / active / paused / ended from the real status; overview shows the right card per state and only shows delivery/box content when `confirmed_active`. |
+| CUS-03 / CUS-05 | Fixed in code | Overview, delivery and community: invented times, cutoff, menu names, named doctors, Zoom sessions, pre-set RSVP, past-dated sessions and the fake "Ask a doctor" form removed; PLACEHOLDER notes + real WhatsApp links instead. |
+| PUB-03 | Fixed in code | `/forgot-password` now shows email / WhatsApp / phone contact (no disabled input). Real reset flow still needs your decision. |
+| PUB-04 | Fixed in code | New `/terms` and `/privacy` pages with PLACEHOLDER legal text; register + footer link to them. Legal wording is CLIENT CONTENT REQUIRED. |
+| CUS-04 | Fixed in code | Pause / vacation / rider notes now await the real `PATCH /api/customer/me`, show server errors, are disabled unless active; empty note rejected. |
+| CUS-07 / 08 / PUB-06 | Fixed in code | Enter key can no longer submit before Review; no default plan; phone prefilled from profile; account email read-only; submit error is `role=alert` and scrolled into view. |
+| CUS-09 | Fixed in code, live check pending | `DuplicateLeadError` in the Postgres repo -> API returns 409 with existing reference. No DB unique index yet (small race window). |
+| PUB-07 | Fixed in code | Any valid 6-digit pincode accepted; "Bangalore" removed from review/confirmation copy (serviceability confirmed by team). Server still stores city "Bangalore". |
+| PUB-08 (subscribe) / PUB-09 / PUB-02 (subscribe) | Fixed in code | Rs 3,500 formatting, "Mode B" wording, "Client Favorite", free-delivery row, "closed Sundays", "Bangalore delivery policy" removed from `/subscribe`. |
+| All others | Not started | Groups C-G in `PLAN.md`. |
 
 ## Bugs
 

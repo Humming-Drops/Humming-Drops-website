@@ -1,6 +1,6 @@
 # PLAN.md — Fix plan for BUGS.md (all severities)
 
-Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A fixed in code (static checks + unit tests pass); live/browser re-test BLOCKED: local Postgres is not running (no service, Docker not started). Groups B–G not started.**
+Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A committed (d9417c2) and verified statically; live/browser re-test BLOCKED: local Postgres is not running (no service, Docker not started). Group B fixed in code on branch `fix/qa-bugs` (verification pending). Groups C–G not started (parts of C done inside Group B files: CUS-03 overview/delivery, PUB-02/PUB-09 on /subscribe).**
 
 ## Working rules
 - Loop per item: fix → re-test the affected pages in Chrome → tick `[x]` here → next item. Commit after each group (one commit per group, message `fix(<area>): …`).
@@ -23,14 +23,14 @@ Source: `BUGS.md` (QA run 2026-11-17). **Status: IN PROGRESS — Group A fixed i
 - [x] **ADM improvement** Remove dev-credential hint "Default Admin: admin@hummingdrops.dev" outside development. File: `src/components/auth/admin-sign-in-portal.tsx`.
 
 ## Group B — Subscription-state integrity (P0, project rule §6.3)
-- [ ] **CUS-02** Dashboard branches on real status: none → CTA to `/subscribe`; `registration_submitted`/`pending_confirmation` → pending card with lead reference + WhatsApp 8618902810; `confirmed/active` → timeline. Never show "Active"/dispatch for non-active.
+- [x] **CUS-02** Dashboard branches on real status: none → CTA to `/subscribe`; `registration_submitted`/`pending_confirmation` → pending card with lead reference + WhatsApp 8618902810; `confirmed/active` → timeline. Never show "Active"/dispatch for non-active.
   Files: `src/app/dashboard/overview/page.tsx`, `src/app/dashboard/delivery/page.tsx`, `src/types/subscription.ts`, `src/app/api/customer/me/route.ts` (if status field needed).
-- [ ] **CUS-04** Pause / rider-notes: disabled until active; no success toast without a real API call; reject empty note. Persisting requires a new API + schema → **flag as scope question** (CLAUDE.md §7 Phase 1 says no dashboard functionality yet); default: disable and label "Coming soon — CLIENT INPUT REQUIRED".
+- [x] **CUS-04** Pause / rider-notes: disabled until active; no success toast without a real API call; reject empty note. Persisting requires a new API + schema → **flag as scope question** (CLAUDE.md §7 Phase 1 says no dashboard functionality yet); default: disable and label "Coming soon — CLIENT INPUT REQUIRED".
   File: `src/app/dashboard/delivery/page.tsx`.
-- [ ] **CUS-09** Duplicate-lead handling: verify then block/merge second pending lead for same user. Files: `src/app/api/subscriptions/lead/route.ts`, `src/lib/lead-storage.ts` (+ test).
-- [ ] **CUS-07 / CUS-08 / PUB-06** `/subscribe`: real Review step before submit; no default plan; prefill saved phone; account email read-only; surface API errors next to the submit button (aria-live) and scroll/focus them.
+- [x] **CUS-09** Duplicate-lead handling: verify then block/merge second pending lead for same user. Files: `src/app/api/subscriptions/lead/route.ts`, `src/lib/lead-storage.ts` (+ test).
+- [x] **CUS-07 / CUS-08 / PUB-06** `/subscribe`: real Review step before submit; no default plan; prefill saved phone; account email read-only; surface API errors next to the submit button (aria-live) and scroll/focus them.
   File: `src/app/subscribe/page.tsx` (+ `src/app/subscribe/layout.tsx` if titles).
-- [ ] **PUB-07** Pincode: Bangalore corridors are unconfirmed → accept any valid 6-digit pincode but show "serviceability CLIENT INPUT REQUIRED / confirmed by hub on WhatsApp"; stop hard-wiring "Bangalore" in the review.
+- [x] **PUB-07** Pincode: Bangalore corridors are unconfirmed → accept any valid 6-digit pincode but show "serviceability CLIENT INPUT REQUIRED / confirmed by hub on WhatsApp"; stop hard-wiring "Bangalore" in the review.
   Files: `src/app/subscribe/page.tsx`, `src/lib/sanitization.ts`.
 
 ## Group C — Content truth: brochure vs. invented claims (P1)
@@ -39,9 +39,9 @@ Single source of truth first, then apply everywhere.
   Files: new `src/lib/plan-content.ts` (or extend `src/types/plans.ts`), `src/components/home/{hero,box-anatomy,pricing-section,two-pillars,why-humming-drops,feature-strip,faq-section,closing-cta}.tsx`, `src/app/plans/page.tsx`, `src/app/subscribe/page.tsx`, `src/components/auth/{auth-shell,customer-sign-in-form,customer-sign-up-form}.tsx`, `src/app/dashboard/overview/page.tsx`, `src/components/layout/footer.tsx`, `src/app/about/page.tsx`.
 - [ ] **PUB-02** Remove/tag: 7:30 AM delivery, closed-Sundays, "doctor-certified", "Triple-Washed", "Zero Long Cold Storage", "Hand-Inspected", "Free Lab Test" (→ brochure wording: free monthly Blood Sugar, Cholesterol, Blood Pressure checkup), "Pause or cancel anytime", free-delivery line, "Most Popular / Recommended / Client Favorite", founding-team quote, "Bangalore delivery policy". Unify to one neutral badge style or none.
   Files: same set as above + `src/app/contact/page.tsx`, `src/components/home/reviews-section.tsx`, `src/types/plans.ts`.
-- [ ] **CUS-03** Dashboard: replace invented times, menu, named doctors, Zoom sessions, "RSVP Confirmed", "Submit to Medical Board" with `PLACEHOLDER — CLIENT CONTENT REQUIRED` blocks (or hide).
+- [x] **CUS-03** Dashboard: replace invented times, menu, named doctors, Zoom sessions, "RSVP Confirmed", "Submit to Medical Board" with `PLACEHOLDER — CLIENT CONTENT REQUIRED` blocks (or hide).
   Files: `src/app/dashboard/overview/page.tsx`, `src/app/dashboard/delivery/page.tsx`, `src/app/dashboard/community/page.tsx`.
-- [ ] **CUS-05** Community: drop pre-marked RSVP and past-dated sessions (filter `date >= today` if any data remains; otherwise placeholder).
+- [x] **CUS-05** Community: drop pre-marked RSVP and past-dated sessions (filter `date >= today` if any data remains; otherwise placeholder).
   File: `src/app/dashboard/community/page.tsx`.
 - [ ] **PUB-09** Remove "Mode B" from customer copy; **CUS-11** remove "managed by sign-in provider"; payments page internal copy ("RR-006", "file-backed", "Legacy role", "PostgreSQL RBAC grants", "Amount (paise)" mix).
   Files: `src/app/subscribe/page.tsx`, `src/app/dashboard/settings/page.tsx`, `src/app/admin/payments/page.tsx`, `src/app/admin/staff/page.tsx`.
@@ -53,9 +53,9 @@ Single source of truth first, then apply everywhere.
 - [ ] Visible focus rings and contrast audit (4.5:1) fixes found in Group G. Files: `src/styles`/global CSS, `tailwind.config.ts`, `src/components/ui/*`.
 
 ## Group E — Missing pages & stubs (P2)
-- [ ] **PUB-03** `/forgot-password`: until reset is implemented, remove the disabled input and show contact instructions (hummingdrops@gmail.com / 8618902810). A real reset flow is out of Phase-1 scope → needs your confirmation.
+- [x] **PUB-03** `/forgot-password`: until reset is implemented, remove the disabled input and show contact instructions (hummingdrops@gmail.com / 8618902810). A real reset flow is out of Phase-1 scope → needs your confirmation.
   File: `src/app/forgot-password/page.tsx`.
-- [ ] **PUB-04** Add `/terms` and `/privacy` pages with `PLACEHOLDER — CLIENT CONTENT REQUIRED` legal text (health-data consent needs client/legal wording); fix register links and footer.
+- [x] **PUB-04** Add `/terms` and `/privacy` pages with `PLACEHOLDER — CLIENT CONTENT REQUIRED` legal text (health-data consent needs client/legal wording); fix register links and footer.
   Files: new `src/app/terms/page.tsx`, `src/app/privacy/page.tsx`, `src/components/auth/customer-sign-up-form.tsx`, `src/components/layout/footer.tsx`.
 - [ ] **PUB-12** Contact: add address/Maps source as `CLIENT INPUT REQUIRED` if unknown; contact form only if you want it (optional).
 

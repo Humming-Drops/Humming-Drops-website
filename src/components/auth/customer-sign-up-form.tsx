@@ -262,10 +262,14 @@ export function CustomerSignUpForm() {
             />
             <span className="text-xs text-stone-600 leading-relaxed">
               I agree to the{" "}
-              <Link href="/about" className="text-forest-800 underline font-semibold">
+              <Link href="/terms" className="text-forest-800 underline font-semibold">
                 Terms of Service
               </Link>
-              , morning doorstep delivery guidelines, and{" "}
+              ,{" "}
+              <Link href="/privacy" className="text-forest-800 underline font-semibold">
+                Privacy Policy
+              </Link>
+              , and{" "}
               <Link href="/medcity-smiles" className="text-forest-800 underline font-semibold">
                 MedCity Smiles Health Program
               </Link>

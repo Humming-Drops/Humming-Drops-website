@@ -163,6 +163,18 @@ export function Footer() {
                 Contact
               </Link>
               <Link
+                href="/terms"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/privacy"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                Privacy
+              </Link>
+              <Link
                 href="/subscribe?plan=standard"
                 className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
