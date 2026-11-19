@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import {
-  AlertCircle,
   Apple,
   ArrowRight,
   Carrot,
@@ -17,21 +16,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { useSubscriberAccount, type SubscriberAccount } from "@/lib/use-subscriber-account";
+import {
+  DashboardCard,
+  DashboardCardTitle,
+  DashboardError,
+  DashboardLoading,
+  DashboardPage,
+  DashboardPageHeader,
+  DashboardStatusPill,
+  PlaceholderNote,
+} from "@/components/dashboard/dashboard-ui";
 
 const PLAN_LABEL: Record<string, string> = { standard: "Standard", premium: "Premium" };
 
-function PlaceholderNote({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5">
-      {children}
-    </p>
-  );
-}
-
 function NoSubscriptionCard() {
   return (
-    <div className="rounded-3xl border border-line-subtle bg-surface p-6 sm:p-8 space-y-4">
-      <h2 className="font-display text-xl font-bold text-content-primary">You don&apos;t have a subscription yet</h2>
+    <DashboardCard className="space-y-4">
+      <DashboardCardTitle>You don&apos;t have a subscription yet</DashboardCardTitle>
       <p className="text-sm text-content-secondary max-w-xl">
         Choose a plan to start your daily breakfast box. Your delivery details and member benefits appear here once your
         subscription is confirmed.
@@ -42,16 +43,16 @@ function NoSubscriptionCard() {
           <ArrowRight className="w-4 h-4 ml-1.5" aria-hidden="true" />
         </Link>
       </Button>
-    </div>
+    </DashboardCard>
   );
 }
 
 function PendingCard({ account }: { account: SubscriberAccount }) {
   return (
-    <div className="rounded-3xl border border-amber-200 bg-amber-50/60 p-6 sm:p-8 space-y-4" role="status">
-      <div className="flex items-center gap-2">
-        <Clock className="w-5 h-5 text-amber-700" aria-hidden="true" />
-        <h2 className="font-display text-xl font-bold text-amber-950">Registration received — awaiting confirmation</h2>
+    <DashboardCard tone="warning" className="space-y-4" role="status">
+      <div className="flex items-start gap-2">
+        <Clock className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
+        <h2 className="font-display text-lg font-bold text-amber-950">Registration received — awaiting confirmation</h2>
       </div>
       <p className="text-sm text-amber-900 max-w-xl">
         Your subscription is <strong>not active yet</strong> and no payment has been charged. Our team will contact you
@@ -74,17 +75,15 @@ function PendingCard({ account }: { account: SubscriberAccount }) {
           <span>WhatsApp {OFFICIAL_CONTACT.phone}</span>
         </a>
       </Button>
-    </div>
+    </DashboardCard>
   );
 }
 
 function InactiveCard({ account }: { account: SubscriberAccount }) {
   const paused = account.state === "paused";
   return (
-    <div className="rounded-3xl border border-line-subtle bg-surface p-6 sm:p-8 space-y-4" role="status">
-      <h2 className="font-display text-xl font-bold text-content-primary">
-        {paused ? "Your subscription is paused" : "Your subscription has ended"}
-      </h2>
+    <DashboardCard className="space-y-4" role="status">
+      <DashboardCardTitle>{paused ? "Your subscription is paused" : "Your subscription has ended"}</DashboardCardTitle>
       <p className="text-sm text-content-secondary max-w-xl">
         {paused
           ? "Deliveries are on hold. Contact us to resume."
@@ -96,7 +95,7 @@ function InactiveCard({ account }: { account: SubscriberAccount }) {
           <span>WhatsApp {OFFICIAL_CONTACT.phone}</span>
         </a>
       </Button>
-    </div>
+    </DashboardCard>
   );
 }
 
@@ -118,14 +117,12 @@ function ActiveBoxContents({ planId }: { planId: string | null }) {
   return (
     <section className="space-y-4" aria-labelledby="box-contents-heading">
       <div className="space-y-1">
-        <h2 id="box-contents-heading" className="font-display font-extrabold text-xl text-content-primary">
-          What&apos;s in your breakfast box
-        </h2>
+        <DashboardCardTitle id="box-contents-heading">What&apos;s in your breakfast box</DashboardCardTitle>
         <p className="text-xs text-content-secondary">As listed in the Humming Drops brochure.</p>
       </div>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {items.map(({ icon: Icon, title, note, tone }) => (
-          <li key={title} className="p-5 rounded-2xl border border-line-subtle bg-surface flex items-center gap-3">
+          <DashboardCard as="li" key={title} className="flex items-center gap-3">
             <span className={`inline-flex h-10 w-10 items-center justify-center rounded-full shrink-0 ${tone}`}>
               <Icon className="w-5 h-5" aria-hidden="true" />
             </span>
@@ -133,24 +130,24 @@ function ActiveBoxContents({ planId }: { planId: string | null }) {
               <p className="font-bold text-sm text-content-primary">{title}</p>
               <p className="text-xs text-content-secondary">{note}</p>
             </div>
-          </li>
+          </DashboardCard>
         ))}
-        <li className="p-5 rounded-2xl border border-teal-200 bg-teal-50/40 space-y-2 flex flex-col justify-between">
+        <DashboardCard as="li" tone="teal" className="flex flex-col justify-between gap-1">
           <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-800">
-              <Stethoscope className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-900">
+              <Stethoscope className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>Free monthly checkup</span>
             </span>
-            <p className="text-xs text-teal-800/90 leading-relaxed">Blood Sugar, Cholesterol and Blood Pressure.</p>
+            <p className="text-xs text-teal-800 leading-relaxed">Blood Sugar, Cholesterol and Blood Pressure.</p>
           </div>
           <Link
             href="/dashboard/health"
-            className="text-xs font-semibold text-teal-900 hover:text-teal-950 flex items-center gap-1 pt-2"
+            className="inline-flex items-center gap-1 min-h-[44px] self-start text-xs font-semibold text-teal-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 rounded"
           >
             <span>View health vitals</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
-        </li>
+        </DashboardCard>
       </ul>
     </section>
   );
@@ -160,30 +157,11 @@ export default function DashboardOverviewPage() {
   const { account, error } = useSubscriberAccount();
 
   if (error) {
-    return (
-      <div
-        role="alert"
-        className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800"
-      >
-        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
-        <div className="space-y-1">
-          <p className="font-bold">Unable to load your subscriber account</p>
-          <p className="text-xs text-red-700">{error}</p>
-        </div>
-      </div>
-    );
+    return <DashboardError title="Unable to load your subscriber account" detail={error} />;
   }
 
   if (!account) {
-    return (
-      <div className="space-y-8 animate-pulse" role="status" aria-busy="true" aria-label="Loading subscriber account">
-        <div className="space-y-3 pb-6 border-b border-line-subtle">
-          <div className="h-5 w-44 rounded-full bg-muted" />
-          <div className="h-8 w-64 rounded-xl bg-muted" />
-        </div>
-        <div className="h-48 rounded-2xl bg-muted/60 border border-line-subtle" />
-      </div>
-    );
+    return <DashboardLoading label="Loading subscriber account" />;
   }
 
   const planLabel = account.planId ? PLAN_LABEL[account.planId] ?? account.planId : null;
@@ -199,21 +177,17 @@ export default function DashboardOverviewPage() {
             : "No subscription";
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-1 pb-6 border-b border-line-subtle">
-        <div className="inline-flex items-center gap-2">
-          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-800 border border-forest-200">
-            {statusLabel}
-          </span>
-          {account.refCode && <span className="text-xs text-content-muted font-mono">{account.refCode}</span>}
-        </div>
-        <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">
-          Welcome, {account.name}
-        </h1>
-        {planLabel && account.state !== "none" && (
-          <p className="text-xs sm:text-sm text-content-secondary">Plan: {planLabel}</p>
-        )}
-      </div>
+    <DashboardPage>
+      <DashboardPageHeader
+        meta={
+          <>
+            <DashboardStatusPill>{statusLabel}</DashboardStatusPill>
+            {account.refCode && <span className="text-xs text-content-muted font-mono">{account.refCode}</span>}
+          </>
+        }
+        title={<>Welcome, {account.name}</>}
+        description={planLabel && account.state !== "none" ? <>Plan: {planLabel}</> : undefined}
+      />
 
       {account.state === "none" && <NoSubscriptionCard />}
       {account.state === "pending" && <PendingCard account={account} />}
@@ -221,24 +195,22 @@ export default function DashboardOverviewPage() {
 
       {account.state === "active" && (
         <>
-          <section className="rounded-3xl border border-line-subtle bg-surface p-6 space-y-3" aria-labelledby="dispatch-heading">
-            <h2 id="dispatch-heading" className="font-display font-bold text-base sm:text-lg text-content-primary">
-              Today&apos;s delivery
-            </h2>
+          <DashboardCard className="space-y-3" aria-labelledby="dispatch-heading">
+            <DashboardCardTitle id="dispatch-heading">Today&apos;s delivery</DashboardCardTitle>
             <PlaceholderNote>
               PLACEHOLDER — CLIENT CONTENT REQUIRED: delivery window and live dispatch tracking are not yet confirmed.
             </PlaceholderNote>
             <Link
               href="/dashboard/delivery"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline"
+              className="inline-flex items-center gap-1.5 min-h-[44px] text-xs font-semibold text-brand-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded"
             >
               <span>Manage delivery</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
-          </section>
+          </DashboardCard>
           <ActiveBoxContents planId={account.planId} />
         </>
       )}
-    </div>
+    </DashboardPage>
   );
 }

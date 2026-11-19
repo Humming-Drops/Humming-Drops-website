@@ -41,7 +41,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex-1 bg-muted/40 flex flex-col">
       {/* Sub Header Bar */}
-      <div className="bg-surface border-b border-line-subtle px-4 sm:px-8 py-3 flex items-center justify-between">
+      <div className="bg-surface border-b border-line-subtle px-4 sm:px-8 py-1 flex items-center justify-between gap-3">
         <div className="flex items-center space-x-3">
           <span className="text-xs bg-brand-subtle text-brand-primary px-2.5 py-1 rounded-pill font-semibold">
             Subscriber Portal
@@ -52,19 +52,20 @@ export default async function DashboardLayout({
         </div>
         <div className="flex items-center space-x-3 text-xs text-content-secondary">
           <span className="text-content-muted hidden md:inline">Kitchen: Berrybeats Cafe, Bangalore</span>
-          <Link href="/" className="text-brand-primary font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded">
+          <Link href="/" className="inline-flex items-center min-h-[44px] px-2 -mr-2 text-brand-primary font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded">
             Back to Website
           </Link>
         </div>
       </div>
 
       {/* Main dashboard content with sub-nav */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-5 md:gap-8 flex-1">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8 flex flex-col lg:flex-row gap-5 lg:gap-8 flex-1">
         {/* Responsive Sidebar / Pill Nav */}
         <PortalNav items={DASHBOARD_NAV_ITEMS} ariaLabel="Dashboard Navigation" />
 
-        {/* Dynamic Section View */}
-        <div className="flex-1 min-w-0 bg-surface p-5 sm:p-8 rounded-2xl border border-line-subtle shadow-card">
+        {/* Dynamic Section View. On mobile the page sits directly on the canvas
+            (no outer card) so inner cards are not nested inside another card. */}
+        <div className="flex-1 min-w-0 md:bg-surface md:p-8 md:rounded-2xl md:border md:border-line-subtle md:shadow-card">
           {children}
         </div>
       </div>

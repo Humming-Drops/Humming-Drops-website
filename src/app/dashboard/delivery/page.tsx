@@ -16,6 +16,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { useSubscriberAccount } from "@/lib/use-subscriber-account";
+import {
+  DashboardCard,
+  DashboardCardTitle,
+  DashboardError,
+  DashboardLoading,
+  DashboardPage,
+  DashboardPageHeader,
+  PlaceholderNote,
+} from "@/components/dashboard/dashboard-ui";
 
 /** Local calendar date as YYYY-MM-DD (toISOString would shift the day in IST). */
 function toLocalDateString(date: Date): string {
@@ -52,15 +61,10 @@ export default function DashboardDeliveryPage() {
   }, [account]);
 
   if (accountError) {
-    return (
-      <div role="alert" className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800">
-        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
-        <p className="font-bold">{accountError}</p>
-      </div>
-    );
+    return <DashboardError title={accountError} />;
   }
   if (!account) {
-    return <div className="h-48 rounded-2xl bg-muted/60 animate-pulse" role="status" aria-busy="true" aria-label="Loading delivery settings" />;
+    return <DashboardLoading label="Loading delivery settings" />;
   }
 
   const isActive = account.state === "active";
@@ -131,29 +135,17 @@ export default function DashboardDeliveryPage() {
   };
 
   const inputClass =
-    "w-full px-3 py-2.5 min-h-[42px] rounded-xl border border-line-subtle text-xs bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600 disabled:opacity-60";
+    "w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-line-subtle text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-forest-600 disabled:opacity-60";
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-line-subtle">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-800 border border-forest-200">
-              Delivery
-            </span>
-            {account.refCode && <span className="text-xs text-content-muted font-mono">{account.refCode}</span>}
-          </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">
-            Delivery &amp; vacation pause
-          </h1>
-        </div>
-        <Link href="/dashboard/overview" className="text-xs font-semibold text-brand-primary hover:underline">
-          ← Back to overview
-        </Link>
-      </div>
+    <DashboardPage>
+      <DashboardPageHeader
+        meta={account.refCode ? <span className="text-xs text-content-muted font-mono">{account.refCode}</span> : undefined}
+        title={<>Delivery &amp; vacation pause</>}
+      />
 
       {!isActive && (
-        <div role="status" className="rounded-2xl border border-amber-200 bg-amber-50/60 p-5 text-sm text-amber-950 space-y-2">
+        <DashboardCard as="div" tone="warning" role="status" className="text-sm space-y-2">
           <p className="font-bold">
             {account.state === "pending"
               ? "Delivery settings unlock once your subscription is confirmed."
@@ -163,7 +155,7 @@ export default function DashboardDeliveryPage() {
           </p>
           <p className="text-xs">
             {account.state === "none" ? (
-              <Link href="/plans" className="font-semibold underline">
+              <Link href="/plans" className="inline-flex items-center min-h-[44px] font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600 rounded">
                 View plans
               </Link>
             ) : (
@@ -176,14 +168,14 @@ export default function DashboardDeliveryPage() {
               </>
             )}
           </p>
-        </div>
+        </DashboardCard>
       )}
 
-      <div aria-live="polite">
+      <div aria-live="polite" className="empty:hidden">
         {message && (
           <div
             role={message.kind === "error" ? "alert" : "status"}
-            className={`p-4 rounded-2xl text-xs flex items-center gap-2 ${
+            className={`p-4 rounded-2xl text-sm flex items-center gap-2 ${
               message.kind === "error"
                 ? "bg-red-50 border border-red-200 text-red-800"
                 : "bg-forest-900 text-white"
@@ -200,16 +192,16 @@ export default function DashboardDeliveryPage() {
       </div>
 
       {isActive && (
-      <section className="p-6 rounded-3xl border border-forest-200 bg-forest-50/40 space-y-5" aria-labelledby="tomorrow-heading">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1.5">
+      <DashboardCard tone="brand" className="space-y-5" aria-labelledby="tomorrow-heading">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-2">
             <p className="text-xs font-bold text-forest-800">Next delivery day</p>
-            <h2 id="tomorrow-heading" className="font-display text-xl sm:text-2xl font-bold text-content-primary">
+            <h2 id="tomorrow-heading" className="font-display text-lg font-bold text-content-primary">
               {tomorrowLabel}
             </h2>
-            <p className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 inline-block">
+            <PlaceholderNote>
               PLACEHOLDER — CLIENT CONTENT REQUIRED: delivery window and pause cutoff time are not confirmed.
-            </p>
+            </PlaceholderNote>
           </div>
           {isActive && (
             <Badge
@@ -231,7 +223,7 @@ export default function DashboardDeliveryPage() {
           brand="humming"
           variant={isPausedTomorrow ? "primary" : "secondary"}
           size="md"
-          className="rounded-full px-5"
+          className="w-full sm:w-auto"
         >
           {isPausedTomorrow ? (
             <>
@@ -252,17 +244,14 @@ export default function DashboardDeliveryPage() {
               : "You have a vacation range saved. Edit or clear it under Vacation pause to use this shortcut."}
           </p>
         )}
-      </section>
+      </DashboardCard>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="p-6 rounded-3xl bg-surface border border-line-subtle space-y-5" aria-labelledby="vacation-heading">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-forest-700" aria-hidden="true" />
-            <h2 id="vacation-heading" className="font-display font-bold text-base text-content-primary">
-              Vacation pause
-            </h2>
-          </div>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <DashboardCard className="space-y-5" aria-labelledby="vacation-heading">
+          <DashboardCardTitle id="vacation-heading" icon={Calendar}>
+            Vacation pause
+          </DashboardCardTitle>
           <form onSubmit={handleSaveVacation} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -278,34 +267,30 @@ export default function DashboardDeliveryPage() {
                 <input id="vacation-end" type="date" disabled={!isActive} value={vacationEnd} onChange={(e) => setVacationEnd(e.target.value)} className={inputClass} />
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 type="submit"
                 disabled={!isActive || !vacationStart || !vacationEnd || busy !== null}
                 brand="humming"
                 variant="primary"
-                size="sm"
-                className="rounded-full px-4 text-xs"
+                size="md"
               >
-                <Save className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                <Save className="w-4 h-4 mr-1" aria-hidden="true" />
                 <span>{busy === "vacation" ? "Saving…" : "Save vacation range"}</span>
               </Button>
               {isActive && (vacationStart || vacationEnd) && (
-                <button type="button" onClick={handleClearVacation} disabled={busy !== null} className="text-xs text-stone-600 hover:text-stone-900 px-3 py-1.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600">
+                <button type="button" onClick={handleClearVacation} disabled={busy !== null} className="min-h-[44px] text-sm font-semibold text-stone-600 hover:text-stone-900 px-4 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600">
                   Clear
                 </button>
               )}
             </div>
           </form>
-        </section>
+        </DashboardCard>
 
-        <section className="p-6 rounded-3xl bg-surface border border-line-subtle space-y-5" aria-labelledby="notes-heading">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-forest-700" aria-hidden="true" />
-            <h2 id="notes-heading" className="font-display font-bold text-base text-content-primary">
-              Delivery instructions
-            </h2>
-          </div>
+        <DashboardCard className="space-y-5" aria-labelledby="notes-heading">
+          <DashboardCardTitle id="notes-heading" icon={MessageSquare}>
+            Delivery instructions
+          </DashboardCardTitle>
           <form onSubmit={handleSaveNotes} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="rider-notes" className="block text-xs font-semibold text-content-secondary">
@@ -326,31 +311,31 @@ export default function DashboardDeliveryPage() {
               disabled={!isActive || !account.addressId || busy !== null}
               brand="humming"
               variant="secondary"
-              size="sm"
-              className="rounded-full px-4 text-xs"
+              size="md"
             >
-              <Save className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+              <Save className="w-4 h-4 mr-1" aria-hidden="true" />
               <span>{busy === "notes" ? "Saving…" : "Save instructions"}</span>
             </Button>
           </form>
-        </section>
+        </DashboardCard>
       </div>
 
-      <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <DashboardCard as="div" className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <p className="text-xs font-bold text-stone-900">Need an urgent change or a new address?</p>
-          <p className="text-[11px] text-stone-600">Contact the Humming Drops team on WhatsApp.</p>
+          <p className="text-sm font-bold text-content-primary">Need an urgent change or a new address?</p>
+          <p className="text-xs text-content-secondary">Contact the Humming Drops team on WhatsApp.</p>
         </div>
-        <a
-          href={OFFICIAL_CONTACT.whatsappUrl("Hello Humming Drops Team, I need assistance with my delivery schedule")}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-forest-900 text-white text-xs font-semibold hover:bg-forest-800 transition shrink-0 self-start sm:self-auto"
-        >
-          <span>WhatsApp {OFFICIAL_CONTACT.phone}</span>
-          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-        </a>
-      </div>
-    </div>
+        <Button asChild brand="humming" variant="secondary" size="md" className="shrink-0 self-start sm:self-auto">
+          <a
+            href={OFFICIAL_CONTACT.whatsappUrl("Hello Humming Drops Team, I need assistance with my delivery schedule")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>WhatsApp {OFFICIAL_CONTACT.phone}</span>
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </a>
+        </Button>
+      </DashboardCard>
+    </DashboardPage>
   );
 }
