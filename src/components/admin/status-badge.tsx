@@ -14,6 +14,9 @@ const STATUS_BADGE_MAP: Record<string, { label: string; variant: NonNullable<Bad
   cancelled: { label: "Cancelled", variant: "error" },
   failed: { label: "Failed", variant: "error" },
   expired: { label: "Expired", variant: "neutral" },
+  published: { label: "Published", variant: "success" },
+  draft: { label: "Draft", variant: "neutral" },
+  archived: { label: "Archived", variant: "neutral" },
 };
 
 export function StatusBadge({ status }: { status: string }) {

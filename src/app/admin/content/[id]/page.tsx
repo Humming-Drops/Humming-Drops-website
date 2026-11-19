@@ -5,6 +5,18 @@ import { useParams } from "next/navigation";
 import { ContentFieldEditor } from "@/components/content/content-field-editor";
 import { ContentRenderer } from "@/components/content/content-renderer";
 import type { ContentTemplateSchema } from "@/lib/content-validation";
+import { StatusBadge } from "@/components/admin/status-badge";
+import {
+  AdminLoadingState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminSectionHeading,
+  adminButton,
+  adminCard,
+  adminErrorText,
+  adminInput,
+  adminLabel,
+} from "@/components/admin/admin-ui";
 
 interface PageState {
   id: string;
@@ -119,41 +131,33 @@ export default function EditContentPage() {
   };
 
   if (loadError) {
-    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">{loadError}</div>;
+    return <AdminNotice tone="error">{loadError}</AdminNotice>;
   }
   if (!page || !template) {
-    return <div className="rounded-2xl border border-line-subtle bg-surface p-6 text-sm text-content-secondary">Loading…</div>;
+    return <AdminLoadingState label="Loading page" />;
   }
 
   return (
     <div className="max-w-3xl space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-content-secondary">{template.name}</p>
-          <h2 className="font-display text-2xl font-extrabold text-content-primary">{page.title}</h2>
-          <p className="font-mono text-xs text-content-secondary">/content/{page.slug}</p>
-        </div>
-        <span
-          className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${
-            page.status === "published"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-surface-muted text-content-secondary border-line-subtle"
-          }`}
-        >
-          {page.status}
-        </span>
-      </div>
+      <AdminPageHeader
+        eyebrow={template.name}
+        title={<span className="break-words">{page.title}</span>}
+        description={<p className="break-all font-mono text-xs">/content/{page.slug}</p>}
+        actions={<StatusBadge status={page.status} />}
+      />
 
-      {actionError && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">{actionError}</div>}
+      {actionError && <AdminNotice tone="error">{actionError}</AdminNotice>}
 
-      <div className="flex gap-3 border-b border-line-subtle pb-2 text-xs font-semibold" role="tablist" aria-label="Page editor view">
+      <div className="flex gap-1 border-b border-line-subtle text-sm font-semibold" role="tablist" aria-label="Page editor view">
         <button
           type="button"
           role="tab"
           aria-selected={mode === "edit"}
           onClick={() => setMode("edit")}
-          className={`rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 ${
-            mode === "edit" ? "text-brand-primary" : "text-content-secondary hover:text-content-primary"
+          className={`-mb-px min-h-[40px] rounded-t-lg border-b-2 px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+            mode === "edit"
+              ? "border-brand-primary text-brand-primary"
+              : "border-transparent text-content-secondary hover:text-content-primary"
           }`}
         >
           Edit
@@ -163,8 +167,10 @@ export default function EditContentPage() {
           role="tab"
           aria-selected={mode === "preview"}
           onClick={() => setMode("preview")}
-          className={`rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 ${
-            mode === "preview" ? "text-brand-primary" : "text-content-secondary hover:text-content-primary"
+          className={`-mb-px min-h-[40px] rounded-t-lg border-b-2 px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+            mode === "preview"
+              ? "border-brand-primary text-brand-primary"
+              : "border-transparent text-content-secondary hover:text-content-primary"
           }`}
         >
           Preview
@@ -172,13 +178,13 @@ export default function EditContentPage() {
       </div>
 
       {mode === "preview" ? (
-        <div className="rounded-2xl border border-line-subtle bg-canvas p-6">
+        <div className="rounded-2xl border border-line-subtle bg-canvas p-4 sm:p-6">
           <ContentRenderer templateSlug={template.slug} data={data} />
         </div>
       ) : (
         <div className="space-y-5">
           <div className="space-y-1.5">
-            <label htmlFor="content-edit-title" className="text-xs font-semibold text-content-secondary">
+            <label htmlFor="content-edit-title" className={adminLabel}>
               Title
             </label>
             <input
@@ -186,9 +192,9 @@ export default function EditContentPage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+              className={adminInput}
             />
-            {fieldErrors.title && <p className="text-[11px] text-red-600">{fieldErrors.title}</p>}
+            {fieldErrors.title && <p className={adminErrorText}>{fieldErrors.title}</p>}
           </div>
 
           <ContentFieldEditor
@@ -203,7 +209,7 @@ export default function EditContentPage() {
               type="button"
               onClick={saveDraft}
               disabled={isSaving}
-              className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white hover:bg-brand-primary-hover transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className={adminButton("primary")}
             >
               {isSaving ? "Saving…" : "Save draft"}
             </button>
@@ -211,7 +217,7 @@ export default function EditContentPage() {
               type="button"
               onClick={togglePublish}
               disabled={isPublishing}
-              className="rounded-full border border-line-subtle px-5 py-2.5 text-xs font-semibold text-content-primary hover:bg-surface-muted transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/30 focus-visible:ring-offset-2"
+              className={adminButton("secondary")}
             >
               {isPublishing ? "Working…" : page.status === "published" ? "Unpublish" : "Publish"}
             </button>
@@ -219,8 +225,8 @@ export default function EditContentPage() {
         </div>
       )}
 
-      <div className="rounded-2xl border border-line-subtle bg-surface p-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-content-secondary">Audit trail</h3>
+      <div className={`${adminCard} p-4 sm:p-5`}>
+        <AdminSectionHeading>Audit trail</AdminSectionHeading>
         {auditLogs.length === 0 ? (
           <p className="mt-2 text-xs text-content-secondary">No changes recorded yet.</p>
         ) : (

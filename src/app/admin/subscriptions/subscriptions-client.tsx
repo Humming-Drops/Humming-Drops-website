@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
+import {
+  AdminLoadingState,
+  AdminNotice,
+  AdminPageHeader,
+  adminButton,
+  adminInput,
+  adminLabel,
+  adminTable,
+} from "@/components/admin/admin-ui";
 
 interface SubscriptionRow {
   subscription: {
@@ -65,66 +74,53 @@ export function SubscriptionsClient() {
 
   if (loadError) {
     return (
-      <div role="alert" className="rounded-2xl border border-red-200 bg-red-50/80 p-6 text-sm text-red-800">
-        {loadError}
-      </div>
+      <AdminNotice tone="error">{loadError}</AdminNotice>
     );
   }
   if (!rows) {
-    return (
-      <div className="space-y-6 animate-pulse" role="status" aria-busy="true" aria-label="Loading subscriptions">
-        <div className="space-y-2">
-          <div className="h-4 w-36 rounded bg-muted/70" />
-          <div className="h-8 w-48 rounded-xl bg-muted/70" />
-        </div>
-        <div className="h-64 rounded-2xl border border-line-subtle bg-surface" />
-      </div>
-    );
+    return <AdminLoadingState label="Loading subscriptions" />;
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm text-content-secondary">Lifecycle management</p>
-        <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Subscriptions</h2>
-      </div>
+      <AdminPageHeader eyebrow="Lifecycle management" title="Subscriptions" />
 
       {actionError && (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-          {actionError}
-        </div>
+        <AdminNotice tone="error">{actionError}</AdminNotice>
       )}
 
-      <div tabIndex={0} role="region" aria-label="Subscriptions table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
+      <div tabIndex={0} role="region" aria-label="Subscriptions table (scrollable)" className={adminTable.shell}>
+        <table className={adminTable.table}>
+          <thead className={adminTable.head}>
             <tr>
-              <th className="px-4 py-3">Reference</th>
-              <th className="px-4 py-3">Customer</th>
-              <th className="px-4 py-3">Plan</th>
-              <th className="px-4 py-3">Area</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3" />
+              <th className={adminTable.th}>Reference</th>
+              <th className={adminTable.th}>Customer</th>
+              <th className={adminTable.th}>Plan</th>
+              <th className={adminTable.th}>Area</th>
+              <th className={adminTable.th}>Status</th>
+              <th className={adminTable.th}>
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map(({ subscription, plan, customerName, area }) => (
-              <tr key={subscription.id} className="border-b border-line-subtle last:border-0">
-                <td className="px-4 py-3 font-mono text-xs">{subscription.leadReferenceCode}</td>
-                <td className="px-4 py-3">{customerName || "—"}</td>
-                <td className="px-4 py-3">{plan?.name || "—"}</td>
-                <td className="px-4 py-3 text-content-secondary">{area || "—"}</td>
-                <td className="px-4 py-3">
+              <tr key={subscription.id} className={adminTable.row}>
+                <td className={adminTable.mono}>{subscription.leadReferenceCode}</td>
+                <td className={adminTable.td}>{customerName || "—"}</td>
+                <td className={adminTable.td}>{plan?.name || "—"}</td>
+                <td className={`${adminTable.td} text-content-secondary`}>{area || "—"}</td>
+                <td className={adminTable.td}>
                   <StatusBadge status={subscription.status} />
                 </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex flex-wrap justify-end gap-2">
+                <td className="px-4 py-2 text-right">
+                  <div className="flex min-h-[36px] items-center justify-end gap-2">
                     {subscription.status === "pending_confirmation" && (
                       <button
                         type="button"
                         disabled={busyId === subscription.id}
                         onClick={() => runAction(subscription.id, "confirm")}
-                        className="rounded-full bg-brand-primary hover:bg-brand-hover px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                        className={adminButton("primary", "sm")}
                       >
                         Confirm
                       </button>
@@ -138,7 +134,7 @@ export function SubscriptionsClient() {
                           setPauseStart("");
                           setPauseEnd("");
                         }}
-                        className="rounded-full border border-line-subtle hover:bg-muted/60 px-3 py-1.5 text-xs font-semibold text-content-primary disabled:opacity-60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                        className={adminButton("secondary", "sm")}
                       >
                         Pause
                       </button>
@@ -148,7 +144,7 @@ export function SubscriptionsClient() {
                         type="button"
                         disabled={busyId === subscription.id}
                         onClick={() => runAction(subscription.id, "resume")}
-                        className="rounded-full border border-line-subtle hover:bg-muted/60 px-3 py-1.5 text-xs font-semibold text-content-primary disabled:opacity-60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                        className={adminButton("secondary", "sm")}
                       >
                         Resume
                       </button>
@@ -158,7 +154,7 @@ export function SubscriptionsClient() {
                         type="button"
                         disabled={busyId === subscription.id}
                         onClick={() => runAction(subscription.id, "cancel")}
-                        className="rounded-full border border-red-200 hover:bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 disabled:opacity-60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+                        className={adminButton("danger", "sm")}
                       >
                         Cancel
                       </button>
@@ -192,7 +188,7 @@ export function SubscriptionsClient() {
               Pause subscription
             </h3>
             <div className="space-y-1.5">
-              <label htmlFor="admin-pause-start" className="block text-xs font-semibold text-content-secondary">
+              <label htmlFor="admin-pause-start" className={adminLabel}>
                 Pause start
               </label>
               <input
@@ -200,11 +196,11 @@ export function SubscriptionsClient() {
                 type="date"
                 value={pauseStart}
                 onChange={(e) => setPauseStart(e.target.value)}
-                className="w-full rounded-xl border border-line-subtle px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={adminInput}
               />
             </div>
             <div className="space-y-1.5">
-              <label htmlFor="admin-pause-end" className="block text-xs font-semibold text-content-secondary">
+              <label htmlFor="admin-pause-end" className={adminLabel}>
                 Pause end
               </label>
               <input
@@ -212,14 +208,14 @@ export function SubscriptionsClient() {
                 type="date"
                 value={pauseEnd}
                 onChange={(e) => setPauseEnd(e.target.value)}
-                className="w-full rounded-xl border border-line-subtle px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={adminInput}
               />
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setPauseModalId(null)}
-                className="px-4 py-2 rounded-full text-xs font-semibold text-content-secondary hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className={adminButton("ghost")}
               >
                 Cancel
               </button>
@@ -227,7 +223,7 @@ export function SubscriptionsClient() {
                 type="button"
                 disabled={!pauseStart || !pauseEnd || busyId === pauseModalId}
                 onClick={() => runAction(pauseModalId, "pause", { pauseStart, pauseEnd })}
-                className="rounded-full bg-brand-primary hover:bg-brand-hover px-4 py-2 text-xs font-semibold text-white disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-1"
+                className={adminButton("primary")}
               >
                 Confirm pause
               </button>

@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { hasPermission } from "@/lib/auth/server";
 import { listContentPages } from "@/lib/content-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
+import {
+  AdminPageHeader,
+  adminButton,
+  adminInput,
+  adminLabel,
+  adminTable,
+} from "@/components/admin/admin-ui";
 
 export default async function AdminContentPage({
   searchParams,
@@ -31,84 +39,71 @@ export default async function AdminContentPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-content-secondary">Template-driven CMS</p>
-          <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Website content</h2>
-        </div>
-        <Link
-          href="/admin/content/new"
-          className="inline-flex items-center min-h-[38px] rounded-full bg-brand-primary hover:bg-brand-hover px-4 py-2 text-xs font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-1"
-        >
-          New page
-        </Link>
-      </div>
+      <AdminPageHeader
+        eyebrow="Template-driven CMS"
+        title="Website content"
+        actions={
+          <Link href="/admin/content/new" className={adminButton("primary")}>
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            New page
+          </Link>
+        }
+      />
 
       <form method="get" className="flex flex-wrap items-end gap-3">
-        <div className="space-y-1">
-          <label htmlFor="content-search" className="block text-xs font-semibold text-content-secondary">
+        <div className="w-full space-y-1.5 sm:w-56">
+          <label htmlFor="content-search" className={adminLabel}>
             Search title or slug
           </label>
-          <input
-            id="content-search"
-            name="q"
-            type="search"
-            defaultValue={params.q ?? ""}
-            className="w-56 rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-          />
+          <input id="content-search" name="q" type="search" defaultValue={params.q ?? ""} className={adminInput} />
         </div>
-        <div className="space-y-1">
-          <label htmlFor="content-status" className="block text-xs font-semibold text-content-secondary">
+        <div className="min-w-0 flex-1 space-y-1.5 sm:w-40 sm:flex-none">
+          <label htmlFor="content-status" className={adminLabel}>
             Status
           </label>
-          <select
-            id="content-status"
-            name="status"
-            defaultValue={status}
-            className="rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-          >
+          <select id="content-status" name="status" defaultValue={status} className={adminInput}>
             <option value="">All</option>
             <option value="draft">Draft</option>
             <option value="published">Published</option>
             <option value="archived">Archived</option>
           </select>
         </div>
-        <button
-          type="submit"
-          className="rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-1"
-        >
-          Filter
+        <button type="submit" className={adminButton("secondary")}>
+          Apply
         </button>
       </form>
 
-      <div tabIndex={0} role="region" aria-label="Content pages table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
+      <div tabIndex={0} role="region" aria-label="Content pages table (scrollable)" className={adminTable.shell}>
+        <table className={adminTable.table}>
+          <thead className={adminTable.head}>
             <tr>
-              <th className="px-4 py-3">Title</th>
-              <th className="px-4 py-3">Slug</th>
-              <th className="px-4 py-3">Template</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Updated</th>
-              <th className="px-4 py-3" />
+              <th className={adminTable.th}>Title</th>
+              <th className={adminTable.th}>Slug</th>
+              <th className={adminTable.th}>Template</th>
+              <th className={adminTable.th}>Status</th>
+              <th className={adminTable.th}>Updated</th>
+              <th className={adminTable.th}>
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map(({ page, templateName }) => (
-              <tr key={page.id} className="border-b border-line-subtle last:border-0 hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-content-primary">{page.title}</td>
-                <td className="px-4 py-3 font-mono text-xs text-content-secondary">/content/{page.slug}</td>
-                <td className="px-4 py-3">{templateName}</td>
-                <td className="px-4 py-3">
+              <tr key={page.id} className={adminTable.row}>
+                <td className={`${adminTable.td} font-medium text-content-primary`}>{page.title}</td>
+                <td className={`${adminTable.mono} text-content-secondary`}>/content/{page.slug}</td>
+                <td className={adminTable.td}>{templateName}</td>
+                <td className={adminTable.td}>
                   <StatusBadge status={page.status} />
                 </td>
-                <td className="px-4 py-3 text-content-secondary whitespace-nowrap">
+                <td className={`${adminTable.td} text-content-secondary`}>
                   {new Date(page.updatedAt).toLocaleDateString("en-IN")}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className={`${adminTable.td} text-right`}>
                   <Link
                     href={`/admin/content/${page.id}`}
-                    className="text-xs font-semibold text-brand-primary hover:underline rounded px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                    className={adminButton("secondary", "sm")}
+                    aria-label={`Edit ${page.title}`}
                   >
                     Edit
                   </Link>

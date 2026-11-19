@@ -2,44 +2,47 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
+import { AdminPageHeader, adminTable } from "@/components/admin/admin-ui";
 
 export default async function AdminLeadsPage() {
   const leads = await leadRepository.getAllLeads();
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm text-content-secondary">Customer registrations</p>
-        <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary">Lead management</h2>
-        <p className="mt-1 text-sm text-content-secondary">
-          This list is read-only. To confirm, pause or cancel a registration, open{" "}
-          <Link href="/admin/subscriptions" className="font-semibold text-brand-primary hover:underline">
-            Subscriptions
-          </Link>
-          .
-        </p>
-      </div>
-      <div tabIndex={0} role="region" aria-label="Leads table (scrollable)" className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
+      <AdminPageHeader
+        eyebrow="Customer registrations"
+        title="Lead management"
+        description={
+          <p>
+            This list is read-only. To confirm, pause or cancel a registration, open{" "}
+            <Link href="/admin/subscriptions" className="font-semibold text-brand-primary hover:underline">
+              Subscriptions
+            </Link>
+            .
+          </p>
+        }
+      />
+      <div tabIndex={0} role="region" aria-label="Leads table (scrollable)" className={adminTable.shell}>
+        <table className={adminTable.table}>
+          <thead className={adminTable.head}>
             <tr>
-              <th className="px-4 py-3">Reference</th>
-              <th className="px-4 py-3">Customer</th>
-              <th className="px-4 py-3">Plan</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Created</th>
+              <th className={adminTable.th}>Reference</th>
+              <th className={adminTable.th}>Customer</th>
+              <th className={adminTable.th}>Plan</th>
+              <th className={adminTable.th}>Status</th>
+              <th className={adminTable.th}>Created</th>
             </tr>
           </thead>
           <tbody>
             {leads.map((lead) => (
-              <tr key={lead.id} className="border-b border-line-subtle last:border-0 hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-mono text-xs">{lead.leadReferenceCode}</td>
-                <td className="px-4 py-3 font-medium text-content-primary">{lead.customer.fullName}</td>
-                <td className="px-4 py-3">{lead.planName}</td>
-                <td className="px-4 py-3">
+              <tr key={lead.id} className={adminTable.row}>
+                <td className={adminTable.mono}>{lead.leadReferenceCode}</td>
+                <td className={`${adminTable.td} font-medium text-content-primary`}>{lead.customer.fullName}</td>
+                <td className={adminTable.td}>{lead.planName}</td>
+                <td className={adminTable.td}>
                   <StatusBadge status={lead.status} />
                 </td>
-                <td className="px-4 py-3 text-content-secondary whitespace-nowrap">
+                <td className={`${adminTable.td} text-content-secondary`}>
                   {new Date(lead.createdAt).toLocaleDateString("en-IN")}
                 </td>
               </tr>

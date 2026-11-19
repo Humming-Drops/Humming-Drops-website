@@ -4,6 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ContentFieldEditor } from "@/components/content/content-field-editor";
 import { isValidContentSlug, type ContentTemplateSchema } from "@/lib/content-validation";
+import {
+  AdminLoadingState,
+  AdminNotice,
+  AdminPageHeader,
+  adminButton,
+  adminErrorText,
+  adminHelpText,
+  adminInput,
+  adminLabel,
+} from "@/components/admin/admin-ui";
 
 function slugify(value: string): string {
   return value
@@ -102,36 +112,31 @@ export default function NewContentPage() {
   };
 
   if (loadError) {
-    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">{loadError}</div>;
+    return <AdminNotice tone="error">{loadError}</AdminNotice>;
   }
 
   if (!templates) {
-    return <div className="rounded-2xl border border-line-subtle bg-surface p-6 text-sm text-content-secondary">Loading templates…</div>;
+    return <AdminLoadingState label="Loading templates" />;
   }
 
   if (templates.length === 0) {
     return (
-      <div className="rounded-2xl border border-line-subtle bg-surface p-6 text-sm text-content-secondary">
-        No content templates are available yet.
-      </div>
+      <AdminNotice>No content templates are available yet.</AdminNotice>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-      <div>
-        <p className="text-sm text-content-secondary">Template-driven CMS</p>
-        <h2 className="font-display text-3xl font-extrabold text-content-primary">New page</h2>
-      </div>
+      <AdminPageHeader eyebrow="Template-driven CMS" title="New page" />
 
       {formError && (
-        <div ref={formErrorRef} role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-          {formError}
+        <div ref={formErrorRef}>
+          <AdminNotice tone="error">{formError}</AdminNotice>
         </div>
       )}
 
       <div className="space-y-1.5">
-        <label htmlFor="content-template" className="text-xs font-semibold text-content-secondary">
+        <label htmlFor="content-template" className={adminLabel}>
           Template
         </label>
         <select
@@ -141,7 +146,7 @@ export default function NewContentPage() {
             setTemplateId(e.target.value);
             setData({});
           }}
-          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+          className={adminInput}
         >
           {templates.map((t) => (
             <option key={t.id} value={t.id}>
@@ -149,11 +154,11 @@ export default function NewContentPage() {
             </option>
           ))}
         </select>
-        {selectedTemplate && <p className="text-[11px] text-content-secondary">{selectedTemplate.description}</p>}
+        {selectedTemplate && <p className={adminHelpText}>{selectedTemplate.description}</p>}
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="content-slug" className="text-xs font-semibold text-content-secondary">
+        <label htmlFor="content-slug" className={adminLabel}>
           URL slug <span className="text-red-600">*</span>
         </label>
         <input
@@ -167,21 +172,21 @@ export default function NewContentPage() {
           aria-invalid={fieldErrors.slug ? true : undefined}
           aria-describedby={fieldErrors.slug ? "content-slug-help content-slug-error" : "content-slug-help"}
           placeholder="e.g. monsoon-delivery-update"
-          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+          className={`${adminInput} font-mono`}
         />
-        <p id="content-slug-help" className="text-[11px] text-content-secondary">
+        <p id="content-slug-help" className={adminHelpText}>
           Lowercase letters, numbers, and hyphens only.
           {isValidContentSlug(slug) ? ` Published at /content/${slug}` : ""}
         </p>
         {fieldErrors.slug && (
-          <p id="content-slug-error" role="alert" className="text-[11px] text-red-700">
+          <p id="content-slug-error" role="alert" className={adminErrorText}>
             {fieldErrors.slug}
           </p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="content-title" className="text-xs font-semibold text-content-secondary">
+        <label htmlFor="content-title" className={adminLabel}>
           Title <span className="text-red-600">*</span>
         </label>
         <input
@@ -194,10 +199,10 @@ export default function NewContentPage() {
           }}
           aria-invalid={fieldErrors.title ? true : undefined}
           aria-describedby={fieldErrors.title ? "content-title-error" : undefined}
-          className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+          className={adminInput}
         />
         {fieldErrors.title && (
-          <p id="content-title-error" role="alert" className="text-[11px] text-red-700">
+          <p id="content-title-error" role="alert" className={adminErrorText}>
             {fieldErrors.title}
           </p>
         )}
@@ -215,7 +220,7 @@ export default function NewContentPage() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-full bg-brand-primary px-5 py-2.5 text-xs font-semibold text-white hover:bg-brand-primary-hover transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+        className={adminButton("primary")}
       >
         {isSubmitting ? "Saving…" : "Save draft"}
       </button>
