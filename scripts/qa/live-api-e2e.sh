@@ -38,7 +38,7 @@ code -b $CJ $B/api/auth/me >/dev/null
 chk "me: hasOpenSubscription=true after lead" "$(grep -o '"hasOpenSubscription":[a-z]*' /tmp/o.txt)" '"hasOpenSubscription":true'
 code -b $CJ $B/api/customer/me >/dev/null
 SUB=$(grep -o '"subscription":{"id":"[^"]*"' /tmp/o.txt | head -1 | cut -d'"' -f6)
-chk "admin sees subscription in list" "$(code -b $AJ $B/api/admin/subscriptions; grep -c "$SUB" /tmp/o.txt)" 1
+chk "admin sees subscription in list" "$(code -b $AJ $B/api/admin/subscriptions >/dev/null; grep -c "$SUB" /tmp/o.txt)" 1
 chk "admin confirm" "$(code -b $AJ -H "$J" -d '{"action":"confirm"}' $B/api/admin/subscriptions/$SUB)" 200
 code -b $CJ $B/api/customer/me >/dev/null
 chk "customer sees confirmed_active" "$(grep -o '"status":"[a-z_]*"' /tmp/o.txt | head -1)" '"status":"confirmed_active"'
