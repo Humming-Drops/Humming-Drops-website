@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { leadRepository } from "@/lib/lead-storage";
+import { getDatabaseClient, isDatabaseConfigured } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -26,11 +27,27 @@ export async function GET() {
     heapUsedMb: Math.round((memoryUsage.heapUsed / 1024 / 1024) * 100) / 100,
   };
 
+  // Real dependency check: a deploy that cannot reach its database must fail
+  // the platform healthcheck (503) instead of receiving traffic.
+  let database: "operational" | "unreachable" | "not_configured" = "not_configured";
+  if (isDatabaseConfigured()) {
+    try {
+      await Promise.race([
+        getDatabaseClient()`select 1`,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 3000)),
+      ]);
+      database = "operational";
+    } catch {
+      database = "unreachable";
+    }
+  }
+  const healthy = database !== "unreachable";
+
   const responseTimeMs = Date.now() - startTime;
 
   return NextResponse.json(
     {
-      status: "healthy",
+      status: healthy ? "healthy" : "degraded",
       timestamp: new Date().toISOString(),
       uptimeSeconds,
       environment: appEnv,
@@ -38,6 +55,7 @@ export async function GET() {
       responseTimeMs,
       services: {
         application: "operational",
+        database,
         checkoutMode,
         persistenceDriver: leadRepository.getActiveDriverName(),
       },
@@ -48,7 +66,7 @@ export async function GET() {
       },
     },
     {
-      status: 200,
+      status: healthy ? 200 : 503,
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
         "Pragma": "no-cache",
