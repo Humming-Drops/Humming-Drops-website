@@ -1,7 +1,7 @@
 # ADR-009: Clerk Authentication with PostgreSQL Application Identity
 
 **Date:** 2026-11-03
-**Status:** ACCEPTED
+**Status:** SUPERSEDED — Clerk was removed (2026-11-19). Authentication is in-app (`users.password_hash` + server sessions). Migration `0007_remove_clerk` drops `clerk_user_id` and `clerk_webhook_events`. Kept for history only.
 **Tags:** authentication, authorization, clerk, postgresql, drizzle
 
 ## Decision

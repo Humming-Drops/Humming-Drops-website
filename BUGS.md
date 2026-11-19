@@ -132,7 +132,7 @@ Steps: create draft `qa-test-banner`; anonymous GET `/content/qa-test-banner` (a
 - **PUB-08** `/subscribe`: prices "₹3500" not "₹3,500"; badge wording differs per page.
 - **PUB-09** `/subscribe` step 5: customer-facing "Assisted Doorstep Registration (Mode B)"; "Loading…" label flash.
 - **PUB-10 / ADM-10** Duplicate title suffix ("… | Humming Drops | Humming Drops"); 404 uses home title; all `/admin/*` pages share the generic home title; OG tags only on home.
-- **PUB-11 / CUS-11** `/register`, `/login`: two stacked headers/logos; "Back to Home" duplicates nav. Settings copy "Email (managed by sign-in provider)" is leftover Clerk-era text.
+- **PUB-11 / CUS-11** `/register`, `/login`: two stacked headers/logos; "Back to Home" duplicates nav. Clerk has since been removed entirely (migration 0007).
 - **PUB-12** `/contact`: phone formatted "8618902810" vs "+91 8618902810"; no contact form; Maps link is a search with no address.
 - **PUB-13** Public pages served `Cache-Control: no-store` (confirm dev-only).
 - **CUS-01** Single session cookie per browser; super_admin visiting `/login` is sent to the customer dashboard (no admin-aware experience).

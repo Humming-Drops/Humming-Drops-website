@@ -35,7 +35,7 @@ export async function listStaffWithRoles() {
 
   const grantedUserIds = [...new Set(grants.map((g) => g.userId))];
 
-  // Explicit safe columns only: never select passwordHash / clerkUserId here.
+  // Explicit safe columns only: never select passwordHash here.
   const staffUsers = await db
     .select({
       id: users.id,
