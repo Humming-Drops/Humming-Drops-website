@@ -48,7 +48,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
           return "py-0";
         case "standard":
         default:
-          return "py-14 md:py-20";
+          return "py-16 sm:py-20 lg:py-24";
       }
     };
 

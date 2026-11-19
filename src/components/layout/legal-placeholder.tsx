@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 
 interface LegalPlaceholderProps {
@@ -12,8 +13,8 @@ interface LegalPlaceholderProps {
  */
 export function LegalPlaceholder({ title, topics }: LegalPlaceholderProps) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 space-y-6">
-      <h1 className="font-display text-3xl font-extrabold text-content-primary tracking-tight">{title}</h1>
+    <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 space-y-6">
+      <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-content-primary tracking-tight">{title}</h1>
 
       <div role="note" className="rounded-2xl border border-amber-200 bg-amber-50/70 p-5 text-sm text-amber-950 space-y-2">
         <p className="font-bold">PLACEHOLDER — CLIENT CONTENT REQUIRED</p>
@@ -37,18 +38,22 @@ export function LegalPlaceholder({ title, topics }: LegalPlaceholderProps) {
 
       <p className="text-sm text-content-secondary">
         Questions in the meantime? Email{" "}
-        <a className="font-semibold text-brand-primary underline" href={`mailto:${OFFICIAL_CONTACT.email}`}>
+        <a className="inline-flex min-h-[44px] items-center font-semibold text-brand-primary underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" href={`mailto:${OFFICIAL_CONTACT.email}`}>
           {OFFICIAL_CONTACT.email}
         </a>{" "}
         or call{" "}
-        <a className="font-semibold text-brand-primary underline" href={`tel:+91${OFFICIAL_CONTACT.phone}`}>
+        <a className="inline-flex min-h-[44px] items-center font-semibold text-brand-primary underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" href={`tel:+91${OFFICIAL_CONTACT.phone}`}>
           +91 {OFFICIAL_CONTACT.phone}
         </a>
         .
       </p>
 
-      <Link href="/" className="inline-block text-sm font-semibold text-brand-primary hover:underline">
-        ← Back to home
+      <Link
+        href="/"
+        className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+      >
+        <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+        Back to home
       </Link>
     </div>
   );

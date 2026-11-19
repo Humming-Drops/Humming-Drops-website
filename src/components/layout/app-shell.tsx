@@ -41,7 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main
         id="main-content"
         tabIndex={-1}
-        className={`flex-1 flex flex-col focus:outline-none ${hideMobileStickyBar ? "pb-0" : "pb-24 md:pb-0"}`}
+        className="flex-1 flex flex-col focus:outline-none"
       >
         {children}
       </main>
@@ -49,8 +49,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Shared Footer on Public Routes */}
       {!isDashboard && !isAdmin && <Footer />}
 
-      {/* Mobile-Only Sticky Bottom CTA Bar */}
-      {!hideMobileStickyBar && <MobileStickyBar />}
+      {/* Mobile-Only Sticky Bottom CTA Bar + spacer so it never covers the last content (spacer sits after the footer, not inside main) */}
+      {!hideMobileStickyBar && (
+        <>
+          <div aria-hidden="true" className="h-24 bg-surface md:hidden" />
+          <MobileStickyBar />
+        </>
+      )}
     </div>
   );
 }

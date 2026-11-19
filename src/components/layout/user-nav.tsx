@@ -43,9 +43,11 @@ export function UserNav() {
         aria-expanded={open}
         aria-haspopup="true"
         aria-label="User account menu"
-        className="w-8 h-8 rounded-full bg-forest-900 text-white font-semibold text-xs flex items-center justify-center ring-2 ring-line-subtle hover:ring-brand-primary transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
+        className="group w-11 h-11 -m-1.5 rounded-full flex items-center justify-center focus:outline-none"
       >
-        {initials || <User className="w-4 h-4" />}
+        <span className="w-8 h-8 rounded-full bg-forest-900 text-white font-semibold text-xs flex items-center justify-center ring-2 ring-line-subtle group-hover:ring-brand-primary group-focus-visible:ring-brand-primary transition-all">
+          {initials || <User className="w-4 h-4" aria-hidden="true" />}
+        </span>
       </button>
 
       {open && (

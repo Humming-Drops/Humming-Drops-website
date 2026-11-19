@@ -15,7 +15,7 @@ export function Footer() {
             <div className="flex items-center gap-4">
               <Link
                 href="/"
-                className="relative h-9 w-36 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="relative h-11 w-36 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                 aria-label="Humming Drops Home"
               >
                 <Image
@@ -29,7 +29,7 @@ export function Footer() {
               <span className="h-7 w-px bg-line-subtle shrink-0" aria-hidden="true" />
               <Link
                 href="/medcity-smiles"
-                className="relative h-10 w-24 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
+                className="relative h-11 w-24 block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
                 aria-label="MedCity Smiles Community"
               >
                 <Image
@@ -59,31 +59,31 @@ export function Footer() {
             <nav aria-label="Footer Navigation" className="grid grid-cols-2 sm:grid-cols-1 gap-1.5 text-sm font-sans">
               <Link
                 href="/plans"
-                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Subscription Plans
               </Link>
               <Link
                 href="/#journey"
-                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 How It Works
               </Link>
               <Link
                 href="/medcity-smiles"
-                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 MedCity Smiles
               </Link>
               <Link
                 href="/about"
-                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 About Us
               </Link>
               <Link
                 href="/contact"
-                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="text-content-secondary hover:text-brand-primary transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Contact Support
               </Link>
@@ -143,40 +143,40 @@ export function Footer() {
             <p>
               © {new Date().getFullYear()} Humming Drops. All rights reserved. · Bangalore Doorstep Nutrition
             </p>
-            <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 font-medium">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-0 font-medium">
               <Link
                 href="/about"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 About
               </Link>
               <Link
                 href="/medcity-smiles"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 MedCity Smiles
               </Link>
               <Link
                 href="/contact"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Contact
               </Link>
               <Link
                 href="/terms"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Terms
               </Link>
               <Link
                 href="/privacy"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Privacy
               </Link>
               <Link
                 href="/subscribe?plan=standard"
-                className="hover:text-brand-primary hover:underline transition-colors min-h-[36px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                className="hover:text-brand-primary hover:underline transition-colors min-h-[44px] inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Subscribe
               </Link>

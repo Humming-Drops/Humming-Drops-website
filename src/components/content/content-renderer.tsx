@@ -21,7 +21,7 @@ export function ContentRenderer({ templateSlug, data }: ContentRendererProps) {
         {Boolean(data.ctaUrl) && (
           <a
             href={text(data.ctaUrl)}
-            className="inline-flex items-center rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white hover:bg-brand-primary-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            className="inline-flex items-center rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white hover:bg-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
           >
             {text(data.ctaLabel) || "Learn more"}
           </a>
