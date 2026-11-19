@@ -8,17 +8,27 @@ import {
   EyeOff,
   Mail,
   Lock,
-  User,
   Phone,
-  AlertCircle,
   Loader2,
   ArrowRight,
-  Check,
 } from "lucide-react";
 import { isSafeRedirectUrl } from "@/lib/auth-redirects";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/client";
 import { isValidIndianPhone, normalizePhone } from "@/lib/sanitization";
+import { cn } from "@/lib/utils";
+import {
+  AuthErrorAlert,
+  AuthFooterRow,
+  AuthHeader,
+  FieldIcon,
+  authButtonClass,
+  authHintClass,
+  authInputClass,
+  authInputWithIconClass,
+  authLabelClass,
+  authLinkClass,
+} from "@/components/auth/auth-shell";
 
 export function CustomerSignUpForm() {
   const router = useRouter();
@@ -99,36 +109,20 @@ export function CustomerSignUpForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-forest-50 text-forest-800 border border-forest-200">
-          Fresh Morning Starts
-        </span>
-        <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold text-forest-950 tracking-tight">
-          Create Your Account
-        </h1>
-        <p className="mt-2 text-sm text-stone-600">
-          Subscribe for fresh breakfast boxes delivered right to your doorstep in Bangalore.
-        </p>
-      </div>
+    <div className="w-full">
+      <AuthHeader
+        title="Create Your Account"
+        description="Subscribe for fresh breakfast boxes delivered right to your doorstep in Bangalore."
+      />
 
-      {/* Error Banner */}
       {error && (
-        <div
-          role="alert"
-          className="mb-6 rounded-2xl border border-red-200 bg-red-50/80 p-4 flex items-start gap-3 text-sm text-red-800 animate-in fade-in"
-        >
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
+        <AuthErrorAlert>
           <p>{error}</p>
-        </div>
+        </AuthErrorAlert>
       )}
 
       {Object.keys(fieldErrors).length > 0 && (
-        <div
-          role="alert"
-          className="mb-6 rounded-2xl border border-red-200 bg-red-50/80 p-4 text-sm text-red-800"
-        >
+        <AuthErrorAlert>
           <p className="font-bold">Please fix the following:</p>
           <ul className="mt-2 list-disc pl-5 space-y-1">
             {Object.entries(fieldErrors).map(([field, message]) => (
@@ -139,44 +133,31 @@ export function CustomerSignUpForm() {
               </li>
             ))}
           </ul>
-        </div>
+        </AuthErrorAlert>
       )}
 
-      {/* Main Form */}
-      <form onSubmit={handleSignUp} noValidate className="space-y-4">
-        {/* Name Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <form onSubmit={handleSignUp} noValidate className="space-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-3">
           <div>
-            <label
-              htmlFor="firstName"
-              className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5"
-            >
+            <label htmlFor="firstName" className={authLabelClass}>
               First Name
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-                <User className="w-4 h-4" aria-hidden="true" />
-              </div>
-              <input
-                id="firstName"
-                aria-invalid={invalid("firstName")}
-                aria-describedby={describedBy("firstName")}
-                type="text"
-                required
-                autoComplete="given-name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First"
-                className="w-full pl-10 pr-3.5 py-3 rounded-xl border border-[#E2ECE4] bg-white text-stone-900 placeholder:text-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent transition"
-              />
-            </div>
+            <input
+              id="firstName"
+              aria-invalid={invalid("firstName")}
+              aria-describedby={describedBy("firstName")}
+              type="text"
+              required
+              autoComplete="given-name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First"
+              className={authInputClass}
+            />
           </div>
 
           <div>
-            <label
-              htmlFor="lastName"
-              className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5"
-            >
+            <label htmlFor="lastName" className={authLabelClass}>
               Last Name
             </label>
             <input
@@ -186,23 +167,19 @@ export function CustomerSignUpForm() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Last"
-              className="w-full px-3.5 py-3 rounded-xl border border-[#E2ECE4] bg-white text-stone-900 placeholder:text-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent transition"
+              className={authInputClass}
             />
           </div>
         </div>
 
-        {/* Email */}
         <div>
-          <label
-            htmlFor="email"
-            className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5"
-          >
+          <label htmlFor="email" className={authLabelClass}>
             Email Address
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <FieldIcon>
               <Mail className="w-4 h-4" aria-hidden="true" />
-            </div>
+            </FieldIcon>
             <input
               id="email"
               aria-invalid={invalid("email")}
@@ -213,23 +190,19 @@ export function CustomerSignUpForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E2ECE4] bg-white text-stone-900 placeholder:text-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent transition"
+              className={cn(authInputClass, authInputWithIconClass)}
             />
           </div>
         </div>
 
-        {/* Phone */}
         <div>
-          <label
-            htmlFor="phone"
-            className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5"
-          >
+          <label htmlFor="phone" className={authLabelClass}>
             Mobile Number (Optional)
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <FieldIcon>
               <Phone className="w-4 h-4" aria-hidden="true" />
-            </div>
+            </FieldIcon>
             <input
               id="phone"
               aria-invalid={invalid("phone")}
@@ -239,40 +212,36 @@ export function CustomerSignUpForm() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="10-digit mobile number"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E2ECE4] bg-white text-stone-900 placeholder:text-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent transition"
+              className={cn(authInputClass, authInputWithIconClass)}
             />
           </div>
         </div>
 
-        {/* Password */}
         <div>
-          <label
-            htmlFor="password"
-            className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5"
-          >
+          <label htmlFor="password" className={authLabelClass}>
             Password
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <FieldIcon>
               <Lock className="w-4 h-4" aria-hidden="true" />
-            </div>
+            </FieldIcon>
             <input
               id="password"
               aria-invalid={invalid("password")}
-              aria-describedby={describedBy("password")}
+              aria-describedby={fieldErrors.password ? "password-error" : "password-hint"}
               type={showPassword ? "text" : "password"}
               required
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Minimum 8 characters"
-              className="w-full pl-10 pr-11 py-3 rounded-xl border border-[#E2ECE4] bg-white text-stone-900 placeholder:text-stone-400 text-sm focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent transition"
+              className={cn(authInputClass, authInputWithIconClass, "pr-12")}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600 transition"
+              className="absolute inset-y-0 right-0 w-12 flex items-center justify-center rounded-r-xl text-stone-400 hover:text-stone-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
             >
               {showPassword ? (
                 <EyeOff className="w-4 h-4" aria-hidden="true" />
@@ -281,47 +250,39 @@ export function CustomerSignUpForm() {
               )}
             </button>
           </div>
-          <p className="mt-1 text-[11px] text-stone-500">
+          <p id="password-hint" className={authHintClass}>
             Must contain at least 8 characters.
           </p>
         </div>
 
-        {/* Terms Agreement */}
-        <div className="pt-2">
-          <label className="flex items-start gap-2.5 cursor-pointer select-none">
-            <input
-              id="agreeTerms"
-              type="checkbox"
-              aria-invalid={invalid("terms")}
-              aria-describedby={describedBy("terms")}
-              checked={agreeTerms}
-              onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-stone-300 text-forest-700 focus:ring-forest-600 transition"
-            />
-            <span className="text-xs text-stone-600 leading-relaxed">
-              I agree to the{" "}
-              <Link href="/terms" className="text-forest-800 underline font-semibold">
-                Terms of Service
-              </Link>
-              ,{" "}
-              <Link href="/privacy" className="text-forest-800 underline font-semibold">
-                Privacy Policy
-              </Link>
-              , and{" "}
-              <Link href="/medcity-smiles" className="text-forest-800 underline font-semibold">
-                MedCity Smiles Health Program
-              </Link>
-              .
-            </span>
+        <div className="flex items-start gap-3">
+          <input
+            id="agreeTerms"
+            type="checkbox"
+            aria-invalid={invalid("terms")}
+            aria-describedby={describedBy("terms")}
+            checked={agreeTerms}
+            onChange={(e) => setAgreeTerms(e.target.checked)}
+            className="mt-0.5 h-5 w-5 shrink-0 rounded border-stone-300 text-forest-700 focus:ring-forest-600 transition cursor-pointer"
+          />
+          <label htmlFor="agreeTerms" className="text-sm text-stone-600 leading-relaxed cursor-pointer">
+            I agree to the{" "}
+            <Link href="/terms" className={cn(authLinkClass, "underline")}>
+              Terms of Service
+            </Link>
+            ,{" "}
+            <Link href="/privacy" className={cn(authLinkClass, "underline")}>
+              Privacy Policy
+            </Link>
+            , and{" "}
+            <Link href="/medcity-smiles" className={cn(authLinkClass, "underline")}>
+              MedCity Smiles Health Program
+            </Link>
+            .
           </label>
         </div>
 
-        {/* Submit */}
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-full h-12 rounded-xl bg-forest-900 hover:bg-forest-950 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 mt-4"
-        >
+        <Button type="submit" disabled={loading} className={cn(authButtonClass, "mt-1")}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
@@ -336,18 +297,15 @@ export function CustomerSignUpForm() {
         </Button>
       </form>
 
-      {/* Switch to Sign In */}
-      <div className="mt-8 pt-6 border-t border-[#E2ECE4] text-center">
-        <p className="text-sm text-stone-600">
-          Already have an account?{" "}
-          <Link
-            href={`/login${redirectParam ? `?redirect_url=${encodeURIComponent(redirectParam)}` : ""}`}
-            className="font-bold text-forest-800 hover:text-forest-950 hover:underline transition"
-          >
-            Sign in
-          </Link>
-        </p>
-      </div>
+      <AuthFooterRow>
+        Already have an account?{" "}
+        <Link
+          href={`/login${redirectParam ? `?redirect_url=${encodeURIComponent(redirectParam)}` : ""}`}
+          className={authLinkClass}
+        >
+          Sign in
+        </Link>
+      </AuthFooterRow>
     </div>
   );
 }

@@ -1,68 +1,111 @@
 import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { ShieldCheck, Sparkles } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface AuthShellProps {
-  badgeText: string;
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
+/*
+ * Shared building blocks for every account screen (sign in, register, password reset,
+ * staff sign in, onboarding) and the subscribe form, so they read as one family:
+ * same card, heading scale, label, 48px input, primary button and alert styles.
+ */
+
+export const authLabelClass = "block text-sm font-medium text-stone-800 mb-1.5";
+
+/** 48px input. text-base on mobile prevents iOS focus zoom. Invalid fields turn red via aria-invalid. */
+export const authInputClass =
+  "block w-full h-12 px-4 rounded-xl border border-[#E2ECE4] bg-white text-base sm:text-sm text-stone-900 placeholder:text-stone-400 transition focus:outline-none focus:ring-2 focus:ring-forest-600 focus:border-transparent aria-[invalid=true]:border-red-400 aria-[invalid=true]:focus:ring-red-300 read-only:bg-stone-50 read-only:text-stone-600 disabled:bg-stone-50 disabled:text-stone-600";
+
+/** Add to authInputClass when a leading icon is shown. */
+export const authInputWithIconClass = "pl-10";
+
+export const authHintClass = "mt-1.5 text-xs text-stone-500";
+export const authFieldErrorClass = "mt-1.5 text-xs font-medium text-red-700";
+
+export const authButtonClass =
+  "w-full h-12 rounded-xl bg-forest-900 hover:bg-forest-950 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 hover:translate-y-0 focus-visible:ring-forest-600";
+
+export const authLinkClass =
+  "font-semibold text-forest-800 hover:text-forest-950 hover:underline underline-offset-4 transition rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600";
+
+/** Leading icon slot inside a relative input wrapper. */
+export function FieldIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+      {children}
+    </span>
+  );
 }
 
-export function AuthShell({ badgeText, title, subtitle, children }: AuthShellProps) {
+/** Page wrapper for single-card screens (forgot / reset password, onboarding). */
+export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-canvas relative overflow-hidden flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-emerald-100/50 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-teal-100/40 blur-3xl"
-      />
+    <div className="bg-canvas flex justify-center items-start sm:items-center px-4 py-10 sm:py-16 min-h-[calc(100vh-4rem)]">
+      {children}
+    </div>
+  );
+}
 
-      <div className="relative z-10 w-full max-w-md space-y-6">
-        <div className="text-center space-y-3">
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-xl p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-            aria-label="Humming Drops Home"
-          >
-            <div className="relative h-9 w-36">
-              <Image
-                src="/images/humming-drops-logo.png"
-                alt="Humming Drops"
-                fill
-                sizes="144px"
-                className="object-contain"
-                priority
-              />
-            </div>
-          </Link>
+export function AuthCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "w-full max-w-md bg-white border border-[#E2ECE4] rounded-3xl p-6 sm:p-8 shadow-sm",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
 
-          <div className="flex justify-center">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-subtle border border-line-subtle text-brand-primary text-xs font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-              <span>{badgeText}</span>
-            </span>
-          </div>
+export function AuthHeader({
+  title,
+  description,
+  className,
+}: {
+  title: string;
+  description?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("mb-6", className)}>
+      <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-forest-950 tracking-tight">
+        {title}
+      </h1>
+      {description ? <p className="mt-2 text-sm text-stone-600 leading-relaxed">{description}</p> : null}
+    </div>
+  );
+}
 
-          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-content-primary tracking-tight">
-            {title}
-          </h1>
-          <p className="text-sm text-content-secondary max-w-sm mx-auto leading-relaxed">
-            {subtitle}
-          </p>
-        </div>
+export function AuthErrorAlert({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <div
+      id={id}
+      role="alert"
+      className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 flex items-start gap-3 text-sm text-red-800"
+    >
+      <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
+      <div className="min-w-0">{children}</div>
+    </div>
+  );
+}
 
-        <div className="flex justify-center">{children}</div>
+export function AuthSuccessAlert({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      role="status"
+      className="mb-6 rounded-2xl border border-forest-200 bg-forest-50 p-4 flex items-start gap-3 text-sm text-forest-900"
+    >
+      <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" aria-hidden="true" />
+      <div className="min-w-0">{children}</div>
+    </div>
+  );
+}
 
-        <p className="text-center text-xs text-content-muted flex items-center justify-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-brand-primary shrink-0" aria-hidden="true" />
-          <span>Encrypted Session Security · Fresh morning delivery across Bangalore</span>
-        </p>
-      </div>
+/** Divider row at the bottom of a card ("New here? Create an account"). */
+export function AuthFooterRow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-8 pt-6 border-t border-[#E2ECE4] text-center text-sm text-stone-600">
+      {children}
     </div>
   );
 }

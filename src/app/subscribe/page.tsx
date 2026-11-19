@@ -21,6 +21,7 @@ import {
   Leaf,
   Info,
   Plus,
+  Loader2,
 } from "lucide-react";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { DietaryType } from "@/types/subscription";
@@ -30,6 +31,16 @@ import { Card } from "@/components/ui/card";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { isValidPlanTier } from "@/lib/auth-redirects";
 import { normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
+import { cn } from "@/lib/utils";
+import {
+  FieldIcon,
+  authButtonClass,
+  authFieldErrorClass,
+  authHintClass,
+  authInputClass,
+  authInputWithIconClass,
+  authLabelClass,
+} from "@/components/auth/auth-shell";
 
 interface ConfirmationData {
   leadReferenceCode: string;
@@ -329,7 +340,7 @@ function SubscribeFormContent() {
             </div>
 
             <div className="space-y-2">
-              <Badge variant="warning" size="md" className="uppercase tracking-wider">
+              <Badge variant="warning" size="md">
                 Registration Received · Pending Confirmation
               </Badge>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-forest-900 font-display">
@@ -342,7 +353,7 @@ function SubscribeFormContent() {
 
             <div className="p-4 rounded-2xl bg-forest-50/60 border border-forest-900/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
               <div>
-                <span className="text-[11px] font-bold text-forest-800 uppercase tracking-wider block">
+                <span className="text-xs font-semibold text-forest-800 block">
                   Lead Reference Code
                 </span>
                 <span className="font-mono text-xl font-extrabold text-forest-900 tracking-wider">
@@ -352,9 +363,9 @@ function SubscribeFormContent() {
               <button
                 type="button"
                 onClick={handleCopyReference}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-forest-900/20 text-forest-900 hover:bg-forest-50 transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 min-h-[44px] rounded-xl bg-white border border-forest-900/20 text-forest-900 hover:bg-forest-50 transition-colors shadow-sm"
               >
-                <Copy className="w-3.5 h-3.5" />
+                <Copy className="w-4 h-4" aria-hidden="true" />
                 {copiedRef ? "Copied to Clipboard!" : "Copy Code"}
               </button>
             </div>
@@ -371,19 +382,19 @@ function SubscribeFormContent() {
               <h3 className="font-bold text-sm text-stone-900 font-display">Registration Summary</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-xl border border-stone-200/60">
                 <div>
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Selected Plan</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Selected Plan</span>
                   <span className="font-bold text-forest-900 text-sm">
                     {confirmationData.plan.name} Plan
                   </span>
                   <span className="text-stone-500 block">{inr(confirmationData.plan.monthlyPriceINR)}/month</span>
                 </div>
                 <div>
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Contact Phone</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Contact Phone</span>
                   <span className="font-semibold text-stone-800">{confirmationData.customer.phone}</span>
                   <span className="text-stone-500 block truncate">{confirmationData.customer.email}</span>
                 </div>
                 <div className="sm:col-span-2">
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Delivery Destination</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Delivery Destination</span>
                   <span className="font-medium text-stone-800">
                     {confirmationData.deliveryAddress.flatNo}, {confirmationData.deliveryAddress.buildingName},{" "}
                     {confirmationData.deliveryAddress.streetAddress}, {confirmationData.deliveryAddress.area},{" "}
@@ -403,7 +414,7 @@ function SubscribeFormContent() {
                 <span>Chat with the team on WhatsApp</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
-              <p className="text-[11px] text-stone-500">
+              <p className={authHintClass}>
                 Official coordinator helpline: <strong>+91 {OFFICIAL_CONTACT.phone}</strong> · Kitchen: {OFFICIAL_CONTACT.kitchenLocation}
               </p>
             </div>
@@ -483,7 +494,7 @@ function SubscribeFormContent() {
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 1 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -510,7 +521,7 @@ function SubscribeFormContent() {
                     type="button"
                     aria-pressed={selectedPlanId === "standard"}
                     onClick={() => setSelectedPlanId("standard")}
-                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "standard"
                         ? "border-forest-900 bg-forest-50/20 shadow-md ring-2 ring-forest-900/10"
                         : "border-stone-200 hover:border-stone-300 bg-white"
@@ -549,7 +560,7 @@ function SubscribeFormContent() {
                     type="button"
                     aria-pressed={selectedPlanId === "premium"}
                     onClick={() => setSelectedPlanId("premium")}
-                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "premium"
                         ? "border-forest-900 bg-forest-50/30 shadow-md ring-2 ring-forest-900/15"
                         : "border-stone-200 hover:border-stone-300 bg-white"
@@ -607,7 +618,7 @@ function SubscribeFormContent() {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 2 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -619,12 +630,14 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="space-y-4 pt-2">
-                  <div className="space-y-1">
-                    <label htmlFor="fullName" className="block text-xs font-bold text-stone-700">
-                      Full Name <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="fullName" className={authLabelClass}>
+                      Full Name <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
+                      <FieldIcon>
+                        <User className="w-4 h-4" aria-hidden="true" />
+                      </FieldIcon>
                       <input
                         id="fullName"
                         aria-invalid={errors.fullName ? true : undefined}
@@ -634,22 +647,18 @@ function SubscribeFormContent() {
                         value={customer.fullName}
                         onChange={(e) => setCustomer({ ...customer, fullName: e.target.value })}
                         placeholder="e.g. Aditi Rao"
-                        className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.fullName
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, authInputWithIconClass)}
                       />
                     </div>
-                    {errors.fullName && <p id="fullName-error" role="alert" className="text-[11px] text-red-700">{errors.fullName}</p>}
+                    {errors.fullName && <p id="fullName-error" role="alert" className={authFieldErrorClass}>{errors.fullName}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="phone" className="block text-xs font-bold text-stone-700">
-                      WhatsApp Mobile Number <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="phone" className={authLabelClass}>
+                      WhatsApp Mobile Number <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
-                    <div className="relative flex">
-                      <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-xs font-bold">
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-[#E2ECE4] bg-stone-50 text-stone-600 text-sm font-semibold">
                         +91
                       </span>
                       <input
@@ -661,28 +670,26 @@ function SubscribeFormContent() {
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
                         placeholder="98765 43210"
-                        className={`w-full px-3 py-2.5 text-sm rounded-r-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.phone
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, "rounded-l-none")}
                       />
                     </div>
                     {errors.phone ? (
-                      <p id="phone-error" role="alert" className="text-[11px] text-red-700">{errors.phone}</p>
+                      <p id="phone-error" role="alert" className={authFieldErrorClass}>{errors.phone}</p>
                     ) : (
-                      <p className="text-[11px] text-stone-500">
+                      <p className={authHintClass}>
                         10-digit Indian mobile number for daily delivery updates.
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="email" className="block text-xs font-bold text-stone-700">
-                      Email Address <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="email" className={authLabelClass}>
+                      Email Address <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
+                      <FieldIcon>
+                        <Mail className="w-4 h-4" aria-hidden="true" />
+                      </FieldIcon>
                       <input
                         id="email"
                         aria-invalid={errors.email ? true : undefined}
@@ -693,17 +700,13 @@ function SubscribeFormContent() {
                         aria-describedby={errors.email ? "email-error" : "email-help"}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                         placeholder="aditi@example.com"
-                        className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.email
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, authInputWithIconClass)}
                       />
                     </div>
                     {errors.email ? (
-                      <p id="email-error" role="alert" className="text-[11px] text-red-700">{errors.email}</p>
+                      <p id="email-error" role="alert" className={authFieldErrorClass}>{errors.email}</p>
                     ) : (
-                      <p id="email-help" className="text-[11px] text-stone-500">
+                      <p id="email-help" className={authHintClass}>
                         {emailLocked
                           ? "This is your account email. Registrations are linked to it."
                           : "Use the email you signed in with."}
@@ -716,7 +719,7 @@ function SubscribeFormContent() {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 3 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -728,9 +731,9 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-1">
-                    <label htmlFor="flatNo" className="block text-xs font-bold text-stone-700">
-                      Flat / Door / Apt No. <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="flatNo" className={authLabelClass}>
+                      Flat / Door / Apt No. <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="flatNo"
@@ -741,18 +744,14 @@ function SubscribeFormContent() {
                       value={deliveryAddress.flatNo}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, flatNo: e.target.value })}
                       placeholder="e.g. Apt 402, Block B"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.flatNo
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.flatNo && <p id="flatNo-error" role="alert" className="text-[11px] text-red-700">{errors.flatNo}</p>}
+                    {errors.flatNo && <p id="flatNo-error" role="alert" className={authFieldErrorClass}>{errors.flatNo}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="buildingName" className="block text-xs font-bold text-stone-700">
-                      Building / Society Name <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="buildingName" className={authLabelClass}>
+                      Building / Society Name <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="buildingName"
@@ -763,18 +762,14 @@ function SubscribeFormContent() {
                       value={deliveryAddress.buildingName}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, buildingName: e.target.value })}
                       placeholder="e.g. Prestige Greenwoods"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.buildingName
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.buildingName && <p id="buildingName-error" role="alert" className="text-[11px] text-red-700">{errors.buildingName}</p>}
+                    {errors.buildingName && <p id="buildingName-error" role="alert" className={authFieldErrorClass}>{errors.buildingName}</p>}
                   </div>
 
-                  <div className="sm:col-span-2 space-y-1">
-                    <label htmlFor="streetAddress" className="block text-xs font-bold text-stone-700">
-                      Street Address / Road <span className="text-red-500">*</span>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="streetAddress" className={authLabelClass}>
+                      Street Address / Road <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="streetAddress"
@@ -785,18 +780,14 @@ function SubscribeFormContent() {
                       value={deliveryAddress.streetAddress}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, streetAddress: e.target.value })}
                       placeholder="e.g. 14th Main, 5th Cross, Near Sony World Signal"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.streetAddress
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.streetAddress && <p id="streetAddress-error" role="alert" className="text-[11px] text-red-700">{errors.streetAddress}</p>}
+                    {errors.streetAddress && <p id="streetAddress-error" role="alert" className={authFieldErrorClass}>{errors.streetAddress}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="area" className="block text-xs font-bold text-stone-700">
-                      Area / Neighborhood <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="area" className={authLabelClass}>
+                      Area / Neighborhood <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="area"
@@ -807,32 +798,28 @@ function SubscribeFormContent() {
                       value={deliveryAddress.area}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, area: e.target.value })}
                       placeholder="e.g. Koramangala, Indiranagar, HSR"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.area
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.area && <p id="area-error" role="alert" className="text-[11px] text-red-700">{errors.area}</p>}
+                    {errors.area && <p id="area-error" role="alert" className={authFieldErrorClass}>{errors.area}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <span id="city-label" className="block text-xs font-bold text-stone-700">
+                        <span id="city-label" className={authLabelClass}>
                           City
                         </span>
                         <div
                           aria-labelledby="city-label"
-                          className="px-3 py-2.5 text-sm rounded-xl border border-stone-200 bg-stone-100 text-stone-700 font-semibold flex items-center gap-1.5"
+                          className="h-12 px-4 text-base sm:text-sm rounded-xl border border-[#E2ECE4] bg-stone-50 text-stone-700 font-semibold flex items-center gap-1.5"
                         >
                           <MapPin className="w-3.5 h-3.5 text-forest-700" aria-hidden="true" />
                           <span>Bangalore</span>
                         </div>
                       </div>
                       <div>
-                        <label htmlFor="pincode" className="block text-xs font-bold text-stone-700">
-                          Pincode <span className="text-red-500">*</span>
+                        <label htmlFor="pincode" className={authLabelClass}>
+                          Pincode <span className="text-red-600" aria-hidden="true">*</span>
                         </label>
                         <input
                           id="pincode"
@@ -844,19 +831,15 @@ function SubscribeFormContent() {
                           value={deliveryAddress.pincode}
                           onChange={(e) => setDeliveryAddress({ ...deliveryAddress, pincode: e.target.value })}
                           placeholder="560034"
-                          className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                            errors.pincode
-                              ? "border-red-400 focus:ring-red-200"
-                              : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                          }`}
+                          className={authInputClass}
                         />
                       </div>
                     </div>
-                    {errors.pincode && <p id="pincode-error" role="alert" className="text-[11px] text-red-700">{errors.pincode}</p>}
+                    {errors.pincode && <p id="pincode-error" role="alert" className={authFieldErrorClass}>{errors.pincode}</p>}
                   </div>
 
-                  <div className="sm:col-span-2 space-y-1">
-                    <label htmlFor="deliveryNotes" className="block text-xs font-bold text-stone-700">
+                  <div className="sm:col-span-2">
+                    <label htmlFor="deliveryNotes" className={authLabelClass}>
                       Optional Morning Delivery Notes
                     </label>
                     <input
@@ -865,9 +848,9 @@ function SubscribeFormContent() {
                       value={deliveryAddress.deliveryNotes}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, deliveryNotes: e.target.value })}
                       placeholder="e.g. Leave with building security / Ring bell twice"
-                      className="w-full px-3 py-2.5 text-sm rounded-xl border border-stone-300 font-sans focus:outline-none focus:ring-2 focus:ring-forest-900/20 focus:border-forest-900"
+                      className={authInputClass}
                     />
-                    <p className="text-[11px] text-stone-500">
+                    <p className={authHintClass}>
                       Specific gate instructions or door drop preferences.
                     </p>
                   </div>
@@ -878,7 +861,7 @@ function SubscribeFormContent() {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 4 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -890,7 +873,7 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="space-y-2 pt-2">
-                  <label className="block text-xs font-bold text-stone-700">Dietary Style</label>
+                  <label className={authLabelClass}>Dietary Style</label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                       {
@@ -926,14 +909,14 @@ function SubscribeFormContent() {
                             <Check className="w-3.5 h-3.5 text-forest-800" />
                           )}
                         </div>
-                        <p className="text-[11px] text-stone-500 leading-snug">{style.desc}</p>
+                        <p className="text-xs text-stone-500 leading-snug">{style.desc}</p>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold text-stone-700">
+                  <label className={authLabelClass}>
                     Allergies or Intolerances (Select all that apply)
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -945,7 +928,7 @@ function SubscribeFormContent() {
                           type="button"
                           aria-pressed={isSelected}
                           onClick={() => toggleAllergy(allergy)}
-                          className={`inline-flex items-center gap-1.5 text-xs px-3.5 py-2 min-h-[38px] rounded-full border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                          className={`inline-flex items-center gap-1.5 text-sm px-4 py-2 min-h-[44px] rounded-full border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                             isSelected
                               ? "bg-forest-900 text-white border-forest-900 shadow-xs"
                               : "bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-300"
@@ -963,8 +946,8 @@ function SubscribeFormContent() {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="dietNotes" className="block text-xs font-bold text-stone-700">
+                <div>
+                  <label htmlFor="dietNotes" className={authLabelClass}>
                     Additional Dietary Notes
                   </label>
                   <textarea
@@ -973,7 +956,7 @@ function SubscribeFormContent() {
                     value={dietaryPreferences.notes}
                     onChange={(e) => setDietaryPreferences({ ...dietaryPreferences, notes: e.target.value })}
                     placeholder="e.g. Please no spicy dressings, low sodium salad, prefer soft fruits"
-                    className="w-full px-3 py-2.5 text-sm rounded-xl border border-stone-300 font-sans focus:outline-none focus:ring-2 focus:ring-forest-900/20 focus:border-forest-900"
+                    className={cn(authInputClass, "h-auto py-3 leading-relaxed")}
                   />
                 </div>
               </div>
@@ -981,7 +964,7 @@ function SubscribeFormContent() {
             {currentStep === 5 && activePlan && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 5 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -1002,7 +985,7 @@ function SubscribeFormContent() {
                         Monthly breakfast box subscription
                       </span>
                     </div>
-                    <span className="font-mono text-xl font-extrabold text-forest-900">
+                    <span className="text-xl font-extrabold text-forest-900 tabular-nums">
                       {inr(activePlan.monthlyPriceINR)}
                     </span>
                   </div>
@@ -1022,7 +1005,7 @@ function SubscribeFormContent() {
                     </div>
                     <div className="flex justify-between pt-2 border-t border-forest-900/10 text-sm font-extrabold text-forest-950">
                       <span>Plan price:</span>
-                      <span className="font-mono text-base">{inr(activePlan.monthlyPriceINR)} / month</span>
+                      <span className="text-base tabular-nums">{inr(activePlan.monthlyPriceINR)} / month</span>
                     </div>
                   </div>
                 </div>
@@ -1030,11 +1013,11 @@ function SubscribeFormContent() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Contact</span>
+                      <span className="text-xs font-semibold text-stone-500">Contact</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(2)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
                         Edit
                       </button>
@@ -1046,11 +1029,11 @@ function SubscribeFormContent() {
 
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Delivery</span>
+                      <span className="text-xs font-semibold text-stone-500">Delivery</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(3)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
                         Edit
                       </button>
@@ -1065,11 +1048,11 @@ function SubscribeFormContent() {
 
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Diet Style</span>
+                      <span className="text-xs font-semibold text-stone-500">Diet Style</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(4)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
                         Edit
                       </button>
@@ -1115,16 +1098,16 @@ function SubscribeFormContent() {
                   type="button"
                   onClick={handleBack}
                   disabled={isPending}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl text-sm font-semibold text-stone-700 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Back
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back
                 </button>
               ) : (
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center sm:justify-start min-h-[44px] px-2 text-xs text-stone-500 hover:text-stone-800 transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl text-sm font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                 >
-                  ← Cancel &amp; Return
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Cancel &amp; Return
                 </Link>
               )}
 
@@ -1136,11 +1119,11 @@ function SubscribeFormContent() {
                   variant="primary"
                   size="md"
                   asChild
-                  className="rounded-full px-6"
+                  className={cn(authButtonClass, "sm:w-auto px-6")}
                 >
                   <Link href={`/login?redirect_url=${encodeURIComponent(`/subscribe?plan=${selectedPlanId}`)}`}>
                     <span>Sign in to continue</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Link>
                 </Button>
               ) : currentStep < 5 ? (
@@ -1151,10 +1134,10 @@ function SubscribeFormContent() {
                   brand="humming"
                   variant="primary"
                   size="md"
-                  className="rounded-full px-6"
+                  className={cn(authButtonClass, "sm:w-auto px-6")}
                 >
                   <span>Continue</span>
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Button>
               ) : (
                 <Button
@@ -1165,10 +1148,10 @@ function SubscribeFormContent() {
                   brand="humming"
                   variant="primary"
                   size="lg"
-                  className="rounded-full px-8 bg-forest-900 hover:bg-forest-800 shadow-md"
+                  className={cn(authButtonClass, "sm:w-auto px-6 h-auto min-h-12 py-3")}
                 >
                   <span>Submit Registration &amp; Connect on WhatsApp</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                 </Button>
               )}
             </div>
@@ -1185,7 +1168,7 @@ export default function SubscribePage() {
       fallback={
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center space-y-3">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+            <Loader2 className="mx-auto w-6 h-6 animate-spin text-forest-700" aria-hidden="true" />
             <p className="text-sm font-medium text-stone-500">Loading subscription form…</p>
           </div>
         </div>

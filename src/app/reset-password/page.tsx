@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthCard, AuthShell } from "@/components/auth/auth-shell";
 import { ResetPasswordForm } from "@/components/auth/password-reset-forms";
 
 export const metadata: Metadata = {
@@ -14,10 +15,10 @@ export default async function ResetPasswordPage({
 }) {
   const { token } = await searchParams;
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#FDFCF7] flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md bg-white border border-[#E2ECE4] rounded-3xl p-6 sm:p-8 shadow-sm">
+    <AuthShell>
+      <AuthCard>
         <ResetPasswordForm token={typeof token === "string" ? token : ""} />
-      </div>
-    </div>
+      </AuthCard>
+    </AuthShell>
   );
 }

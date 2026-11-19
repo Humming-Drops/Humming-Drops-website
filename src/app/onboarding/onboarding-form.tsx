@@ -3,7 +3,13 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import {
+  AuthErrorAlert,
+  authButtonClass,
+  authInputClass,
+  authLabelClass,
+} from "@/components/auth/auth-shell";
 
 export function OnboardingForm({ defaultEmail }: { defaultEmail: string }) {
   const router = useRouter();
@@ -36,63 +42,65 @@ export function OnboardingForm({ defaultEmail }: { defaultEmail: string }) {
   };
 
   return (
-    <Card className="p-6 space-y-5">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-          <label htmlFor="email" className="block text-xs font-bold text-content-secondary">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            disabled
-            value={defaultEmail}
-            className="w-full px-3 py-2.5 text-sm rounded-xl border border-line-subtle bg-muted/40 text-content-secondary"
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {error ? (
+        <AuthErrorAlert id="onboarding-error">
+          <p>{error}</p>
+        </AuthErrorAlert>
+      ) : null}
 
-        <div className="space-y-1">
-          <label htmlFor="fullName" className="block text-xs font-bold text-content-secondary">
-            Full name <span className="text-red-500">*</span>
-          </label>
+      <div>
+        <label htmlFor="email" className={authLabelClass}>
+          Email
+        </label>
+        <input id="email" type="email" disabled value={defaultEmail} className={authInputClass} />
+      </div>
+
+      <div>
+        <label htmlFor="fullName" className={authLabelClass}>
+          Full name <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="fullName"
+          type="text"
+          required
+          minLength={2}
+          autoComplete="name"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "onboarding-error" : undefined}
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder="Your name"
+          className={authInputClass}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className={authLabelClass}>
+          WhatsApp mobile number <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
+        <div className="flex">
+          <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-[#E2ECE4] bg-stone-50 text-stone-600 text-sm font-semibold">
+            +91
+          </span>
           <input
-            id="fullName"
-            type="text"
+            id="phone"
+            type="tel"
             required
-            minLength={2}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Your name"
-            className="w-full px-3 py-2.5 text-sm rounded-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+            autoComplete="tel-national"
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? "onboarding-error" : undefined}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="98765 43210"
+            className={cn(authInputClass, "rounded-l-none")}
           />
         </div>
+      </div>
 
-        <div className="space-y-1">
-          <label htmlFor="phone" className="block text-xs font-bold text-content-secondary">
-            WhatsApp mobile number <span className="text-red-500">*</span>
-          </label>
-          <div className="relative flex">
-            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-line-subtle bg-muted/40 text-content-secondary text-xs font-bold">
-              +91
-            </span>
-            <input
-              id="phone"
-              type="tel"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="98765 43210"
-              className="w-full px-3 py-2.5 text-sm rounded-r-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-            />
-          </div>
-        </div>
-
-        {error ? <p className="text-xs text-red-600">{error}</p> : null}
-
-        <Button type="submit" variant="primary" size="md" isLoading={isPending} className="w-full rounded-full">
-          Continue
-        </Button>
-      </form>
-    </Card>
+      <Button type="submit" isLoading={isPending} className={cn(authButtonClass, "mt-1")}>
+        Continue
+      </Button>
+    </form>
   );
 }

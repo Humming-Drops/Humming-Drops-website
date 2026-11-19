@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Loader2, Sparkles, Check, ShieldCheck } from "lucide-react";
+import { AuthCard } from "@/components/auth/auth-shell";
 import { CustomerSignUpForm } from "@/components/auth/customer-sign-up-form";
 
 export const metadata: Metadata = {
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 
 function FormFallback() {
   return (
-    <div className="w-full max-w-md mx-auto p-8 flex flex-col items-center justify-center min-h-[360px] text-stone-400">
-      <Loader2 className="w-6 h-6 animate-spin text-forest-700" />
+    <div className="w-full flex flex-col items-center justify-center min-h-[360px]">
+      <Loader2 className="w-6 h-6 animate-spin text-forest-700" aria-hidden="true" />
       <p className="mt-3 text-xs text-stone-500">Loading registration form...</p>
     </div>
   );
@@ -19,12 +20,12 @@ function FormFallback() {
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#FDFCF7] flex flex-col justify-between selection:bg-forest-100 selection:text-forest-900">
+    <div className="bg-canvas selection:bg-forest-100 selection:text-forest-900">
       {/* Main Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 flex items-center">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Why Join Humming Drops */}
-          <div className="lg:col-span-6 space-y-6 lg:pr-8">
+          <div className="order-2 lg:order-1 lg:col-span-6 space-y-6 lg:pr-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-forest-50 text-forest-800 border border-forest-200">
               <Sparkles className="w-3.5 h-3.5 text-forest-600" aria-hidden="true" />
               <span>Bangalore&apos;s Morning Nutrition Club</span>
@@ -79,27 +80,15 @@ export default function RegisterPage() {
           </div>
 
           {/* Right Column: Custom Registration Form */}
-          <div className="lg:col-span-6 flex justify-center">
-            <div className="w-full max-w-md bg-white border border-[#E2ECE4] rounded-3xl p-6 sm:p-8 shadow-sm">
+          <div className="order-1 lg:order-2 lg:col-span-6 flex justify-center">
+            <AuthCard>
               <Suspense fallback={<FormFallback />}>
                 <CustomerSignUpForm />
               </Suspense>
-            </div>
+            </AuthCard>
           </div>
         </div>
-      </main>
-
-      {/* Footer minimal */}
-      <footer className="w-full border-t border-[#E2ECE4]/70 bg-white/40 py-6 px-6 text-center text-xs text-stone-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p>© {new Date().getFullYear()} Humming Drops &amp; MedCity Smiles. All rights reserved.</p>
-          <div className="flex items-center gap-4 text-xs">
-            <span>Help: 8618902810</span>
-            <span>·</span>
-            <span>hummingdrops@gmail.com</span>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

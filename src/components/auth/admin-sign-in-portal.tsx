@@ -11,12 +11,27 @@ import {
   AlertCircle,
   Loader2,
   ArrowRight,
+  ArrowLeft,
   LogOut,
   Terminal,
 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { isSafeRedirectUrl } from "@/lib/auth-redirects";
 import { useAuth } from "@/lib/auth/client";
+import { cn } from "@/lib/utils";
+import {
+  AuthCard,
+  AuthErrorAlert,
+  AuthFooterRow,
+  AuthHeader,
+  FieldIcon,
+  authButtonClass,
+  authInputClass,
+  authInputWithIconClass,
+  authLabelClass,
+  authLinkClass,
+} from "@/components/auth/auth-shell";
 
 export function AdminSignInPortal() {
   const { user, isSignedIn, logout } = useAuth();
@@ -71,180 +86,163 @@ export function AdminSignInPortal() {
   const isInsufficientCustomer = isSignedIn && user?.role === "customer";
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-forest-700 selection:text-white">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md px-4">
-        {/* Operations Badge */}
-        <div className="flex justify-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-900/60 border border-forest-700/60 text-xs font-semibold text-emerald-400 shadow-inner">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" aria-hidden="true" />
-            <span>Operations Console</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-canvas flex justify-center items-start sm:items-center px-4 py-10 sm:py-16 selection:bg-forest-100 selection:text-forest-900">
+      <div className="w-full max-w-md">
+        <Link
+          href="/"
+          aria-label="Humming Drops Home"
+          className="mx-auto mb-6 flex w-fit rounded-xl p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
+        >
+          <span className="relative block h-12 w-28">
+            <Image
+              src="/images/humming-drops-logo.png"
+              alt="Humming Drops"
+              fill
+              sizes="112px"
+              className="object-contain"
+              priority
+            />
+          </span>
+        </Link>
 
-        {/* Heading */}
-        <h2 className="mt-4 text-center font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Humming Drops Staff Access
-        </h2>
-        <p className="mt-2 text-center text-xs sm:text-sm text-stone-400">
-          Bangalore Kitchen Dispatch &middot; Berrybeats Cafe &middot; MedCity Vitals
-        </p>
-      </div>
+        <AuthCard>
+          <p className="mb-2 inline-flex items-center gap-1.5 text-sm font-semibold text-forest-800">
+            <ShieldCheck className="w-4 h-4" aria-hidden="true" />
+            Operations Console
+          </p>
+          <AuthHeader
+            title="Humming Drops Staff Access"
+            description="Bangalore Kitchen Dispatch · Berrybeats Cafe · MedCity Vitals"
+          />
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-stone-900/90 border border-stone-800 rounded-2xl py-8 px-6 sm:px-10 shadow-2xl backdrop-blur">
-          {/* Insufficient permissions notice if customer is logged in */}
           {isInsufficientCustomer ? (
             <div className="space-y-6">
               <div
                 role="alert"
-                className="rounded-xl border border-amber-500/40 bg-amber-950/40 p-4 text-amber-200 text-xs leading-relaxed space-y-2"
+                className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 leading-relaxed space-y-2"
               >
-                <div className="flex items-center gap-2 font-bold text-amber-300">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-amber-400" />
+                <div className="flex items-center gap-2 font-bold">
+                  <AlertCircle className="w-5 h-5 shrink-0 text-amber-700" aria-hidden="true" />
                   <span>Insufficient Privileges</span>
                 </div>
                 <p>
-                  You are signed in as <span className="font-mono text-white font-semibold">{user.email}</span>, which is a customer subscriber account and does not hold staff permissions for the Operations Console.
+                  You are signed in as <span className="font-semibold break-all">{user.email}</span>, which is a customer subscriber account and does not hold staff permissions for the Operations Console.
                 </p>
               </div>
 
-              <div className="space-y-2.5">
-                <Button
-                  onClick={() => logout()}
-                  variant="outline"
-                  className="w-full h-11 border-stone-700 hover:bg-stone-800 text-stone-200 text-xs font-bold flex items-center justify-center gap-2"
-                >
-                  <LogOut className="w-4 h-4" />
+              <div className="space-y-2">
+                <Button onClick={() => logout()} className={authButtonClass}>
+                  <LogOut className="w-4 h-4" aria-hidden="true" />
                   <span>Sign out and switch to staff account</span>
                 </Button>
 
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="w-full h-11 text-stone-400 hover:text-white text-xs font-semibold"
+                <Link
+                  href="/dashboard/overview"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-forest-800 hover:bg-forest-50 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                 >
-                  <Link href="/dashboard/overview">
-                    &larr; Return to Customer Dashboard
-                  </Link>
-                </Button>
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                  Return to Customer Dashboard
+                </Link>
               </div>
             </div>
           ) : (
             <>
-              {/* Error Banner */}
               {error && (
-                <div
-                  role="alert"
-                  className="mb-6 rounded-xl border border-red-500/40 bg-red-950/40 p-3.5 flex items-start gap-3 text-xs text-red-200 animate-in fade-in"
-                >
-                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <AuthErrorAlert id="admin-auth-error">
                   <p>{error}</p>
-                </div>
+                </AuthErrorAlert>
               )}
 
-              {/* Staff Sign-in Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label
-                    htmlFor="admin-email"
-                    className="block text-xs font-bold uppercase tracking-wider text-stone-300 mb-1.5"
-                  >
+                  <label htmlFor="admin-email" className={authLabelClass}>
                     Staff Email
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-                      <Mail className="w-4 h-4" />
-                    </div>
+                    <FieldIcon>
+                      <Mail className="w-4 h-4" aria-hidden="true" />
+                    </FieldIcon>
                     <input
                       id="admin-email"
                       type="email"
                       required
                       autoComplete="email"
+                      aria-invalid={error ? true : undefined}
+                      aria-describedby={error ? "admin-auth-error" : undefined}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                      className={cn(authInputClass, authInputWithIconClass)}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="admin-password"
-                    className="block text-xs font-bold uppercase tracking-wider text-stone-300 mb-1.5"
-                  >
+                  <label htmlFor="admin-password" className={authLabelClass}>
                     Password
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-                      <Lock className="w-4 h-4" />
-                    </div>
+                    <FieldIcon>
+                      <Lock className="w-4 h-4" aria-hidden="true" />
+                    </FieldIcon>
                     <input
                       id="admin-password"
                       type={showPassword ? "text" : "password"}
                       required
                       autoComplete="current-password"
+                      aria-invalid={error ? true : undefined}
+                      aria-describedby={error ? "admin-auth-error" : undefined}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Staff security credentials"
-                      className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-stone-700 bg-stone-950 text-white placeholder:text-stone-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                      className={cn(authInputClass, authInputWithIconClass, "pr-12")}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? "Hide password" : "Show password"}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-300 transition"
+                      className="absolute inset-y-0 right-0 w-12 flex items-center justify-center rounded-r-xl text-stone-400 hover:text-stone-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                     >
                       {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
+                        <EyeOff className="w-4 h-4" aria-hidden="true" />
                       ) : (
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4" aria-hidden="true" />
                       )}
                     </button>
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-11 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2 mt-2"
-                >
+                <Button type="submit" disabled={loading} className={cn(authButtonClass, "mt-1")}>
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                       <span>Authenticating staff credentials...</span>
                     </>
                   ) : (
                     <>
                       <span>Enter Operations Console</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
                     </>
                   )}
                 </Button>
               </form>
 
-              {/* Developer Helper */}
               {process.env.NODE_ENV === "development" && (
-              <div className="mt-6 pt-5 border-t border-stone-800 text-center">
-                <div className="inline-flex items-center gap-1.5 text-[11px] text-stone-400">
-                  <Terminal className="w-3.5 h-3.5 text-stone-400" />
+                <p className="mt-6 flex items-center justify-center gap-1.5 text-xs text-stone-500">
+                  <Terminal className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Default Admin: admin@hummingdrops.dev</span>
-                </div>
-              </div>
+                </p>
               )}
             </>
           )}
 
-          {/* Customer Portal Link */}
-          <div className="mt-6 text-center">
-            <Link
-              href="/"
-              className="text-xs text-stone-400 hover:text-stone-200 transition"
-            >
-              &larr; Return to Humming Drops Main Website
+          <AuthFooterRow>
+            <Link href="/" className={cn(authLinkClass, "inline-flex items-center gap-1.5 py-2")}>
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+              Return to Humming Drops Main Website
             </Link>
-          </div>
-        </div>
+          </AuthFooterRow>
+        </AuthCard>
       </div>
     </div>
   );
