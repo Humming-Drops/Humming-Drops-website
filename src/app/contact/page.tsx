@@ -11,18 +11,18 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="w-full bg-[#FCFDF9] min-h-[calc(100vh-4rem)] py-10 sm:py-16">
-      <div className="max-w-2xl mx-auto px-5 sm:px-6 space-y-6 sm:space-y-8">
+    <div className="w-full bg-[#FCFDF9] min-h-[calc(100vh-4rem)] border-b border-line-subtle">
+      <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 space-y-8">
         {/* Header */}
-        <div className="space-y-3 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <div className="space-y-4 text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
             <span>Customer Care &amp; Kitchen Hub</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#132A1C] tracking-tight">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#132A1C] tracking-tight leading-tight">
             Get in Touch
           </h1>
-          <p className="text-sm sm:text-base text-[#405347] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed">
             Have questions about your morning breakfast box, delivery area, or the MedCity Smiles community? We are here to help.
           </p>
         </div>
@@ -36,7 +36,7 @@ export default function ContactPage() {
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <Phone className="w-5 h-5" />
+                <Phone className="w-5 h-5" aria-hidden="true" />
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Phone Support</span>
@@ -57,7 +57,7 @@ export default function ContactPage() {
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-[#0E7A3E]/10 text-[#0E7A3E] flex items-center justify-center shrink-0">
-                <MessageCircle className="w-5 h-5 fill-[#0E7A3E] stroke-white" />
+                <MessageCircle className="w-5 h-5 fill-[#0E7A3E] stroke-white" aria-hidden="true" />
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">WhatsApp Support</span>
@@ -66,7 +66,7 @@ export default function ContactPage() {
             </div>
             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full shrink-0 flex items-center gap-1">
               <span>Chat</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
             </span>
           </a>
 
@@ -77,11 +77,11 @@ export default function ContactPage() {
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
-                <Mail className="w-5 h-5" />
+                <Mail className="w-5 h-5" aria-hidden="true" />
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Email Inquiries</span>
-                <span className="text-sm sm:text-base font-extrabold text-stone-900 truncate block">{OFFICIAL_CONTACT.email}</span>
+                <span className="text-sm sm:text-base font-extrabold text-stone-900 block [overflow-wrap:anywhere]">{OFFICIAL_CONTACT.email}</span>
               </div>
             </div>
             <span className="text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1.5 rounded-full shrink-0">
@@ -98,7 +98,7 @@ export default function ContactPage() {
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-                <MapPin className="w-5 h-5" />
+                <MapPin className="w-5 h-5" aria-hidden="true" />
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">Bangalore Kitchen</span>
@@ -107,7 +107,7 @@ export default function ContactPage() {
             </div>
             <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1.5 rounded-full shrink-0 flex items-center gap-1">
               <span>Maps</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
             </span>
           </a>
         </div>
@@ -118,27 +118,22 @@ export default function ContactPage() {
             variant="primary"
             size="lg"
             asChild
-            className="w-full justify-center min-h-[48px] text-base font-bold rounded-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md"
+            className="w-full justify-center shadow-md"
           >
-            <Link href="/subscribe?plan=standard" className="flex items-center justify-center gap-2">
+            <Link href="/subscribe?plan=standard">
               <span>Start Your Subscription</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </Button>
 
           <Button
-            variant="outline"
+            variant="secondary"
             size="lg"
             asChild
-            className="w-full justify-center min-h-[48px] text-base font-bold rounded-full bg-[#0E7A3E] hover:bg-[#0B6A35] text-white border-transparent shadow-sm"
+            className="w-full justify-center"
           >
-            <a
-              href="https://wa.me/918618902810"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" />
+            <a href="https://wa.me/918618902810" target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="w-4 h-4" aria-hidden="true" />
               <span>Chat on WhatsApp</span>
             </a>
           </Button>
@@ -146,7 +141,7 @@ export default function ContactPage() {
 
         {/* Delivery Timings Footer Note */}
         <div className="p-4 rounded-2xl bg-white border border-[#E3EFE5] text-center text-xs text-[#4F6458] flex items-center justify-center gap-2">
-          <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+          <Clock className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
           <span>Fresh morning doorstep arrival before 7:30 AM daily across Bangalore</span>
         </div>
       </div>

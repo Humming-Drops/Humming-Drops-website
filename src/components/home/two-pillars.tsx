@@ -35,7 +35,7 @@ export function TwoPillars() {
     <section
       id="three-pillars"
       aria-label="Three Pillars, One Wellness Journey"
-      className="py-14 sm:py-16 lg:py-24 bg-[#FCFDF9] border-b border-[#E3EFE5] relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-[#FCFDF9] border-b border-[#E3EFE5] relative overflow-hidden"
     >
       {/* Background Ambient Glows */}
       <div
@@ -49,7 +49,7 @@ export function TwoPillars() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-10 sm:mb-14">
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-bold tracking-wide shadow-2xs">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
             <span>Complete Daily Wellness</span>
@@ -66,7 +66,7 @@ export function TwoPillars() {
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto">
             Humming Drops brings together fresh daily nutrition, mental wellbeing, and preventative health support for a more complete everyday wellness journey.
           </p>
         </div>
@@ -77,12 +77,12 @@ export function TwoPillars() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 max-w-7xl mx-auto items-stretch"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-7 max-w-xl lg:max-w-7xl mx-auto items-stretch"
         >
           {/* Pillar 1: Nutrition (Primary Green Accent) */}
           <motion.div
             variants={shouldReduceMotion ? undefined : cardVariants}
-            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-emerald-500/25 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-emerald-500/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+            className="rounded-3xl p-6 sm:p-7 bg-white border border-emerald-500/25 shadow-[0_8px_30px_rgba(30,43,36,0.06)] lg:hover:-translate-y-1 lg:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-emerald-500/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
           >
             {/* Top Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-green-500" />
@@ -124,7 +124,7 @@ export function TwoPillars() {
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>5 Seasonal Cut Fruits &amp; 3 Crisp Vegetables</span>
+                  <span>4 Fruit Varieties &amp; 2 Vegetable Varieties</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
@@ -147,7 +147,7 @@ export function TwoPillars() {
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[48px] py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md cursor-pointer group/btn"
+                className="w-full justify-center px-5 font-bold bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md cursor-pointer group/btn"
               >
                 <Link href="#pricing" className="flex items-center justify-center gap-2">
                   <span>Explore Nutrition Plans</span>
@@ -160,7 +160,7 @@ export function TwoPillars() {
           {/* Pillar 2: MedCity Smiles (Aqua / Teal Accent) */}
           <motion.div
             variants={shouldReduceMotion ? undefined : cardVariants}
-            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-[#00A88F]/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-[#00A88F]/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+            className="rounded-3xl p-6 sm:p-7 bg-white border border-[#00A88F]/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] lg:hover:-translate-y-1 lg:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-[#00A88F]/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
           >
             {/* Top Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-500 via-[#00A88F] to-emerald-500" />
@@ -231,7 +231,7 @@ export function TwoPillars() {
                 variant="outline"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[48px] py-3.5 rounded-full bg-teal-50 hover:bg-teal-100 text-teal-950 border-2 border-[#00A88F]/50 hover:border-[#00A88F] shadow-sm cursor-pointer group/btn"
+                className="w-full justify-center px-5 font-bold bg-teal-50 hover:bg-teal-100 text-teal-950 border-2 border-[#00A88F]/50 hover:border-[#00A88F] shadow-sm cursor-pointer group/btn"
               >
                 <Link href="/medcity-smiles" className="flex items-center justify-center gap-2">
                   <span>Explore MedCity Smiles</span>
@@ -244,7 +244,7 @@ export function TwoPillars() {
           {/* Pillar 3: MedCity Labs (Clinical Blue Accent) */}
           <motion.div
             variants={shouldReduceMotion ? undefined : cardVariants}
-            className="rounded-3xl p-6 sm:p-7 lg:p-7 bg-white border border-sky-600/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-sky-600/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
+            className="rounded-3xl p-6 sm:p-7 bg-white border border-sky-600/30 shadow-[0_8px_30px_rgba(30,43,36,0.06)] lg:hover:-translate-y-1 lg:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] md:hover:border-sky-600/60 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between space-y-6 relative overflow-hidden group"
           >
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-500" />
 
@@ -304,7 +304,7 @@ export function TwoPillars() {
                 variant="outline"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[48px] py-3.5 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-950 border-2 border-sky-600/40 hover:border-sky-600 shadow-sm cursor-pointer group/btn"
+                className="w-full justify-center px-5 font-bold bg-sky-50 hover:bg-sky-100 text-sky-950 border-2 border-sky-600/40 hover:border-sky-600 shadow-sm cursor-pointer group/btn"
               >
                 <Link href="/contact" className="flex items-center justify-center gap-2">
                   <span>Learn About Health Support</span>

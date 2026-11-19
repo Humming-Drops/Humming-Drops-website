@@ -2,10 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles, ArrowRight, PhoneCall, HeartPulse, ShieldCheck, MessageCircle, Leaf } from "lucide-react";
+import { Check, Sparkles, ArrowRight, PhoneCall, HeartPulse, MessageCircle, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { OrganicWaveDivider } from "@/components/ui/doodles";
 
 export function PricingSection() {
   const [highlightedPlan, setHighlightedPlan] = useState<"standard" | "premium">("premium");
@@ -21,17 +20,17 @@ export function PricingSection() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-emerald-200/80 text-emerald-800 text-xs font-bold tracking-wide shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-emerald-800 text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
             <span>Simple, Honest &amp; Flexible Plans</span>
           </div>
 
-          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-[#132A1C] tracking-tight leading-[1.15]">
             Choose Your Morning Wellness Plan
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto">
             Both plans include doorstep delivery before 7:30 AM, free MedCity Smiles membership, and free monthly doctor-certified health checkups.
           </p>
         </div>
@@ -130,9 +129,9 @@ export function PricingSection() {
                 variant="secondary"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[50px] py-3.5 cursor-pointer rounded-full border-2 border-emerald-600 text-emerald-800 hover:bg-emerald-50 hover:border-emerald-700"
+                className="w-full justify-center"
               >
-                <Link href="/subscribe?plan=standard" className="flex items-center gap-2">
+                <Link href="/subscribe?plan=standard">
                   <span>Subscribe to Standard</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
@@ -152,9 +151,9 @@ export function PricingSection() {
             )}
           >
             {/* Top Recommended Glowing Badge */}
-            <div className="absolute -top-4 right-6 sm:right-8 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-extrabold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-yellow-200" aria-hidden="true" />
-              <span>Most Popular · Best Value</span>
+            <div className="absolute -top-3.5 right-6 sm:right-8 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-extrabold text-xs uppercase tracking-wider px-4 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-100" aria-hidden="true" />
+              <span>Recommended</span>
             </div>
 
             <div className="space-y-6">
@@ -226,9 +225,9 @@ export function PricingSection() {
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[50px] py-3.5 shadow-md hover:shadow-lg cursor-pointer rounded-full bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 hover:from-emerald-700 hover:to-green-700 text-white"
+                className="w-full justify-center shadow-md"
               >
-                <Link href="/subscribe?plan=premium" className="flex items-center gap-2">
+                <Link href="/subscribe?plan=premium">
                   <span>Subscribe to Premium</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
@@ -239,44 +238,34 @@ export function PricingSection() {
 
         {/* Assisted Phone / WhatsApp Lead Booking Note */}
         <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-white border border-[#E3EFE5] max-w-3xl mx-auto text-center space-y-3 shadow-card">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
             <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Need Help Choosing or Customizing?</span>
           </div>
 
-          <h4 className="text-lg font-extrabold text-[#132A1C]">
+          <h3 className="font-display text-lg sm:text-xl font-extrabold text-[#132A1C]">
             Speak Directly with Our Morning Care Team
-          </h4>
+          </h3>
 
           <p className="text-sm text-[#405347] max-w-xl mx-auto leading-relaxed">
             Prefer ordering directly via WhatsApp or need custom dietary adjustments? Our Bangalore team is here to assist you daily:
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 pt-2">
-            <a
-              href="https://wa.me/918618902810"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#0E7A3E] text-white text-sm font-bold shadow-xs hover:bg-[#0B6A35] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-            >
-              <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" />
-              <span>WhatsApp: 8618902810</span>
-            </a>
-
-            <a
-              href="tel:8618902810"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-            >
-              <PhoneCall className="w-4 h-4" />
-              <span>Call: 8618902810</span>
-            </a>
+            <Button variant="primary" size="md" asChild className="bg-[#0E7A3E] hover:bg-[#0B6A35]">
+              <a href="https://wa.me/918618902810" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                <span>WhatsApp: 8618902810</span>
+              </a>
+            </Button>
+            <Button variant="secondary" size="md" asChild>
+              <a href="tel:8618902810">
+                <PhoneCall className="w-4 h-4" aria-hidden="true" />
+                <span>Call: 8618902810</span>
+              </a>
+            </Button>
           </div>
         </div>
-      </div>
-
-      {/* Organic wave transition */}
-      <div className="mt-14 lg:mt-18 text-canvas">
-        <OrganicWaveDivider fill="#FCFDF9" className="w-full h-12 sm:h-16 text-canvas" />
       </div>
     </section>
   );

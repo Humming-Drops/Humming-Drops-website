@@ -49,9 +49,9 @@ export default function MedCitySmilesPage() {
       <section
         id="medcity-hero"
         aria-label="MedCity Smiles Hero"
-        className="py-14 sm:py-16 lg:py-24 bg-gradient-to-b from-[#F8FAF9] to-white relative overflow-hidden"
+        className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#F8FAF9] to-white relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl space-y-6 text-center mx-auto">
             <div className="relative h-24 w-48 sm:h-28 sm:w-56 mx-auto">
               <Image
@@ -64,14 +64,14 @@ export default function MedCitySmilesPage() {
               />
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide shadow-2xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
               <span>In Collaboration with MedCity Health Labs</span>
             </div>
 
-            <h1 className="text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold text-teal-950 tracking-tight leading-[1.1]">
+            <h1 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold text-teal-950 tracking-tight leading-[1.1]">
               Nourishing the Body.{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A88F] to-teal-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#156C63] to-[#00A88F]">
                 Uplifting the Mind.
               </span>
             </h1>
@@ -84,7 +84,7 @@ export default function MedCitySmilesPage() {
             <div className="flex flex-col sm:flex-row gap-4 pt-2 justify-center">
               <Link
                 href="/subscribe"
-                className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full bg-teal-700 hover:bg-teal-800 text-white font-bold shadow-md transition-all active:scale-[0.98] w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full bg-teal-700 hover:bg-teal-800 text-white font-bold shadow-md transition-all active:scale-[0.98] w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
               >
                 <span>Get Started with Breakfast Box</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -104,39 +104,39 @@ export default function MedCitySmilesPage() {
       <section
         id="why-medcity"
         aria-label="Why MedCity Smiles"
-        className="relative py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E3EFE5]"
+        className="relative py-16 sm:py-20 lg:py-24 bg-mint border-y border-[#E3EFE5]"
       >
         <span id="pillars" className="pointer-events-none absolute top-0 left-0" aria-hidden="true" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">
-              <Activity className="w-3.5 h-3.5 text-teal-700" />
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold">
+              <Activity className="w-3.5 h-3.5 text-teal-700" aria-hidden="true" />
               <span>Mind and Body Health</span>
             </div>
-            <h2 className="text-[clamp(28px,4vw,44px)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
               Why MedCity Smiles
             </h2>
-            <p className="text-base sm:text-lg text-stone-600 font-sans max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
               Real wellness is both physical and mental. Here is exactly what membership gives you.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch max-w-xl lg:max-w-none mx-auto">
             {WHY_MEDCITY.map((item, i) => {
               const Icon = item.icon;
               return (
                 <div
                   key={item.id}
-                  className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-4"
+                  className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] lg:hover:-translate-y-1 lg:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-4"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-5 h-5" aria-hidden="true" />
                     </div>
                     <span className="text-xs font-bold text-teal-700">0{i + 1}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-teal-950">{item.title}</h3>
-                  <p className="text-sm text-stone-600 leading-relaxed font-sans">{item.copy}</p>
+                  <h3 className="font-display text-xl font-extrabold text-teal-950">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-stone-600 leading-relaxed">{item.copy}</p>
                 </div>
               );
             })}
@@ -145,23 +145,23 @@ export default function MedCitySmilesPage() {
       </section>
 
       {/* SECTION 3: HEALTH MONITORING */}
-      <section id="vitals" aria-label="Health Monitoring" className="py-14 sm:py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold tracking-wide">
-              <Stethoscope className="w-3.5 h-3.5 text-teal-700" />
+      <section id="vitals" aria-label="Health Monitoring" className="py-16 sm:py-20 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold">
+              <Stethoscope className="w-3.5 h-3.5 text-teal-700" aria-hidden="true" />
               <span>Included Free</span>
             </div>
-            <h2 className="text-[clamp(28px,4vw,44px)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-teal-950 tracking-tight leading-[1.15]">
               Exclusive Monthly Health Monitoring
             </h2>
-            <p className="text-base sm:text-lg text-stone-600 font-sans max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
               Because caring for your mind starts with knowing your body. These vitals are monitored monthly for
               every Humming Drops subscriber.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch max-w-xl lg:max-w-none mx-auto">
             {CONFIRMED_VITALS_BENEFITS.map((v, i) => {
               const Icon = v.metricName.toLowerCase().includes("blood sugar")
                 ? Droplets
@@ -172,16 +172,16 @@ export default function MedCitySmilesPage() {
               return (
                 <div
                   key={i}
-                  className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] md:hover:-translate-y-1 md:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-3"
+                  className="p-6 sm:p-8 rounded-3xl bg-white border border-[#2BB3B1]/15 shadow-[0_8px_30px_rgba(30,43,36,0.06)] lg:hover:-translate-y-1 lg:hover:shadow-[0_16px_40px_rgba(30,43,36,0.12)] transition-all duration-300 flex flex-col space-y-3"
                 >
                   <div className="w-11 h-11 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 mb-2">
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-5 h-5" aria-hidden="true" />
                   </div>
                   <div className="text-xs font-bold uppercase text-teal-700 tracking-wider">
                     {v.frequency} Checkup
                   </div>
-                  <h3 className="font-extrabold text-xl text-teal-950">{v.metricName}</h3>
-                  <p className="text-sm text-stone-600 font-sans leading-relaxed">{v.purpose}</p>
+                  <h3 className="font-display text-xl font-extrabold text-teal-950">{v.metricName}</h3>
+                  <p className="text-sm sm:text-base text-stone-600 leading-relaxed">{v.purpose}</p>
                 </div>
               );
             })}
@@ -193,14 +193,14 @@ export default function MedCitySmilesPage() {
       <section
         id="community-cta"
         aria-label="Join the MedCity Smiles Community"
-        className="py-14 sm:py-16 lg:py-20 bg-gradient-to-br from-teal-700 via-teal-800 to-emerald-900 text-white"
+        className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-teal-700 via-teal-800 to-emerald-900 text-white"
       >
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold tracking-wide">
-            <Smile className="w-3.5 h-3.5 text-amber-300" />
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 border border-white/30 text-xs font-bold">
+            <Smile className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
             <span>Free With Every Plan</span>
           </div>
-          <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold tracking-tight leading-[1.15]">
             Join MedCity Smiles — Free With Your Subscription
           </h2>
           <p className="text-sm sm:text-base text-teal-50/90 max-w-2xl mx-auto leading-relaxed">
@@ -210,14 +210,14 @@ export default function MedCitySmilesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Link
               href="/subscribe"
-              className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full bg-white text-teal-900 font-extrabold shadow-md hover:bg-teal-50 transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full bg-white text-teal-900 font-bold shadow-md hover:bg-teal-50 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-teal-800"
             >
               <span>Subscribe Now</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
             <a
               href="tel:8618902810"
-              className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full border-2 border-white/40 hover:border-white text-white font-bold transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full border-2 border-white/40 hover:border-white text-white font-bold transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-teal-800"
             >
               <PhoneCall className="w-4 h-4" aria-hidden="true" />
               <span>Call: 8618902810</span>

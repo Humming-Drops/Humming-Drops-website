@@ -2,10 +2,7 @@
 
 import React from "react";
 import { Clock, Check, X, Sparkles, ShieldCheck } from "lucide-react";
-import {
-  DoodleSquiggle,
-  HandwrittenAnnotation,
-} from "@/components/ui/doodles";
+import { DoodleSquiggle } from "@/components/ui/doodles";
 
 export function WhyHummingDrops() {
   return (
@@ -22,17 +19,12 @@ export function WhyHummingDrops() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-3.5 mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2">
-            <span className="px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold tracking-wide">
-              The Morning Habit
-            </span>
-            <HandwrittenAnnotation rotation="-rotate-1" color="text-emerald-700 hidden sm:inline-flex">
-              Small positive choices
-            </HandwrittenAnnotation>
-          </div>
+        <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-14">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+            The Morning Habit
+          </span>
 
-          <h2 className="font-display text-[2rem] sm:text-4xl lg:text-5xl font-extrabold text-[#132A1C] tracking-tight leading-tight">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-[#132A1C] tracking-tight leading-[1.15]">
             Wellness isn&apos;t one big change. <br className="hidden sm:inline" />
             It&apos;s made of{" "}
             <span className="relative inline-block text-emerald-700 pb-2">
@@ -44,7 +36,7 @@ export function WhyHummingDrops() {
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto">
             Mornings are fast-paced. Humming Drops turns daily whole-food nutrition into an effortless, uplifting habit you never have to think twice about.
           </p>
         </div>

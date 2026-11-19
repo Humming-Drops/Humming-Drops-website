@@ -11,7 +11,7 @@ export function ClosingCTA() {
     <section
       id="contact"
       aria-label="Start Your Humming Drops Subscription & Contact Us"
-      className="py-8 sm:py-16 lg:py-24 bg-[#FCFDF9] relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-[#FCFDF9] relative overflow-hidden"
     >
       {/* Decorative ambient glows */}
       <div
@@ -19,72 +19,72 @@ export function ClosingCTA() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[42rem] h-[42rem] bg-emerald-100/50 rounded-full blur-3xl pointer-events-none"
       />
 
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 bg-gradient-to-br from-emerald-700 via-emerald-800 to-forest-900 text-white text-center relative overflow-hidden shadow-floating">
+      <div className="w-full max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+        <div className="rounded-3xl p-6 sm:p-8 lg:p-12 bg-gradient-to-br from-emerald-700 via-emerald-800 to-forest-900 text-white text-center relative overflow-hidden shadow-floating">
           {/* Subtle background blur circles */}
           <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-amber-400/15 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative z-10 w-full max-w-3xl mx-auto space-y-4 sm:space-y-6">
+          <div className="relative z-10 w-full max-w-3xl mx-auto space-y-5 sm:space-y-6">
             {/* Top Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-[11px] sm:text-xs font-bold text-white shadow-xs">
-              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-300" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/30 text-xs font-bold text-white">
+              <Sparkles className="w-3.5 h-3.5 text-yellow-300" aria-hidden="true" />
               <span>Doorstep Delivery · Bangalore</span>
             </div>
 
             {/* Main Headline */}
-            <h2 className="font-display text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-white tracking-tight leading-[1.15]">
               Start Your Mornings with Fresh, Effortless Nutrition
             </h2>
 
             {/* Subtitle */}
-            <p className="text-xs sm:text-base text-emerald-50 max-w-xl mx-auto font-sans leading-relaxed">
+            <p className="text-sm sm:text-base text-emerald-50 max-w-xl mx-auto leading-relaxed">
               &ldquo;Wellness is not one big change. It is made up of small, positive choices every day.&rdquo;
             </p>
 
             {/* Compact 2x2 Contact Grid on Mobile for Maximum Space Efficiency */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 pt-1 text-left">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-left">
               {/* WhatsApp Contact */}
               <a
                 href="https://wa.me/918618902810"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="min-h-[56px] p-3 sm:p-3.5 rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-[#0E7A3E] flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-[#0E7A3E] flex items-center justify-center shrink-0">
                   <MessageCircle className="w-4 h-4 fill-[#0E7A3E] stroke-white" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block truncate">WhatsApp</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-stone-900 block truncate">8618902810</span>
+                  <span className="text-sm font-extrabold text-stone-900 block truncate">8618902810</span>
                 </div>
               </a>
 
               {/* Phone Contact */}
               <a
                 href="tel:8618902810"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="min-h-[56px] p-3 sm:p-3.5 rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block truncate">Phone</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-stone-900 block truncate">8618902810</span>
+                  <span className="text-sm font-extrabold text-stone-900 block truncate">8618902810</span>
                 </div>
               </a>
 
               {/* Email Contact */}
               <a
                 href={`mailto:${OFFICIAL_CONTACT.email}`}
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="min-h-[56px] p-3 sm:p-3.5 rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block truncate">Email</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-stone-900 block truncate">{OFFICIAL_CONTACT.email}</span>
+                  <span className="text-sm font-extrabold text-stone-900 block truncate">{OFFICIAL_CONTACT.email}</span>
                 </div>
               </a>
 
@@ -93,26 +93,26 @@ export function ClosingCTA() {
                 href="https://maps.google.com/?q=Berrybeats+Cafe+Bangalore"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="min-h-[56px] p-3 sm:p-3.5 rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block truncate">Kitchen</span>
-                  <span className="text-xs sm:text-sm font-bold text-stone-900 block truncate">Berrybeats Cafe</span>
+                  <span className="text-sm font-bold text-stone-900 block truncate">Berrybeats Cafe</span>
                 </div>
               </a>
             </div>
 
             {/* Action CTAs: Both Pillars Reflected */}
-            <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-2.5 pt-1">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-stretch sm:items-center gap-3 pt-1">
               {/* Primary: Start Nutrition Subscription */}
               <Button
                 variant="outline"
-                size="md"
+                size="lg"
                 asChild
-                className="w-full sm:w-auto bg-white text-emerald-900 hover:bg-emerald-50 border-transparent font-extrabold text-sm sm:text-base px-6 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+                className="w-full sm:w-auto bg-white text-emerald-900 hover:bg-emerald-50 border-transparent px-6 shadow-md"
               >
                 <Link href="/subscribe?plan=standard" className="flex items-center justify-center gap-1.5">
                   <span>Start Your Subscription</span>
@@ -123,9 +123,9 @@ export function ClosingCTA() {
               {/* Secondary: Explore MedCity Smiles Pillar (Outlined Aqua) */}
               <Button
                 variant="outline"
-                size="md"
+                size="lg"
                 asChild
-                className="w-full sm:w-auto bg-white text-teal-900 hover:bg-teal-50 border-2 border-[#00A88F] hover:border-teal-700 font-extrabold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+                className="w-full sm:w-auto bg-white text-teal-900 hover:bg-teal-50 border-2 border-[#00A88F] hover:border-teal-700 px-6 shadow-md"
               >
                 <Link href="/medcity-smiles" className="flex items-center justify-center gap-1.5">
                   <Heart className="w-4 h-4 text-teal-700" />
@@ -136,9 +136,9 @@ export function ClosingCTA() {
               {/* WhatsApp Quick Link */}
               <Button
                 variant="outline"
-                size="md"
+                size="lg"
                 asChild
-                className="w-full sm:w-auto bg-[#0E7A3E] text-white hover:bg-[#0B6A35] border-transparent font-bold text-sm sm:text-base px-5 min-h-[44px] sm:min-h-[48px] shadow-md active:scale-[0.98] transition-all cursor-pointer rounded-full"
+                className="w-full sm:w-auto bg-[#0E7A3E] text-white hover:bg-[#0B6A35] border-transparent px-6 shadow-md"
               >
                 <a
                   href="https://wa.me/918618902810"

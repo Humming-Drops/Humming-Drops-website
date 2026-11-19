@@ -15,7 +15,6 @@ import {
   Users,
 } from "lucide-react";
 import { CONFIRMED_VITALS_BENEFITS } from "@/types/health";
-import { OrganicWaveDivider } from "@/components/ui/doodles";
 
 const CARE_PILLARS = [
   {
@@ -103,14 +102,14 @@ export function MedCitySmilesSection() {
               );
             })}
 
-            <div className="pt-2 flex items-center justify-between">
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-x-4">
               <span className="text-xs text-[#4F6458]">Included free with every plan</span>
               <Link
                 href="/medcity-smiles"
-                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline flex items-center gap-1 text-sm rounded-lg px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
+                className="font-bold text-[#156C63] hover:text-[#0D5049] hover:underline inline-flex items-center gap-1 text-sm rounded-lg px-2 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700"
               >
                 <span>Explore MedCity Smiles</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -155,10 +154,6 @@ export function MedCitySmilesSection() {
             </Link>
           </div>
         </div>
-      </div>
-
-      <div className="mt-14 lg:mt-18 text-canvas">
-        <OrganicWaveDivider fill="#FAFCF8" className="w-full h-12 sm:h-16 text-canvas" />
       </div>
     </section>
   );

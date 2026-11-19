@@ -4,10 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Leaf, Sparkles, Heart, Sun, Check, ChevronRight, ShieldCheck, Apple, Droplets, Utensils, CalendarOff } from "lucide-react";
-import {
-  HandwrittenAnnotation,
-  GentleWaveDivider,
-} from "@/components/ui/doodles";
 
 interface Compartment {
   id: string;
@@ -166,21 +162,16 @@ export function BoxAnatomy() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-10">
-          <div className="inline-flex items-center gap-2">
-            <span className="px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold tracking-wide">
-              Meticulously Curated Nutrition
-            </span>
-            <HandwrittenAnnotation rotation="rotate-2" color="text-emerald-700 hidden sm:inline-flex">
-              Tap any compartment to explore!
-            </HandwrittenAnnotation>
-          </div>
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+            Meticulously Curated Nutrition
+          </span>
 
-          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-[#132A1C] tracking-tight leading-[1.15]">
             What is Inside Your Daily Box?
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto font-sans">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto">
             4 fruits, 2 vegetables, a fresh mix salad and fresh sprouts every day, plus dry fruits. Freshly prepared
             every morning and delivered straight to your door.
           </p>
@@ -193,7 +184,7 @@ export function BoxAnatomy() {
         </div>
 
         {/* Compartment Pill Navigation */}
-        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-3 mb-8 snap-x snap-mandatory no-scrollbar scroll-smooth -mx-5 px-5 sm:mx-0 sm:px-0">
+        <div className="flex items-center justify-start lg:justify-center gap-2 overflow-x-auto pb-3 mb-8 snap-x snap-mandatory scroll-smooth -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {COMPARTMENTS.map((c) => {
             const Icon = c.icon;
             const isSelected = c.id === activeCompartmentId;
@@ -246,7 +237,7 @@ export function BoxAnatomy() {
                         top: `${c.hotspot!.y}%`,
                         left: `${c.hotspot!.x}%`,
                       }}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 z-20 cursor-pointer"
+                      className="absolute -translate-x-1/2 -translate-y-1/2 group p-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 z-20 cursor-pointer"
                       aria-label={`Select compartment ${c.number}: ${c.name}`}
                     >
                       {isSelected && !shouldReduceMotion && (
@@ -270,12 +261,12 @@ export function BoxAnatomy() {
               </div>
 
               {/* Bottom Interactive Bar */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#4F6458]">
+              <div className="mt-3 px-2 flex items-center justify-between gap-3 text-xs text-[#4F6458]">
                 <span className="font-bold text-[#132A1C] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                   Tap numbers to inspect each fresh compartment
                 </span>
-                <span className="font-medium">Fresh Daily Box</span>
+                <span className="font-medium shrink-0">Fresh Daily Box</span>
               </div>
             </div>
           </div>
@@ -357,12 +348,13 @@ export function BoxAnatomy() {
 
                 {/* Quick Compartment Bottom Bar */}
                 <div className="pt-3 border-t border-[#E3EFE5] flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     {COMPARTMENTS.map((c) => (
                       <button
                         key={c.id}
+                        type="button"
                         onClick={() => setActiveCompartmentId(c.id)}
-                        className={`w-8 h-8 rounded-full text-xs font-bold transition-all flex items-center justify-center cursor-pointer ${
+                        className={`w-11 h-11 rounded-full text-xs font-bold transition-all flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                           c.id === activeCompartment.id
                             ? "bg-emerald-700 text-white shadow-2xs"
                             : "bg-emerald-50 text-[#132A1C] hover:bg-emerald-100"
@@ -376,6 +368,7 @@ export function BoxAnatomy() {
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       const currentIndex = COMPARTMENTS.findIndex(
                         (c) => c.id === activeCompartment.id
@@ -383,10 +376,10 @@ export function BoxAnatomy() {
                       const nextIndex = (currentIndex + 1) % COMPARTMENTS.length;
                       setActiveCompartmentId(COMPARTMENTS[nextIndex].id);
                     }}
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    className="min-h-[44px] px-2 rounded-full text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                   >
                     <span>Next</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </motion.div>
@@ -398,11 +391,6 @@ export function BoxAnatomy() {
         <p className="text-xs text-center text-[#4F6458] mt-8 max-w-2xl mx-auto">
           * Daily fruit and vegetable varieties rotate based on morning market freshness and seasonal peak to ensure natural diversity.
         </p>
-      </div>
-
-      {/* Gentle Wave transition */}
-      <div className="mt-10 lg:mt-14 -mb-16 lg:-mb-24">
-        <GentleWaveDivider fill="#F0FDF4" className="w-full h-8 sm:h-12 text-canvas" />
       </div>
     </section>
   );

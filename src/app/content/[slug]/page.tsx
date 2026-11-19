@@ -26,7 +26,7 @@ export default async function PublicContentPage({
   if (!row) notFound();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
       <ContentRenderer templateSlug={row.template.slug} data={row.page.data as Record<string, unknown>} />
     </div>
   );

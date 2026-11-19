@@ -28,7 +28,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Button variant="primary" asChild>
             <Link href="/">
-              <Home className="w-4 h-4 mr-2" aria-hidden="true" />
+              <Home className="w-4 h-4" aria-hidden="true" />
               <span>Back to Humming Drops</span>
             </Link>
           </Button>
