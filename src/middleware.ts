@@ -22,6 +22,7 @@ const AUTH_PREFIXES = [
   "/register",
   "/admin/login",
   "/forgot-password",
+  "/reset-password",
 ];
 
 function isMatch(pathname: string, prefixes: string[]): boolean {

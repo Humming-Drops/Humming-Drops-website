@@ -19,7 +19,7 @@ Original QA run: 2026-11-17. Fix + verification pass: 2026-11-18 on branch `fix/
 | CUS-04 | High | VERIFIED | Pause / vacation / rider notes call the real API, show errors, are disabled unless active; persisted across reload in the browser. Quick-pause no longer overwrites a vacation range. |
 | CUS-05 | High | VERIFIED | Past-dated sessions, pre-set RSVP and fake question form removed. |
 | ADM-02 | High | VERIFIED | Draft filter is in the SQL query; anonymous page shows no draft title / template / id. |
-| PUB-03 | Med | CODE | `/forgot-password` shows email / WhatsApp / phone instead of a disabled field. A real reset flow needs your decision (see Open). |
+| PUB-03 | Med | FIXED | `/forgot-password` now runs a real email-token reset flow (`/reset-password`, migration 0008). Production needs `RESEND_API_KEY` + `MAIL_FROM`. |
 | PUB-04 | Med | VERIFIED | `/terms` and `/privacy` exist with PLACEHOLDER legal text; register + footer link to them. Real legal wording is client content. |
 | PUB-06 | Med | VERIFIED | Account email is read-only on `/subscribe`, server rejects a mismatch (400), submit error is an alert scrolled into view. |
 | CUS-07 | Med | VERIFIED | Root cause found in the browser: the Continue button turned into the submit button during the click and submitted the form. Fixed with keyed buttons + guard; Review step now shows without submitting. |
