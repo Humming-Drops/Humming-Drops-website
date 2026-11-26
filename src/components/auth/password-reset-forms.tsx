@@ -177,6 +177,13 @@ export function ResetPasswordForm({ token }: { token: string }) {
       {error && (
         <AuthErrorAlert id="reset-error">
           <p>{error}</p>
+          {/expired|invalid/i.test(error) && (
+            <p>
+              <Link href="/forgot-password" className={authLinkClass}>
+                Request a new link
+              </Link>
+            </p>
+          )}
         </AuthErrorAlert>
       )}
       {done ? (

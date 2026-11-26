@@ -72,7 +72,10 @@ export function isBangalorePincode(pincode: string): boolean {
 export function sanitizeString(val: unknown, maxLength: number = 255): string {
   if (typeof val !== "string") return "";
   // Strip HTML tags and control characters
-  const stripped = val.replace(/<[^>]*>?/gm, "").trim();
+  const stripped = val
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .trim();
   return stripped.slice(0, maxLength);
 }
 

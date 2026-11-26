@@ -6,6 +6,7 @@ import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
 export const metadata: Metadata = {
   title: "Admin Portal Sign In",
   description: "Operations console sign in for Humming Drops staff and administrators.",
+  robots: { index: false },
 };
 
 export const dynamic = "force-dynamic";

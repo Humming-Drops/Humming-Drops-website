@@ -14,11 +14,18 @@ import {
   sanitizeString,
 } from "@/lib/sanitization";
 import { isUniqueViolation, violatedConstraint } from "@/lib/db/errors";
+import { clientIp, isRateLimited, recordAttempt, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
+    const ipKey = `register-ip:${clientIp(request)}`;
+    if (isRateLimited(ipKey, 30)) {
+      return NextResponse.json({ success: false, error: TOO_MANY_ATTEMPTS }, { status: 429 });
+    }
+    recordAttempt(ipKey);
+
     let body: any;
     try {
       body = await request.json();
@@ -38,7 +45,7 @@ export async function POST(request: Request) {
 
     // 1. Sanitize & Validate Email
     const rawEmail = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    if (!rawEmail || !isValidEmail(rawEmail)) {
+    if (!rawEmail || rawEmail.length > 254 || !isValidEmail(rawEmail)) {
       return NextResponse.json(
         { success: false, error: "Please provide a valid email address." },
         { status: 400 }
@@ -47,9 +54,9 @@ export async function POST(request: Request) {
 
     // 2. Validate Password
     const password = typeof body.password === "string" ? body.password : "";
-    if (!password || password.length < 8) {
+    if (!password.trim() || password.length < 8 || password.length > 128) {
       return NextResponse.json(
-        { success: false, error: "Password must be at least 8 characters long." },
+        { success: false, error: "Password must be 8 to 128 characters long and not only spaces." },
         { status: 400 }
       );
     }

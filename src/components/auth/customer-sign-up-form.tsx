@@ -283,15 +283,15 @@ export function CustomerSignUpForm() {
           />
           <label htmlFor="agreeTerms" className="text-sm text-stone-600 leading-relaxed cursor-pointer">
             I agree to the{" "}
-            <Link href="/terms" className={cn(authLinkClass, "underline")}>
+            <Link href="/terms" target="_blank" rel="noopener" className={cn(authLinkClass, "underline")}>
               Terms of Service
             </Link>
             ,{" "}
-            <Link href="/privacy" className={cn(authLinkClass, "underline")}>
+            <Link href="/privacy" target="_blank" rel="noopener" className={cn(authLinkClass, "underline")}>
               Privacy Policy
             </Link>
             , and{" "}
-            <Link href="/medcity-smiles" className={cn(authLinkClass, "underline")}>
+            <Link href="/medcity-smiles" target="_blank" rel="noopener" className={cn(authLinkClass, "underline")}>
               MedCity Smiles Health Program
             </Link>
             .
