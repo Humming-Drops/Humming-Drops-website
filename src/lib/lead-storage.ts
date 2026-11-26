@@ -153,7 +153,8 @@ export class JsonFileLeadRepository implements ILeadRepository {
   constructor(customPath?: string) {
     const dataDir = path.join(process.cwd(), "data");
     this.filePath = customPath || path.join(dataDir, "leads.json");
-    this.ensureStorageExists();
+    // No filesystem writes here: this runs on import, and serverless hosts are
+    // read-only. Files are created by the first read or write that needs them.
   }
 
   private ensureStorageExists(): void {
