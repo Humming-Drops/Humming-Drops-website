@@ -65,7 +65,8 @@ export class JsonFilePaymentRepository implements IPaymentRepository {
     const dataDir = path.join(process.cwd(), "data");
     this.eventsFilePath = path.join(dataDir, "webhook-events.json");
     this.paymentsFilePath = path.join(dataDir, "payments.json");
-    this.ensureStorageExists();
+    // No filesystem writes here (runs on import; serverless hosts are read-only).
+    // Every write method creates the files it needs.
     this.loadEventIds();
   }
 
