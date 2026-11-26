@@ -28,6 +28,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ use
 
   const { userId: targetUserId } = await params;
   if (!isUuid(targetUserId)) return apiError("Invalid customer id.", 400);
+  const target = await getAppUserById(targetUserId);
+  if (!target) return apiError("Customer not found.", 404);
   const vitals = await db.select().from(healthVitals).where(eq(healthVitals.userId, targetUserId));
 
   await db.insert(administrativeAuditLogs).values({
@@ -35,7 +37,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ use
     action: "health.staff_access_read",
     resourceType: "health_vitals",
     resourceId: targetUserId,
-    metadata: { recordCount: vitals.length },
+    metadata: { recordCount: vitals.length, targetEmail: target.email },
   });
 
   return NextResponse.json({ vitals });

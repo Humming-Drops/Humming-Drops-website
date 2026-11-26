@@ -84,6 +84,11 @@ export const NOISY_AUDIT_ACTIONS = ["health.self_access_read"];
 export function auditEntrySummary(resourceType: string | null, metadata: unknown): string | null {
   if (!metadata || typeof metadata !== "object") return null;
   const m = metadata as Record<string, unknown>;
+  if (resourceType === "user_role" || resourceType === "health_vitals") {
+    const who = typeof m.targetEmail === "string" ? m.targetEmail : null;
+    const role = typeof m.roleSlug === "string" ? m.roleSlug.replace(/_/g, " ") : null;
+    return [who, role].filter(Boolean).join(" · ") || null;
+  }
   if (resourceType === "content_page") {
     const snap = (m.snapshot ?? {}) as Record<string, unknown>;
     const title = typeof snap.title === "string" ? snap.title : null;

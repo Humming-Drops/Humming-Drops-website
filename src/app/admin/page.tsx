@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
+import { hasPermission } from "@/lib/auth/server";
 import {
   AdminPageHeader,
   AdminSectionHeading,
@@ -17,7 +18,8 @@ const NEXT_ACTIONS = [
 ];
 
 export default async function AdminOverviewPage() {
-  const leads = await leadRepository.getAllLeads();
+  const canReadLeads = await hasPermission("leads:read");
+  const leads = canReadLeads ? await leadRepository.getAllLeads() : [];
   const pending = leads.filter((lead) => lead.status === "pending_confirmation").length;
   const active = leads.filter((lead) => lead.status === "confirmed_active").length;
 
@@ -32,7 +34,7 @@ export default async function AdminOverviewPage() {
     <div className="space-y-6">
       <AdminPageHeader eyebrow="Operational overview" title="Today's control center" />
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {metrics.map(([label, value]) => (
+        {(canReadLeads ? metrics : []).map(([label, value]) => (
           <div key={label} className={`${adminCard} p-4 sm:p-5`}>
             <p className="text-xs font-semibold text-content-secondary">{label}</p>
             <p className="mt-2 font-display text-2xl font-extrabold tabular-nums text-content-primary sm:text-3xl">

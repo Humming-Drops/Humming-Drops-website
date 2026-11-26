@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
+import { hasPermission } from "@/lib/auth/server";
 import { AdminPageHeader } from "@/components/admin/admin-ui";
 import { LeadsClient, type LeadRow } from "./leads-client";
 
 export default async function AdminLeadsPage() {
+  if (!(await hasPermission("leads:read"))) {
+    return (
+      <div className="rounded-2xl border border-line-subtle bg-surface p-6 text-sm text-content-secondary">
+        You don&apos;t have permission to view registrations.
+      </div>
+    );
+  }
+
   const leads = await leadRepository.getAllLeads();
 
   // Only what the follow-up team needs; never IP address / user agent.

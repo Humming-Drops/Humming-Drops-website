@@ -66,22 +66,61 @@ export async function listStaffWithRoles() {
   }));
 }
 
+const ROLE_PRIORITY = [
+  "super_admin",
+  "business_admin",
+  "operations_manager",
+  "finance_manager",
+  "content_manager",
+  "nutritionist",
+  "read_only_auditor",
+] as const;
+
+/** users.role is what sign-in and middleware read, so it must follow the granted roles. */
+export function resolveAccountRole(currentRole: string, grantedSlugs: string[], revokedSlug?: string) {
+  // Legacy "admin" accounts keep full access unless Super Admin is explicitly revoked.
+  if (currentRole === "admin" && revokedSlug !== "super_admin") return "admin" as const;
+  return ROLE_PRIORITY.find((slug) => grantedSlugs.includes(slug)) ?? ("customer" as const);
+}
+
+async function syncAccountRole(userId: string, revokedSlug?: string) {
+  const [user] = await db
+    .select({ email: users.email, role: users.role })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  if (!user) return null;
+  const grants = await db
+    .select({ slug: applicationRoles.slug })
+    .from(userRoles)
+    .innerJoin(applicationRoles, eq(applicationRoles.id, userRoles.roleId))
+    .where(eq(userRoles.userId, userId));
+  const role = resolveAccountRole(user.role, grants.map((g) => g.slug), revokedSlug);
+  if (role !== user.role) {
+    await db.update(users).set({ role, updatedAt: new Date() }).where(eq(users.id, userId));
+  }
+  return user.email;
+}
+
 export async function assignRole(params: { userId: string; roleId: string; actorUserId: string }) {
   const [role] = await db.select().from(applicationRoles).where(eq(applicationRoles.id, params.roleId)).limit(1);
   if (!role) throw new StaffAdminError("Role not found.");
   if (role.slug === "customer") throw new StaffAdminError("The customer role cannot be assigned manually.");
 
-  await db
+  const inserted = await db
     .insert(userRoles)
     .values({ userId: params.userId, roleId: params.roleId, assignedByUserId: params.actorUserId })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning();
+  const targetEmail = await syncAccountRole(params.userId);
+  if (inserted.length === 0) return; // already held: nothing new to audit
 
   await db.insert(administrativeAuditLogs).values({
     actorUserId: params.actorUserId,
     action: "staff.role_assigned",
     resourceType: "user_role",
     resourceId: params.userId,
-    metadata: { roleId: params.roleId, roleSlug: role.slug },
+    metadata: { roleId: params.roleId, roleSlug: role.slug, targetEmail },
   });
 }
 
@@ -115,11 +154,13 @@ export async function revokeRole(params: { userId: string; roleId: string; actor
     throw new StaffAdminError("That user does not hold this role.");
   }
 
+  const targetEmail = await syncAccountRole(params.userId, role.slug);
+
   await db.insert(administrativeAuditLogs).values({
     actorUserId: params.actorUserId,
     action: "staff.role_revoked",
     resourceType: "user_role",
     resourceId: params.userId,
-    metadata: { roleId: params.roleId },
+    metadata: { roleId: params.roleId, roleSlug: role.slug, targetEmail },
   });
 }
