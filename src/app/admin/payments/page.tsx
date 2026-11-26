@@ -52,7 +52,7 @@ export default async function AdminPaymentsPage() {
                   </td>
                   <td className={adminTable.mono}>{order.leadReferenceCode || "—"}</td>
                   <td className={`${adminTable.td} text-content-secondary`}>
-                    {new Date(order.createdAt).toLocaleString("en-IN")}
+                    {new Date(order.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
                   </td>
                 </tr>
               ))}
@@ -94,7 +94,7 @@ export default async function AdminPaymentsPage() {
                     <StatusBadge status={tx.status} />
                   </td>
                   <td className={`${adminTable.td} text-content-secondary`}>
-                    {new Date(tx.createdAt).toLocaleString("en-IN")}
+                    {new Date(tx.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
                   </td>
                 </tr>
               ))}

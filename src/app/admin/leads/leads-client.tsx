@@ -161,7 +161,7 @@ export function LeadsClient({ rows }: { rows: LeadRow[] }) {
                       <StatusBadge status={r.status} />
                     </td>
                     <td className={`${adminTable.td} text-content-secondary`}>
-                      {new Date(r.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                      {new Date(r.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
                     </td>
                     <td className="sticky right-0 bg-surface px-4 py-2 text-right shadow-[-8px_0_12px_-10px_rgba(0,0,0,0.25)]">
                       <button
