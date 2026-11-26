@@ -20,6 +20,9 @@ out
 .env.development
 .env.test
 .env.production
+.env.*
+data/*.json
+tsconfig.tsbuildinfo
 
 # Documentation & design references
 docs

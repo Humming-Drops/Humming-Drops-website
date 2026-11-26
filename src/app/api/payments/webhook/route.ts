@@ -66,16 +66,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Record event in idempotency ledger
-    await paymentRepository.recordWebhookEvent({
-      id: eventId,
-      provider: "razorpay",
-      eventType: eventPayload.event || "unknown",
-      status: "processed",
-      payload: eventPayload,
-      processedAt: new Date().toISOString(),
-    });
-
     // 5. Asynchronous Event Routing & Lifecycle Reconciliation
     switch (eventPayload.event) {
       case "order.paid":
@@ -164,6 +154,16 @@ export async function POST(request: Request) {
       default:
         console.log(`[PAYMENTS WEBHOOK] Unhandled event received: ${eventPayload.event}`);
     }
+
+    // Record event in idempotency ledger (only once processing has succeeded)
+    await paymentRepository.recordWebhookEvent({
+      id: eventId,
+      provider: "razorpay",
+      eventType: eventPayload.event || "unknown",
+      status: "processed",
+      payload: eventPayload,
+      processedAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       received: true,

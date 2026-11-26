@@ -123,14 +123,10 @@ export default function DashboardDeliveryPage() {
   const handleSaveNotes = (e: React.FormEvent) => {
     e.preventDefault();
     const text = deliveryNotes.trim();
-    if (!text) {
-      setMessage({ kind: "error", text: "Enter an instruction before saving." });
-      return;
-    }
     void run(
       "notes",
       () => patchCustomer({ type: "delivery_notes", addressId: account.addressId, deliveryNotes: text }),
-      "Delivery instructions saved."
+      text ? "Delivery instructions saved." : "Delivery instructions cleared."
     );
   };
 
@@ -265,13 +261,13 @@ export default function DashboardDeliveryPage() {
                 <label htmlFor="vacation-start" className="block text-xs font-semibold text-content-secondary">
                   From date
                 </label>
-                <input id="vacation-start" type="date" disabled={!isActive} value={vacationStart} onChange={(e) => setVacationStart(e.target.value)} className={inputClass} />
+                <input id="vacation-start" type="date" min={new Date().toLocaleDateString("en-CA")} disabled={!isActive} value={vacationStart} onChange={(e) => setVacationStart(e.target.value)} className={inputClass} />
               </div>
               <div className="space-y-1.5">
                 <label htmlFor="vacation-end" className="block text-xs font-semibold text-content-secondary">
                   To date
                 </label>
-                <input id="vacation-end" type="date" disabled={!isActive} value={vacationEnd} onChange={(e) => setVacationEnd(e.target.value)} className={inputClass} />
+                <input id="vacation-end" type="date" min={vacationStart || new Date().toLocaleDateString("en-CA")} disabled={!isActive} value={vacationEnd} onChange={(e) => setVacationEnd(e.target.value)} className={inputClass} />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">

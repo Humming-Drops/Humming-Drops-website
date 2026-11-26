@@ -5,6 +5,7 @@ import { users } from "@/lib/db/schema";
 import { isValidEmail } from "@/lib/sanitization";
 import { createPasswordResetToken } from "@/lib/auth/password-reset";
 import { sendMail } from "@/lib/mailer";
+import { clientIp, isRateLimited, recordAttempt, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -26,12 +27,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "Please provide a valid email address." }, { status: 400 });
   }
 
+  const ipKey = `forgot-ip:${clientIp(request)}`;
+  if (isRateLimited(ipKey, 20)) {
+    return NextResponse.json({ success: false, error: TOO_MANY_ATTEMPTS }, { status: 429 });
+  }
+  recordAttempt(ipKey);
+
   try {
     const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (user && user.isActive) {
       const token = await createPasswordResetToken(user.id);
       if (token) {
-        const base = (process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin).replace(/\/$/, "");
+        const configured = process.env.NEXT_PUBLIC_APP_URL;
+        if (!configured && process.env.NODE_ENV === "production") {
+          throw new Error("NEXT_PUBLIC_APP_URL is required to build password reset links.");
+        }
+        const base = (configured || new URL(request.url).origin).replace(/\/$/, "");
         await sendMail({
           to: user.email,
           subject: "Reset your Humming Drops password",

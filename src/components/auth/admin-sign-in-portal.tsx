@@ -65,6 +65,8 @@ export function AdminSignInPortal() {
       }
 
       if (data.user.role === "customer") {
+        // Do not leave a customer session behind on the staff console.
+        await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
         setError("Access Denied: Your account does not possess staff or administrator privileges.");
         return;
       }
@@ -153,7 +155,7 @@ export function AdminSignInPortal() {
                 </AuthErrorAlert>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div>
                   <label htmlFor="admin-email" className={authLabelClass}>
                     Staff Email

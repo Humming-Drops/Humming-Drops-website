@@ -3,6 +3,8 @@ import { getServerAuthoritativeCheckoutMode } from "@/lib/checkout-config";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { razorpayClient } from "@/lib/razorpay";
 import { paymentRepository } from "@/lib/payment-storage";
+import { getCurrentUser } from "@/lib/auth/server";
+import { leadRepository } from "@/lib/lead-storage";
 
 /**
  * POST /api/payments/order
@@ -41,8 +43,20 @@ export async function POST(request: Request) {
       leadReferenceCode?: string;
     };
 
-    if (!planId || !OFFICIAL_PLANS[planId]) {
+    if (!planId || !Object.hasOwn(OFFICIAL_PLANS, planId)) {
       return NextResponse.json({ error: "Invalid plan identifier." }, { status: 400 });
+    }
+
+    // A payment may only activate the caller's own registration, at that registration's plan.
+    if (leadReferenceCode) {
+      const current = await getCurrentUser();
+      const lead = current ? await leadRepository.getLeadByReference(String(leadReferenceCode)) : null;
+      if (!lead || lead.customer.email.toLowerCase() !== current!.user.email.toLowerCase()) {
+        return NextResponse.json({ error: "Registration not found on this account." }, { status: 404 });
+      }
+      if (lead.planId !== planId) {
+        return NextResponse.json({ error: "Plan does not match your registration." }, { status: 400 });
+      }
     }
 
     // Server-authoritative pricing (Client-submitted price tampering is strictly ignored)

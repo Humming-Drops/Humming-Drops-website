@@ -13,6 +13,7 @@ import {
 } from "@/lib/db/schema";
 import { sanitizeString, isValidPincode, normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
 import { validatePauseRange } from "@/lib/subscription-admin";
+import { isUuid } from "@/lib/api-response";
 
 export async function GET() {
   const { userId } = await auth();
@@ -138,7 +139,7 @@ export async function PATCH(request: Request) {
   }
 
   if (body.type === "address") {
-    const addressId = typeof body.addressId === "string" ? body.addressId : null;
+    const addressId = isUuid(body.addressId) ? (body.addressId as string) : null;
     if (!addressId) return NextResponse.json({ error: "Address is required." }, { status: 400 });
 
     const flatNo = sanitizeString(body.flatNo, 50);
@@ -178,7 +179,8 @@ export async function PATCH(request: Request) {
         streetAddress,
         area,
         pincode,
-        deliveryNotes: deliveryNotes || undefined,
+        // Omitted = keep; empty string = clear.
+        deliveryNotes: typeof body.deliveryNotes === "string" ? deliveryNotes || null : undefined,
         updatedAt: new Date(),
       })
       .where(and(eq(deliveryAddresses.id, addressId), eq(deliveryAddresses.userId, user.id)))
@@ -193,13 +195,16 @@ export async function PATCH(request: Request) {
   }
 
   if (body.type === "delivery_notes") {
-    const addressId = typeof body.addressId === "string" ? body.addressId : null;
+    const addressId = isUuid(body.addressId) ? (body.addressId as string) : null;
     if (!addressId) return NextResponse.json({ error: "Address is required." }, { status: 400 });
+    if (typeof body.deliveryNotes !== "string") {
+      return NextResponse.json({ error: "Delivery notes must be text." }, { status: 400 });
+    }
     const deliveryNotes = sanitizeString(body.deliveryNotes, 300);
 
     const updated = await db
       .update(deliveryAddresses)
-      .set({ deliveryNotes: deliveryNotes || undefined, updatedAt: new Date() })
+      .set({ deliveryNotes: deliveryNotes || null, updatedAt: new Date() })
       .where(and(eq(deliveryAddresses.id, addressId), eq(deliveryAddresses.userId, user.id)))
       .returning();
 
@@ -212,11 +217,14 @@ export async function PATCH(request: Request) {
   }
 
   if (body.type === "pause") {
-    const subscriptionId = typeof body.subscriptionId === "string" ? body.subscriptionId : null;
+    const subscriptionId = isUuid(body.subscriptionId) ? (body.subscriptionId as string) : null;
     if (!subscriptionId) return NextResponse.json({ error: "Subscription is required." }, { status: 400 });
 
-    const rawStart = typeof body.pauseStart === "string" ? body.pauseStart : "";
-    const rawEnd = typeof body.pauseEnd === "string" ? body.pauseEnd : "";
+    if ([body.pauseStart, body.pauseEnd].some((v) => v != null && typeof v !== "string")) {
+      return NextResponse.json({ error: "Pause dates must be in YYYY-MM-DD format." }, { status: 400 });
+    }
+    const rawStart: string = body.pauseStart ?? "";
+    const rawEnd: string = body.pauseEnd ?? "";
     const isClearing = !rawStart && !rawEnd;
 
     if (!isClearing) {

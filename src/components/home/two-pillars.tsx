@@ -130,7 +130,7 @@ export function TwoPillars() {
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span>Mixed Sprouts Portion &amp; Dry Fruits Mix</span>
+                  <span>Fresh Mix Salad &amp; Sprouts daily; Dry Fruits 3 days a week (daily on Premium)</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#132A1C]">
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
@@ -306,7 +306,7 @@ export function TwoPillars() {
                 asChild
                 className="w-full justify-center px-5 font-bold bg-sky-50 hover:bg-sky-100 text-sky-950 border-2 border-sky-600/40 hover:border-sky-600 shadow-sm cursor-pointer group/btn"
               >
-                <Link href="/contact" className="flex items-center justify-center gap-2">
+                <Link href="/medcity-smiles" className="flex items-center justify-center gap-2">
                   <span>Learn About Health Support</span>
                   <ArrowRight className="w-4 h-4 text-sky-900 transition-transform group-hover/btn:translate-x-1" />
                 </Link>

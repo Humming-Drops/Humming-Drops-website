@@ -219,9 +219,16 @@ export function Navbar() {
         if (e.key === "Escape") setMobileMenuOpen(false);
       };
       window.addEventListener("keydown", handleKeyDown);
+      // The drawer is hidden from 1280px up; close it so scrolling is not left locked.
+      const desktop = window.matchMedia("(min-width: 1280px)");
+      const handleResize = () => {
+        if (desktop.matches) setMobileMenuOpen(false);
+      };
+      desktop.addEventListener("change", handleResize);
       return () => {
         document.body.style.overflow = "";
         window.removeEventListener("keydown", handleKeyDown);
+        desktop.removeEventListener("change", handleResize);
       };
     } else {
       document.body.style.overflow = "";
@@ -420,8 +427,7 @@ export function Navbar() {
           />
           <div
             id="mobile-navigation-drawer"
-            role="dialog"
-            aria-modal="true"
+            role="navigation"
             aria-label="Mobile Navigation"
             className={cn(
               "relative z-40 xl:hidden border-t border-line-subtle shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast",

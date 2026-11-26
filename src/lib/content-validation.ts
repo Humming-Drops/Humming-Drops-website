@@ -64,7 +64,7 @@ export function validateContentData(
 
   for (const field of schema.fields) {
     const value = data[field.key];
-    const isEmpty = value === undefined || value === null || value === "";
+    const isEmpty = value === undefined || value === null || (typeof value === "string" && value.trim() === "");
 
     if (field.required && isEmpty) {
       errors.push({ field: field.key, message: `${field.label} is required.` });

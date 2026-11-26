@@ -33,14 +33,12 @@ export default async function AdminAuditLogPage({
 
   const params = await searchParams;
   const kind = parseAuditKind(params.kind);
-  const page = parsePageNumber(params.page);
   const prefix = auditKindPrefix(kind);
 
-  const [rows, total] = await Promise.all([
-    listAdministrativeAuditLogs({ limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE, actionPrefix: prefix }),
-    countAdministrativeAuditLogs(prefix),
-  ]);
+  const total = await countAdministrativeAuditLogs(prefix);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const page = Math.min(parsePageNumber(params.page), totalPages);
+  const rows = await listAdministrativeAuditLogs({ limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE, actionPrefix: prefix });
   const pageHref = (p: number) => `/admin/audit-log?kind=${kind}&page=${p}`;
 
   return (
@@ -100,7 +98,7 @@ export default async function AdminAuditLogPage({
                   </td>
                   <td className={adminTable.td}>{actorEmail || "system"}</td>
                   <td className={`${adminTable.td} text-content-secondary`}>
-                    {new Date(log.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                    {new Date(log.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
                   </td>
                 </tr>
               );

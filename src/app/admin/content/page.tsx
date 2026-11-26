@@ -28,7 +28,8 @@ export default async function AdminContentPage({
   }
 
   const params = await searchParams;
-  const q = (params.q ?? "").trim().toLowerCase().slice(0, 80);
+  // A repeated ?q= arrives as an array.
+  const q = String(params.q ?? "").trim().toLowerCase().slice(0, 80);
   const status = ["draft", "published", "archived"].includes(params.status ?? "") ? (params.status as string) : "";
   const allRows = await listContentPages();
   const rows = allRows.filter(
@@ -97,7 +98,7 @@ export default async function AdminContentPage({
                   <StatusBadge status={page.status} />
                 </td>
                 <td className={`${adminTable.td} text-content-secondary`}>
-                  {new Date(page.updatedAt).toLocaleDateString("en-IN")}
+                  {new Date(page.updatedAt).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}
                 </td>
                 <td className={`${adminTable.td} text-right`}>
                   <Link

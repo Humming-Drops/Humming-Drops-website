@@ -308,7 +308,7 @@ export default function EditContentPage() {
           <ul className="mt-2 space-y-1 text-xs text-content-secondary">
             {auditLogs.map((log) => (
               <li key={log.id}>
-                {log.action} by {log.actorEmail ?? "system"} — {new Date(log.createdAt).toLocaleString("en-IN")}
+                {log.action} by {log.actorEmail ?? "system"} — {new Date(log.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
               </li>
             ))}
           </ul>

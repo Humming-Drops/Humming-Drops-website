@@ -8,6 +8,7 @@ import {
   getSessionCookieOptions,
 } from "@/lib/auth/session";
 import { isValidEmail } from "@/lib/sanitization";
+import { clearAttempts, clientIp, isRateLimited, recordAttempt, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +48,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Only failed attempts count, per account and per address.
+    const accountKey = `login:${email}`;
+    const ipKey = `login-ip:${clientIp(request)}`;
+    if (isRateLimited(accountKey, 10) || isRateLimited(ipKey, 50)) {
+      return NextResponse.json({ success: false, error: TOO_MANY_ATTEMPTS }, { status: 429 });
+    }
+    const failed = () => {
+      recordAttempt(accountKey);
+      recordAttempt(ipKey);
+      return NextResponse.json({ success: false, error: "Invalid email or password." }, { status: 401 });
+    };
+
     // 1. Query User from PostgreSQL
     const [user] = await db
       .select()
@@ -55,13 +68,17 @@ export async function POST(request: Request) {
       .limit(1);
 
     if (!user || !user.passwordHash) {
-      return NextResponse.json(
-        { success: false, error: "Invalid email or password." },
-        { status: 401 }
-      );
+      return failed();
     }
 
-    // 2. Account Status Check
+    // 2. Verify Password Hash
+    const passwordMatch = await verifyPassword(password, user.passwordHash);
+    if (!passwordMatch) {
+      return failed();
+    }
+    clearAttempts(accountKey);
+
+    // 3. Account Status Check (only revealed to someone who knows the password)
     if (!user.isActive) {
       return NextResponse.json(
         {
@@ -69,15 +86,6 @@ export async function POST(request: Request) {
           error: "Your account is currently inactive. Please contact support.",
         },
         { status: 403 }
-      );
-    }
-
-    // 3. Verify Password Hash
-    const passwordMatch = await verifyPassword(password, user.passwordHash);
-    if (!passwordMatch) {
-      return NextResponse.json(
-        { success: false, error: "Invalid email or password." },
-        { status: 401 }
       );
     }
 

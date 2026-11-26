@@ -3,7 +3,7 @@ import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/chec
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
 import { DuplicateLeadError, leadRepository } from "@/lib/lead-storage";
-import { getAppUserById, requireAuthUser, auth } from "@/lib/auth/server";
+import { getCurrentUser, hasPermission, requireAuthUser } from "@/lib/auth/server";
 import {
   normalizePhone,
   isValidIndianPhone,
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     const { planId, customer, deliveryAddress, dietaryPreferences } = body;
 
     // 1. Plan Validation (Canonical Pricing Guardrail)
-    if (!planId || typeof planId !== "string" || !(planId in OFFICIAL_PLANS)) {
+    if (!planId || typeof planId !== "string" || !Object.hasOwn(OFFICIAL_PLANS, planId)) {
       return NextResponse.json(
         {
           success: false,
@@ -319,28 +319,22 @@ export async function POST(request: Request) {
  * GET /api/subscriptions/lead?ref=HD-REG-...
  * Quick lookup helper with RBAC / admin gating to prevent unauthenticated PII leakage.
  */
-async function isStaffAuthorized(): Promise<boolean> {
-  const { userId } = await auth();
-  if (!userId) return false;
-  const appUser = await getAppUserById(userId);
-  return Boolean(
-    appUser?.isActive &&
-      ["admin", "super_admin", "staff", "operations", "nutritionist"].includes(appUser.role)
-  );
-}
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get("ref");
-    const authorized = await isStaffAuthorized();
+    const current = await getCurrentUser();
+    if (!current) {
+      return NextResponse.json({ success: false, error: "Authentication required." }, { status: 401 });
+    }
+    const authorized = await hasPermission("leads:read");
 
     if (!ref) {
       // Listing all leads strictly requires administrative credentials
       if (!authorized) {
         return NextResponse.json(
-          { success: false, error: "Unauthorized: Admin authorization required to list all lead records." },
-          { status: 401 }
+          { success: false, error: "Admin authorization required to list all lead records." },
+          { status: 403 }
         );
       }
 
@@ -360,26 +354,10 @@ export async function GET(request: Request) {
     }
 
     const lead = await leadRepository.getLeadByReference(ref);
-    if (!lead) {
+    // Someone else's reference looks the same as an unknown one.
+    const isOwner = lead?.customer.email?.toLowerCase() === current.user.email.toLowerCase();
+    if (!lead || (!authorized && !isOwner)) {
       return NextResponse.json({ error: "Lead reference not found." }, { status: 404 });
-    }
-
-    // Unauthenticated requests receive sanitized, masked status data without full customer PII
-    if (!authorized) {
-      const maskedPhone = lead.customer?.phone
-        ? lead.customer.phone.slice(0, 2) + "******" + lead.customer.phone.slice(-2)
-        : "";
-      return NextResponse.json({
-        success: true,
-        leadReferenceCode: lead.leadReferenceCode,
-        planId: lead.planId,
-        planName: lead.planName,
-        status: lead.status,
-        area: lead.deliveryAddress?.area,
-        customerName: lead.customer?.fullName,
-        maskedPhone,
-        createdAt: lead.createdAt,
-      });
     }
 
     return NextResponse.json({

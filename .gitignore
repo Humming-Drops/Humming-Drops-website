@@ -14,6 +14,9 @@ coverage/
 # Environment variables
 .env*.local
 .env
+.env.development
+.env.production
+.env.test
 
 # Local Demo Data (Phase 4.6 temporary store)
 data/*.json

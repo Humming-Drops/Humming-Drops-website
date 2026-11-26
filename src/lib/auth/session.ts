@@ -15,12 +15,17 @@ export const SESSION_COOKIE_NAME = "hd_session";
 // Auto session expiration: 48 hours (users must re-authenticate at least once every 48 hours)
 export const SESSION_MAX_AGE_SECONDS = 48 * 60 * 60; // 172,800 seconds
 
-function getSecretKey(): string {
-  return (
-    process.env.SESSION_SECRET ||
-    process.env.NEXTAUTH_SECRET ||
-    "hummingdrops_secure_session_signing_secret_2026_dev_key"
-  );
+// Secrets that have appeared in this repository: anyone can forge cookies with them.
+const PUBLIC_SECRET_MARKERS = ["hummingdrops_secure_session_signing_secret", "your_high_entropy_session_secret"];
+const DEV_ONLY_SECRET = "local-development-only-session-secret-not-for-production";
+
+export function getSecretKey(): string {
+  const secret = process.env.SESSION_SECRET || process.env.NEXTAUTH_SECRET;
+  if (process.env.NODE_ENV !== "production") return secret || DEV_ONLY_SECRET;
+  if (!secret || secret.length < 32 || PUBLIC_SECRET_MARKERS.some((m) => secret.includes(m))) {
+    throw new Error("SESSION_SECRET must be a private random value of at least 32 characters.");
+  }
+  return secret;
 }
 
 function base64UrlEncode(bytes: Uint8Array): string {

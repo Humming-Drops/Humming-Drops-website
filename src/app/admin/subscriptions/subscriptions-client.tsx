@@ -202,8 +202,9 @@ export function SubscriptionsClient() {
                   <td className={`${adminTable.td} text-content-secondary`}>{area || "—"}</td>
                   <td className={adminTable.td}>
                     <StatusBadge status={subscription.status} />
-                    {subscription.status === "paused" && subscription.pauseStart && subscription.pauseEnd ? (
-                      <div className="mt-1 text-xs text-content-secondary">
+                    {["paused", "confirmed_active"].includes(subscription.status) && subscription.pauseStart && subscription.pauseEnd ? (
+                      <div className="mt-1 text-xs font-semibold text-content-secondary">
+                        {subscription.status === "confirmed_active" ? "Vacation: " : ""}
                         {subscription.pauseStart} → {subscription.pauseEnd}
                       </div>
                     ) : null}

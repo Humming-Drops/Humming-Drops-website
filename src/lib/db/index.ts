@@ -36,10 +36,13 @@ export function getDatabaseClient(): postgres.Sql {
       ? parseInt(process.env.DATABASE_POOL_MAX, 10)
       : 10;
 
+    // "disable" is the explicit opt-out for the local Compose Postgres, which has
+    // no SSL even though the standalone server runs with NODE_ENV=production.
     const enforceSsl =
-      process.env.DATABASE_SSL === "require" ||
-      process.env.DATABASE_SSL === "true" ||
-      process.env.NODE_ENV === "production";
+      process.env.DATABASE_SSL !== "disable" &&
+      (process.env.DATABASE_SSL === "require" ||
+        process.env.DATABASE_SSL === "true" ||
+        process.env.NODE_ENV === "production");
 
     _client = postgres(connectionUrl, {
       max: poolMax,
