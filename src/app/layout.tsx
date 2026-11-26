@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://hummingdrops.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.hummingdrops.com"),
   title: {
     template: "%s | Humming Drops",
     default: "Humming Drops | Healthy Drops, Healthier you",
