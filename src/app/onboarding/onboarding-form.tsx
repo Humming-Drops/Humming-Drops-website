@@ -29,7 +29,7 @@ export function OnboardingForm({ defaultEmail }: { defaultEmail: string }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ type: "profile", fullName, phone }),
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.success) {
           throw new Error(data.error || "Something went wrong. Please try again.");
         }

@@ -1,20 +1,45 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
-import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
-import { AdminPageHeader, adminTable } from "@/components/admin/admin-ui";
+import { AdminPageHeader } from "@/components/admin/admin-ui";
+import { LeadsClient, type LeadRow } from "./leads-client";
 
 export default async function AdminLeadsPage() {
   const leads = await leadRepository.getAllLeads();
+
+  // Only what the follow-up team needs; never IP address / user agent.
+  const rows: LeadRow[] = leads.map((lead) => ({
+    id: lead.id,
+    reference: lead.leadReferenceCode,
+    planName: lead.planName,
+    status: lead.status,
+    createdAt: lead.createdAt,
+    fullName: lead.customer.fullName,
+    phone: lead.customer.phone,
+    email: lead.customer.email,
+    address: [
+      lead.deliveryAddress?.flatNo,
+      lead.deliveryAddress?.buildingName,
+      lead.deliveryAddress?.streetAddress,
+      lead.deliveryAddress?.area,
+      lead.deliveryAddress?.pincode,
+    ]
+      .filter(Boolean)
+      .join(", "),
+    area: lead.deliveryAddress?.area ?? "",
+    deliveryNotes: lead.deliveryAddress?.deliveryNotes ?? "",
+    dietaryType: lead.dietaryPreferences?.dietaryType ?? "",
+    allergies: lead.dietaryPreferences?.allergies ?? [],
+  }));
 
   return (
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Customer registrations"
-        title="Lead management"
+        title="Leads"
         description={
           <p>
-            This list is read-only. To confirm, pause or cancel a registration, open{" "}
+            Contact new registrations on WhatsApp or by phone. Once you have spoken to them, confirm, pause or cancel in{" "}
             <Link href="/admin/subscriptions" className="font-semibold text-brand-primary hover:underline">
               Subscriptions
             </Link>
@@ -22,40 +47,7 @@ export default async function AdminLeadsPage() {
           </p>
         }
       />
-      <div tabIndex={0} role="region" aria-label="Leads table (scrollable)" className={adminTable.shell}>
-        <table className={adminTable.table}>
-          <thead className={adminTable.head}>
-            <tr>
-              <th className={adminTable.th}>Reference</th>
-              <th className={adminTable.th}>Customer</th>
-              <th className={adminTable.th}>Plan</th>
-              <th className={adminTable.th}>Status</th>
-              <th className={adminTable.th}>Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leads.map((lead) => (
-              <tr key={lead.id} className={adminTable.row}>
-                <td className={adminTable.mono}>{lead.leadReferenceCode}</td>
-                <td className={`${adminTable.td} font-medium text-content-primary`}>{lead.customer.fullName}</td>
-                <td className={adminTable.td}>{lead.planName}</td>
-                <td className={adminTable.td}>
-                  <StatusBadge status={lead.status} />
-                </td>
-                <td className={`${adminTable.td} text-content-secondary`}>
-                  {new Date(lead.createdAt).toLocaleDateString("en-IN")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {leads.length === 0 && (
-          <EmptyTableState
-            title="No registrations found"
-            description="New breakfast box leads submitted through /subscribe will appear here."
-          />
-        )}
-      </div>
+      <LeadsClient rows={rows} />
     </div>
   );
 }

@@ -87,18 +87,20 @@ export function AdminNotice({
   children,
   className,
 }: {
-  tone?: "neutral" | "error";
+  tone?: "neutral" | "error" | "success";
   children: React.ReactNode;
   className?: string;
 }) {
   return (
     <div
-      role={tone === "error" ? "alert" : undefined}
+      role={tone === "error" ? "alert" : tone === "success" ? "status" : undefined}
       className={cn(
         "rounded-xl border p-4 text-sm",
         tone === "error"
           ? "border-red-200 bg-red-50 text-red-800"
-          : "border-line-subtle bg-surface text-content-secondary",
+          : tone === "success"
+            ? "border-emerald-200 bg-emerald-50 font-medium text-emerald-800"
+            : "border-line-subtle bg-surface text-content-secondary",
         className
       )}
     >
@@ -109,12 +111,15 @@ export function AdminNotice({
 
 export function AdminLoadingState({ label }: { label: string }) {
   return (
-    <div className="animate-pulse space-y-6 motion-reduce:animate-none" role="status" aria-busy="true" aria-label={label}>
-      <div className="space-y-2">
+    <div className="space-y-6" role="status" aria-busy="true" aria-label={label}>
+      {/* Only the placeholder bars pulse; the text stays at full contrast. */}
+      <div className="animate-pulse space-y-2 motion-reduce:animate-none" aria-hidden="true">
         <div className="h-4 w-36 rounded bg-muted/70" />
         <div className="h-8 w-48 rounded-xl bg-muted/70" />
       </div>
-      <div className="h-64 rounded-2xl border border-line-subtle bg-surface" />
+      <div className="flex h-64 items-center justify-center rounded-2xl border border-line-subtle bg-surface">
+        <p className="text-sm text-content-secondary">{label}…</p>
+      </div>
     </div>
   );
 }

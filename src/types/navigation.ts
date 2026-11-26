@@ -29,7 +29,7 @@ export const HUMMING_DROPS_NAV: BrandNavConfig = {
   logoAlt: "Humming Drops Official Logo",
   navItems: [
     { label: "How it works", href: "/#journey" },
-    { label: "Plans", href: "/#pricing" },
+    { label: "Plans", href: "/plans" },
     { label: "Contact", href: "/contact" },
   ],
   primaryCTA: {

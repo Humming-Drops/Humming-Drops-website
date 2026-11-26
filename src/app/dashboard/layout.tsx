@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth/server";
 import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 
 const DASHBOARD_NAV_ITEMS: PortalNavItem[] = [
-  { label: "Today's Box & Status", href: "/dashboard/overview" },
+  { label: "Overview", href: "/dashboard/overview" },
   { label: "Delivery Calendar & Pause", href: "/dashboard/delivery" },
   { label: "Health Vitals", href: "/dashboard/health", accent: "teal" },
   { label: "MedCity Smiles", href: "/dashboard/community", accent: "teal" },

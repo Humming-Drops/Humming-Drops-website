@@ -216,7 +216,7 @@ export default function MedCitySmilesPage() {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
             <a
-              href="tel:8618902810"
+              href="tel:+918618902810"
               className="inline-flex items-center justify-center gap-2 px-6 min-h-[48px] rounded-full border-2 border-white/40 hover:border-white text-white font-bold transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-teal-800"
             >
               <PhoneCall className="w-4 h-4" aria-hidden="true" />

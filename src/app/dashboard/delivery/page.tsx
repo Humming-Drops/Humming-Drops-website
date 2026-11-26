@@ -155,9 +155,12 @@ export default function DashboardDeliveryPage() {
           </p>
           <p className="text-xs">
             {account.state === "none" ? (
-              <Link href="/plans" className="inline-flex items-center min-h-[44px] font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600 rounded">
-                View plans
-              </Link>
+              <>
+                Once you subscribe and our team confirms it, you can pause deliveries and leave notes for the rider here.{" "}
+                <Link href="/plans" className="inline-flex items-center min-h-[44px] font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600 rounded">
+                  View plans
+                </Link>
+              </>
             ) : (
               <>
                 Questions? WhatsApp{" "}
@@ -191,6 +194,10 @@ export default function DashboardDeliveryPage() {
         )}
       </div>
 
+      {/* Forms only make sense for an active subscription; everyone else
+          sees the status card above instead of a page of disabled controls. */}
+      {isActive ? (
+        <>
       {isActive && (
       <DashboardCard tone="brand" className="space-y-5" aria-labelledby="tomorrow-heading">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -319,6 +326,9 @@ export default function DashboardDeliveryPage() {
           </form>
         </DashboardCard>
       </div>
+
+        </>
+      ) : null}
 
       <DashboardCard as="div" className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">

@@ -117,7 +117,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error("[LOGIN API ERROR]", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to sign in." },
+      { success: false, error: "We couldn't sign you in right now. Please try again." },
       { status: 500 }
     );
   }

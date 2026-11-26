@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
+import { isValidIndianPhone, normalizePhone } from "@/lib/sanitization";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/admin/status-badge";
 import {
@@ -21,6 +22,7 @@ interface AccountData {
   user: {
     email: string;
     phone: string;
+    role?: string;
     profile?: { fullName: string; phone: string };
   };
   subscriptions: Array<{
@@ -38,12 +40,14 @@ export default function DashboardSettingsPage() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveErrorField, setSaveErrorField] = useState<"fullName" | "phone" | null>(null);
+  const [savedNotice, setSavedNotice] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const loadAccount = () => {
     fetch("/api/customer/me")
       .then(async (response) => {
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || "Unable to load account.");
         setAccount(data);
         setFullName(data.user.profile?.fullName || "");
@@ -59,6 +63,23 @@ export default function DashboardSettingsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveError(null);
+    setSaveErrorField(null);
+    setSavedNotice(false);
+
+    // Same rules as the server, checked here first to save a round trip.
+    if (fullName.trim().length < 2) {
+      setSaveError("Full name must be at least 2 characters.");
+      setSaveErrorField("fullName");
+      requestAnimationFrame(() => document.getElementById("fullName")?.focus());
+      return;
+    }
+    if (!isValidIndianPhone(normalizePhone(phone))) {
+      setSaveError("Enter a valid 10-digit Indian mobile number.");
+      setSaveErrorField("phone");
+      requestAnimationFrame(() => document.getElementById("phone")?.focus());
+      return;
+    }
+
     setIsSaving(true);
     try {
       const res = await fetch("/api/customer/me", {
@@ -66,11 +87,16 @@ export default function DashboardSettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "profile", fullName, phone }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) {
+        if (data.field === "phone") {
+          setSaveErrorField("phone");
+          requestAnimationFrame(() => document.getElementById("phone")?.focus());
+        }
         throw new Error(data.error || "Unable to save your profile. Please try again.");
       }
       setIsEditing(false);
+      setSavedNotice(true);
       loadAccount();
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Unable to save your profile. Please try again.");
@@ -91,16 +117,13 @@ export default function DashboardSettingsPage() {
     <DashboardPage>
       <DashboardPageHeader
         title={<>Profile &amp; Settings</>}
-        actions={
-          <button
-            type="button"
-            onClick={() => logout()}
-            className="rounded-full border border-red-200 bg-red-50 px-5 min-h-[44px] text-sm font-semibold text-red-700 hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
-          >
-            Sign out
-          </button>
-        }
       />
+
+      {savedNotice ? (
+        <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+          Your profile was saved.
+        </p>
+      ) : null}
 
       <DashboardCard>
         <div className="flex items-center justify-between gap-3">
@@ -108,7 +131,7 @@ export default function DashboardSettingsPage() {
           {!isEditing && (
             <button
               type="button"
-              onClick={() => setIsEditing(true)}
+              onClick={() => { setIsEditing(true); setSavedNotice(false); }}
               className="min-h-[44px] -my-2 -mr-3 px-3 text-sm font-semibold text-brand-primary hover:underline rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
             >
               Edit
@@ -127,8 +150,8 @@ export default function DashboardSettingsPage() {
                 type="text"
                 required
                 minLength={2}
-                aria-invalid={saveError ? true : undefined}
-                aria-describedby={saveError ? "profile-error" : undefined}
+                aria-invalid={saveError && saveErrorField !== "phone" ? true : undefined}
+                aria-describedby={saveError && saveErrorField !== "phone" ? "profile-error" : undefined}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className={inputClass}
@@ -146,8 +169,10 @@ export default function DashboardSettingsPage() {
                   id="phone"
                   type="tel"
                   required
-                  aria-invalid={saveError ? true : undefined}
-                  aria-describedby={saveError ? "profile-error" : undefined}
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  aria-invalid={saveError && saveErrorField !== "fullName" ? true : undefined}
+                  aria-describedby={saveError && saveErrorField !== "fullName" ? "profile-error" : undefined}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className={cn(inputClass, "rounded-l-none")}
@@ -166,7 +191,7 @@ export default function DashboardSettingsPage() {
             </div>
 
             {saveError ? (
-              <p id="profile-error" role="alert" className="text-xs text-red-700">
+              <p id="profile-error" role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
                 {saveError}
               </p>
             ) : null}
@@ -180,6 +205,7 @@ export default function DashboardSettingsPage() {
                 onClick={() => {
                   setIsEditing(false);
                   setSaveError(null);
+                  setSaveErrorField(null);
                   setFullName(account.user.profile?.fullName || "");
                   setPhone(account.user.phone || "");
                 }}
@@ -194,7 +220,7 @@ export default function DashboardSettingsPage() {
             <div><dt className="text-content-secondary">Name</dt><dd className="font-semibold">{account.user.profile?.fullName || "Not provided"}</dd></div>
             <div><dt className="text-content-secondary">Email</dt><dd className="font-semibold break-all">{account.user.email}</dd></div>
             <div><dt className="text-content-secondary">Phone</dt><dd className="font-semibold">{account.user.phone || "Not provided"}</dd></div>
-            <div><dt className="text-content-secondary">Application role</dt><dd className="font-semibold">Customer</dd></div>
+            <div><dt className="text-content-secondary">Account type</dt><dd className="font-semibold">{account.user.role === "customer" ? "Customer" : "Staff"}</dd></div>
           </dl>
         )}
       </DashboardCard>
@@ -211,6 +237,18 @@ export default function DashboardSettingsPage() {
         ) : (
           <p className="mt-3 text-sm text-content-secondary">No subscription is linked to this account yet.</p>
         )}
+      </DashboardCard>
+
+      <DashboardCard>
+        <DashboardCardTitle>Sign out</DashboardCardTitle>
+        <p className="mt-2 text-sm text-content-secondary">Sign out of your Humming Drops account on this device.</p>
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="mt-4 rounded-full border border-line-subtle bg-white px-5 min-h-[44px] text-sm font-semibold text-red-700 hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+        >
+          Sign out
+        </button>
       </DashboardCard>
     </DashboardPage>
   );

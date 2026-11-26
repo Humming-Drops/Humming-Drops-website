@@ -4,6 +4,7 @@ import { hasPermission } from "@/lib/auth/server";
 import { countAdministrativeAuditLogs, listAdministrativeAuditLogs } from "@/lib/audit-log";
 import {
   AUDIT_KINDS,
+  auditEntrySummary,
   auditKindPrefix,
   auditResourceHref,
   humanizeAuditAction,
@@ -73,7 +74,7 @@ export default async function AdminAuditLogPage({
           <thead className={adminTable.head}>
             <tr>
               <th className={adminTable.th}>Action</th>
-              <th className={adminTable.th}>Resource</th>
+              <th className={adminTable.th}>What</th>
               <th className={adminTable.th}>Actor</th>
               <th className={adminTable.th}>When</th>
             </tr>
@@ -81,24 +82,25 @@ export default async function AdminAuditLogPage({
           <tbody>
             {rows.map(({ log, actorEmail }) => {
               const href = auditResourceHref(log.resourceType, log.resourceId);
+              const summary = auditEntrySummary(log.resourceType, log.metadata);
               return (
                 <tr key={log.id} className={adminTable.row}>
                   <td className={adminTable.td}>
                     <span className="font-medium text-content-primary">{humanizeAuditAction(log.action)}</span>
                     <span className="block font-mono text-xs text-content-secondary">{log.action}</span>
                   </td>
-                  <td className={`${adminTable.td} text-content-secondary`}>
+                  <td className={`${adminTable.td} max-w-[22rem] whitespace-normal text-content-secondary`}>
                     {href ? (
                       <Link href={href} className="font-semibold text-brand-primary hover:underline">
-                        {log.resourceType.replace(/_/g, " ")}
+                        {summary ?? log.resourceType.replace(/_/g, " ")}
                       </Link>
                     ) : (
-                      log.resourceType.replace(/_/g, " ")
+                      summary ?? log.resourceType.replace(/_/g, " ")
                     )}
                   </td>
                   <td className={adminTable.td}>{actorEmail || "system"}</td>
                   <td className={`${adminTable.td} text-content-secondary`}>
-                    {new Date(log.createdAt).toLocaleString("en-IN")}
+                    {new Date(log.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
                   </td>
                 </tr>
               );

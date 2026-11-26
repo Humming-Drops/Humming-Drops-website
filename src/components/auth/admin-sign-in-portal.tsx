@@ -57,7 +57,7 @@ export function AdminSignInPortal() {
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success) {
         setError(data.error || "Invalid staff credentials.");

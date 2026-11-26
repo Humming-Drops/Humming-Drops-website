@@ -184,7 +184,7 @@ export async function createContentPage(params: {
     })
     .returning();
 
-  await recordAudit(created.id, params.actorUserId, "created", { title: created.title, data: created.data });
+  await recordAudit(created.id, params.actorUserId, "created", { title: created.title, slug: created.slug, data: created.data });
   return created;
 }
 
@@ -215,7 +215,7 @@ export async function updateContentPageDraft(params: {
     .returning();
   if (!updated) throw new Error("Content page not found.");
 
-  await recordAudit(updated.id, params.actorUserId, "updated", { title: updated.title, data: updated.data });
+  await recordAudit(updated.id, params.actorUserId, "updated", { title: updated.title, slug: updated.slug, data: updated.data });
   return updated;
 }
 
@@ -235,7 +235,7 @@ export async function publishContentPage(id: string, actorUserId: string) {
     .returning();
   if (!updated) throw new Error("Content page not found.");
 
-  await recordAudit(updated.id, actorUserId, "published", { title: updated.title });
+  await recordAudit(updated.id, actorUserId, "published", { title: updated.title, slug: updated.slug });
   return updated;
 }
 
@@ -250,6 +250,6 @@ export async function unpublishContentPage(id: string, actorUserId: string) {
     .returning();
   if (!updated) throw new Error("Content page not found.");
 
-  await recordAudit(updated.id, actorUserId, "unpublished", { title: updated.title });
+  await recordAudit(updated.id, actorUserId, "unpublished", { title: updated.title, slug: updated.slug });
   return updated;
 }

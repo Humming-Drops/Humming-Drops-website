@@ -13,6 +13,7 @@ import {
   isValidIndianPhone,
   sanitizeString,
 } from "@/lib/sanitization";
+import { isUniqueViolation, violatedConstraint } from "@/lib/db/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -93,26 +94,49 @@ export async function POST(request: Request) {
       );
     }
 
-    // 6. Hash Password & Create User
+    // 5b. Phone is unique on users — check it up front for a clear message.
+    if (phone) {
+      const [phoneOwner] = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.phone, phone))
+        .limit(1);
+      if (phoneOwner) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "This mobile number is already linked to another account. Sign in, or use a different number.",
+            field: "phone",
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    // 6. Hash Password, then create user + profile atomically so a failure
+    // can never leave a half-created account behind.
     const passwordHash = await hashPassword(password);
 
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: rawEmail,
-        passwordHash,
-        phone,
-        role: "customer",
-        isActive: true,
-      })
-      .returning();
+    const newUser = await db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(users)
+        .values({
+          email: rawEmail,
+          passwordHash,
+          phone,
+          role: "customer",
+          isActive: true,
+        })
+        .returning({ id: users.id, email: users.email, role: users.role });
 
-    // 7. Create Profile
-    await db.insert(profiles).values({
-      userId: newUser.id,
-      fullName,
-      phone: phone || "",
-      email: rawEmail,
+      // 7. Create Profile
+      await tx.insert(profiles).values({
+        userId: created.id,
+        fullName,
+        phone: phone || "",
+        email: rawEmail,
+      });
+      return created;
     });
 
     // 8. Generate Session Token
@@ -142,10 +166,25 @@ export async function POST(request: Request) {
     response.cookies.set(cookieOpts.name, sessionToken, cookieOpts);
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    // Never echo driver errors to the client: they contain the SQL text and
+    // bound parameters (including the password hash).
+    if (isUniqueViolation(error)) {
+      const onPhone = violatedConstraint(error).includes("phone");
+      return NextResponse.json(
+        {
+          success: false,
+          error: onPhone
+            ? "This mobile number is already linked to another account. Sign in, or use a different number."
+            : "An account with this email address already exists. Please sign in instead.",
+          field: onPhone ? "phone" : "email",
+        },
+        { status: 409 }
+      );
+    }
     console.error("[REGISTER API ERROR]", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to create account." },
+      { success: false, error: "We couldn't create your account right now. Please try again." },
       { status: 500 }
     );
   }

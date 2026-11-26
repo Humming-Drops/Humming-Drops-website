@@ -102,16 +102,10 @@ export function PricingSection() {
                     <span><strong className="text-[#132A1C]">Dry Fruits</strong> — 3 days a week</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
-                    </div>
-                    <span>Free MedCity Smiles community membership</span>
-                  </li>
-                  <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0 mt-0.5">
                       <HeartPulse className="w-3.5 h-3.5 stroke-[2.5]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Free Monthly Health Check</strong> (Sugar, BP &amp; Vitals)</span>
+                    <span><strong className="text-[#132A1C]">Free Monthly Health Check</strong> (blood sugar, cholesterol &amp; blood pressure)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
@@ -259,7 +253,7 @@ export function PricingSection() {
               </a>
             </Button>
             <Button variant="secondary" size="md" asChild>
-              <a href="tel:8618902810">
+              <a href="tel:+918618902810">
                 <PhoneCall className="w-4 h-4" aria-hidden="true" />
                 <span>Call: 8618902810</span>
               </a>

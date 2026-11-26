@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { apiError, isUuid } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { getAppUserById, hasPermission } from "@/lib/auth/server";
-import { StaffAdminError, revokeRole } from "@/lib/staff-admin";
+import { StaffAdminError, StaffGuardError, revokeRole } from "@/lib/staff-admin";
 
 export async function DELETE(
   _request: Request,
@@ -23,6 +23,7 @@ export async function DELETE(
     await revokeRole({ userId, roleId, actorUserId: appUser.id });
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof StaffGuardError) return apiError(error.message, 409);
     if (error instanceof StaffAdminError) return apiError(error.message, 404);
     console.error("[ADMIN STAFF REVOKE ERROR]:", error);
     return apiError("Failed to revoke role.", 500);

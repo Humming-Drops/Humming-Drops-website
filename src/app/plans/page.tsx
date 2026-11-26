@@ -202,7 +202,7 @@ export default function PlansPage() {
               </a>
             </Button>
             <Button variant="secondary" size="md" asChild>
-              <a href="tel:8618902810">
+              <a href="tel:+918618902810">
                 <PhoneCall className="w-4 h-4" aria-hidden="true" />
                 <span>Call: 8618902810</span>
               </a>

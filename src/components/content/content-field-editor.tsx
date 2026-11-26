@@ -22,6 +22,10 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
         const value = data[field.key];
         const error = fieldErrors[field.key];
         const fieldId = `content-field-${field.key}`;
+        const a11y = {
+          "aria-invalid": error ? true : undefined,
+          "aria-describedby": error ? `${fieldId}-error` : field.helpText ? `${fieldId}-help` : undefined,
+        } as const;
 
         return (
           <div key={field.key} className="space-y-1.5">
@@ -33,6 +37,7 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
             {field.type === "richtext" ? (
               <textarea
                 id={fieldId}
+                {...a11y}
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
                 rows={5}
@@ -43,6 +48,8 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
               <div className="pt-0.5">
                 <input
                   id={fieldId}
+                  {...a11y}
+                {...a11y}
                   type="checkbox"
                   checked={Boolean(value)}
                   onChange={(e) => onChange(field.key, e.target.checked)}
@@ -52,6 +59,7 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
             ) : field.type === "number" ? (
               <input
                 id={fieldId}
+                {...a11y}
                 type="number"
                 value={typeof value === "number" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value === "" ? undefined : Number(e.target.value))}
@@ -60,6 +68,7 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
             ) : (
               <input
                 id={fieldId}
+                {...a11y}
                 type="text"
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
@@ -69,7 +78,7 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
               />
             )}
 
-            {field.helpText && !error && <p className={adminHelpText}>{field.helpText}</p>}
+            {field.helpText && !error && <p id={`${fieldId}-help`} className={adminHelpText}>{field.helpText}</p>}
             {error && (
               <p id={`${fieldId}-error`} role="alert" className={adminErrorText}>
                 {error}

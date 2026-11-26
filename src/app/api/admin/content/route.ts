@@ -3,6 +3,7 @@ import { apiError, isUuid } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { ContentValidationFailure, createContentPage, listContentPages } from "@/lib/content-storage";
+import { isUniqueViolation } from "@/lib/db/errors";
 
 export async function GET() {
   const { userId } = await auth();
@@ -56,10 +57,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, page }, { status: 201 });
   } catch (error) {
     if (error instanceof ContentValidationFailure) {
-      return apiError("Validation failed", 400, { details: error.errors });
+      return apiError("Some fields need fixing.", 400, { details: error.errors });
     }
-    if (error && typeof error === "object" && "code" in error && (error as { code?: string }).code === "23505") {
-      return apiError("A page with this slug already exists.", 409);
+    if (isUniqueViolation(error)) {
+      return apiError("A page with this slug already exists. Choose a different slug.", 409, {
+        details: [{ field: "slug", message: "This slug is already used by another page." }],
+      });
     }
     console.error("[ADMIN CONTENT CREATE ERROR]:", error);
     return apiError("Failed to create content page.", 500);

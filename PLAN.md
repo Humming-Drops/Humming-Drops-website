@@ -128,3 +128,15 @@ Limits: Chrome extension cannot resize the viewport (layout checks used headless
 Done and verified: Groups A, B, C, D, F, G. Group E: PUB-03 and PUB-04 done; PUB-12 partly (client input for the address).
 Not done on purpose: real password reset (needs provider + approval), legal wording (client), shared `form-field.tsx` component (each form got the same ARIA pattern directly instead), deleting local QA test data.
 Extra work done beyond this plan: keyed Continue/Submit buttons (root cause of auto-submit), per-user DB lock for duplicate registrations, readable/filterable/paginated audit log, content search + filter, audit actor on content changes, dedicated admin layout, skeleton `role=status`.
+
+## Second pass (2026-11-24) — fixes from the 4-agent browser review
+Per-bug detail: `BUGS.md` → "Second QA pass (2026-11-24)" (Q2-01 … Q2-22).
+- [x] Security: register/login error leak (raw SQL + password hash), settings half-save — transactions, duplicate-phone checks, `src/lib/db/errors.ts`.
+- [x] CMS: honest live-page editing, Save & publish, unsaved-changes guard, duplicate slug 409, new-page validation.
+- [x] Admin: shared `AdminDialog` (native `<dialog>`), cancel/pause/revoke confirmations, leads contact + search/filter/paging, subscriptions search/filter, audit log covers subscription actions + page titles, last-Super-Admin guard.
+- [x] Customer: subscribe name/pincode/a11y fixes, delivery empty state, settings polish, login/sign-up inline validation.
+- [x] Public: pricing card brochure fix, Plans link, header breakpoint (xl), vitals copy, brand switcher ARIA, tel +91.
+- [x] Tooling: `npm run db:migrate` loads `.env.local`.
+- [x] Checks: tsc, lint, 115 unit tests, live curl checks (register 409, settings 409 + no half-save, slug 409, own Super Admin 409, confirm → audit row), viewport + axe sweep 81/81.
+- [x] Independent browser verification: customer 10/10 PASS, admin/CMS 6/8 PASS + 2 partial; follow-up findings fixed as Q2-23 … Q2-30 (BUGS.md).
+- Test data created this pass (local DB only): accounts `qa-fix-*`, `verify-*`, `dup-phone-*` @hummingdrops.test; leads HD-REG-2026-31249; confirmed HD-REG-2026-74974 and HD-REG-2026-96087; CMS pages `qa-test-page-delete-me`, `verify-page-delete-me`, `verify-page2-delete-me` (plus earlier `qa-test-banner`, `browser-test-banner`).

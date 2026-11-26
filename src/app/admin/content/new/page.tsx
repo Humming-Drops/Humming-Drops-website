@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ContentFieldEditor } from "@/components/content/content-field-editor";
-import { isValidContentSlug, type ContentTemplateSchema } from "@/lib/content-validation";
+import { isValidContentSlug, validateContentData, type ContentTemplateSchema } from "@/lib/content-validation";
 import {
   AdminLoadingState,
   AdminNotice,
@@ -45,6 +46,7 @@ export default function NewContentPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slugTouched, setSlugTouched] = useState(false);
+  const [createdId, setCreatedId] = useState<string | null>(null);
   const formErrorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -75,9 +77,16 @@ export default function NewContentPage() {
     if (!isValidContentSlug(slug)) {
       local.slug = "Use 3-80 characters: lowercase letters, numbers and single hyphens (e.g. monsoon-update).";
     }
+    if (selectedTemplate) {
+      for (const err of validateContentData(selectedTemplate.schema, data)) {
+        if (err.field !== "_root") local[err.field] = err.message;
+      }
+    }
     if (Object.keys(local).length > 0) {
       setFieldErrors(local);
-      const first = local.slug ? "content-slug" : "content-title";
+      const firstKey = Object.keys(local)[0];
+      const first =
+        firstKey === "title" ? "content-title" : firstKey === "slug" ? "content-slug" : fieldDomId(firstKey);
       requestAnimationFrame(() => document.getElementById(first)?.focus());
       return;
     }
@@ -91,7 +100,7 @@ export default function NewContentPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ templateId, slug, title, data }),
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         if (Array.isArray(json.details)) {
@@ -100,13 +109,19 @@ export default function NewContentPage() {
           setFieldErrors(errs);
         }
         setFormError(json.error || "Failed to create page.");
+        if (Array.isArray(json.details) && json.details.some((d: { field: string }) => d.field === "slug")) {
+          requestAnimationFrame(() => document.getElementById("content-slug")?.focus());
+        }
+        setIsSubmitting(false);
         return;
       }
 
+      // Keep the button disabled until navigation finishes, so a slow route
+      // load can't invite a second, duplicate submit.
+      setCreatedId(json.page.id);
       router.push(`/admin/content/${json.page.id}`);
     } catch {
       setFormError("Network error creating the page.");
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -143,8 +158,12 @@ export default function NewContentPage() {
           id="content-template"
           value={templateId}
           onChange={(e) => {
+            const next = templates.find((t) => t.id === e.target.value);
             setTemplateId(e.target.value);
-            setData({});
+            // Keep values for fields the new template also has (e.g. Body).
+            const keep = new Set(next?.schema.fields.map((f) => f.key) ?? []);
+            setData((prev) => Object.fromEntries(Object.entries(prev).filter(([k]) => keep.has(k))));
+            setFieldErrors({});
           }}
           className={adminInput}
         >
@@ -158,34 +177,6 @@ export default function NewContentPage() {
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="content-slug" className={adminLabel}>
-          URL slug <span className="text-red-600">*</span>
-        </label>
-        <input
-          id="content-slug"
-          type="text"
-          value={slug}
-          onChange={(e) => {
-            setSlugTouched(true);
-            setSlug(e.target.value.toLowerCase());
-          }}
-          aria-invalid={fieldErrors.slug ? true : undefined}
-          aria-describedby={fieldErrors.slug ? "content-slug-help content-slug-error" : "content-slug-help"}
-          placeholder="e.g. monsoon-delivery-update"
-          className={`${adminInput} font-mono`}
-        />
-        <p id="content-slug-help" className={adminHelpText}>
-          Lowercase letters, numbers, and hyphens only.
-          {isValidContentSlug(slug) ? ` Published at /content/${slug}` : ""}
-        </p>
-        {fieldErrors.slug && (
-          <p id="content-slug-error" role="alert" className={adminErrorText}>
-            {fieldErrors.slug}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5">
         <label htmlFor="content-title" className={adminLabel}>
           Title <span className="text-red-600">*</span>
         </label>
@@ -195,7 +186,13 @@ export default function NewContentPage() {
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
-            if (!slugTouched) setSlug(slugify(e.target.value));
+            setFormError(null);
+            if (!slugTouched) {
+              const next = slugify(e.target.value);
+              setSlug(next);
+              if (isValidContentSlug(next)) setFieldErrors(({ slug: _slug, ...rest }) => rest);
+            }
+            if (e.target.value.trim()) setFieldErrors(({ title: _title, ...rest }) => rest);
           }}
           aria-invalid={fieldErrors.title ? true : undefined}
           aria-describedby={fieldErrors.title ? "content-title-error" : undefined}
@@ -208,22 +205,76 @@ export default function NewContentPage() {
         )}
       </div>
 
+      <div className="space-y-1.5">
+        <label htmlFor="content-slug" className={adminLabel}>
+          URL slug <span className="text-red-600">*</span>
+        </label>
+        <input
+          id="content-slug"
+          type="text"
+          value={slug}
+          onChange={(e) => {
+            setSlugTouched(true);
+            setFormError(null);
+            setSlug(e.target.value.toLowerCase());
+            if (isValidContentSlug(e.target.value.toLowerCase())) setFieldErrors(({ slug: _slug, ...rest }) => rest);
+          }}
+          aria-invalid={fieldErrors.slug ? true : undefined}
+          aria-describedby={fieldErrors.slug ? "content-slug-help content-slug-error" : "content-slug-help"}
+          placeholder="e.g. monsoon-delivery-update"
+          className={`${adminInput} font-mono`}
+        />
+        <p id="content-slug-help" className={adminHelpText}>
+          Filled in from the title. Lowercase letters, numbers and hyphens only; it cannot be changed after the page is created.
+          {isValidContentSlug(slug) ? ` Published at /content/${slug}` : ""}
+        </p>
+        {fieldErrors.slug && (
+          <p id="content-slug-error" role="alert" className={adminErrorText}>
+            {fieldErrors.slug}
+          </p>
+        )}
+      </div>
+
       {selectedTemplate && (
         <ContentFieldEditor
           fields={selectedTemplate.schema.fields}
           data={data}
-          onChange={(key, value) => setData((prev) => ({ ...prev, [key]: value }))}
+          onChange={(key, value) => {
+            setData((prev) => ({ ...prev, [key]: value }));
+            setFieldErrors(({ [key]: _cleared, ...rest }) => rest);
+          }}
           fieldErrors={fieldErrors}
         />
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={adminButton("primary")}
-      >
-        {isSubmitting ? "Saving…" : "Save draft"}
-      </button>
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="submit"
+          disabled={isSubmitting || createdId !== null}
+          className={adminButton("primary")}
+        >
+          {createdId ? "Opening editor…" : isSubmitting ? "Saving…" : "Save draft"}
+        </button>
+        <Link href="/admin/content" className={adminButton("secondary")}>
+          Cancel
+        </Link>
+        {createdId ? (
+          <p role="status" className={adminHelpText}>
+            Saved as a draft.{" "}
+            <Link href={`/admin/content/${createdId}`} className="font-semibold text-brand-primary underline">
+              Open the editor
+            </Link>{" "}
+            if it doesn&apos;t open by itself.
+          </p>
+        ) : (
+          <p className={adminHelpText}>New pages are saved as drafts. Nothing is public until you publish.</p>
+        )}
+      </div>
     </form>
   );
+}
+
+/** DOM id ContentFieldEditor gives each template field. */
+function fieldDomId(key: string): string {
+  return `content-field-${key}`;
 }

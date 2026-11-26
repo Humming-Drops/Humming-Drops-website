@@ -263,10 +263,12 @@ export function BoxAnatomy() {
               {/* Bottom Interactive Bar */}
               <div className="mt-3 px-2 flex items-center justify-between gap-3 text-xs text-[#4F6458]">
                 <span className="font-bold text-[#132A1C] flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                  Tap numbers to inspect each fresh compartment
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block motion-safe:animate-pulse" aria-hidden="true" />
+                  Tap a number to see what&apos;s inside
                 </span>
-                <span className="font-medium shrink-0">Fresh Daily Box</span>
+                <span className="font-medium shrink-0 text-right">
+                  Salad (03) isn&apos;t visible in this photo — use the buttons above
+                </span>
               </div>
             </div>
           </div>

@@ -111,9 +111,13 @@ function SubscribeFormContent() {
     email: "",
   });
 
-  // Prefill authenticated customer information without overwriting user input
+  // Prefill authenticated customer information once. A ref (not "is the
+  // field empty?") decides, so a customer can clear the name and retype it
+  // without it springing back.
+  const prefilledFromAccount = React.useRef(false);
   useEffect(() => {
-    if (!isUserLoaded || !user) return;
+    if (!isUserLoaded || !user || prefilledFromAccount.current) return;
+    prefilledFromAccount.current = true;
 
     setCustomer((prev) => {
       const derivedFullName =
@@ -228,8 +232,23 @@ function SubscribeFormContent() {
     }
 
     setErrors(newErrors);
+    const firstInvalid = Object.keys(newErrors)[0];
+    if (firstInvalid) {
+      // Move focus to the first problem so keyboard and screen-reader users
+      // land on it instead of hearing every alert at once.
+      requestAnimationFrame(() => {
+        const target =
+          document.getElementById(firstInvalid) ??
+          document.querySelector<HTMLElement>(`[data-error-anchor="${firstInvalid}"]`);
+        target?.focus();
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
     return Object.keys(newErrors).length === 0;
   };
+
+  const pincodeOutsideBangalore =
+    /^[1-9][0-9]{5}$/.test(deliveryAddress.pincode.trim()) && !deliveryAddress.pincode.trim().startsWith("56");
 
   const reviewOpenedAt = React.useRef(0);
 
@@ -307,7 +326,7 @@ function SubscribeFormContent() {
           body: JSON.stringify(payload),
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
 
         if (!res.ok || !data.success) {
           throw new Error(data.error || "Failed to submit subscription registration.");
@@ -366,7 +385,7 @@ function SubscribeFormContent() {
                 className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 min-h-[44px] rounded-xl bg-white border border-forest-900/20 text-forest-900 hover:bg-forest-50 transition-colors shadow-sm"
               >
                 <Copy className="w-4 h-4" aria-hidden="true" />
-                {copiedRef ? "Copied to Clipboard!" : "Copy Code"}
+                <span aria-live="polite">{copiedRef ? "Copied!" : "Copy code"}</span>
               </button>
             </div>
 
@@ -398,6 +417,7 @@ function SubscribeFormContent() {
                   <span className="font-medium text-stone-800">
                     {confirmationData.deliveryAddress.flatNo}, {confirmationData.deliveryAddress.buildingName},{" "}
                     {confirmationData.deliveryAddress.streetAddress}, {confirmationData.deliveryAddress.area},{" "}
+                    {confirmationData.deliveryAddress.city ? `${confirmationData.deliveryAddress.city} ` : ""}
                     {confirmationData.deliveryAddress.pincode}
                   </span>
                 </div>
@@ -419,12 +439,18 @@ function SubscribeFormContent() {
               </p>
             </div>
 
-            <div className="pt-4 border-t border-stone-100 flex justify-center">
+            <div className="pt-4 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/dashboard/overview"
+                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-5 rounded-full border border-forest-900/20 text-sm font-semibold text-forest-900 hover:bg-forest-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
+              >
+                Go to my dashboard
+              </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 hover:text-forest-900 underline-offset-4 hover:underline"
+                className="inline-flex items-center gap-1.5 min-h-[44px] px-3 text-sm font-semibold text-forest-800 hover:text-forest-900 underline-offset-4 hover:underline rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
               >
-                <ArrowLeft className="w-3.5 h-3.5" /> Return to Homepage
+                <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" /> Return to homepage
               </Link>
             </div>
           </Card>
@@ -463,6 +489,7 @@ function SubscribeFormContent() {
               return (
                 <li
                   key={step}
+                  aria-current={isCurrent ? "step" : undefined}
                   className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-1.5 rounded-xl transition-colors ${
                     isCurrent
                       ? "bg-forest-50 text-forest-900 font-bold border border-forest-900/20"
@@ -482,7 +509,10 @@ function SubscribeFormContent() {
                   >
                     {isCompleted ? <Check className="w-3 h-3" /> : step}
                   </span>
-                  <span className="text-[11px] sm:text-xs">{label}</span>
+                  <span className="text-[11px] sm:text-xs">
+                    {label}
+                    {isCompleted ? <span className="sr-only"> (done)</span> : null}
+                  </span>
                 </li>
               );
             })}
@@ -516,7 +546,7 @@ function SubscribeFormContent() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 rounded-2xl focus:outline-none" data-error-anchor="plan" tabIndex={-1}>
                   <button
                     type="button"
                     aria-pressed={selectedPlanId === "standard"}
@@ -824,18 +854,24 @@ function SubscribeFormContent() {
                         <input
                           id="pincode"
                           aria-invalid={errors.pincode ? true : undefined}
-                          aria-describedby={errors.pincode ? "pincode-error" : undefined}
+                          aria-describedby={errors.pincode ? "pincode-error" : pincodeOutsideBangalore ? "pincode-note" : undefined}
                           type="text"
                           maxLength={6}
                           required
                           value={deliveryAddress.pincode}
                           onChange={(e) => setDeliveryAddress({ ...deliveryAddress, pincode: e.target.value })}
-                          placeholder="560034"
+                          placeholder="e.g. 560034"
+                          inputMode="numeric"
                           className={authInputClass}
                         />
                       </div>
                     </div>
                     {errors.pincode && <p id="pincode-error" role="alert" className={authFieldErrorClass}>{errors.pincode}</p>}
+                    {!errors.pincode && pincodeOutsideBangalore && (
+                      <p id="pincode-note" className="mt-1.5 text-xs font-medium text-amber-800">
+                        This doesn&apos;t look like a Bangalore pincode. You can still register — our team will tell you on WhatsApp whether we deliver there.
+                      </p>
+                    )}
                   </div>
 
                   <div className="sm:col-span-2">
@@ -873,8 +909,8 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="space-y-2 pt-2">
-                  <label className={authLabelClass}>Dietary Style</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <p id="diet-style-label" className={authLabelClass}>Dietary Style</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup" aria-labelledby="diet-style-label">
                     {[
                       {
                         id: "standard" as DietaryType,
@@ -884,18 +920,31 @@ function SubscribeFormContent() {
                       {
                         id: "vegan" as DietaryType,
                         name: "100% Vegan",
-                        desc: "Preference only. Availability is confirmed by our team (CLIENT INPUT REQUIRED).",
+                        desc: "Preference only — our team confirms availability on WhatsApp.",
                       },
                       {
                         id: "pure_fruit" as DietaryType,
                         name: "Fruit Focused",
-                        desc: "Preference only. Availability is confirmed by our team (CLIENT INPUT REQUIRED).",
+                        desc: "Preference only — our team confirms availability on WhatsApp.",
                       },
-                    ].map((style) => (
+                    ].map((style, index, all) => (
                       <button
                         type="button"
                         key={style.id}
-                        aria-pressed={dietaryPreferences.dietaryType === style.id}
+                        id={`diet-${style.id}`}
+                        role="radio"
+                        aria-checked={dietaryPreferences.dietaryType === style.id}
+                        // Radio-group keyboard pattern: one Tab stop, arrow keys move the choice.
+                        tabIndex={dietaryPreferences.dietaryType === style.id ? 0 : -1}
+                        onKeyDown={(e) => {
+                          const step =
+                            e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+                          if (!step) return;
+                          e.preventDefault();
+                          const next = all[(index + step + all.length) % all.length];
+                          setDietaryPreferences((prev) => ({ ...prev, dietaryType: next.id }));
+                          document.getElementById(`diet-${next.id}`)?.focus();
+                        }}
                         onClick={() => setDietaryPreferences({ ...dietaryPreferences, dietaryType: style.id })}
                         className={`text-left p-4 rounded-xl border-2 cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                           dietaryPreferences.dietaryType === style.id
@@ -916,10 +965,10 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className={authLabelClass}>
+                  <p id="allergies-label" className={authLabelClass}>
                     Allergies or Intolerances (Select all that apply)
-                  </label>
-                  <div className="flex flex-wrap gap-2">
+                  </p>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="allergies-label">
                     {COMMON_ALLERGIES.map((allergy) => {
                       const isSelected = dietaryPreferences.allergies.includes(allergy);
                       return (
@@ -1019,7 +1068,7 @@ function SubscribeFormContent() {
                         onClick={() => setCurrentStep(2)}
                         className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> contact details</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 truncate">{customer.fullName || "—"}</p>
@@ -1035,14 +1084,14 @@ function SubscribeFormContent() {
                         onClick={() => setCurrentStep(3)}
                         className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> delivery address</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 truncate">
                       {deliveryAddress.buildingName || "—"}
                     </p>
                     <p className="text-stone-600 line-clamp-2">
-                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area} - {deliveryAddress.pincode}
+                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area}, {deliveryAddress.city} {deliveryAddress.pincode}
                     </p>
                   </div>
 
@@ -1054,7 +1103,7 @@ function SubscribeFormContent() {
                         onClick={() => setCurrentStep(4)}
                         className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> diet preferences</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 capitalize">

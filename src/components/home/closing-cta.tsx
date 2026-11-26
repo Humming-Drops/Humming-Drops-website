@@ -62,7 +62,7 @@ export function ClosingCTA() {
 
               {/* Phone Contact */}
               <a
-                href="tel:8618902810"
+                href="tel:+918618902810"
                 className="min-h-[56px] p-3 sm:p-3.5 rounded-2xl bg-white/95 hover:bg-white text-stone-900 shadow-xs flex items-center gap-2 sm:gap-3 transition-transform active:scale-[0.98] border border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">

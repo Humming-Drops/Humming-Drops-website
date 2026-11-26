@@ -119,7 +119,7 @@ export function Hero() {
   return (
     <section
       aria-label="Welcome to Humming Drops"
-      className="relative overflow-hidden bg-[#FCFDF9] min-h-[auto] lg:h-[calc(100svh-4.25rem)] lg:min-h-[640px] lg:max-h-[840px] flex flex-col lg:flex-row items-stretch"
+      className="relative overflow-hidden bg-[#FCFDF9] min-h-[auto] lg:min-h-[min(840px,calc(100svh-4.25rem))] flex flex-col lg:flex-row items-stretch"
     >
       {/* Background Soft Radiant Glows for Morning Warmth */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-100/60 via-mint/40 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />

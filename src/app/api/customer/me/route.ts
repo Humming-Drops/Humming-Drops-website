@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth, getAppUserById } from "@/lib/auth/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, ne } from "drizzle-orm";
+import { isUniqueViolation } from "@/lib/db/errors";
 import { db } from "@/lib/db";
 import {
   administrativeAuditLogs,
@@ -81,22 +82,51 @@ export async function PATCH(request: Request) {
       );
     }
 
+    // users.phone is unique: refuse a number owned by another account before
+    // writing anything, so the profile and account can never disagree.
+    const [phoneOwner] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.phone, normalizedPhone), ne(users.id, user.id)))
+      .limit(1);
+    if (phoneOwner) {
+      return NextResponse.json(
+        { error: "This mobile number is already linked to another account.", field: "phone" },
+        { status: 409 }
+      );
+    }
+
     const [existing] = await db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1);
 
     // Upsert: onboarding creates the first row (no profile exists yet
-    // for a brand-new sign-up); later edits update it in place.
-    const [savedProfile] = existing
-      ? await db
-          .update(profiles)
-          .set({ fullName, phone: normalizedPhone, updatedAt: new Date() })
-          .where(eq(profiles.userId, user.id))
-          .returning()
-      : await db
-          .insert(profiles)
-          .values({ userId: user.id, fullName, phone: normalizedPhone, email: user.email })
-          .returning();
-
-    await db.update(users).set({ phone: normalizedPhone, updatedAt: new Date() }).where(eq(users.id, user.id));
+    // for a brand-new sign-up); later edits update it in place. Both writes
+    // run in one transaction.
+    let savedProfile: typeof profiles.$inferSelect;
+    try {
+      savedProfile = await db.transaction(async (tx) => {
+        const [row] = existing
+          ? await tx
+              .update(profiles)
+              .set({ fullName, phone: normalizedPhone, updatedAt: new Date() })
+              .where(eq(profiles.userId, user.id))
+              .returning()
+          : await tx
+              .insert(profiles)
+              .values({ userId: user.id, fullName, phone: normalizedPhone, email: user.email })
+              .returning();
+        await tx.update(users).set({ phone: normalizedPhone, updatedAt: new Date() }).where(eq(users.id, user.id));
+        return row;
+      });
+    } catch (error) {
+      if (isUniqueViolation(error)) {
+        return NextResponse.json(
+          { error: "This mobile number is already linked to another account.", field: "phone" },
+          { status: 409 }
+        );
+      }
+      console.error("[CUSTOMER PROFILE UPDATE ERROR]", error);
+      return NextResponse.json({ error: "We couldn't save your details. Please try again." }, { status: 500 });
+    }
 
     await logCustomerAction(
       user.id,

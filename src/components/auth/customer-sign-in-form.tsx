@@ -39,6 +39,24 @@ export function CustomerSignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Our own validation (form is noValidate) so errors look the same as sign-up.
+    if (!email.trim()) {
+      setError("Enter the email address you registered with.");
+      requestAnimationFrame(() => document.getElementById("email")?.focus());
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("That email address doesn't look right — check it and try again (e.g. name@example.com).");
+      requestAnimationFrame(() => document.getElementById("email")?.focus());
+      return;
+    }
+    if (!password) {
+      setError("Enter your password.");
+      requestAnimationFrame(() => document.getElementById("password")?.focus());
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -51,7 +69,7 @@ export function CustomerSignInForm() {
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success) {
         setError(data.error || "Invalid email or password.");
@@ -81,7 +99,7 @@ export function CustomerSignInForm() {
         </AuthErrorAlert>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
         <div>
           <label htmlFor="email" className={authLabelClass}>
             Email Address
@@ -106,17 +124,9 @@ export function CustomerSignInForm() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="password" className={cn(authLabelClass, "mb-0")}>
-              Password
-            </label>
-            <Link
-              href="/forgot-password"
-              className={cn(authLinkClass, "text-sm py-1 -my-1")}
-            >
-              Forgot password?
-            </Link>
-          </div>
+          <label htmlFor="password" className={authLabelClass}>
+            Password
+          </label>
           <div className="relative">
             <FieldIcon>
               <Lock className="w-4 h-4" aria-hidden="true" />
@@ -145,6 +155,11 @@ export function CustomerSignInForm() {
                 <Eye className="w-4 h-4" aria-hidden="true" />
               )}
             </button>
+          </div>
+          <div className="mt-2 flex justify-end">
+            <Link href="/forgot-password" className={cn(authLinkClass, "text-sm py-1")}>
+              Forgot password?
+            </Link>
           </div>
         </div>
 

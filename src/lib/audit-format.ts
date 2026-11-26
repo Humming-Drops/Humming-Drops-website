@@ -18,6 +18,11 @@ const ACTION_LABELS: Record<string, string> = {
   "customer.vacation_dates_cleared": "Vacation dates cleared",
   "health.self_access_read": "Customer viewed own health records",
   "health.staff_access_read": "Staff viewed customer health records",
+  "subscription.confirmed": "Subscription confirmed",
+  "subscription.cancelled": "Subscription cancelled",
+  "subscription.paused": "Subscription paused",
+  "subscription.resumed": "Subscription resumed",
+  "subscription.status_changed": "Subscription status changed",
   "payment.captured": "Payment captured",
   "payment.failed": "Payment failed",
 };
@@ -45,7 +50,8 @@ export function auditResourceHref(resourceType: string | null, resourceId: strin
 }
 
 export const AUDIT_KINDS = [
-  { value: "all", label: "All activity", prefix: null },
+  { value: "all", label: "All staff & customer activity", prefix: null },
+  { value: "subscription", label: "Subscriptions", prefix: "subscription." },
   { value: "staff", label: "Staff & roles", prefix: "staff." },
   { value: "content", label: "Website content", prefix: "content." },
   { value: "customer", label: "Customer changes", prefix: "customer." },
@@ -66,4 +72,31 @@ export function auditKindPrefix(kind: AuditKind): string | null {
 export function parsePageNumber(value: string | undefined): number {
   const n = Number.parseInt(value ?? "1", 10);
   return Number.isFinite(n) && n >= 1 && n <= 10000 ? n : 1;
+}
+
+/** Actions hidden from the default "all" view because they drown everything else. */
+export const NOISY_AUDIT_ACTIONS = ["health.self_access_read"];
+
+/**
+ * One-line description of what an entry touched, from its metadata
+ * (content title / slug, subscription reference and status change).
+ */
+export function auditEntrySummary(resourceType: string | null, metadata: unknown): string | null {
+  if (!metadata || typeof metadata !== "object") return null;
+  const m = metadata as Record<string, unknown>;
+  if (resourceType === "content_page") {
+    const snap = (m.snapshot ?? {}) as Record<string, unknown>;
+    const title = typeof snap.title === "string" ? snap.title : null;
+    const slug = typeof snap.slug === "string" ? snap.slug : null;
+    if (title && slug) return `${title} (/content/${slug})`;
+    return title ?? (slug ? `/content/${slug}` : null);
+  }
+  if (resourceType === "user_subscription") {
+    const ref = typeof m.reference === "string" ? m.reference : null;
+    const from = typeof m.previousStatus === "string" ? m.previousStatus.replace(/_/g, " ") : null;
+    const to = typeof m.newStatus === "string" ? m.newStatus.replace(/_/g, " ") : null;
+    const change = from && to ? `${from} → ${to}` : null;
+    return [ref, change].filter(Boolean).join(" · ") || null;
+  }
+  return null;
 }

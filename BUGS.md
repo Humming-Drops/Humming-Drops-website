@@ -68,6 +68,55 @@ Original QA run: 2026-11-17. Fix + verification pass: 2026-11-18 on branch `fix/
 | N12 | Content list had no search or status filter | Browser | Search + status filter (garbage params handled) | Browser + API |
 | N13 | Duplicate-registration check could race (two parallel submits both passed) | Reasoning, then test | Advisory lock per user inside the transaction | 5-way parallel test |
 
+## Second QA pass (2026-11-24) — 4-agent browser review, then fixes
+
+Review: four Claude-in-Chrome agents covered all 30 routes (public, sign-up/subscribe, customer dashboard, admin + CMS). Scores before fixes: public 5, sign-up 5.5, dashboard 6, admin 5, CMS 5.5. Fixes on branch `fix/qa-bugs`. Checks after fixing: `tsc` clean, lint clean, 115 unit tests pass (new `tests/unit/qa-pass-2026-11-24.test.ts`), live API checks with curl against the real DB, headless viewport + axe sweep 81/81 clean, independent browser verification (see PLAN.md).
+
+| ID | Sev | Status | Bug → fix |
+|---|---|---|---|
+| Q2-01 | Critical | VERIFIED (API) | `/register` with a phone already in use returned the raw SQL error to the browser, including the password hash. Now: duplicate-phone check up front, user + profile created in one transaction, unique violations → 409 with a friendly message shown under the phone field, every other error → generic message. Same leak removed from `/api/auth/login`. |
+| Q2-02 | Critical | VERIFIED (API) | Settings: saving a phone owned by another account half-saved (profile updated, account not) and showed "Unexpected end of JSON input". Now: ownership check first, both writes in one transaction, 409 + message on the phone field, client validation, "saved" confirmation. All client `res.json()` calls tolerate empty bodies. |
+| Q2-03 | Critical | CODE | CMS "Save draft" on a published page went live silently. No separate draft copy exists (would need a schema change), so the editor now says so: live-page notice with "View live page", button reads "Save & update live page", green confirmations. |
+| Q2-04 | Major | CODE | CMS Publish ignored unsaved edits. Publish now saves first ("Save & publish"); "Unsaved changes" indicator; leave-page warning. |
+| Q2-05 | Critical | CODE | Admin Cancel subscription was one click. Now a confirmation dialog (native `<dialog>`: Escape closes, background inert, errors inside). |
+| Q2-06 | Major | CODE | Pause dialog error rendered behind the overlay; no Escape / focus trap. Rebuilt on the shared `AdminDialog`. |
+| Q2-07 | Major | CODE | Leads page had no way to contact anyone. Now WhatsApp / Call / email per lead, details row (address, diet, allergies, notes), search, status filter (defaults to pending), "Show more" paging. Subscriptions page got search, status filter, phone + WhatsApp, success notices. |
+| Q2-08 | Major | VERIFIED (API) | Audit log missed subscription confirm / cancel / pause / resume. Now mirrored into the admin audit log with reference + status change; new "Subscriptions" filter; content rows show page title and slug; customer health self-views hidden from the default view. |
+| Q2-09 | Major | VERIFIED (API) | CMS duplicate slug gave a generic 500. Drizzle wraps the driver error; new `isUniqueViolation` helper checks the cause chain → 409 with the error on the slug field. New-page form: Title before slug, required template fields checked client-side, stale slug error clears, Cancel link. |
+| Q2-10 | Major | VERIFIED (API) | Staff: removing a role had no confirmation and no last-admin guard. Now a confirmation dialog; server refuses removing your own Super Admin role or the last Super Admin (409). |
+| Q2-11 | Major | CODE | `/subscribe` Full Name could not be cleared (prefill effect re-ran). Prefill now runs once. |
+| Q2-12 | Major | CODE | `/subscribe` accepted a Delhi pincode silently. Still allowed (serviceability is unconfirmed) but shows a "doesn't look like a Bangalore pincode — team will confirm" note. |
+| Q2-13 | Minor | CODE | `/subscribe` a11y: focus moves to the first invalid field, stepper `aria-current="step"`, diet style is a radiogroup, allergy chips grouped, distinct "Edit …" button names, "(CLIENT INPUT REQUIRED)" removed from customer-facing diet cards, "e.g." pincode placeholder, Copy button announced, address shows city, confirmation links to the dashboard. |
+| Q2-14 | Major | CODE | Header "Subscribe Now" cut off ~1036px. Desktop nav now starts at 1280px (hamburger below). |
+| Q2-15 | Major | CODE | Homepage Standard card listed the membership twice and dropped cholesterol. Fixed to the brochure trio. |
+| Q2-16 | Minor | CODE | Header "Plans" pointed at `/#pricing`; now `/plans`. Box photo note explains hotspot 03 (salad) is not visible. Brand switcher uses `aria-pressed` buttons instead of misused tabs. `tel:` links use +91. |
+| Q2-17 | Major | CODE | `/medcity-smiles` vitals cards had one identical description; each now describes its own check (brochure facts only). |
+| Q2-18 | Major | CODE | Delivery page showed a customer without a subscription a page of disabled forms; now only the status card with next steps. |
+| Q2-19 | Minor | CODE | Settings "Application role" hard-coded to Customer → real account type; Sign out moved out of the header into its own card. Dashboard copy: no "browser storage" jargon, "MedCity Smiles community" heading, sidebar "Overview". |
+| Q2-20 | Minor | CODE | `/login` used the browser's native validation bubble; now the site's own errors. "Forgot password?" moved after the password field in tab order. Sign-up shows inline errors under each field; Last Name marked optional. |
+| Q2-21 | Minor | CODE | Admin loading states showed a blank card; now visible "Loading …" text. Admin contact links meet the 24px target size. |
+| Q2-22 | Low | VERIFIED | `npm run db:migrate` failed (`url: ''`) because drizzle-kit does not read `.env.local`; config now loads it when `DATABASE_URL` is unset. |
+
+**Independent browser verification (2026-11-24/26, two fresh agents, real clicks):** customer side 10/10 PASS; admin + CMS 6/8 PASS + 2 partial (slow editor open after create; audit entries written before this fix have no slug). Their new findings were fixed:
+
+| ID | Sev | Status | Bug → fix |
+|---|---|---|---|
+| Q2-23 | Major | CODE | Homepage hero clipped the third feature card on short screens (fixed height + overflow hidden) → hero grows with its content. |
+| Q2-24 | Minor | CODE | Diet radio group: arrow keys now move the choice, single Tab stop. |
+| Q2-25 | Minor | CODE | Settings duplicate-phone error now moves focus to the phone field; pincode note linked with `aria-describedby`; login gives a distinct message for a malformed email; duplicate health-page sentence removed. |
+| Q2-26 | Major | CODE | New CMS page could stay on the form after saving (slow editor route in dev) inviting a duplicate submit → button stays disabled ("Opening editor…") with a fallback "Open the editor" link. |
+| Q2-27 | Minor | CODE | New-page form: stale top error clears on edit; template fields get `aria-invalid`/`aria-describedby` and their errors clear on typing; switching template keeps shared fields (Body); focus moves to the slug on a duplicate-slug error. |
+| Q2-28 | Minor | VERIFIED (API) | Subscriptions showed no phone when only the registration profile had one → falls back to the profile phone. |
+| Q2-29 | Minor | CODE | Leads / Subscriptions action column stays visible (sticky) when the table scrolls; Confirm / Pause / Resume buttons name the reference. Editor confirmation scrolls into view and clears on new edits. |
+| Q2-30 | Minor | CODE | Admin loading text sat inside the pulsing skeleton (axe colour-contrast at 375px) → only the bars pulse. |
+
+**Not changed in this pass (needs you / the client):**
+- Marketing claims flagged again by the reviewers (7:30 AM, closed Sundays, founder quote, "Client Favorite", free delivery, triple-washed, doctor-certified) — kept per your earlier decision (PUB-02). **New question:** the homepage also lists features that are not in the brochure or on `/medcity-smiles` — "Mood-Reflecting Hummingbird Companion", "virtual garden", "Tactile Sensory Tools", "Cold-Pressed Juices" (brochure says "Healthy Juice Drops"). Keep or remove?
+- `/medcity-smiles` has no mental-wellbeing content beyond the checkups — needs client copy.
+- `/privacy`, `/terms` legal text — client/legal content.
+- True draft/live separation in the CMS, image upload, editable slugs — would need a schema change; current editor is explicit about what is live.
+- Header buttons appear after the session check (4–8 s in dev mode); re-check on a production build.
+
 ## OPEN — not fixed (needs a decision or client content)
 
 1. **Real password reset** (PUB-03): needs an email / SMS provider and your go-ahead. Until then the page shows contact details.

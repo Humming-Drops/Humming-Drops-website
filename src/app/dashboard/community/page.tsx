@@ -27,7 +27,7 @@ export default function DashboardCommunityPage() {
   return (
     <DashboardPage>
       <DashboardPageHeader
-        title="Community"
+        title="MedCity Smiles community"
         description={
           <>
             MedCity Smiles membership is included with every plan.{" "}

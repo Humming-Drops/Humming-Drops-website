@@ -17,7 +17,7 @@ export default function DashboardHealthPage() {
     fetch("/api/customer/health")
       .then(async (response) => {
         if (!response.ok) throw new Error("Unable to load health records.");
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
         setVitalsCount(Array.isArray(data.vitals) ? data.vitals.length : 0);
         setState("ready");
       })
@@ -32,7 +32,7 @@ export default function DashboardHealthPage() {
       />
       <DashboardCard as="div" tone="teal" className="flex items-start gap-3 text-sm text-teal-950">
         <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" aria-hidden="true" />
-        <p>Health data is loaded from your authenticated account and is never sourced from browser storage.</p>
+        <p>Only you and authorised MedCity staff can see these results.</p>
       </DashboardCard>
       {state === "loading" && (
         <div className="animate-pulse" role="status" aria-busy="true" aria-label="Loading health records">

@@ -23,6 +23,7 @@ import {
   AuthHeader,
   FieldIcon,
   authButtonClass,
+  authFieldErrorClass,
   authHintClass,
   authInputClass,
   authInputWithIconClass,
@@ -91,10 +92,16 @@ export function CustomerSignUpForm() {
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success) {
-        setError(data.error || "Failed to create account. Please check your details.");
+        const message = data.error || "Failed to create account. Please check your details.";
+        if (data.field === "phone" || data.field === "email") {
+          setFieldErrors({ [data.field]: message });
+          requestAnimationFrame(() => document.getElementById(data.field)?.focus());
+        } else {
+          setError(message);
+        }
         return;
       }
 
@@ -123,10 +130,12 @@ export function CustomerSignUpForm() {
 
       {Object.keys(fieldErrors).length > 0 && (
         <AuthErrorAlert>
-          <p className="font-bold">Please fix the following:</p>
+          <p className="font-bold">
+            {Object.keys(fieldErrors).length === 1 ? "Please fix this field:" : "Please fix the following:"}
+          </p>
           <ul className="mt-2 list-disc pl-5 space-y-1">
             {Object.entries(fieldErrors).map(([field, message]) => (
-              <li key={field} id={`${field}-error`}>
+              <li key={field}>
                 <a href={`#${field === "terms" ? "agreeTerms" : field}`} className="underline font-semibold">
                   {message}
                 </a>
@@ -154,11 +163,12 @@ export function CustomerSignUpForm() {
               placeholder="First"
               className={authInputClass}
             />
+            <FieldError field="firstName" errors={fieldErrors} />
           </div>
 
           <div>
             <label htmlFor="lastName" className={authLabelClass}>
-              Last Name
+              Last Name <span className="font-normal text-stone-500">(Optional)</span>
             </label>
             <input
               id="lastName"
@@ -193,6 +203,7 @@ export function CustomerSignUpForm() {
               className={cn(authInputClass, authInputWithIconClass)}
             />
           </div>
+          <FieldError field="email" errors={fieldErrors} />
         </div>
 
         <div>
@@ -215,6 +226,7 @@ export function CustomerSignUpForm() {
               className={cn(authInputClass, authInputWithIconClass)}
             />
           </div>
+          <FieldError field="phone" errors={fieldErrors} />
         </div>
 
         <div>
@@ -250,9 +262,13 @@ export function CustomerSignUpForm() {
               )}
             </button>
           </div>
-          <p id="password-hint" className={authHintClass}>
-            Must contain at least 8 characters.
-          </p>
+          {fieldErrors.password ? (
+            <FieldError field="password" errors={fieldErrors} />
+          ) : (
+            <p id="password-hint" className={authHintClass}>
+              Must contain at least 8 characters.
+            </p>
+          )}
         </div>
 
         <div className="flex items-start gap-3">
@@ -281,6 +297,7 @@ export function CustomerSignUpForm() {
             .
           </label>
         </div>
+        <FieldError field="terms" errors={fieldErrors} />
 
         <Button type="submit" disabled={loading} className={cn(authButtonClass, "mt-1")}>
           {loading ? (
@@ -307,5 +324,14 @@ export function CustomerSignUpForm() {
         </Link>
       </AuthFooterRow>
     </div>
+  );
+}
+
+function FieldError({ field, errors }: { field: string; errors: Record<string, string> }) {
+  if (!errors[field]) return null;
+  return (
+    <p id={`${field}-error`} className={authFieldErrorClass}>
+      {errors[field]}
+    </p>
   );
 }

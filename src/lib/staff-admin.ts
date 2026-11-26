@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { administrativeAuditLogs, applicationRoles, userRoles, users } from "@/lib/db/schema";
 
 export class StaffAdminError extends Error {}
+/** A revoke that is refused to protect admin access (HTTP 409, not 404). */
+export class StaffGuardError extends Error {}
 
 export async function listAssignableRoles() {
   return db.select().from(applicationRoles).where(ne(applicationRoles.slug, "customer")).orderBy(applicationRoles.name);
@@ -84,6 +86,26 @@ export async function assignRole(params: { userId: string; roleId: string; actor
 }
 
 export async function revokeRole(params: { userId: string; roleId: string; actorUserId: string }) {
+  const [role] = await db
+    .select({ slug: applicationRoles.slug, name: applicationRoles.name })
+    .from(applicationRoles)
+    .where(eq(applicationRoles.id, params.roleId))
+    .limit(1);
+  if (!role) throw new StaffAdminError("That role does not exist.");
+
+  if (role.slug === "super_admin") {
+    if (params.userId === params.actorUserId) {
+      throw new StaffGuardError("You can't remove your own Super Admin role. Ask another Super Admin to do it.");
+    }
+    const holders = await db
+      .select({ userId: userRoles.userId })
+      .from(userRoles)
+      .where(eq(userRoles.roleId, params.roleId));
+    if (holders.length <= 1) {
+      throw new StaffGuardError("This is the last Super Admin. Grant Super Admin to someone else first.");
+    }
+  }
+
   const revoked = await db
     .delete(userRoles)
     .where(and(eq(userRoles.userId, params.userId), eq(userRoles.roleId, params.roleId)))

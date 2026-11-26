@@ -52,7 +52,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ success: true, page });
   } catch (error) {
     if (error instanceof ContentValidationFailure) {
-      return apiError("Validation failed", 400, { details: error.errors });
+      return apiError("Some fields need fixing.", 400, { details: error.errors });
     }
     if (error instanceof Error && error.message === "Content page not found.") {
       return apiError(error.message, 404);
