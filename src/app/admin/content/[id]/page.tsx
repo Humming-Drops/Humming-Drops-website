@@ -255,9 +255,15 @@ export default function EditContentPage() {
                 setTitle(e.target.value);
                 setNotice(null);
               }}
+              aria-invalid={fieldErrors.title ? true : undefined}
+              aria-describedby={fieldErrors.title ? "content-edit-title-error" : undefined}
               className={adminInput}
             />
-            {fieldErrors.title && <p className={adminErrorText}>{fieldErrors.title}</p>}
+            {fieldErrors.title && (
+              <p id="content-edit-title-error" role="alert" className={adminErrorText}>
+                {fieldErrors.title}
+              </p>
+            )}
           </div>
 
           <ContentFieldEditor

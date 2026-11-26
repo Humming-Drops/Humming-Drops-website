@@ -23,17 +23,15 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 ### Dual Pillars Under One Unified Ecosystem
 
 1. **Humming Drops (Physical Nutrition & Daily Vitality):**
-   * **Weekly Delivery Rhythm:** 6 delivery days per week.
-     * **4 Days/Week — Fresh Fruit & Vegetable Box:**
-       * 🍎 5 Varieties of Fresh Fruits
-       * 🥕 3 Varieties of Crisp Vegetables
-       * 🌱 Mixed Sprouts Portion
-       * 🥜 Dry Fruits Mix
-     * **2 Days/Week — Healthy Oats Meal:**
-       * 🥣 Wholesome Oats with Fresh Fruits & Dry Fruits
+   * **Daily Breakfast Box:**
+     * 🍎 4 Varieties of Fruits, every day
+     * 🥕 2 Varieties of Vegetables, every day
+     * 🥗 Fresh Mix Salad, every day
+     * 🌱 Fresh Sprouts, every day
+     * 🥜 Dry Fruits, 3 days a week (Standard) or daily (Premium)
    * **Subscription Plans:**
      * **Standard Plan:** `₹3,500` / month
-     * **Premium Plan:** `₹4,000` / month (Standard Box + Oats + Daily Dry Fruits + MedCity Labs Package Discounts + Special Healthy Juice Drops curated with CARE by Berrybeats).
+     * **Premium Plan:** `₹4,000` / month (Standard box + daily Dry Fruits + MedCity Labs package discounts + Special Healthy Juice Drops curated with CARE by Berrybeats).
 
 2. **MedCity Smiles (Mental Wellbeing & Preventative Healthcare):**
    * **Free Monthly Preventative Health Checkup** for every active subscriber:
@@ -66,7 +64,7 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 | :--- | :--- |
 | **Framework** | [Next.js 15.2.0](https://nextjs.org/) (App Router, Server Components, Route Handlers) |
 | **Language** | [TypeScript 5.7.3](https://www.typescriptlang.org/) (Strict Mode: `noImplicitAny`, strict null checks) |
-| **UI & Styling** | [React 19](https://react.dev/), [Tailwind CSS 3.4](https://tailwindcss.com/), Radix UI Primitives, [Lucide React](https://lucide.dev/) |
+| **UI & Styling** | [React 19](https://react.dev/), [Tailwind CSS 3.4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/) |
 | **Animation** | [Framer Motion 12](https://www.framer.com/motion/) (smooth transitions under 300ms, respecting `prefers-reduced-motion`) |
 | **Authentication** | Native PostgreSQL Session Auth (`crypto.scrypt`, HMAC-SHA256, 48-hour auto-session timeout) |
 | **Primary Database** | [PostgreSQL 16+](https://www.postgresql.org/) (Railway Managed DB) with [Drizzle ORM](https://orm.drizzle.team/) & `drizzle-kit` |
@@ -112,7 +110,7 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 │   │   ├── home/                # Editorial hero, BoxAnatomy, MorningJourney, WhyUs, etc.
 │   │   ├── layout/              # Navbar, Footer, MobileDrawer, ThemeSwitcher
 │   │   ├── theme/               # ThemeProvider and client hydration scripts
-│   │   └── ui/                  # Accessible design tokens & Radix UI primitives
+│   │   └── ui/                  # Accessible UI primitives and design tokens
 │   ├── lib/                     # Server-authoritative logic, database clients, helpers
 │   │   ├── auth/                # Native session tokens (48h), scrypt password hashing & RBAC
 │   │   ├── auth-redirects.ts    # Open-redirect prevention & plan tier validators
@@ -140,7 +138,7 @@ In strategic partnership with **MedCity Health Labs** and **Berrybeats Cafe**, H
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/AbelA2004/Humming-Drops-website.git
+   git clone https://github.com/Humming-Drops/Humming-Drops-website.git
    cd Humming-Drops-website
    ```
 
@@ -237,7 +235,7 @@ For in-depth architectural and operational guides, explore the [`docs/`](docs/) 
   - [ADR-006: Health Vitals & PII Data Isolation](docs/adr/ADR-006-health-pii-data-isolation.md)
   - [ADR-007: Client Truth Guardrail](docs/adr/ADR-007-client-truth-guardrail.md)
   - [ADR-008: Accessible Radix UI Component Foundation](docs/adr/ADR-008-component-design-system.md)
-  - [ADR-009: Clerk Authentication with PostgreSQL Identity](docs/adr/ADR-009-clerk-application-identity.md)
+  - [ADR-009: Clerk Authentication](docs/adr/ADR-009-clerk-application-identity.md) (superseded: authentication is now built in)
 - **Standard Operating Runbooks:**
   - [RB-01: Local Development & Server Setup](docs/runbooks/local-development.md)
   - [RB-02: Build, Typecheck & Verification Suite](docs/runbooks/build-and-verification.md)

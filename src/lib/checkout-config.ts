@@ -32,8 +32,8 @@ export function getClientCheckoutPresentationMode(): FulfillmentMode {
  * Reads private server environment variable `CHECKOUT_MODE` (without NEXT_PUBLIC prefix).
  */
 export function getServerAuthoritativeCheckoutMode(): FulfillmentMode {
-  // Check private server-only env variable first
-  const serverMode = process.env.CHECKOUT_MODE || process.env.NEXT_PUBLIC_CHECKOUT_MODE;
+  // Only the private server variable counts; the NEXT_PUBLIC_ one is a display hint.
+  const serverMode = process.env.CHECKOUT_MODE;
   if (serverMode === "online_gateway" || serverMode === "gateway") {
     return "online_gateway";
   }

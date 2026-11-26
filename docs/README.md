@@ -1,5 +1,8 @@
 # Humming Drops & MedCity Smiles — Consolidated Master Documentation
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Project:** Humming Drops & MedCity Smiles Web Platform  
 **Location:** Bangalore, India  
 **Stack Baseline:** Next.js 15+ (App Router), React 19, TypeScript (Strict), Tailwind CSS, Radix UI Primitives, Framer Motion, Native PostgreSQL Session Auth (48h), Drizzle ORM / Railway PostgreSQL, Cloudinary, Razorpay  

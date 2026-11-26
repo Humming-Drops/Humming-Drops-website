@@ -14,6 +14,7 @@ import {
   verifySessionToken,
   type SessionPayload,
 } from "./session";
+import { isSessionRevoked, passwordFingerprint } from "./revocation";
 
 export type UserRole =
   | "customer"
@@ -55,32 +56,28 @@ export async function auth() {
 }
 
 /**
- * Session plus its live database row. A deleted or deactivated account has no
- * session, and roles always come from the database, never from the cookie.
+ * Session plus its live database row. A deleted or deactivated account, a
+ * signed-out session or a changed password has no session, and roles always
+ * come from the database, never from the cookie.
  */
 async function getSessionUser() {
   const session = await getSession();
   if (!session) return null;
   const user = await getAppUserById(session.userId);
-  return user?.isActive ? { session, user } : null;
+  if (!user?.isActive || session.pv !== passwordFingerprint(user.passwordHash)) return null;
+  if (session.jti && (await isSessionRevoked(session.jti))) return null;
+  return { session, user };
 }
 
 /**
  * Resolves the authenticated user from PostgreSQL using the session cookie.
  */
 export async function getCurrentUser() {
-  const session = await getSession();
-  if (!session) return null;
+  const current = await getSessionUser();
+  if (!current) return null;
+  const { session, user } = current;
 
   try {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, session.userId))
-      .limit(1);
-
-    if (!user || !user.isActive) return null;
-
     const [profile] = await db
       .select()
       .from(profiles)

@@ -545,6 +545,12 @@ export const paymentTransactionsRelations = relations(paymentTransactions, ({ on
 
 // Only the SHA-256 hash of the emailed token is stored; the raw token never
 // touches the database.
+/** Sessions ended by sign-out, kept until the cookie would have expired anyway. */
+export const revokedSessions = pgTable("revoked_sessions", {
+  jti: text("jti").primaryKey(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});
+
 export const passwordResetTokens = pgTable("password_reset_tokens", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -554,7 +560,7 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   usedAt: timestamp("used_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+}, (table) => [index("password_reset_tokens_user_idx").on(table.userId)]);
 
 export const contentAuditLogs = pgTable("content_audit_logs", {
   id: uuid("id").primaryKey().defaultRandom(),

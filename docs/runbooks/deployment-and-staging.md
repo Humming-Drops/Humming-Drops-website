@@ -1,5 +1,8 @@
 # HUM-W2-07: DevOps, Staging Isolation & Deployment Runbook (Runbook RB-05)
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Document Identifier:** HUM-W2-07 / Runbook RB-05  
 **Issue Reference:** HUM-17  
 **Target Milestone:** Week 2 — Verification, Security, Payment & DevOps  

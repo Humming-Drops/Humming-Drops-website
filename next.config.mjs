@@ -41,7 +41,20 @@ const nextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000',
+          },
+          {
+            // Deliberately narrow: no script/style rules, so Next.js inline bootstrapping keeps working.
+            key: 'Content-Security-Policy',
+            value: "base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'",
+          },
         ],
+      },
+      {
+        source: '/api/(auth|customer|admin)/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
       },
     ];
   },

@@ -19,14 +19,6 @@ export async function GET() {
   const appEnv = process.env.APP_ENV || nodeEnv;
   const checkoutMode = process.env.CHECKOUT_MODE || "assisted_lead";
 
-  // System memory diagnostics
-  const memoryUsage = process.memoryUsage();
-  const memorySummary = {
-    rssMb: Math.round((memoryUsage.rss / 1024 / 1024) * 100) / 100,
-    heapTotalMb: Math.round((memoryUsage.heapTotal / 1024 / 1024) * 100) / 100,
-    heapUsedMb: Math.round((memoryUsage.heapUsed / 1024 / 1024) * 100) / 100,
-  };
-
   // Real dependency check: a deploy that cannot reach its database must fail
   // the platform healthcheck (503) instead of receiving traffic.
   let database: "operational" | "unreachable" | "not_configured" = "not_configured";
@@ -58,11 +50,6 @@ export async function GET() {
         database,
         checkoutMode,
         persistenceDriver: leadRepository.getActiveDriverName(),
-      },
-      system: {
-        nodeVersion: process.version,
-        platform: process.platform,
-        memory: memorySummary,
       },
     },
     {

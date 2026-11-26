@@ -202,6 +202,17 @@ export async function PATCH(request: Request) {
     }
     const deliveryNotes = sanitizeString(body.deliveryNotes, 300);
 
+    // Same rule as the dashboard form: only a running subscription has delivery instructions to edit.
+    const [target] = await db
+      .select({ status: userSubscriptions.status })
+      .from(deliveryAddresses)
+      .innerJoin(userSubscriptions, eq(userSubscriptions.id, deliveryAddresses.subscriptionId))
+      .where(and(eq(deliveryAddresses.id, addressId), eq(deliveryAddresses.userId, user.id)))
+      .limit(1);
+    if (target && target.status !== "confirmed_active" && target.status !== "paused") {
+      return NextResponse.json({ error: "Delivery notes can be changed once the subscription is active." }, { status: 400 });
+    }
+
     const updated = await db
       .update(deliveryAddresses)
       .set({ deliveryNotes: deliveryNotes || null, updatedAt: new Date() })

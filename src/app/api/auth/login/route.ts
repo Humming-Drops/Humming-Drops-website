@@ -7,6 +7,7 @@ import {
   createSessionToken,
   getSessionCookieOptions,
 } from "@/lib/auth/session";
+import { passwordFingerprint } from "@/lib/auth/revocation";
 import { isValidEmail } from "@/lib/sanitization";
 import { clearAttempts, clientIp, isRateLimited, recordAttempt, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
@@ -104,6 +105,7 @@ export async function POST(request: Request) {
       email: user.email,
       role: user.role,
       fullName,
+      pv: passwordFingerprint(user.passwordHash),
     });
 
     // 6. Return Response with Secure Cookie

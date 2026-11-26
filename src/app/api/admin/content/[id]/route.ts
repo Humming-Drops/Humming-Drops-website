@@ -47,6 +47,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return apiError("title must be 1 to 150 characters of text.", 400);
   }
 
+  // Saving a published page changes the live site, so it needs publish rights.
+  const existing = await getContentPageById(id);
+  if (existing?.page.status === "published" && !(await hasPermission("content:publish"))) {
+    return apiError("Publishing rights are required to edit a live page.", 403);
+  }
+
   try {
     const page = await updateContentPageDraft({ id, title, data: data ?? {}, actorUserId: appUser.id });
     return NextResponse.json({ success: true, page });

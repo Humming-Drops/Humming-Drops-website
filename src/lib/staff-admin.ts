@@ -1,4 +1,4 @@
-import { and, eq, inArray, ne, or } from "drizzle-orm";
+import { and, eq, inArray, ne, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { administrativeAuditLogs, applicationRoles, userRoles, users } from "@/lib/db/schema";
 
@@ -132,23 +132,24 @@ export async function revokeRole(params: { userId: string; roleId: string; actor
     .limit(1);
   if (!role) throw new StaffAdminError("That role does not exist.");
 
-  if (role.slug === "super_admin") {
-    if (params.userId === params.actorUserId) {
-      throw new StaffGuardError("You can't remove your own Super Admin role. Ask another Super Admin to do it.");
-    }
-    const holders = await db
-      .select({ userId: userRoles.userId })
-      .from(userRoles)
-      .where(eq(userRoles.roleId, params.roleId));
-    if (holders.length <= 1) {
-      throw new StaffGuardError("This is the last Super Admin. Grant Super Admin to someone else first.");
-    }
+  if (role.slug === "super_admin" && params.userId === params.actorUserId) {
+    throw new StaffGuardError("You can't remove your own Super Admin role. Ask another Super Admin to do it.");
   }
 
-  const revoked = await db
-    .delete(userRoles)
-    .where(and(eq(userRoles.userId, params.userId), eq(userRoles.roleId, params.roleId)))
-    .returning();
+  // Count and delete under one lock, so two concurrent revokes cannot remove the last two Super Admins.
+  const revoked = await db.transaction(async (tx) => {
+    if (role.slug === "super_admin") {
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext('super_admin_revoke'))`);
+      const holders = await tx.select({ userId: userRoles.userId }).from(userRoles).where(eq(userRoles.roleId, params.roleId));
+      if (holders.length <= 1) {
+        throw new StaffGuardError("This is the last Super Admin. Grant Super Admin to someone else first.");
+      }
+    }
+    return tx
+      .delete(userRoles)
+      .where(and(eq(userRoles.userId, params.userId), eq(userRoles.roleId, params.roleId)))
+      .returning();
+  });
 
   if (revoked.length === 0) {
     throw new StaffAdminError("That user does not hold this role.");
