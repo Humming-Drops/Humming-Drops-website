@@ -47,6 +47,15 @@ export class RazorpayClient {
       !this.keyId ||
       !this.keySecret;
 
+    if (
+      isMockMode &&
+      process.env.NODE_ENV === "production" &&
+      process.env.MOCK_RAZORPAY !== "true" &&
+      process.env.CHECKOUT_MODE === "online_gateway"
+    ) {
+      throw new Error("Razorpay keys are not configured; refusing to simulate payments in production.");
+    }
+
     if (isMockMode) {
       // In development, test environments, or when placeholder keys are used, return simulated order
       return {
