@@ -19,8 +19,13 @@ WORKDIR /app
 # Copy dependency manifests
 COPY package.json package-lock.json ./
 
-# Install clean production and development dependencies for build step
-RUN npm ci
+# Install clean production and development dependencies for build step.
+# npm can crash with "Exit handler never called" yet exit 0, leaving an empty
+# node_modules; the check makes that fail here instead of as "next: not found".
+# Fewer parallel sockets + more retries survive flaky networks (ECONNRESET).
+RUN npm ci --no-audit --no-fund --maxsockets=6 --fetch-retries=5 \
+      --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000 \
+    && test -x node_modules/.bin/next
 
 # ------------------------------------------------------------------------------
 # Stage 3: Application Builder

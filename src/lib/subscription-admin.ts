@@ -1,6 +1,7 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
+  administrativeAuditLogs,
   deliveryAddresses,
   profiles,
   subscriptionAuditLogs,
@@ -14,13 +15,21 @@ import type { SubscriptionStatus } from "@/types/subscription";
 export class SubscriptionTransitionError extends Error {}
 export class SubscriptionNotFoundError extends Error {}
 
+const SUBSCRIPTION_AUDIT_ACTIONS: Record<string, string> = {
+  admin_manual_confirmation: "subscription.confirmed",
+  admin_manual_cancellation: "subscription.cancelled",
+  admin_manual_pause: "subscription.paused",
+  admin_manual_resume: "subscription.resumed",
+};
+
 export async function listSubscriptionsForAdmin() {
   return db
     .select({
       subscription: userSubscriptions,
       plan: subscriptionPlans,
       customerName: profiles.fullName,
-      customerPhone: users.phone,
+      // Account phone, falling back to the number given at registration.
+      customerPhone: sql<string>`coalesce(nullif(${users.phone}, ''), nullif(${profiles.phone}, ''), '')`,
       area: deliveryAddresses.area,
     })
     .from(userSubscriptions)
@@ -76,6 +85,23 @@ async function applyTransition(params: {
     newStatus: params.nextStatus,
     changedByUserId: params.actorUserId,
     triggerReason: params.triggerReason,
+  });
+
+  // Mirror into the administrative audit log so /admin/audit-log shows
+  // staff subscription decisions alongside every other admin action.
+  await db.insert(administrativeAuditLogs).values({
+    actorUserId: params.actorUserId,
+    action: SUBSCRIPTION_AUDIT_ACTIONS[params.triggerReason] ?? "subscription.status_changed",
+    resourceType: "user_subscription",
+    resourceId: params.id,
+    metadata: {
+      reference: updated.leadReferenceCode,
+      previousStatus: existing.status,
+      newStatus: params.nextStatus,
+      ...(params.extraSet && "pauseStart" in params.extraSet && params.extraSet.pauseStart
+        ? { pauseStart: params.extraSet.pauseStart, pauseEnd: params.extraSet.pauseEnd }
+        : {}),
+    },
   });
 
   return updated;

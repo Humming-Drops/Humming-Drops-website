@@ -1,6 +1,6 @@
 import { Container } from "@/components/ui/container";
 
-export default function Loading() {
+export function PageLoading() {
   return (
     <div className="flex-1 flex items-center justify-center py-24" role="status" aria-label="Loading page content">
       <Container size="narrow" className="text-center space-y-4">

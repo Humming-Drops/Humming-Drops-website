@@ -43,8 +43,8 @@ const floatingBadgeVariants: Variants = {
 const HERO_BENEFITS = [
   {
     id: "fruits-veggies",
-    title: "5 Cut Fruits",
-    subtitle: "& 3 Veggies",
+    title: "4 Cut Fruits",
+    subtitle: "& 2 Veggies",
     cardBorder: "border-[#E3EFE5] hover:border-emerald-200",
     iconBg: "bg-rose-50 border-rose-200",
     iconColor: "text-rose-600",
@@ -52,8 +52,8 @@ const HERO_BENEFITS = [
   },
   {
     id: "sprouts-dry-fruits",
-    title: "Sprouts & Dry Fruits",
-    subtitle: "4 Days a Week",
+    title: "Salad & Sprouts",
+    subtitle: "Every Day",
     cardBorder: "border-[#E3EFE5] hover:border-amber-200",
     iconBg: "bg-amber-50 border-amber-200",
     iconColor: "text-emerald-700",
@@ -119,7 +119,7 @@ export function Hero() {
   return (
     <section
       aria-label="Welcome to Humming Drops"
-      className="relative overflow-hidden bg-[#FCFDF9] min-h-[auto] lg:h-[calc(100svh-4.25rem)] lg:min-h-[640px] lg:max-h-[840px] flex flex-col lg:flex-row items-stretch"
+      className="relative overflow-hidden bg-[#FCFDF9] min-h-[auto] lg:min-h-[min(840px,calc(100svh-4.25rem))] flex flex-col lg:flex-row items-stretch"
     >
       {/* Background Soft Radiant Glows for Morning Warmth */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-100/60 via-mint/40 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
@@ -307,7 +307,7 @@ export function Hero() {
                     </div>
                     <div className="min-w-0 flex-1 leading-snug">
                       <p className="font-bold text-[13px] text-[#132A1C] break-words">{title}</p>
-                      <p className="text-[11px] text-[#657B6F] font-normal">{subtitle}</p>
+                      <p className="text-[11px] text-[#4F6458] font-normal">{subtitle}</p>
                     </div>
                   </div>
                 ))}

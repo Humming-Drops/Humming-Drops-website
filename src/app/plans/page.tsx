@@ -27,7 +27,7 @@ export default function PlansPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-content-secondary leading-relaxed">
-            Doorstep delivery every morning in Bangalore (closed Sundays). All plans include a 4-day Fresh Fruit &amp; Vegetable Box plus a 2-day Healthy Oats Meal, free MedCity Smiles membership, and free monthly vitals health checkups.
+            Doorstep delivery every morning in Bangalore (closed Sundays). Every box has 4 fruits, 2 vegetables, fresh mix salad and fresh sprouts. All plans include free MedCity Smiles membership and a free monthly vitals health checkup.
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export default function PlansPage() {
 
               <div className="pt-2 pb-5 border-b border-line-subtle flex items-baseline gap-2">
                 <span className="font-display text-4xl sm:text-5xl font-black text-content-primary tracking-tight">
-                  ₹{OFFICIAL_PLANS.standard.monthlyPriceINR.toLocaleString()}
+                  ₹{OFFICIAL_PLANS.standard.monthlyPriceINR.toLocaleString("en-IN")}
                 </span>
                 <span className="text-sm font-semibold text-content-muted">/ month</span>
               </div>
@@ -130,7 +130,7 @@ export default function PlansPage() {
 
               <div className="pt-2 pb-5 border-b border-line-subtle flex items-baseline gap-2">
                 <span className="font-display text-4xl sm:text-5xl font-black text-content-primary tracking-tight">
-                  ₹{OFFICIAL_PLANS.premium.monthlyPriceINR.toLocaleString()}
+                  ₹{OFFICIAL_PLANS.premium.monthlyPriceINR.toLocaleString("en-IN")}
                 </span>
                 <span className="text-sm font-semibold text-content-muted">/ month</span>
               </div>
@@ -140,7 +140,7 @@ export default function PlansPage() {
                   Everything in Standard plus
                 </h3>
                 <ul className="text-sm space-y-3 text-content-secondary">
-                  {OFFICIAL_PLANS.premium.boxInclusions.map((inc, i) => (
+                  {OFFICIAL_PLANS.premium.boxInclusions.filter((inc) => inc.isPremiumOnly).map((inc, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <span className="w-5 h-5 rounded-full bg-brand-subtle flex items-center justify-center text-brand-primary shrink-0 mt-0.5">
                         <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />
@@ -191,7 +191,7 @@ export default function PlansPage() {
             Need help customizing allergy exclusions or prefer assisted onboarding via WhatsApp? Reach our morning care desk directly.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 pt-2">
-            <Button variant="primary" size="md" asChild className="bg-[#25D366] hover:bg-[#20ba59]">
+            <Button variant="primary" size="md" asChild className="bg-[#0E7A3E] hover:bg-[#0B6A35]">
               <a
                 href="https://wa.me/918618902810"
                 target="_blank"
@@ -202,7 +202,7 @@ export default function PlansPage() {
               </a>
             </Button>
             <Button variant="secondary" size="md" asChild>
-              <a href="tel:8618902810">
+              <a href="tel:+918618902810">
                 <PhoneCall className="w-4 h-4" aria-hidden="true" />
                 <span>Call: 8618902810</span>
               </a>

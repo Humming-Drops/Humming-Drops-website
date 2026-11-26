@@ -12,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const row = await getPublishedPageBySlug(slug);
-  return { title: row ? `${row.page.title} — Humming Drops` : "Page not found" };
+  return { title: row ? row.page.title : "Page not found" };
 }
 
 export default async function PublicContentPage({
@@ -26,7 +26,7 @@ export default async function PublicContentPage({
   if (!row) notFound();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
       <ContentRenderer templateSlug={row.template.slug} data={row.page.data as Record<string, unknown>} />
     </div>
   );

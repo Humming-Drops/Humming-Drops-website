@@ -57,6 +57,7 @@ describe("Production Build Smoke Tests", () => {
       path.join(appDir, "login", "page.tsx"),
       path.join(appDir, "register", "page.tsx"),
       path.join(appDir, "forgot-password", "page.tsx"),
+      path.join(appDir, "reset-password", "page.tsx"),
       path.join(appDir, "dashboard", "page.tsx"),
       path.join(appDir, "dashboard", "overview", "page.tsx"),
       path.join(appDir, "dashboard", "delivery", "page.tsx"),

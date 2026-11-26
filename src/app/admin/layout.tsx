@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { ExternalLink, LayoutDashboard } from "lucide-react";
 import { isStaffUser } from "@/lib/auth/server";
 import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
+import { AdminSignOutButton } from "@/components/admin/admin-sign-out-button";
 
 const ADMIN_NAV_ITEMS: PortalNavItem[] = [
   { label: "Overview", href: "/admin" },
@@ -12,6 +14,9 @@ const ADMIN_NAV_ITEMS: PortalNavItem[] = [
   { label: "Staff", href: "/admin/staff" },
   { label: "Audit log", href: "/admin/audit-log" },
 ];
+
+const HEADER_LINK =
+  "inline-flex min-h-[44px] min-w-[44px] lg:min-h-[40px] lg:min-w-[40px] items-center justify-center rounded-full px-2 text-xs font-semibold text-brand-primary transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:px-3";
 
 // Every admin page reads live, per-staff-member authorized data (leads,
 // payments, audit logs, ...). Must never be statically prerendered --
@@ -32,25 +37,28 @@ export default async function AdminLayout({
 
   return (
     <div className="flex-1 bg-muted/40">
-      <div className="border-b border-line-subtle bg-surface px-4 py-3 sm:px-8">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
-              Operations Console
-            </p>
-            <h1 className="font-display text-lg font-bold text-content-primary">
+      <div className="border-b border-line-subtle bg-surface">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-8">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-content-secondary">Operations console</p>
+            <h1 className="truncate font-display text-sm font-bold text-content-primary sm:text-lg">
               Humming Drops Admin
             </h1>
           </div>
-          <Link
-            href="/dashboard/overview"
-            className="text-xs font-semibold text-brand-primary hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-          >
-            Customer dashboard
-          </Link>
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <Link href="/" className={HEADER_LINK} title="View website">
+              <ExternalLink className="h-4 w-4 sm:hidden" aria-hidden="true" />
+              <span className="sr-only sm:not-sr-only">View website</span>
+            </Link>
+            <Link href="/dashboard/overview" className={HEADER_LINK} title="Customer dashboard">
+              <LayoutDashboard className="h-4 w-4 sm:hidden" aria-hidden="true" />
+              <span className="sr-only sm:not-sr-only">Customer dashboard</span>
+            </Link>
+            <AdminSignOutButton />
+          </div>
         </div>
       </div>
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:py-8 md:flex-row md:gap-8 md:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:py-8 lg:flex-row lg:gap-8 md:px-8">
         <PortalNav items={ADMIN_NAV_ITEMS} ariaLabel="Admin Navigation" />
         <main className="min-w-0 flex-1">{children}</main>
       </div>

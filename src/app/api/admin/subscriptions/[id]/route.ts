@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiError, isUuid } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import {
@@ -12,18 +13,19 @@ import {
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return apiError("Unauthorized", 401);
   if (!(await hasPermission("subscriptions:manage"))) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return apiError("Forbidden", 403);
   }
 
   const appUser = await getAppUserById(userId);
-  if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
+  if (!appUser) return apiError("Application account not linked", 404);
 
   const { id } = await params;
+  if (!isUuid(id)) return apiError("Invalid subscription id.", 400);
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return apiError("Invalid request body", 400);
   }
 
   const { action, pauseStart, pauseEnd } = body as {
@@ -46,22 +48,22 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         break;
       case "pause":
         if (!pauseStart || !pauseEnd) {
-          return NextResponse.json({ error: "pauseStart and pauseEnd are required." }, { status: 400 });
+          return apiError("pauseStart and pauseEnd are required.", 400);
         }
         updated = await pauseSubscription(id, appUser.id, pauseStart, pauseEnd);
         break;
       default:
-        return NextResponse.json({ error: "Unsupported action." }, { status: 400 });
+        return apiError("Unsupported action.", 400);
     }
     return NextResponse.json({ success: true, subscription: updated });
   } catch (error) {
     if (error instanceof SubscriptionNotFoundError) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
+      return apiError(error.message, 404);
     }
     if (error instanceof SubscriptionTransitionError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return apiError(error.message, 400);
     }
     console.error("[ADMIN SUBSCRIPTIONS ERROR]:", error);
-    return NextResponse.json({ error: "Failed to update subscription." }, { status: 500 });
+    return apiError("Failed to update subscription.", 500);
   }
 }

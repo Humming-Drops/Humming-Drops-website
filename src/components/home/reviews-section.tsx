@@ -92,7 +92,7 @@ export function ReviewsSection() {
                 </div>
                 <div className="leading-tight">
                   <h4 className="font-extrabold text-sm text-[#132A1C]">{t.name}</h4>
-                  <p className="text-xs text-[#657B6F] font-medium">{t.role} · {t.location}</p>
+                  <p className="text-xs text-[#4F6458] font-medium">{t.role} · {t.location}</p>
                 </div>
               </div>
             </div>
@@ -100,7 +100,7 @@ export function ReviewsSection() {
         </div>
 
         {/* Mobile Swipe Cue */}
-        <div className="sm:hidden flex items-center justify-center gap-1.5 text-xs text-[#657B6F] pt-2">
+        <div className="sm:hidden flex items-center justify-center gap-1.5 text-xs text-[#4F6458] pt-2">
           <span>← Swipe to read reviews →</span>
         </div>
 

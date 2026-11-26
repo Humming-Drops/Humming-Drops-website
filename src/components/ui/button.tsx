@@ -76,7 +76,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       if (variant === "link") return "";
       switch (size) {
         case "sm":
-          return "h-9 px-4 text-xs font-semibold rounded-full gap-1.5";
+          return "h-11 md:h-9 px-4 text-xs font-semibold rounded-full gap-1.5";
         case "lg":
           return "min-h-[48px] h-12 px-7 text-base font-semibold rounded-full gap-2.5";
         case "md":

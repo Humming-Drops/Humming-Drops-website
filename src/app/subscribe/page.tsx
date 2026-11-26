@@ -21,6 +21,7 @@ import {
   Leaf,
   Info,
   Plus,
+  Loader2,
 } from "lucide-react";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { DietaryType } from "@/types/subscription";
@@ -30,6 +31,16 @@ import { Card } from "@/components/ui/card";
 import { OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { isValidPlanTier } from "@/lib/auth-redirects";
 import { normalizePhone, isValidIndianPhone } from "@/lib/sanitization";
+import { cn } from "@/lib/utils";
+import {
+  FieldIcon,
+  authButtonClass,
+  authFieldErrorClass,
+  authHintClass,
+  authInputClass,
+  authInputWithIconClass,
+  authLabelClass,
+} from "@/components/auth/auth-shell";
 
 interface ConfirmationData {
   leadReferenceCode: string;
@@ -63,6 +74,8 @@ interface ConfirmationData {
   createdAt: string;
 }
 
+const inr = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
+
 const COMMON_ALLERGIES = [
   "Peanuts & Tree Nuts",
   "Dairy / Lactose",
@@ -78,11 +91,11 @@ function SubscribeFormContent() {
   const { isSignedIn } = useAuth();
 
   const planParam = searchParams.get("plan");
-  const initialPlan: PlanTier = isValidPlanTier(planParam) ? planParam : "premium";
+  const initialPlan: PlanTier | null = isValidPlanTier(planParam) ? planParam : null;
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isPending, startTransition] = useTransition();
 
-  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier>(initialPlan);
+  const [selectedPlanId, setSelectedPlanId] = useState<PlanTier | null>(initialPlan);
 
   // Synchronize plan selection if query parameter changes dynamically
   useEffect(() => {
@@ -98,9 +111,13 @@ function SubscribeFormContent() {
     email: "",
   });
 
-  // Prefill authenticated customer information without overwriting user input
+  // Prefill authenticated customer information once. A ref (not "is the
+  // field empty?") decides, so a customer can clear the name and retype it
+  // without it springing back.
+  const prefilledFromAccount = React.useRef(false);
   useEffect(() => {
-    if (!isUserLoaded || !user) return;
+    if (!isUserLoaded || !user || prefilledFromAccount.current) return;
+    prefilledFromAccount.current = true;
 
     setCustomer((prev) => {
       const derivedFullName =
@@ -125,6 +142,29 @@ function SubscribeFormContent() {
       };
     });
   }, [isUserLoaded, user]);
+
+  // Prefill the saved phone number from the customer profile (not exposed by useUser).
+  useEffect(() => {
+    if (!isSignedIn) return;
+    let cancelled = false;
+    fetch("/api/customer/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const phone: string | null | undefined = data?.user?.phone ?? data?.user?.profile?.phone;
+        if (!cancelled && phone) {
+          setCustomer((prev) => (prev.phone.trim() ? prev : { ...prev, phone }));
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn]);
+
+  const accountEmail = user?.primaryEmailAddress?.emailAddress || "";
+  const emailLocked = Boolean(isSignedIn && accountEmail);
+
+  const submitErrorRef = React.useRef<HTMLDivElement | null>(null);
 
   const [deliveryAddress, setDeliveryAddress] = useState({
     flatNo: "",
@@ -151,6 +191,10 @@ function SubscribeFormContent() {
   const [confirmationData, setConfirmationData] = useState<ConfirmationData | null>(null);
   const [copiedRef, setCopiedRef] = useState(false);
 
+  useEffect(() => {
+    if (submitError) submitErrorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [submitError]);
+
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -165,7 +209,8 @@ function SubscribeFormContent() {
       if (!isValidIndianPhone(normalizePhone(customer.phone))) {
         newErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
       }
-      if (!customer.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email.trim())) {
+      const effectiveEmail = (emailLocked ? accountEmail : customer.email).trim();
+      if (!effectiveEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
         newErrors.email = "Please enter a valid email address.";
       }
     } else if (step === 3) {
@@ -179,7 +224,7 @@ function SubscribeFormContent() {
         newErrors.streetAddress = "Street address is required.";
       }
       if (!deliveryAddress.area.trim()) {
-        newErrors.area = "Area or neighborhood in Bangalore is required.";
+        newErrors.area = "Area or neighborhood is required.";
       }
       if (!/^[1-9][0-9]{5}$/.test(deliveryAddress.pincode.trim())) {
         newErrors.pincode = "Please enter a valid 6-digit postal pincode.";
@@ -187,13 +232,31 @@ function SubscribeFormContent() {
     }
 
     setErrors(newErrors);
+    const firstInvalid = Object.keys(newErrors)[0];
+    if (firstInvalid) {
+      // Move focus to the first problem so keyboard and screen-reader users
+      // land on it instead of hearing every alert at once.
+      requestAnimationFrame(() => {
+        const target =
+          document.getElementById(firstInvalid) ??
+          document.querySelector<HTMLElement>(`[data-error-anchor="${firstInvalid}"]`);
+        target?.focus();
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
     return Object.keys(newErrors).length === 0;
   };
+
+  const pincodeOutsideBangalore =
+    /^[1-9][0-9]{5}$/.test(deliveryAddress.pincode.trim()) && !deliveryAddress.pincode.trim().startsWith("56");
+
+  const reviewOpenedAt = React.useRef(0);
 
   const handleNext = () => {
     if (currentStep === 1 && !isSignedIn) return;
     if (validateStep(currentStep)) {
       setSubmitError(null);
+      if (currentStep === 4) reviewOpenedAt.current = Date.now();
       setCurrentStep((prev) => Math.min(prev + 1, 5) as 1 | 2 | 3 | 4 | 5);
       window.scrollTo({ top: 120, behavior: "smooth" });
     }
@@ -217,12 +280,20 @@ function SubscribeFormContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Implicit submission (e.g. Enter key) must never skip the Review step.
+    if (currentStep < 5) {
+      handleNext();
+      return;
+    }
+    // A submit fired within the same click that opened the Review step is not a real submit.
+    if (Date.now() - reviewOpenedAt.current < 600) return;
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
       setSubmitError("Please complete all required fields before submitting.");
       return;
     }
 
     setSubmitError(null);
+    if (!selectedPlanId) return;
 
     startTransition(async () => {
       try {
@@ -231,7 +302,7 @@ function SubscribeFormContent() {
           customer: {
             fullName: customer.fullName.trim(),
             phone: customer.phone.trim(),
-            email: customer.email.trim(),
+            email: (emailLocked ? accountEmail : customer.email).trim(),
           },
           deliveryAddress: {
             flatNo: deliveryAddress.flatNo.trim(),
@@ -255,7 +326,7 @@ function SubscribeFormContent() {
           body: JSON.stringify(payload),
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
 
         if (!res.ok || !data.success) {
           throw new Error(data.error || "Failed to submit subscription registration.");
@@ -277,7 +348,7 @@ function SubscribeFormContent() {
     }
   };
 
-  const activePlan = OFFICIAL_PLANS[selectedPlanId];
+  const activePlan = selectedPlanId ? OFFICIAL_PLANS[selectedPlanId] : null;
   if (confirmationData) {
     return (
       <div className="min-h-screen bg-canvas py-12 px-4 sm:px-6 lg:px-8">
@@ -288,20 +359,20 @@ function SubscribeFormContent() {
             </div>
 
             <div className="space-y-2">
-              <Badge variant="warning" size="md" className="uppercase tracking-wider">
+              <Badge variant="warning" size="md">
                 Registration Received · Pending Confirmation
               </Badge>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-forest-900 font-display">
                 Welcome to Humming Drops!
               </h1>
               <p className="text-stone-600 text-sm max-w-md mx-auto">
-                Thank you, <strong className="text-stone-800">{confirmationData.customer.fullName}</strong>. Your breakfast box registration has been received by our Bangalore kitchen coordinator.
+                Thank you, <strong className="text-stone-800">{confirmationData.customer.fullName}</strong>. Your breakfast box registration has been received by the Humming Drops team.
               </p>
             </div>
 
             <div className="p-4 rounded-2xl bg-forest-50/60 border border-forest-900/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
               <div>
-                <span className="text-[11px] font-bold text-forest-800 uppercase tracking-wider block">
+                <span className="text-xs font-semibold text-forest-800 block">
                   Lead Reference Code
                 </span>
                 <span className="font-mono text-xl font-extrabold text-forest-900 tracking-wider">
@@ -311,10 +382,10 @@ function SubscribeFormContent() {
               <button
                 type="button"
                 onClick={handleCopyReference}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-forest-900/20 text-forest-900 hover:bg-forest-50 transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 min-h-[44px] rounded-xl bg-white border border-forest-900/20 text-forest-900 hover:bg-forest-50 transition-colors shadow-sm"
               >
-                <Copy className="w-3.5 h-3.5" />
-                {copiedRef ? "Copied to Clipboard!" : "Copy Code"}
+                <Copy className="w-4 h-4" aria-hidden="true" />
+                <span aria-live="polite">{copiedRef ? "Copied!" : "Copy code"}</span>
               </button>
             </div>
 
@@ -330,23 +401,24 @@ function SubscribeFormContent() {
               <h3 className="font-bold text-sm text-stone-900 font-display">Registration Summary</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-xl border border-stone-200/60">
                 <div>
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Selected Plan</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Selected Plan</span>
                   <span className="font-bold text-forest-900 text-sm">
                     {confirmationData.plan.name} Plan
                   </span>
-                  <span className="text-stone-500 block">₹{confirmationData.plan.monthlyPriceINR}/month</span>
+                  <span className="text-stone-500 block">{inr(confirmationData.plan.monthlyPriceINR)}/month</span>
                 </div>
                 <div>
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Contact Phone</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Contact Phone</span>
                   <span className="font-semibold text-stone-800">{confirmationData.customer.phone}</span>
                   <span className="text-stone-500 block truncate">{confirmationData.customer.email}</span>
                 </div>
                 <div className="sm:col-span-2">
-                  <span className="text-stone-400 block text-[10px] uppercase font-bold">Delivery Destination</span>
+                  <span className="text-stone-500 block text-xs font-semibold">Delivery Destination</span>
                   <span className="font-medium text-stone-800">
                     {confirmationData.deliveryAddress.flatNo}, {confirmationData.deliveryAddress.buildingName},{" "}
                     {confirmationData.deliveryAddress.streetAddress}, {confirmationData.deliveryAddress.area},{" "}
-                    Bangalore - {confirmationData.deliveryAddress.pincode}
+                    {confirmationData.deliveryAddress.city ? `${confirmationData.deliveryAddress.city} ` : ""}
+                    {confirmationData.deliveryAddress.pincode}
                   </span>
                 </div>
               </div>
@@ -357,22 +429,28 @@ function SubscribeFormContent() {
                 href={confirmationData.whatsappRedirectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-transform hover:-translate-y-0.5"
+                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#0E7A3E] hover:bg-[#0B6A35] text-white font-bold text-sm shadow-md transition-transform hover:-translate-y-0.5"
               >
-                <span>Chat with Bangalore Team on WhatsApp</span>
+                <span>Chat with the team on WhatsApp</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
-              <p className="text-[11px] text-stone-500">
+              <p className={authHintClass}>
                 Official coordinator helpline: <strong>+91 {OFFICIAL_CONTACT.phone}</strong> · Kitchen: {OFFICIAL_CONTACT.kitchenLocation}
               </p>
             </div>
 
-            <div className="pt-4 border-t border-stone-100 flex justify-center">
+            <div className="pt-4 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/dashboard/overview"
+                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-5 rounded-full border border-forest-900/20 text-sm font-semibold text-forest-900 hover:bg-forest-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
+              >
+                Go to my dashboard
+              </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 hover:text-forest-900 underline-offset-4 hover:underline"
+                className="inline-flex items-center gap-1.5 min-h-[44px] px-3 text-sm font-semibold text-forest-800 hover:text-forest-900 underline-offset-4 hover:underline rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
               >
-                <ArrowLeft className="w-3.5 h-3.5" /> Return to Homepage
+                <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" /> Return to homepage
               </Link>
             </div>
           </Card>
@@ -386,13 +464,13 @@ function SubscribeFormContent() {
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-800 bg-forest-50 px-3.5 py-1 rounded-full border border-forest-900/10">
             <Sparkles className="w-3.5 h-3.5 text-forest-600" />
-            <span>Bangalore Breakfast Box Onboarding</span>
+            <span>Breakfast Box Registration</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-display tracking-tight">
             Begin Your Morning Habit
           </h1>
           <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            Fresh Fruit &amp; Vegetable Box 4 days a week, Healthy Oats Meal 2 days a week — delivered every morning
+            Fresh fruits, vegetables, salad and sprouts in your daily breakfast box, delivered every morning
             from Berrybeats cafe, Bangalore (closed Sundays).
           </p>
         </div>
@@ -411,12 +489,13 @@ function SubscribeFormContent() {
               return (
                 <li
                   key={step}
+                  aria-current={isCurrent ? "step" : undefined}
                   className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-1.5 rounded-xl transition-colors ${
                     isCurrent
                       ? "bg-forest-50 text-forest-900 font-bold border border-forest-900/20"
                       : isCompleted
                       ? "text-forest-800"
-                      : "text-stone-400"
+                      : "text-stone-600"
                   }`}
                 >
                   <span
@@ -430,7 +509,10 @@ function SubscribeFormContent() {
                   >
                     {isCompleted ? <Check className="w-3 h-3" /> : step}
                   </span>
-                  <span className="text-[11px] sm:text-xs">{label}</span>
+                  <span className="text-[11px] sm:text-xs">
+                    {label}
+                    {isCompleted ? <span className="sr-only"> (done)</span> : null}
+                  </span>
                 </li>
               );
             })}
@@ -442,7 +524,7 @@ function SubscribeFormContent() {
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 1 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -464,12 +546,12 @@ function SubscribeFormContent() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 rounded-2xl focus:outline-none" data-error-anchor="plan" tabIndex={-1}>
                   <button
                     type="button"
                     aria-pressed={selectedPlanId === "standard"}
                     onClick={() => setSelectedPlanId("standard")}
-                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "standard"
                         ? "border-forest-900 bg-forest-50/20 shadow-md ring-2 ring-forest-900/10"
                         : "border-stone-200 hover:border-stone-300 bg-white"
@@ -481,7 +563,7 @@ function SubscribeFormContent() {
                           {OFFICIAL_PLANS.standard.name} Plan
                         </h3>
                         <span className="font-extrabold text-forest-900 text-lg shrink-0">
-                          ₹{OFFICIAL_PLANS.standard.monthlyPriceINR}
+                          {inr(OFFICIAL_PLANS.standard.monthlyPriceINR)}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
@@ -508,7 +590,7 @@ function SubscribeFormContent() {
                     type="button"
                     aria-pressed={selectedPlanId === "premium"}
                     onClick={() => setSelectedPlanId("premium")}
-                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                    className={`text-left relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       selectedPlanId === "premium"
                         ? "border-forest-900 bg-forest-50/30 shadow-md ring-2 ring-forest-900/15"
                         : "border-stone-200 hover:border-stone-300 bg-white"
@@ -526,7 +608,7 @@ function SubscribeFormContent() {
                           {OFFICIAL_PLANS.premium.name} Plan
                         </h3>
                         <span className="font-extrabold text-forest-900 text-lg shrink-0">
-                          ₹{OFFICIAL_PLANS.premium.monthlyPriceINR}
+                          {inr(OFFICIAL_PLANS.premium.monthlyPriceINR)}
                           <span className="text-xs text-stone-500 font-normal">/mo</span>
                         </span>
                       </div>
@@ -555,13 +637,18 @@ function SubscribeFormContent() {
                     </ul>
                   </button>
                 </div>
+                {errors.plan && (
+                  <p role="alert" className="text-xs font-semibold text-red-700">
+                    {errors.plan}
+                  </p>
+                )}
               </div>
             )}
 
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 2 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -573,81 +660,88 @@ function SubscribeFormContent() {
                 </div>
 
                 <div className="space-y-4 pt-2">
-                  <div className="space-y-1">
-                    <label htmlFor="fullName" className="block text-xs font-bold text-stone-700">
-                      Full Name <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="fullName" className={authLabelClass}>
+                      Full Name <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
+                      <FieldIcon>
+                        <User className="w-4 h-4" aria-hidden="true" />
+                      </FieldIcon>
                       <input
                         id="fullName"
+                        aria-invalid={errors.fullName ? true : undefined}
+                        aria-describedby={errors.fullName ? "fullName-error" : undefined}
                         type="text"
                         required
                         value={customer.fullName}
                         onChange={(e) => setCustomer({ ...customer, fullName: e.target.value })}
                         placeholder="e.g. Aditi Rao"
-                        className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.fullName
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, authInputWithIconClass)}
                       />
                     </div>
-                    {errors.fullName && <p className="text-[11px] text-red-600">{errors.fullName}</p>}
+                    {errors.fullName && <p id="fullName-error" role="alert" className={authFieldErrorClass}>{errors.fullName}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="phone" className="block text-xs font-bold text-stone-700">
-                      WhatsApp Mobile Number <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="phone" className={authLabelClass}>
+                      WhatsApp Mobile Number <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
-                    <div className="relative flex">
-                      <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-xs font-bold">
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-[#E2ECE4] bg-stone-50 text-stone-600 text-sm font-semibold">
                         +91
                       </span>
                       <input
                         id="phone"
+                        aria-invalid={errors.phone ? true : undefined}
+                        aria-describedby={errors.phone ? "phone-error" : undefined}
                         type="tel"
                         required
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
                         placeholder="98765 43210"
-                        className={`w-full px-3 py-2.5 text-sm rounded-r-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.phone
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, "rounded-l-none")}
                       />
                     </div>
                     {errors.phone ? (
-                      <p className="text-[11px] text-red-600">{errors.phone}</p>
+                      <p id="phone-error" role="alert" className={authFieldErrorClass}>{errors.phone}</p>
                     ) : (
-                      <p className="text-[11px] text-stone-500">
+                      <p className={authHintClass}>
                         10-digit Indian mobile number for daily delivery updates.
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="email" className="block text-xs font-bold text-stone-700">
-                      Email Address <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="email" className={authLabelClass}>
+                      Email Address <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
+                      <FieldIcon>
+                        <Mail className="w-4 h-4" aria-hidden="true" />
+                      </FieldIcon>
                       <input
                         id="email"
+                        aria-invalid={errors.email ? true : undefined}
                         type="email"
                         required
-                        value={customer.email}
+                        value={emailLocked ? accountEmail : customer.email}
+                        readOnly={emailLocked}
+                        aria-describedby={errors.email ? "email-error" : "email-help"}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                         placeholder="aditi@example.com"
-                        className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                          errors.email
-                            ? "border-red-400 focus:ring-red-200"
-                            : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                        }`}
+                        className={cn(authInputClass, authInputWithIconClass)}
                       />
                     </div>
-                    {errors.email && <p className="text-[11px] text-red-600">{errors.email}</p>}
+                    {errors.email ? (
+                      <p id="email-error" role="alert" className={authFieldErrorClass}>{errors.email}</p>
+                    ) : (
+                      <p id="email-help" className={authHintClass}>
+                        {emailLocked
+                          ? "This is your account email. Registrations are linked to it."
+                          : "Use the email you signed in with."}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -655,137 +749,133 @@ function SubscribeFormContent() {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 3 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
                     Doorstep Delivery Address
                   </h2>
                   <p className="text-xs sm:text-sm text-stone-600">
-                    We deliver fresh morning boxes across Bangalore residences and offices.
+                    Delivery availability for your pincode is confirmed by our team after you register.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-1">
-                    <label htmlFor="flatNo" className="block text-xs font-bold text-stone-700">
-                      Flat / Door / Apt No. <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="flatNo" className={authLabelClass}>
+                      Flat / Door / Apt No. <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="flatNo"
+                      aria-invalid={errors.flatNo ? true : undefined}
+                      aria-describedby={errors.flatNo ? "flatNo-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.flatNo}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, flatNo: e.target.value })}
                       placeholder="e.g. Apt 402, Block B"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.flatNo
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.flatNo && <p className="text-[11px] text-red-600">{errors.flatNo}</p>}
+                    {errors.flatNo && <p id="flatNo-error" role="alert" className={authFieldErrorClass}>{errors.flatNo}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="buildingName" className="block text-xs font-bold text-stone-700">
-                      Building / Society Name <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="buildingName" className={authLabelClass}>
+                      Building / Society Name <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="buildingName"
+                      aria-invalid={errors.buildingName ? true : undefined}
+                      aria-describedby={errors.buildingName ? "buildingName-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.buildingName}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, buildingName: e.target.value })}
                       placeholder="e.g. Prestige Greenwoods"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.buildingName
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.buildingName && <p className="text-[11px] text-red-600">{errors.buildingName}</p>}
+                    {errors.buildingName && <p id="buildingName-error" role="alert" className={authFieldErrorClass}>{errors.buildingName}</p>}
                   </div>
 
-                  <div className="sm:col-span-2 space-y-1">
-                    <label htmlFor="streetAddress" className="block text-xs font-bold text-stone-700">
-                      Street Address / Road <span className="text-red-500">*</span>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="streetAddress" className={authLabelClass}>
+                      Street Address / Road <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="streetAddress"
+                      aria-invalid={errors.streetAddress ? true : undefined}
+                      aria-describedby={errors.streetAddress ? "streetAddress-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.streetAddress}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, streetAddress: e.target.value })}
                       placeholder="e.g. 14th Main, 5th Cross, Near Sony World Signal"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.streetAddress
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.streetAddress && <p className="text-[11px] text-red-600">{errors.streetAddress}</p>}
+                    {errors.streetAddress && <p id="streetAddress-error" role="alert" className={authFieldErrorClass}>{errors.streetAddress}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label htmlFor="area" className="block text-xs font-bold text-stone-700">
-                      Area / Neighborhood <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="area" className={authLabelClass}>
+                      Area / Neighborhood <span className="text-red-600" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="area"
+                      aria-invalid={errors.area ? true : undefined}
+                      aria-describedby={errors.area ? "area-error" : undefined}
                       type="text"
                       required
                       value={deliveryAddress.area}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, area: e.target.value })}
                       placeholder="e.g. Koramangala, Indiranagar, HSR"
-                      className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                        errors.area
-                          ? "border-red-400 focus:ring-red-200"
-                          : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                      }`}
+                      className={authInputClass}
                     />
-                    {errors.area && <p className="text-[11px] text-red-600">{errors.area}</p>}
+                    {errors.area && <p id="area-error" role="alert" className={authFieldErrorClass}>{errors.area}</p>}
                   </div>
 
-                  <div className="space-y-1">
-                    <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <span id="city-label" className="block text-xs font-bold text-stone-700">
+                        <span id="city-label" className={authLabelClass}>
                           City
                         </span>
                         <div
                           aria-labelledby="city-label"
-                          className="px-3 py-2.5 text-sm rounded-xl border border-stone-200 bg-stone-100 text-stone-700 font-semibold flex items-center gap-1.5"
+                          className="h-12 px-4 text-base sm:text-sm rounded-xl border border-[#E2ECE4] bg-stone-50 text-stone-700 font-semibold flex items-center gap-1.5"
                         >
                           <MapPin className="w-3.5 h-3.5 text-forest-700" aria-hidden="true" />
                           <span>Bangalore</span>
                         </div>
                       </div>
                       <div>
-                        <label htmlFor="pincode" className="block text-xs font-bold text-stone-700">
-                          Pincode <span className="text-red-500">*</span>
+                        <label htmlFor="pincode" className={authLabelClass}>
+                          Pincode <span className="text-red-600" aria-hidden="true">*</span>
                         </label>
                         <input
                           id="pincode"
+                          aria-invalid={errors.pincode ? true : undefined}
+                          aria-describedby={errors.pincode ? "pincode-error" : pincodeOutsideBangalore ? "pincode-note" : undefined}
                           type="text"
                           maxLength={6}
                           required
                           value={deliveryAddress.pincode}
                           onChange={(e) => setDeliveryAddress({ ...deliveryAddress, pincode: e.target.value })}
-                          placeholder="560034"
-                          className={`w-full px-3 py-2.5 text-sm rounded-xl border font-sans focus:outline-none focus:ring-2 ${
-                            errors.pincode
-                              ? "border-red-400 focus:ring-red-200"
-                              : "border-stone-300 focus:ring-forest-900/20 focus:border-forest-900"
-                          }`}
+                          placeholder="e.g. 560034"
+                          inputMode="numeric"
+                          className={authInputClass}
                         />
                       </div>
                     </div>
-                    {errors.pincode && <p className="text-[11px] text-red-600">{errors.pincode}</p>}
+                    {errors.pincode && <p id="pincode-error" role="alert" className={authFieldErrorClass}>{errors.pincode}</p>}
+                    {!errors.pincode && pincodeOutsideBangalore && (
+                      <p id="pincode-note" className="mt-1.5 text-xs font-medium text-amber-800">
+                        This doesn&apos;t look like a Bangalore pincode. You can still register — our team will tell you on WhatsApp whether we deliver there.
+                      </p>
+                    )}
                   </div>
 
-                  <div className="sm:col-span-2 space-y-1">
-                    <label htmlFor="deliveryNotes" className="block text-xs font-bold text-stone-700">
+                  <div className="sm:col-span-2">
+                    <label htmlFor="deliveryNotes" className={authLabelClass}>
                       Optional Morning Delivery Notes
                     </label>
                     <input
@@ -794,9 +884,9 @@ function SubscribeFormContent() {
                       value={deliveryAddress.deliveryNotes}
                       onChange={(e) => setDeliveryAddress({ ...deliveryAddress, deliveryNotes: e.target.value })}
                       placeholder="e.g. Leave with building security / Ring bell twice"
-                      className="w-full px-3 py-2.5 text-sm rounded-xl border border-stone-300 font-sans focus:outline-none focus:ring-2 focus:ring-forest-900/20 focus:border-forest-900"
+                      className={authInputClass}
                     />
-                    <p className="text-[11px] text-stone-500">
+                    <p className={authHintClass}>
                       Specific gate instructions or door drop preferences.
                     </p>
                   </div>
@@ -807,41 +897,54 @@ function SubscribeFormContent() {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 4 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
                     Dietary &amp; Health Preferences
                   </h2>
                   <p className="text-xs sm:text-sm text-stone-600">
-                    Customize your breakfast box for allergies or dietary lifestyle.
+                    Tell us about allergies or dietary preferences. Our team will confirm what can be accommodated.
                   </p>
                 </div>
 
                 <div className="space-y-2 pt-2">
-                  <label className="block text-xs font-bold text-stone-700">Dietary Style</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <p id="diet-style-label" className={authLabelClass}>Dietary Style</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup" aria-labelledby="diet-style-label">
                     {[
                       {
                         id: "standard" as DietaryType,
                         name: "Standard Mix",
-                        desc: "Full wholesome variety: fruits, vegetables, sprouts, dry fruits & oats meals.",
+                        desc: "The standard Humming Drops breakfast box.",
                       },
                       {
                         id: "vegan" as DietaryType,
                         name: "100% Vegan",
-                        desc: "Completely plant-derived wholesome whole foods curation.",
+                        desc: "Preference only — our team confirms availability on WhatsApp.",
                       },
                       {
                         id: "pure_fruit" as DietaryType,
                         name: "Fruit Focused",
-                        desc: "Enriched seasonal fruit portions with nuts and seeds.",
+                        desc: "Preference only — our team confirms availability on WhatsApp.",
                       },
-                    ].map((style) => (
+                    ].map((style, index, all) => (
                       <button
                         type="button"
                         key={style.id}
-                        aria-pressed={dietaryPreferences.dietaryType === style.id}
+                        id={`diet-${style.id}`}
+                        role="radio"
+                        aria-checked={dietaryPreferences.dietaryType === style.id}
+                        // Radio-group keyboard pattern: one Tab stop, arrow keys move the choice.
+                        tabIndex={dietaryPreferences.dietaryType === style.id ? 0 : -1}
+                        onKeyDown={(e) => {
+                          const step =
+                            e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+                          if (!step) return;
+                          e.preventDefault();
+                          const next = all[(index + step + all.length) % all.length];
+                          setDietaryPreferences((prev) => ({ ...prev, dietaryType: next.id }));
+                          document.getElementById(`diet-${next.id}`)?.focus();
+                        }}
                         onClick={() => setDietaryPreferences({ ...dietaryPreferences, dietaryType: style.id })}
                         className={`text-left p-4 rounded-xl border-2 cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                           dietaryPreferences.dietaryType === style.id
@@ -855,17 +958,17 @@ function SubscribeFormContent() {
                             <Check className="w-3.5 h-3.5 text-forest-800" />
                           )}
                         </div>
-                        <p className="text-[11px] text-stone-500 leading-snug">{style.desc}</p>
+                        <p className="text-xs text-stone-500 leading-snug">{style.desc}</p>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold text-stone-700">
+                  <p id="allergies-label" className={authLabelClass}>
                     Allergies or Intolerances (Select all that apply)
-                  </label>
-                  <div className="flex flex-wrap gap-2">
+                  </p>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="allergies-label">
                     {COMMON_ALLERGIES.map((allergy) => {
                       const isSelected = dietaryPreferences.allergies.includes(allergy);
                       return (
@@ -874,7 +977,7 @@ function SubscribeFormContent() {
                           type="button"
                           aria-pressed={isSelected}
                           onClick={() => toggleAllergy(allergy)}
-                          className={`inline-flex items-center gap-1.5 text-xs px-3.5 py-2 min-h-[38px] rounded-full border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                          className={`inline-flex items-center gap-1.5 text-sm px-4 py-2 min-h-[44px] rounded-full border font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                             isSelected
                               ? "bg-forest-900 text-white border-forest-900 shadow-xs"
                               : "bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-300"
@@ -892,8 +995,8 @@ function SubscribeFormContent() {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="dietNotes" className="block text-xs font-bold text-stone-700">
+                <div>
+                  <label htmlFor="dietNotes" className={authLabelClass}>
                     Additional Dietary Notes
                   </label>
                   <textarea
@@ -902,15 +1005,15 @@ function SubscribeFormContent() {
                     value={dietaryPreferences.notes}
                     onChange={(e) => setDietaryPreferences({ ...dietaryPreferences, notes: e.target.value })}
                     placeholder="e.g. Please no spicy dressings, low sodium salad, prefer soft fruits"
-                    className="w-full px-3 py-2.5 text-sm rounded-xl border border-stone-300 font-sans focus:outline-none focus:ring-2 focus:ring-forest-900/20 focus:border-forest-900"
+                    className={cn(authInputClass, "h-auto py-3 leading-relaxed")}
                   />
                 </div>
               </div>
             )}
-            {currentStep === 5 && (
+            {currentStep === 5 && activePlan && (
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest-800">
+                  <span className="text-sm font-semibold text-forest-800">
                     Step 5 of 5
                   </span>
                   <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
@@ -928,18 +1031,18 @@ function SubscribeFormContent() {
                         {activePlan.name} Plan (Monthly)
                       </span>
                       <span className="text-xs text-stone-500 block">
-                        4-Day Box + 2-Day Oats · Bangalore Doorstep Delivery
+                        Monthly breakfast box subscription
                       </span>
                     </div>
-                    <span className="font-mono text-xl font-extrabold text-forest-900">
-                      ₹{activePlan.monthlyPriceINR}
+                    <span className="text-xl font-extrabold text-forest-900 tabular-nums">
+                      {inr(activePlan.monthlyPriceINR)}
                     </span>
                   </div>
 
                   <div className="space-y-1.5 text-xs text-stone-600">
                     <div className="flex justify-between">
                       <span>Monthly Subscription Fee:</span>
-                      <span className="font-bold text-stone-800">₹{activePlan.monthlyPriceINR}</span>
+                      <span className="font-bold text-stone-800">{inr(activePlan.monthlyPriceINR)}</span>
                     </div>
                     <div className="flex justify-between text-forest-800">
                       <span>Morning Delivery Fee:</span>
@@ -950,8 +1053,8 @@ function SubscribeFormContent() {
                       <span className="font-bold">Included Free</span>
                     </div>
                     <div className="flex justify-between pt-2 border-t border-forest-900/10 text-sm font-extrabold text-forest-950">
-                      <span>Total Amount to Confirm:</span>
-                      <span className="font-mono text-base">₹{activePlan.monthlyPriceINR} / month</span>
+                      <span>Plan price:</span>
+                      <span className="text-base tabular-nums">{inr(activePlan.monthlyPriceINR)} / month</span>
                     </div>
                   </div>
                 </div>
@@ -959,13 +1062,13 @@ function SubscribeFormContent() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Contact</span>
+                      <span className="text-xs font-semibold text-stone-500">Contact</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(2)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> contact details</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 truncate">{customer.fullName || "—"}</p>
@@ -975,32 +1078,32 @@ function SubscribeFormContent() {
 
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Delivery</span>
+                      <span className="text-xs font-semibold text-stone-500">Delivery</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(3)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> delivery address</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 truncate">
                       {deliveryAddress.buildingName || "—"}
                     </p>
                     <p className="text-stone-600 line-clamp-2">
-                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area}, Bangalore - {deliveryAddress.pincode}
+                      {deliveryAddress.flatNo}, {deliveryAddress.streetAddress}, {deliveryAddress.area}, {deliveryAddress.city} {deliveryAddress.pincode}
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-1 relative">
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold uppercase text-stone-500">Diet Style</span>
+                      <span className="text-xs font-semibold text-stone-500">Diet Style</span>
                       <button
                         type="button"
                         onClick={() => setCurrentStep(4)}
-                        className="text-[11px] font-semibold text-forest-800 hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900/25"
+                        className="-my-2 -mr-2 px-3 py-2 min-h-[44px] text-sm font-semibold text-forest-800 hover:underline underline-offset-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                       >
-                        Edit
+                        Edit<span className="sr-only"> diet preferences</span>
                       </button>
                     </div>
                     <p className="font-bold text-stone-900 capitalize">
@@ -1015,7 +1118,7 @@ function SubscribeFormContent() {
                 <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex items-start gap-2.5">
                   <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="font-bold block">Assisted Doorstep Registration (Mode B)</span>
+                    <span className="font-bold block">Registration with team confirmation</span>
                     <p className="text-amber-800 leading-relaxed">
                       No card charge today. Upon submission, you will receive a reference tracking code and a one-click WhatsApp link to coordinate delivery start date with our team at Berrybeats cafe.
                     </p>
@@ -1023,7 +1126,11 @@ function SubscribeFormContent() {
                 </div>
 
                 {submitError && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2">
+                  <div
+                    ref={submitErrorRef}
+                    role="alert"
+                    className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2"
+                  >
                     <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="font-semibold block">Submission Error:</strong>
@@ -1040,57 +1147,60 @@ function SubscribeFormContent() {
                   type="button"
                   onClick={handleBack}
                   disabled={isPending}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl text-sm font-semibold text-stone-700 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Back
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back
                 </button>
               ) : (
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center sm:justify-start min-h-[44px] px-2 text-xs text-stone-500 hover:text-stone-800 transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl text-sm font-semibold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600"
                 >
-                  ← Cancel &amp; Return
+                  <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Cancel &amp; Return
                 </Link>
               )}
 
               {currentStep === 1 && !isSignedIn ? (
                 <Button
+                  key="signin-btn"
                   type="button"
                   brand="humming"
                   variant="primary"
                   size="md"
                   asChild
-                  className="rounded-full px-6"
+                  className={cn(authButtonClass, "sm:w-auto px-6")}
                 >
                   <Link href={`/login?redirect_url=${encodeURIComponent(`/subscribe?plan=${selectedPlanId}`)}`}>
                     <span>Sign in to continue</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Link>
                 </Button>
               ) : currentStep < 5 ? (
                 <Button
+                  key="continue-btn"
                   type="button"
                   onClick={handleNext}
                   brand="humming"
                   variant="primary"
                   size="md"
-                  className="rounded-full px-6"
+                  className={cn(authButtonClass, "sm:w-auto px-6")}
                 >
                   <span>Continue</span>
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Button>
               ) : (
                 <Button
+                  key="submit-btn"
                   type="submit"
                   disabled={isPending}
                   isLoading={isPending}
                   brand="humming"
                   variant="primary"
                   size="lg"
-                  className="rounded-full px-8 bg-forest-900 hover:bg-forest-800 shadow-md"
+                  className={cn(authButtonClass, "sm:w-auto px-6 h-auto min-h-12 py-3")}
                 >
                   <span>Submit Registration &amp; Connect on WhatsApp</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                 </Button>
               )}
             </div>
@@ -1107,7 +1217,7 @@ export default function SubscribePage() {
       fallback={
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center space-y-3">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+            <Loader2 className="mx-auto w-6 h-6 animate-spin text-forest-700" aria-hidden="true" />
             <p className="text-sm font-medium text-stone-500">Loading subscription form…</p>
           </div>
         </div>

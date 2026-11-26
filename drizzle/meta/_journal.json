@@ -50,6 +50,20 @@
       "when": 1762387200000,
       "tag": "0006_nutritionist_health_rbac",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1762473600000,
+      "tag": "0007_remove_clerk",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1762560000000,
+      "tag": "0008_password_reset_tokens",
+      "breakpoints": true
     }
   ]
 }

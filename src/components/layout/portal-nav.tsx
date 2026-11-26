@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,15 @@ interface PortalNavProps {
 
 export function PortalNav({ items, ariaLabel }: PortalNavProps) {
   const pathname = usePathname();
+  const pillRowRef = useRef<HTMLDivElement>(null);
+
+  // Keep the active pill visible in the horizontally scrolling mobile/tablet row.
+  useEffect(() => {
+    const row = pillRowRef.current;
+    const active = row?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!row || !active || row.offsetParent === null) return;
+    row.scrollTo({ left: active.offsetLeft - row.clientWidth / 2 + active.clientWidth / 2, behavior: "auto" });
+  }, [pathname]);
 
   const isItemActive = (href: string) => {
     if (href === "/admin") {
@@ -27,10 +36,10 @@ export function PortalNav({ items, ariaLabel }: PortalNavProps) {
   };
 
   return (
-    <aside className="w-full shrink-0 md:w-56">
+    <aside className="w-full shrink-0 lg:w-56">
       <nav aria-label={ariaLabel}>
         {/* Mobile & Tablet: Horizontal scrollable pill tabs */}
-        <div className="flex md:hidden items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 no-scrollbar">
+        <div ref={pillRowRef} className="flex lg:hidden items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 no-scrollbar">
           {items.map((item) => {
             const active = isItemActive(item.href);
             const isTeal = item.accent === "teal";
@@ -40,7 +49,7 @@ export function PortalNav({ items, ariaLabel }: PortalNavProps) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 min-h-[40px] border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
+                  "inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 min-h-[44px] border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
                   isTeal
                     ? "focus-visible:ring-teal-700"
                     : "focus-visible:ring-brand-primary",
@@ -58,7 +67,7 @@ export function PortalNav({ items, ariaLabel }: PortalNavProps) {
         </div>
 
         {/* Desktop: Vertical sidebar */}
-        <div className="hidden md:flex flex-col space-y-1 text-sm font-medium">
+        <div className="hidden lg:flex flex-col space-y-1 text-sm font-medium">
           {items.map((item) => {
             const active = isItemActive(item.href);
             const isTeal = item.accent === "teal";

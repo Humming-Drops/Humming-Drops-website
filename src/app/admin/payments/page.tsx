@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { hasPermission } from "@/lib/auth/server";
 import { paymentRepository } from "@/lib/payment-storage";
 import { EmptyTableState, StatusBadge } from "@/components/admin/status-badge";
+import { AdminPageHeader, AdminSectionHeading, adminTable } from "@/components/admin/admin-ui";
 
 export default async function AdminPaymentsPage() {
   const canRead = await hasPermission("payments:read");
@@ -18,37 +20,38 @@ export default async function AdminPaymentsPage() {
   ]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <p className="text-sm text-content-secondary">Razorpay orders &amp; transactions</p>
-        <h2 className="font-display text-3xl font-extrabold text-content-primary">Payments</h2>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader eyebrow="Razorpay orders & transactions" title="Payments" />
 
-      <section className="space-y-3">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-content-secondary">Orders</h3>
-        <div className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
+      <section className="space-y-3" aria-labelledby="payments-orders-heading">
+        <div id="payments-orders-heading">
+          <AdminSectionHeading>Orders</AdminSectionHeading>
+        </div>
+        <div tabIndex={0} role="region" aria-label="Payments table (scrollable)" className={adminTable.shell}>
+          <table className={adminTable.table}>
+            <thead className={adminTable.head}>
               <tr>
-                <th className="px-4 py-3">Order ID</th>
-                <th className="px-4 py-3">Plan</th>
-                <th className="px-4 py-3">Amount (₹)</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Lead ref</th>
-                <th className="px-4 py-3">Created</th>
+                <th className={adminTable.th}>Order ID</th>
+                <th className={adminTable.th}>Plan</th>
+                <th className={adminTable.th}>Amount (₹)</th>
+                <th className={adminTable.th}>Status</th>
+                <th className={adminTable.th}>Lead ref</th>
+                <th className={adminTable.th}>Created</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id} className="border-b border-line-subtle last:border-0 hover:bg-muted/20 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs">{order.id}</td>
-                  <td className="px-4 py-3 capitalize">{order.planId}</td>
-                  <td className="px-4 py-3 font-medium">₹{order.amountINR}</td>
-                  <td className="px-4 py-3">
+                <tr key={order.id} className={adminTable.row}>
+                  <td className={adminTable.mono}>{order.id}</td>
+                  <td className={`${adminTable.td} capitalize`}>{order.planId}</td>
+                  <td className={`${adminTable.td} font-medium tabular-nums`}>
+                    ₹{Number(order.amountINR).toLocaleString("en-IN")}
+                  </td>
+                  <td className={adminTable.td}>
                     <StatusBadge status={order.status} />
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs">{order.leadReferenceCode || "—"}</td>
-                  <td className="px-4 py-3 text-content-secondary whitespace-nowrap">
+                  <td className={adminTable.mono}>{order.leadReferenceCode || "—"}</td>
+                  <td className={`${adminTable.td} text-content-secondary`}>
                     {new Date(order.createdAt).toLocaleString("en-IN")}
                   </td>
                 </tr>
@@ -64,29 +67,33 @@ export default async function AdminPaymentsPage() {
         </div>
       </section>
 
-      <section className="space-y-3">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-content-secondary">Transactions</h3>
-        <div className="overflow-x-auto rounded-2xl border border-line-subtle bg-surface shadow-card">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-line-subtle bg-muted/40 text-xs font-semibold text-content-secondary">
+      <section className="space-y-3" aria-labelledby="payments-transactions-heading">
+        <div id="payments-transactions-heading">
+          <AdminSectionHeading>Transactions</AdminSectionHeading>
+        </div>
+        <div tabIndex={0} role="region" aria-label="Payment records table (scrollable)" className={adminTable.shell}>
+          <table className={adminTable.table}>
+            <thead className={adminTable.head}>
               <tr>
-                <th className="px-4 py-3">Payment ID</th>
-                <th className="px-4 py-3">Order ID</th>
-                <th className="px-4 py-3">Amount (paise)</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Created</th>
+                <th className={adminTable.th}>Payment ID</th>
+                <th className={adminTable.th}>Order ID</th>
+                <th className={adminTable.th}>Amount (₹)</th>
+                <th className={adminTable.th}>Status</th>
+                <th className={adminTable.th}>Created</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((tx) => (
-                <tr key={tx.id} className="border-b border-line-subtle last:border-0 hover:bg-muted/20 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs">{tx.id}</td>
-                  <td className="px-4 py-3 font-mono text-xs">{tx.orderId}</td>
-                  <td className="px-4 py-3">{tx.amountPaise}</td>
-                  <td className="px-4 py-3">
+                <tr key={tx.id} className={adminTable.row}>
+                  <td className={adminTable.mono}>{tx.id}</td>
+                  <td className={adminTable.mono}>{tx.orderId}</td>
+                  <td className={`${adminTable.td} font-medium tabular-nums`}>
+                    ₹{(tx.amountPaise / 100).toLocaleString("en-IN")}
+                  </td>
+                  <td className={adminTable.td}>
                     <StatusBadge status={tx.status} />
                   </td>
-                  <td className="px-4 py-3 text-content-secondary whitespace-nowrap">
+                  <td className={`${adminTable.td} text-content-secondary`}>
                     {new Date(tx.createdAt).toLocaleString("en-IN")}
                   </td>
                 </tr>
@@ -101,12 +108,10 @@ export default async function AdminPaymentsPage() {
           )}
         </div>
       </section>
-
-      <p className="text-xs text-content-secondary">
-        Payment records are currently file-backed pending the production PostgreSQL migration tracked under
-        RR-006. This view reads through the same repository the payment API routes already use, so no
-        admin-UI change is needed once that migration lands.
-      </p>
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Admin Payments",
+};

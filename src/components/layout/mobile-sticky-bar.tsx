@@ -88,9 +88,9 @@ export function MobileStickyBar() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
-          className="w-11 h-11 shrink-0 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-md active:scale-[0.95] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+          className="w-11 h-11 shrink-0 rounded-full bg-[#0E7A3E] text-white flex items-center justify-center shadow-md active:scale-[0.95] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
         >
-          <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" aria-hidden="true" />
+          <MessageCircle className="w-4 h-4 fill-white stroke-[#0E7A3E]" aria-hidden="true" />
         </a>
       </div>
     </aside>

@@ -324,6 +324,15 @@
 }
 
 @layer utilities {
+  /* Horizontal scrollers without a visible scrollbar (still scrollable/keyboard accessible) */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Layout Reading Constraints (< 75 characters per line for optimal ergonomics) */
   .max-w-reading {
     max-width: 680px;

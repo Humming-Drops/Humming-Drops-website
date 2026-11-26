@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerAuthoritativeCheckoutMode, OFFICIAL_CONTACT } from "@/lib/checkout-config";
 import { OFFICIAL_PLANS, PlanTier } from "@/types/plans";
 import { isSubscriptionActive, SubscriptionStatus, DietaryType } from "@/types/subscription";
-import { leadRepository } from "@/lib/lead-storage";
+import { DuplicateLeadError, leadRepository } from "@/lib/lead-storage";
 import { getAppUserById, requireAuthUser, auth } from "@/lib/auth/server";
 import {
   normalizePhone,
@@ -177,7 +177,7 @@ export async function POST(request: Request) {
     }
     if (!area) {
       return NextResponse.json(
-        { success: false, error: "Area / Locality in Bangalore is required.", field: "deliveryAddress.area" },
+        { success: false, error: "Area / Locality is required.", field: "deliveryAddress.area" },
         { status: 400 }
       );
     }
@@ -291,6 +291,17 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
+    if (error instanceof DuplicateLeadError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "You already have a subscription registration on this account. Our team will confirm it, or you can contact us on WhatsApp.",
+          existingReference: error.existingReference,
+        },
+        { status: 409 }
+      );
+    }
     console.error("Error processing subscription lead:", error);
     return NextResponse.json(
       {

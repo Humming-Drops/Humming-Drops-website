@@ -95,10 +95,8 @@ export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    clerkUserId: text("clerk_user_id"),
     email: text("email").notNull().unique(),
-    // Nullable: Clerk's user.created webhook fires before a phone number
-    // is necessarily known (captured later during subscription onboarding).
+    // Nullable: phone is captured later during subscription onboarding.
     phone: text("phone").unique(),
     passwordHash: text("password_hash"),
     role: userRoleEnum("role").notNull().default("customer"),
@@ -107,7 +105,6 @@ export const users = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    uniqueIndex("users_clerk_user_id_idx").on(table.clerkUserId),
     uniqueIndex("users_email_idx").on(table.email),
     uniqueIndex("users_phone_idx").on(table.phone),
   ]
@@ -539,13 +536,24 @@ export const paymentTransactionsRelations = relations(paymentTransactions, ({ on
 }));
 
 // ============================================================================
-// 14. CLERK LIFECYCLE WEBHOOK IDEMPOTENCY
+// 14. CONTENT AUDIT
 // ============================================================================
 
-export const clerkWebhookEvents = pgTable("clerk_webhook_events", {
-  id: text("id").primaryKey(), // Svix message id (svix-id header)
-  eventType: text("event_type").notNull(),
-  processedAt: timestamp("processed_at", { withTimezone: true }).notNull().defaultNow(),
+// ============================================================================
+// 15. PASSWORD RESET TOKENS
+// ============================================================================
+
+// Only the SHA-256 hash of the emailed token is stored; the raw token never
+// touches the database.
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  usedAt: timestamp("used_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const contentAuditLogs = pgTable("content_audit_logs", {

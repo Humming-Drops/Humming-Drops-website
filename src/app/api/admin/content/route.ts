@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
+import { apiError, isUuid } from "@/lib/api-response";
 import { auth } from "@/lib/auth/server";
 import { getAppUserById, hasPermission } from "@/lib/auth/server";
 import { ContentValidationFailure, createContentPage, listContentPages } from "@/lib/content-storage";
+import { isUniqueViolation } from "@/lib/db/errors";
 
 export async function GET() {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return apiError("Unauthorized", 401);
   if (!(await hasPermission("content:write"))) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return apiError("Forbidden", 403);
   }
 
   const rows = await listContentPages();
@@ -16,17 +18,17 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) return apiError("Unauthorized", 401);
   if (!(await hasPermission("content:write"))) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return apiError("Forbidden", 403);
   }
 
   const appUser = await getAppUserById(userId);
-  if (!appUser) return NextResponse.json({ error: "Application account not linked" }, { status: 404 });
+  if (!appUser) return apiError("Application account not linked", 404);
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return apiError("Invalid request body", 400);
   }
 
   const { templateId, slug, title, data } = body as {
@@ -37,7 +39,11 @@ export async function POST(request: Request) {
   };
 
   if (!templateId || !slug || !title) {
-    return NextResponse.json({ error: "templateId, slug, and title are required." }, { status: 400 });
+    return apiError("templateId, slug, and title are required.", 400);
+  }
+
+  if (!isUuid(templateId)) {
+    return apiError("templateId must be a valid template id.", 400);
   }
 
   try {
@@ -51,12 +57,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, page }, { status: 201 });
   } catch (error) {
     if (error instanceof ContentValidationFailure) {
-      return NextResponse.json({ error: "Validation failed", details: error.errors }, { status: 400 });
+      return apiError("Some fields need fixing.", 400, { details: error.errors });
     }
-    if (error && typeof error === "object" && "code" in error && (error as { code?: string }).code === "23505") {
-      return NextResponse.json({ error: "A page with this slug already exists." }, { status: 409 });
+    if (isUniqueViolation(error)) {
+      return apiError("A page with this slug already exists. Choose a different slug.", 409, {
+        details: [{ field: "slug", message: "This slug is already used by another page." }],
+      });
     }
     console.error("[ADMIN CONTENT CREATE ERROR]:", error);
-    return NextResponse.json({ error: "Failed to create content page." }, { status: 500 });
+    return apiError("Failed to create content page.", 500);
   }
 }

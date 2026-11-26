@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+};
 
 export default function NotFound() {
   return (
@@ -23,7 +28,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Button variant="primary" asChild>
             <Link href="/">
-              <Home className="w-4 h-4 mr-2" aria-hidden="true" />
+              <Home className="w-4 h-4" aria-hidden="true" />
               <span>Back to Humming Drops</span>
             </Link>
           </Button>

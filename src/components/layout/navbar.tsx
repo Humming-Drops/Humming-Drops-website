@@ -50,7 +50,7 @@ function isInteractiveOrEditableElement(target: EventTarget | null): boolean {
 
 export function Navbar() {
   const { theme } = useBrandTheme();
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded, user: authUser } = useAuth();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -63,6 +63,11 @@ export function Navbar() {
 
   // Active brand nav config
   const navConfig = theme === "medcity" ? MEDCITY_SMILES_NAV : HUMMING_DROPS_NAV;
+
+  // Signed-in users who already have a pending/active subscription do not need a "Subscribe" CTA.
+  const hideSubscribeCta = Boolean(
+    isSignedIn && authUser?.hasOpenSubscription && /subscribe/i.test(navConfig.primaryCTA.label)
+  );
 
   // Smart scroll behavior, navigation lock & active section tracking
   useEffect(() => {
@@ -231,7 +236,7 @@ export function Navbar() {
   const isNavItemActive = (href: string) => {
     const isHomeHashMatch =
       pathname === "/" &&
-      ((href === "/#pricing" && activeSection === "pricing") ||
+      (((href === "/#pricing" || href === "/plans") && activeSection === "pricing") ||
         (href === "/#journey" && activeSection === "journey"));
     const isMedcityHashMatch =
       pathname === "/medcity-smiles" &&
@@ -313,7 +318,7 @@ export function Navbar() {
           {/* Desktop Navigation Links */}
           <nav
             aria-label="Main Navigation"
-            className="hidden lg:flex items-center gap-1"
+            className="hidden xl:flex items-center gap-1"
           >
             {navConfig.navItems.map((item) => {
               const isActive = isNavItemActive(item.href);
@@ -341,15 +346,17 @@ export function Navbar() {
 
           {/* Right Actions & Hamburger Toggle */}
           <div className="flex items-center gap-2 shrink-0">
-            {!isSignedIn ? (
+            {!isLoaded ? (
+              <span aria-hidden="true" className="hidden xl:inline-block h-8 w-16" />
+            ) : !isSignedIn ? (
               <Link
                 href="/login"
-                className="hidden lg:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
+                className="hidden xl:inline-flex px-3.5 py-1.5 text-xs font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full"
               >
                 Sign In
               </Link>
             ) : (
-              <div className="hidden lg:flex items-center gap-2">
+              <div className="hidden xl:flex items-center gap-2">
                 <Link
                   href="/dashboard"
                   className={cn(
@@ -366,20 +373,22 @@ export function Navbar() {
             )}
 
             {/* Primary CTA (visible from md breakpoint upwards) */}
-            <Button
+            {!hideSubscribeCta && (
+              <Button
               variant="primary"
               size="sm"
               asChild
-              className={cn("hidden md:inline-flex shadow-sm gap-1.5 whitespace-nowrap", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white")}
+              className={cn("hidden md:inline-flex shadow-sm gap-1.5 whitespace-nowrap", theme === "medcity" && "bg-teal-700 hover:bg-teal-800 text-white", !isLoaded && "invisible")}
             >
               <Link href={navConfig.primaryCTA.href}>
                 <span>{navConfig.primaryCTA.label}</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
-            </Button>
+              </Button>
+            )}
 
             {/* Responsive Hamburger Toggle (visible below lg screens) */}
-            <div className="flex lg:hidden items-center gap-2">
+            <div className="flex xl:hidden items-center gap-2">
               {isSignedIn && <UserNav />}
               <Button
                 variant="ghost"
@@ -407,7 +416,7 @@ export function Navbar() {
           <div
             aria-hidden="true"
             onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-x-0 top-16 h-[calc(100dvh-4rem)] z-30 bg-forest-950/20 backdrop-blur-xs lg:hidden"
+            className="fixed inset-x-0 top-16 h-[calc(100dvh-4rem)] z-30 bg-forest-950/20 backdrop-blur-xs xl:hidden"
           />
           <div
             id="mobile-navigation-drawer"
@@ -415,7 +424,7 @@ export function Navbar() {
             aria-modal="true"
             aria-label="Mobile Navigation"
             className={cn(
-              "relative z-40 lg:hidden border-t border-line-subtle shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast",
+              "relative z-40 xl:hidden border-t border-line-subtle shadow-floating animate-in fade-in-0 slide-in-from-top-2 duration-fast",
               theme === "medcity" ? "bg-mist-50" : "bg-cream-50"
             )}
           >
@@ -458,6 +467,7 @@ export function Navbar() {
 
               {/* Mobile CTAs */}
               <div className="pt-2 border-t border-line-subtle space-y-3">
+                {!hideSubscribeCta && (
                 <Button
                   variant="primary"
                   size="lg"
@@ -472,6 +482,7 @@ export function Navbar() {
                     <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                   </Link>
                 </Button>
+                )}
 
               {!isSignedIn ? (
                 <Button

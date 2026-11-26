@@ -3,11 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { SunMedium, Utensils, Truck, Check, Sparkles, Leaf } from "lucide-react";
-import {
-  HandwrittenAnnotation,
-  GentleWaveDivider,
-} from "@/components/ui/doodles";
+import { SunMedium, Utensils, Truck, Check, Leaf } from "lucide-react";
 
 interface JourneyStep {
   number: string;
@@ -36,7 +32,7 @@ const JOURNEY_STEPS: JourneyStep[] = [
   {
     number: "02",
     title: "Prepared & packed",
-    shortCopy: "Washed, cut, and assembled into your Fruit & Vegetable Box or Healthy Oats Meal with strict culinary hygiene at Berrybeats Cafe.",
+    shortCopy: "Washed, cut, and assembled into your daily breakfast box with strict culinary hygiene at Berrybeats Cafe.",
     badge: "Culinary Kitchen",
     icon: Utensils,
     accentClass: "text-primary",
@@ -67,25 +63,20 @@ export function MorningJourney() {
     <section
       id="journey"
       aria-label="How it works"
-      className="py-14 sm:py-16 lg:py-24 bg-mint border-y border-[#E2ECE4] relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-mint border-y border-[#E2ECE4] relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2">
-            <span className="px-3.5 py-1 rounded-[20px] bg-mint border border-[#E2ECE4] text-primary text-xs font-semibold tracking-wide shadow-2xs">
-              Simple 3-Step Journey
-            </span>
-            <HandwrittenAnnotation rotation="-rotate-2" color="text-primary hidden sm:inline-flex">
-              From dawn harvest to your doorstep
-            </HandwrittenAnnotation>
-          </div>
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-emerald-800 text-xs font-bold">
+            Simple 3-Step Journey
+          </span>
 
-          <h2 className="font-display text-[1.75rem] sm:text-3xl lg:text-4xl font-extrabold text-ink tracking-tight leading-[1.18]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-ink tracking-tight leading-[1.15]">
             How Your Morning Box Reaches You
           </h2>
 
-          <p className="text-base sm:text-lg text-body leading-relaxed max-w-2xl mx-auto font-sans">
+          <p className="text-base sm:text-lg text-body leading-relaxed max-w-2xl mx-auto">
             An effortless morning ritual built on daily freshness and care — delivered before your day begins.
           </p>
         </div>
@@ -114,7 +105,7 @@ export function MorningJourney() {
                       className={`relative w-[60px] h-[60px] rounded-full ${step.bgLightClass} ${step.accentClass} border-2 ${step.borderClass} flex items-center justify-center shrink-0 shadow-2xs`}
                     >
                       <StepIcon className="w-7 h-7" strokeWidth={1.75} />
-                      <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-600 text-white font-display font-black text-[10px] flex items-center justify-center shadow-2xs">
+                      <span className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-700 text-white font-display font-black text-[10px] flex items-center justify-center shadow-2xs">
                         {step.number}
                       </span>
                     </div>
@@ -148,14 +139,14 @@ export function MorningJourney() {
             })}
 
             {/* Mobile Produce Quote Card */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-primary-bright to-primary text-white space-y-2 shadow-card">
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-primary-bright to-primary text-white space-y-2 shadow-card">
               <div className="flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-mint" />
+                <Leaf className="w-4 h-4 text-mint" aria-hidden="true" />
                 <span className="text-[11px] uppercase font-bold tracking-wider text-mint">
                   Our Founding Belief
                 </span>
               </div>
-              <blockquote className="text-xs text-white font-medium leading-relaxed italic">
+              <blockquote className="text-sm text-white font-medium leading-relaxed italic">
                 &ldquo;Achieving optimal health shouldn&apos;t be a struggle. We deliver essential daily nutrition right to your doorstep, making wellness effortless.&rdquo;
               </blockquote>
             </div>
@@ -182,7 +173,7 @@ export function MorningJourney() {
                     onMouseEnter={() => setActiveStepIndex(idx)}
                     onFocus={() => setActiveStepIndex(idx)}
                     onClick={() => setActiveStepIndex(idx)}
-                    className={`p-4 pt-5 rounded-[20px] border text-center transition-all duration-200 flex flex-col items-center space-y-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
+                    className={`p-4 pt-5 rounded-3xl border text-center transition-all duration-200 flex flex-col items-center space-y-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
                       isActive
                         ? "bg-white border-primary ring-2 ring-primary/20 shadow-md scale-[1.01]"
                         : "bg-white/90 border-[#E2ECE4] hover:bg-white hover:border-primary/40 shadow-2xs"
@@ -199,7 +190,7 @@ export function MorningJourney() {
                       <StepIcon className="w-8 h-8" strokeWidth={1.75} />
                       <span
                         className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full font-display font-black text-[10px] flex items-center justify-center shadow-2xs ${
-                          isActive ? "bg-primary text-white" : "bg-emerald-600 text-white"
+                          isActive ? "bg-primary text-white" : "bg-emerald-700 text-white"
                         }`}
                       >
                         {step.number}
@@ -228,7 +219,7 @@ export function MorningJourney() {
               initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="lg:col-span-6 p-6 sm:p-7 rounded-[20px] bg-white border border-[#E2ECE4] shadow-card flex flex-col justify-between space-y-5"
+              className="lg:col-span-6 p-6 sm:p-7 rounded-3xl bg-white border border-[#E2ECE4] shadow-card flex flex-col justify-between space-y-5"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -261,7 +252,7 @@ export function MorningJourney() {
                     {activeStep.highlights.map((h, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2.5 px-3.5 py-2 rounded-[20px] bg-canvas border border-[#E2ECE4] text-xs font-semibold text-ink shadow-2xs"
+                        className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-canvas border border-[#E2ECE4] text-xs font-semibold text-ink shadow-2xs"
                       >
                         <Check className="w-3.5 h-3.5 text-primary shrink-0" />
                         <span>{h}</span>
@@ -274,17 +265,22 @@ export function MorningJourney() {
               {/* Step Navigation Dots */}
               <div className="pt-3 border-t border-[#E2ECE4] flex items-center justify-between text-xs text-body">
                 <span>Meticulously prepared every dawn</span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center">
                   {JOURNEY_STEPS.map((_, i) => (
                     <button
                       key={i}
                       type="button"
                       onClick={() => setActiveStepIndex(i)}
-                      className={`h-2.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 ${
-                        i === activeStepIndex ? "w-7 bg-primary" : "w-2.5 bg-[#E2ECE4] hover:bg-primary/40"
-                      }`}
+                      className="group/dot h-11 min-w-[28px] px-1 flex items-center justify-center rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
                       aria-label={`Jump to step ${i + 1}`}
-                    />
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`h-2.5 rounded-full transition-all ${
+                          i === activeStepIndex ? "w-7 bg-primary" : "w-2.5 bg-[#E2ECE4] group-hover/dot:bg-primary/40"
+                        }`}
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
@@ -292,8 +288,8 @@ export function MorningJourney() {
 
             {/* Right Column: Authentic Fresh Produce Frame & Founding Quote (6 cols) */}
             <div className="lg:col-span-6 flex flex-col justify-between space-y-4">
-              <div className="relative rounded-[20px] p-3 sm:p-4 bg-white border border-[#E2ECE4] shadow-card flex-1 flex flex-col justify-between">
-                <div className="relative w-full aspect-[16/10] rounded-[20px] overflow-hidden bg-mint">
+              <div className="relative rounded-3xl p-3 sm:p-4 bg-white border border-[#E2ECE4] shadow-card flex-1 flex flex-col justify-between">
+                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-mint">
                   <Image
                     src="/images/fresh-produce-prep.jpg"
                     alt="Authentic fresh produce, fruits, and sprouts prepared by Humming Drops"
@@ -312,10 +308,10 @@ export function MorningJourney() {
                 </div>
               </div>
 
-              <div className="p-5 sm:p-6 rounded-[20px] bg-gradient-to-br from-primary-bright to-primary text-white space-y-2 relative overflow-hidden shadow-card">
+              <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-primary-bright to-primary text-white space-y-2 relative overflow-hidden shadow-card">
                 <div className="relative z-10 space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <Leaf className="w-4 h-4 text-mint" />
+                    <Leaf className="w-4 h-4 text-mint" aria-hidden="true" />
                     <span className="text-[11px] uppercase font-bold tracking-wider text-mint">
                       Our Founding Belief
                     </span>
@@ -331,11 +327,6 @@ export function MorningJourney() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Gentle curved transition */}
-      <div className="mt-8 lg:mt-12 -mb-14 lg:-mb-20">
-        <GentleWaveDivider fill="#EFFAF2" className="w-full h-8 sm:h-12 text-mint" />
       </div>
     </section>
   );

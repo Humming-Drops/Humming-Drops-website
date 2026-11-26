@@ -22,6 +22,7 @@ const AUTH_PREFIXES = [
   "/register",
   "/admin/login",
   "/forgot-password",
+  "/reset-password",
 ];
 
 function isMatch(pathname: string, prefixes: string[]): boolean {
@@ -57,7 +58,9 @@ export async function middleware(request: NextRequest) {
     const safeTarget =
       redirectParam && isSafeRedirectUrl(redirectParam)
         ? redirectParam
-        : "/dashboard/overview";
+        : session.role === "customer"
+          ? "/dashboard/overview"
+          : "/admin";
     return NextResponse.redirect(new URL(safeTarget, request.url));
   }
 

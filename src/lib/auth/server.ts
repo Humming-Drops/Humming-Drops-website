@@ -95,38 +95,23 @@ export async function requireAuthUser() {
 
 
 /**
- * Resolves user by their PostgreSQL UUID (with fallback to legacy clerkUserId).
+ * Resolves a user by their PostgreSQL UUID.
  */
 export async function getAppUserById(identifier: string) {
   if (!identifier) return null;
 
   try {
-    // Look up by primary UUID first
-    const [byUuid] = await db
+    const [user] = await db
       .select()
       .from(users)
       .where(eq(users.id, identifier))
       .limit(1);
 
-    if (byUuid) return byUuid;
-
-    // Fallback: look up by clerkUserId if present
-    const [byClerk] = await db
-      .select()
-      .from(users)
-      .where(eq(users.clerkUserId, identifier))
-      .limit(1);
-
-    return byClerk ?? null;
+    return user ?? null;
   } catch {
     return null;
   }
 }
-
-/**
- * Backward-compatible alias
- */
-export const getAppUserByClerkId = getAppUserById;
 
 /**
  * Checks whether the current user has any of the specified roles.

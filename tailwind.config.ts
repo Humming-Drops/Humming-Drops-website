@@ -59,7 +59,7 @@ const config: Config = {
         },
         /* Core Design Tokens */
         primary: {
-          DEFAULT: "#1F8A45",
+          DEFAULT: "#1B7A3E",
           bright: "#3CC46A",
           hover: "#176f37",
         },

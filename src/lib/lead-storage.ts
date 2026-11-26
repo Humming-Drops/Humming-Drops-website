@@ -20,7 +20,26 @@ import {
   dietaryPreferences,
   subscriptionAuditLogs,
 } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { and, eq, desc, inArray, sql } from "drizzle-orm";
+
+/**
+ * Thrown when a user who already holds an open registration/subscription
+ * (pending, active or paused) tries to register another one (CUS-09).
+ */
+export class DuplicateLeadError extends Error {
+  constructor(public readonly existingReference: string | null) {
+    super("An open subscription registration already exists for this account.");
+    this.name = "DuplicateLeadError";
+  }
+}
+
+/** Statuses that count as an "open" registration for duplicate detection. */
+export const OPEN_SUBSCRIPTION_STATUSES = [
+  "registration_submitted",
+  "pending_confirmation",
+  "confirmed_active",
+  "paused",
+] as const;
 
 /**
  * Persisted Subscription Lead Record
@@ -84,24 +103,24 @@ export const CANONICAL_PLANS: Record<
     name: "Standard",
     monthlyPriceINR: 3500,
     perDayPriceINR: 116,
-    tagline: "Doctor-approved daily breakfast for diabetes & heart wellness",
+    tagline: "Fresh fruits, vegetables, salad and sprouts every day, with holistic health monitoring",
     features: [
-      "26 fresh morning breakfast boxes / month",
-      "Free monthly doctor health checkup at MedCity Smiles",
-      "Weekly live nutritionist and wellness webinars",
-      "Flexible pause or vacation options",
+      "4 varieties of fruits, 2 varieties of vegetables, fresh mix salad and fresh sprouts every day",
+      "Dry fruits 3 days a week",
+      "Free MedCity Smiles membership",
+      "Free monthly checkup: Blood Sugar, Cholesterol, Blood Pressure",
     ],
   },
   premium: {
     name: "Premium",
     monthlyPriceINR: 4000,
     perDayPriceINR: 133,
-    tagline: "Customized clinical nutrition with 1-on-1 dietitian support",
+    tagline: "Everything in Standard plus curated juices & MedCity Labs discounts",
     features: [
       "Everything in Standard",
-      "1-on-1 dedicated dietitian consultations & custom meal tuning",
-      "Priority early-morning kitchen dispatch",
-      "Exclusive seasonal fruit infusions & doctor notes",
+      "Dry fruits every day",
+      "MedCity Labs package discounts",
+      "Special healthy juice drops curated with CARE by Berrybeats",
     ],
   },
 };
@@ -313,6 +332,23 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
 
       if (!user) {
         throw new Error("Failed to resolve or create customer user identity.");
+      }
+
+      // 1b. Duplicate guard (CUS-09): one open registration per account.
+      // Serialize concurrent submissions for the same user so two requests cannot both pass the check.
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${user.id}))`);
+      const [openSub] = await tx
+        .select({ ref: userSubscriptions.leadReferenceCode })
+        .from(userSubscriptions)
+        .where(
+          and(
+            eq(userSubscriptions.userId, user.id),
+            inArray(userSubscriptions.status, [...OPEN_SUBSCRIPTION_STATUSES])
+          )
+        )
+        .limit(1);
+      if (openSub) {
+        throw new DuplicateLeadError(openSub.ref ?? null);
       }
 
       // 2. Insert Lead / Subscription with STRICT INVARIANT: 'pending_confirmation' & hasActivePerks: false

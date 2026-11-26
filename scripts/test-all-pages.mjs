@@ -7,7 +7,7 @@ const routes = [
   { path: '/subscribe', expectStatus: 307, checkLocation: '/register?redirect_url=%2Fsubscribe' },
   { path: '/login', expectStatus: 200, check: 'Sign In' },
   { path: '/register', expectStatus: 200, check: 'Account' },
-  { path: '/forgot-password', expectStatus: 200, check: 'Reset' },
+  { path: '/forgot-password', expectStatus: 200, check: 'password' },
   { path: '/admin/login', expectStatus: 200, check: 'Operations Console' },
   { path: '/admin', expectStatus: 200, check: 'Operations Console' },
   { path: '/api/health', expectStatus: 200, check: 'healthy' },

@@ -46,6 +46,8 @@ export function getServerAuthoritativeCheckoutMode(): FulfillmentMode {
  */
 export const OFFICIAL_CONTACT = {
   phone: "8618902810",
+  phoneDisplay: "+91 8618902810",
+  phoneTel: "+918618902810",
   email: "hummingdrops@gmail.com",
   website: "www.hummingdrops.com",
   kitchenLocation: "Berrybeats cafe, Bangalore",

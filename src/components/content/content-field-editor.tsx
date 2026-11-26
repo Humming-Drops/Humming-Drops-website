@@ -1,6 +1,7 @@
 "use client";
 
 import type { ContentFieldDefinition } from "@/lib/content-validation";
+import { adminErrorText, adminHelpText, adminInput, adminLabel } from "@/components/admin/admin-ui";
 
 interface ContentFieldEditorProps {
   fields: ContentFieldDefinition[];
@@ -21,10 +22,14 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
         const value = data[field.key];
         const error = fieldErrors[field.key];
         const fieldId = `content-field-${field.key}`;
+        const a11y = {
+          "aria-invalid": error ? true : undefined,
+          "aria-describedby": error ? `${fieldId}-error` : field.helpText ? `${fieldId}-help` : undefined,
+        } as const;
 
         return (
           <div key={field.key} className="space-y-1.5">
-            <label htmlFor={fieldId} className="text-xs font-semibold text-content-secondary">
+            <label htmlFor={fieldId} className={adminLabel}>
               {field.label}
               {field.required && <span className="text-red-600"> *</span>}
             </label>
@@ -32,16 +37,19 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
             {field.type === "richtext" ? (
               <textarea
                 id={fieldId}
+                {...a11y}
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
                 rows={5}
                 maxLength={field.maxLength}
-                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={adminInput}
               />
             ) : field.type === "boolean" ? (
               <div className="pt-0.5">
                 <input
                   id={fieldId}
+                  {...a11y}
+                {...a11y}
                   type="checkbox"
                   checked={Boolean(value)}
                   onChange={(e) => onChange(field.key, e.target.checked)}
@@ -51,25 +59,31 @@ export function ContentFieldEditor({ fields, data, onChange, fieldErrors }: Cont
             ) : field.type === "number" ? (
               <input
                 id={fieldId}
+                {...a11y}
                 type="number"
                 value={typeof value === "number" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value === "" ? undefined : Number(e.target.value))}
-                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={adminInput}
               />
             ) : (
               <input
                 id={fieldId}
+                {...a11y}
                 type="text"
                 value={typeof value === "string" ? value : ""}
                 onChange={(e) => onChange(field.key, e.target.value)}
                 maxLength={field.maxLength}
                 placeholder={field.type === "url" || field.type === "image_url" ? "https://" : undefined}
-                className="w-full rounded-xl border border-line-subtle bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={adminInput}
               />
             )}
 
-            {field.helpText && !error && <p className="text-[11px] text-content-secondary">{field.helpText}</p>}
-            {error && <p className="text-[11px] text-red-600">{error}</p>}
+            {field.helpText && !error && <p id={`${fieldId}-help`} className={adminHelpText}>{field.helpText}</p>}
+            {error && (
+              <p id={`${fieldId}-error`} role="alert" className={adminErrorText}>
+                {error}
+              </p>
+            )}
           </div>
         );
       })}

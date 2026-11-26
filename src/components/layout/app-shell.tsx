@@ -10,6 +10,8 @@ import { SmoothScrollManager } from "@/components/layout/smooth-scroll-manager";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
+  // The operations console has its own header; public navbar/footer would only add noise.
+  const isAdmin = Boolean(pathname?.startsWith("/admin"));
   const hideMobileStickyBar = Boolean(
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/dashboard") ||
@@ -33,22 +35,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <SmoothScrollManager />
 
       {/* Global Brand-Aware Responsive Navbar */}
-      <Navbar />
+      {!isAdmin && <Navbar />}
 
       {/* Primary Main Landmark */}
       <main
         id="main-content"
         tabIndex={-1}
-        className={`flex-1 flex flex-col focus:outline-none ${hideMobileStickyBar ? "pb-0" : "pb-24 md:pb-0"}`}
+        className="flex-1 flex flex-col focus:outline-none"
       >
         {children}
       </main>
 
       {/* Shared Footer on Public Routes */}
-      {!isDashboard && <Footer />}
+      {!isDashboard && !isAdmin && <Footer />}
 
-      {/* Mobile-Only Sticky Bottom CTA Bar */}
-      {!hideMobileStickyBar && <MobileStickyBar />}
+      {/* Mobile-Only Sticky Bottom CTA Bar + spacer so it never covers the last content (spacer sits after the footer, not inside main) */}
+      {!hideMobileStickyBar && (
+        <>
+          <div aria-hidden="true" className="h-24 bg-surface md:hidden" />
+          <MobileStickyBar />
+        </>
+      )}
     </div>
   );
 }

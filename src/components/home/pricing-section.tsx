@@ -2,10 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles, ArrowRight, PhoneCall, HeartPulse, ShieldCheck, MessageCircle, Leaf } from "lucide-react";
+import { Check, Sparkles, ArrowRight, PhoneCall, HeartPulse, MessageCircle, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { OrganicWaveDivider } from "@/components/ui/doodles";
 
 export function PricingSection() {
   const [highlightedPlan, setHighlightedPlan] = useState<"standard" | "premium">("premium");
@@ -21,17 +20,17 @@ export function PricingSection() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-emerald-200/80 text-emerald-800 text-xs font-bold tracking-wide shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-emerald-800 text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
             <span>Simple, Honest &amp; Flexible Plans</span>
           </div>
 
-          <h2 className="font-display text-[2rem] sm:text-3xl lg:text-4xl font-extrabold text-[#132A1C] tracking-tight leading-[1.16]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold text-[#132A1C] tracking-tight leading-[1.15]">
             Choose Your Morning Wellness Plan
           </h2>
 
-          <p className="text-base sm:text-lg text-[#405347] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#405347] leading-relaxed max-w-2xl mx-auto">
             Both plans include doorstep delivery before 7:30 AM, free MedCity Smiles membership, and free monthly doctor-certified health checkups.
           </p>
         </div>
@@ -59,7 +58,7 @@ export function PricingSection() {
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#132A1C] font-display">
                     Standard Plan
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#657B6F] mt-1">
+                  <p className="text-xs sm:text-sm text-[#4F6458] mt-1">
                     Daily fresh fruits, greens &amp; regular health tracking
                   </p>
                 </div>
@@ -74,7 +73,7 @@ export function PricingSection() {
                   <span className="font-display text-4xl sm:text-5xl font-black text-[#132A1C]">
                     ₹3,500
                   </span>
-                  <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
+                  <span className="text-sm font-semibold text-[#4F6458]">/ month</span>
                 </div>
               </div>
 
@@ -88,31 +87,25 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Fresh Fruit &amp; Vegetable Box</strong> — 4 days a week</span>
+                    <span><strong className="text-[#132A1C]">Daily Breakfast Box</strong> — every day</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>5 fruit varieties, 3 vegetable varieties, sprouts &amp; dry fruits on box days</span>
+                    <span>4 fruit varieties, 2 vegetable varieties, fresh mix salad &amp; fresh sprouts</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Healthy Oats Meal</strong> — 2 days a week</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
-                    </div>
-                    <span>Oats served with fruits &amp; dry fruits on oats days</span>
+                    <span><strong className="text-[#132A1C]">Dry Fruits</strong> — 3 days a week</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 shrink-0 mt-0.5">
                       <HeartPulse className="w-3.5 h-3.5 stroke-[2.5]" />
                     </div>
-                    <span><strong className="text-[#132A1C]">Free Monthly Health Check</strong> (Sugar, BP &amp; Vitals)</span>
+                    <span><strong className="text-[#132A1C]">Free Monthly Health Check</strong> (blood sugar, cholesterol &amp; blood pressure)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
@@ -130,9 +123,9 @@ export function PricingSection() {
                 variant="secondary"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[50px] py-3.5 cursor-pointer rounded-full border-2 border-emerald-600 text-emerald-800 hover:bg-emerald-50 hover:border-emerald-700"
+                className="w-full justify-center"
               >
-                <Link href="/subscribe?plan=standard" className="flex items-center gap-2">
+                <Link href="/subscribe?plan=standard">
                   <span>Subscribe to Standard</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
@@ -152,9 +145,9 @@ export function PricingSection() {
             )}
           >
             {/* Top Recommended Glowing Badge */}
-            <div className="absolute -top-4 right-6 sm:right-8 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-extrabold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-yellow-200" aria-hidden="true" />
-              <span>Most Popular · Best Value</span>
+            <div className="absolute -top-3.5 right-6 sm:right-8 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-extrabold text-xs uppercase tracking-wider px-4 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-100" aria-hidden="true" />
+              <span>Recommended</span>
             </div>
 
             <div className="space-y-6">
@@ -167,7 +160,7 @@ export function PricingSection() {
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#132A1C] font-display">
                     Premium Plan
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#657B6F] mt-1">
+                  <p className="text-xs sm:text-sm text-[#4F6458] mt-1">
                     Curated juices + exclusive MedCity Labs discounts
                   </p>
                 </div>
@@ -182,7 +175,7 @@ export function PricingSection() {
                   <span className="font-display text-4xl sm:text-5xl font-black text-[#132A1C]">
                     ₹4,000
                   </span>
-                  <span className="text-sm font-semibold text-[#657B6F]">/ month</span>
+                  <span className="text-sm font-semibold text-[#4F6458]">/ month</span>
                 </div>
               </div>
 
@@ -208,7 +201,7 @@ export function PricingSection() {
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span>4-day Fruit &amp; Vegetable Box + 2-day Healthy Oats Meal</span>
+                    <span>Dry fruits every day, plus the full Standard box</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
@@ -226,9 +219,9 @@ export function PricingSection() {
                 variant="primary"
                 size="lg"
                 asChild
-                className="w-full justify-center text-base font-bold min-h-[50px] py-3.5 shadow-md hover:shadow-lg cursor-pointer rounded-full bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 hover:from-emerald-700 hover:to-green-700 text-white"
+                className="w-full justify-center shadow-md"
               >
-                <Link href="/subscribe?plan=premium" className="flex items-center gap-2">
+                <Link href="/subscribe?plan=premium">
                   <span>Subscribe to Premium</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
@@ -239,44 +232,34 @@ export function PricingSection() {
 
         {/* Assisted Phone / WhatsApp Lead Booking Note */}
         <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-white border border-[#E3EFE5] max-w-3xl mx-auto text-center space-y-3 shadow-card">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
             <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Need Help Choosing or Customizing?</span>
           </div>
 
-          <h4 className="text-lg font-extrabold text-[#132A1C]">
+          <h3 className="font-display text-lg sm:text-xl font-extrabold text-[#132A1C]">
             Speak Directly with Our Morning Care Team
-          </h4>
+          </h3>
 
           <p className="text-sm text-[#405347] max-w-xl mx-auto leading-relaxed">
             Prefer ordering directly via WhatsApp or need custom dietary adjustments? Our Bangalore team is here to assist you daily:
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 pt-2">
-            <a
-              href="https://wa.me/918618902810"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white text-sm font-bold shadow-xs hover:bg-[#20ba59] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-            >
-              <MessageCircle className="w-4 h-4 fill-white stroke-[#25D366]" />
-              <span>WhatsApp: 8618902810</span>
-            </a>
-
-            <a
-              href="tel:8618902810"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[48px] rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold hover:bg-emerald-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-            >
-              <PhoneCall className="w-4 h-4" />
-              <span>Call: 8618902810</span>
-            </a>
+            <Button variant="primary" size="md" asChild className="bg-[#0E7A3E] hover:bg-[#0B6A35]">
+              <a href="https://wa.me/918618902810" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                <span>WhatsApp: 8618902810</span>
+              </a>
+            </Button>
+            <Button variant="secondary" size="md" asChild>
+              <a href="tel:+918618902810">
+                <PhoneCall className="w-4 h-4" aria-hidden="true" />
+                <span>Call: 8618902810</span>
+              </a>
+            </Button>
           </div>
         </div>
-      </div>
-
-      {/* Organic wave transition */}
-      <div className="mt-14 lg:mt-18 text-canvas">
-        <OrganicWaveDivider fill="#FCFDF9" className="w-full h-12 sm:h-16 text-canvas" />
       </div>
     </section>
   );

@@ -33,8 +33,8 @@ export function BrandSwitcher({
 
   return (
     <div
-      role="tablist"
-      aria-label="Brand Experience Switcher"
+      role="group"
+      aria-label="Choose brand: Humming Drops or MedCity Smiles"
       className={cn(
         "inline-flex items-center p-1 bg-forest-50/95 backdrop-blur-sm rounded-pill border border-line-subtle shadow-sm select-none",
         className
@@ -42,8 +42,7 @@ export function BrandSwitcher({
     >
       <button
         type="button"
-        role="tab"
-        aria-selected={theme === "humming"}
+        aria-pressed={theme === "humming"}
         onClick={() => handleSelect("humming")}
         className={cn(
           "relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-900 focus-visible:ring-offset-1",
@@ -68,8 +67,7 @@ export function BrandSwitcher({
 
       <button
         type="button"
-        role="tab"
-        aria-selected={theme === "medcity"}
+        aria-pressed={theme === "medcity"}
         onClick={() => handleSelect("medcity")}
         className={cn(
           "relative z-10 flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-pill transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1",

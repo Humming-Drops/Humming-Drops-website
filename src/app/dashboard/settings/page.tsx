@@ -1,15 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth/client";
+import { cn } from "@/lib/utils";
+import { isValidIndianPhone, normalizePhone } from "@/lib/sanitization";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/admin/status-badge";
+import {
+  DashboardCard,
+  DashboardCardTitle,
+  DashboardError,
+  DashboardLoading,
+  DashboardPage,
+  DashboardPageHeader,
+} from "@/components/dashboard/dashboard-ui";
+
+const inputClass =
+  "w-full px-3 py-2.5 min-h-[44px] text-sm rounded-xl border border-line-subtle bg-surface focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary";
 
 interface AccountData {
   user: {
     email: string;
     phone: string;
+    role?: string;
     profile?: { fullName: string; phone: string };
   };
   subscriptions: Array<{
@@ -27,12 +40,14 @@ export default function DashboardSettingsPage() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveErrorField, setSaveErrorField] = useState<"fullName" | "phone" | null>(null);
+  const [savedNotice, setSavedNotice] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const loadAccount = () => {
     fetch("/api/customer/me")
       .then(async (response) => {
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || "Unable to load account.");
         setAccount(data);
         setFullName(data.user.profile?.fullName || "");
@@ -48,6 +63,23 @@ export default function DashboardSettingsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveError(null);
+    setSaveErrorField(null);
+    setSavedNotice(false);
+
+    // Same rules as the server, checked here first to save a round trip.
+    if (fullName.trim().length < 2) {
+      setSaveError("Full name must be at least 2 characters.");
+      setSaveErrorField("fullName");
+      requestAnimationFrame(() => document.getElementById("fullName")?.focus());
+      return;
+    }
+    if (!isValidIndianPhone(normalizePhone(phone))) {
+      setSaveError("Enter a valid 10-digit Indian mobile number.");
+      setSaveErrorField("phone");
+      requestAnimationFrame(() => document.getElementById("phone")?.focus());
+      return;
+    }
+
     setIsSaving(true);
     try {
       const res = await fetch("/api/customer/me", {
@@ -55,11 +87,16 @@ export default function DashboardSettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "profile", fullName, phone }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) {
+        if (data.field === "phone") {
+          setSaveErrorField("phone");
+          requestAnimationFrame(() => document.getElementById("phone")?.focus());
+        }
         throw new Error(data.error || "Unable to save your profile. Please try again.");
       }
       setIsEditing(false);
+      setSavedNotice(true);
       loadAccount();
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Unable to save your profile. Please try again.");
@@ -69,51 +106,33 @@ export default function DashboardSettingsPage() {
   };
 
   if (error) {
-    return (
-      <div
-        role="alert"
-        className="rounded-2xl border border-red-200 bg-red-50/70 p-6 flex items-start gap-3 text-sm text-red-800"
-      >
-        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
-        <p>{error}</p>
-      </div>
-    );
+    return <DashboardError title={error} />;
   }
   if (!account) {
-    return (
-      <div className="space-y-6 animate-pulse" aria-busy="true" aria-label="Loading profile settings">
-        <div className="h-14 w-56 rounded-xl bg-muted/70" />
-        <div className="h-44 rounded-2xl bg-muted/70 border border-line-subtle" />
-        <div className="h-36 rounded-2xl bg-muted/70 border border-line-subtle" />
-      </div>
-    );
+    return <DashboardLoading label="Loading profile settings" />;
   }
 
   const subscription = account.subscriptions[0];
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line-subtle pb-6">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">Account</p>
-          <h1 className="font-display text-2xl font-extrabold text-content-primary">Profile &amp; Settings</h1>
-        </div>
-        <button
-          type="button"
-          onClick={() => logout()}
-          className="rounded-full border border-red-200 bg-red-50 px-4 py-2 min-h-[38px] text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
-        >
-          Sign out
-        </button>
-      </div>
+    <DashboardPage>
+      <DashboardPageHeader
+        title={<>Profile &amp; Settings</>}
+      />
 
-      <section className="rounded-2xl border border-line-subtle bg-surface p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold text-content-primary">Your profile</h2>
+      {savedNotice ? (
+        <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+          Your profile was saved.
+        </p>
+      ) : null}
+
+      <DashboardCard>
+        <div className="flex items-center justify-between gap-3">
+          <DashboardCardTitle>Your profile</DashboardCardTitle>
           {!isEditing && (
             <button
               type="button"
-              onClick={() => setIsEditing(true)}
-              className="text-xs font-semibold text-brand-primary hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              onClick={() => { setIsEditing(true); setSavedNotice(false); }}
+              className="min-h-[44px] -my-2 -mr-3 px-3 text-sm font-semibold text-brand-primary hover:underline rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
             >
               Edit
             </button>
@@ -123,7 +142,7 @@ export default function DashboardSettingsPage() {
         {isEditing ? (
           <form onSubmit={handleSave} className="mt-4 space-y-4">
             <div className="space-y-1">
-              <label htmlFor="fullName" className="block text-xs font-bold text-content-secondary">
+              <label htmlFor="fullName" className="block text-xs font-semibold text-content-secondary">
                 Full name
               </label>
               <input
@@ -131,13 +150,15 @@ export default function DashboardSettingsPage() {
                 type="text"
                 required
                 minLength={2}
+                aria-invalid={saveError && saveErrorField !== "phone" ? true : undefined}
+                aria-describedby={saveError && saveErrorField !== "phone" ? "profile-error" : undefined}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm rounded-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                className={inputClass}
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="phone" className="block text-xs font-bold text-content-secondary">
+              <label htmlFor="phone" className="block text-xs font-semibold text-content-secondary">
                 WhatsApp mobile number
               </label>
               <div className="relative flex">
@@ -148,26 +169,35 @@ export default function DashboardSettingsPage() {
                   id="phone"
                   type="tel"
                   required
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  aria-invalid={saveError && saveErrorField !== "fullName" ? true : undefined}
+                  aria-describedby={saveError && saveErrorField !== "fullName" ? "profile-error" : undefined}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm rounded-r-xl border border-line-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                  className={cn(inputClass, "rounded-l-none")}
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-content-secondary">Email (managed by sign-in provider)</label>
+              <label htmlFor="accountEmail" className="block text-xs font-semibold text-content-secondary">Email (cannot be changed here)</label>
               <input
+                id="accountEmail"
                 type="email"
                 disabled
                 value={account.user.email}
-                className="w-full px-3 py-2.5 text-sm rounded-xl border border-line-subtle bg-muted/40 text-content-secondary"
+                className={cn(inputClass, "bg-muted/40 text-content-secondary")}
               />
             </div>
 
-            {saveError ? <p className="text-xs text-red-600">{saveError}</p> : null}
+            {saveError ? (
+              <p id="profile-error" role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+                {saveError}
+              </p>
+            ) : null}
 
             <div className="flex items-center gap-3 pt-1">
-              <Button type="submit" variant="primary" size="sm" isLoading={isSaving} className="rounded-full">
+              <Button type="submit" variant="primary" size="md" isLoading={isSaving}>
                 Save changes
               </Button>
               <button
@@ -175,10 +205,11 @@ export default function DashboardSettingsPage() {
                 onClick={() => {
                   setIsEditing(false);
                   setSaveError(null);
+                  setSaveErrorField(null);
                   setFullName(account.user.profile?.fullName || "");
                   setPhone(account.user.phone || "");
                 }}
-                className="text-xs font-semibold text-content-secondary hover:text-content-primary"
+                className="min-h-[44px] px-4 rounded-full text-sm font-semibold text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 Cancel
               </button>
@@ -187,15 +218,15 @@ export default function DashboardSettingsPage() {
         ) : (
           <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
             <div><dt className="text-content-secondary">Name</dt><dd className="font-semibold">{account.user.profile?.fullName || "Not provided"}</dd></div>
-            <div><dt className="text-content-secondary">Email</dt><dd className="font-semibold">{account.user.email}</dd></div>
-            <div><dt className="text-content-secondary">Phone</dt><dd className="font-semibold">{account.user.phone}</dd></div>
-            <div><dt className="text-content-secondary">Application role</dt><dd className="font-semibold">Customer</dd></div>
+            <div><dt className="text-content-secondary">Email</dt><dd className="font-semibold break-all">{account.user.email}</dd></div>
+            <div><dt className="text-content-secondary">Phone</dt><dd className="font-semibold">{account.user.phone || "Not provided"}</dd></div>
+            <div><dt className="text-content-secondary">Account type</dt><dd className="font-semibold">{account.user.role === "customer" ? "Customer" : "Staff"}</dd></div>
           </dl>
         )}
-      </section>
+      </DashboardCard>
 
-      <section className="rounded-2xl border border-line-subtle bg-surface p-6">
-        <h2 className="font-display text-lg font-bold text-content-primary">Subscription</h2>
+      <DashboardCard>
+        <DashboardCardTitle>Subscription</DashboardCardTitle>
         {subscription ? (
           <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
             <div><dt className="text-content-secondary">Plan</dt><dd className="font-semibold capitalize">{subscription.subscription.planId}</dd></div>
@@ -206,7 +237,19 @@ export default function DashboardSettingsPage() {
         ) : (
           <p className="mt-3 text-sm text-content-secondary">No subscription is linked to this account yet.</p>
         )}
-      </section>
-    </div>
+      </DashboardCard>
+
+      <DashboardCard>
+        <DashboardCardTitle>Sign out</DashboardCardTitle>
+        <p className="mt-2 text-sm text-content-secondary">Sign out of your Humming Drops account on this device.</p>
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="mt-4 rounded-full border border-line-subtle bg-white px-5 min-h-[44px] text-sm font-semibold text-red-700 hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+        >
+          Sign out
+        </button>
+      </DashboardCard>
+    </DashboardPage>
   );
 }
