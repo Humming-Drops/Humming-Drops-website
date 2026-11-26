@@ -16,7 +16,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:check": "drizzle-kit check",
-    "db:seed-admin": "node --env-file=.env.local --loader ./tests/loader.mjs --experimental-strip-types scripts/seed-dev-admin.ts"
+    "db:seed-admin": "node --env-file=.env.local --loader ./tests/loader.mjs --experimental-strip-types scripts/seed-dev-admin.ts",
+    "vercel-build": "node scripts/vercel-build.mjs"
   },
   "dependencies": {
     "cloudinary": "^2.5.1",
