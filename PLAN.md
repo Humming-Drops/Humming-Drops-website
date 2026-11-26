@@ -139,4 +139,5 @@ Per-bug detail: `BUGS.md` → "Second QA pass (2026-11-24)" (Q2-01 … Q2-22).
 - [x] Tooling: `npm run db:migrate` loads `.env.local`.
 - [x] Checks: tsc, lint, 115 unit tests, live curl checks (register 409, settings 409 + no half-save, slug 409, own Super Admin 409, confirm → audit row), viewport + axe sweep 81/81.
 - [x] Independent browser verification: customer 10/10 PASS, admin/CMS 6/8 PASS + 2 partial; follow-up findings fixed as Q2-23 … Q2-30 (BUGS.md).
+- [x] Final viewport + axe sweep after all fixes (2026-11-26): 81/81 clean (375 / 768 / 1440 px, public + customer + admin).
 - Test data created this pass (local DB only): accounts `qa-fix-*`, `verify-*`, `dup-phone-*` @hummingdrops.test; leads HD-REG-2026-31249; confirmed HD-REG-2026-74974 and HD-REG-2026-96087; CMS pages `qa-test-page-delete-me`, `verify-page-delete-me`, `verify-page2-delete-me` (plus earlier `qa-test-banner`, `browser-test-banner`).
