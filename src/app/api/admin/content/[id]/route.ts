@@ -43,8 +43,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   const { title, data } = body as { title?: string; data?: Record<string, unknown> };
-  if (typeof title !== "string" || !title.trim()) {
-    return apiError("title is required.", 400);
+  if (typeof title !== "string" || !title.trim() || title.length > 150 || title.includes("\u0000")) {
+    return apiError("title must be 1 to 150 characters of text.", 400);
   }
 
   try {

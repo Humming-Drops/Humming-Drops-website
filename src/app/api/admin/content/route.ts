@@ -42,6 +42,12 @@ export async function POST(request: Request) {
     return apiError("templateId, slug, and title are required.", 400);
   }
 
+  if (typeof title !== "string" || typeof slug !== "string" || !title.trim() || title.length > 150 || title.includes("\u0000")) {
+    return apiError("Title must be 1 to 150 characters of text.", 400, {
+      details: [{ field: "title", message: "Enter a title of 150 characters or fewer." }],
+    });
+  }
+
   if (!isUuid(templateId)) {
     return apiError("templateId must be a valid template id.", 400);
   }
@@ -63,6 +69,9 @@ export async function POST(request: Request) {
       return apiError("A page with this slug already exists. Choose a different slug.", 409, {
         details: [{ field: "slug", message: "This slug is already used by another page." }],
       });
+    }
+    if (error instanceof Error && error.message === "Content template not found or inactive.") {
+      return apiError(error.message, 400);
     }
     console.error("[ADMIN CONTENT CREATE ERROR]:", error);
     return apiError("Failed to create content page.", 500);
