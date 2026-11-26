@@ -28,8 +28,8 @@ export async function listSubscriptionsForAdmin() {
       subscription: userSubscriptions,
       plan: subscriptionPlans,
       customerName: profiles.fullName,
-      // Account phone, falling back to the number given at registration.
-      customerPhone: sql<string>`coalesce(nullif(${users.phone}, ''), nullif(${profiles.phone}, ''), '')`,
+      // Latest contact number given by the customer, falling back to the account phone.
+      customerPhone: sql<string>`coalesce(nullif(${profiles.phone}, ''), nullif(${users.phone}, ''), '')`,
       area: deliveryAddresses.area,
     })
     .from(userSubscriptions)
@@ -51,11 +51,16 @@ async function applyTransition(params: {
   nextStatus: SubscriptionStatus;
   actorUserId: string;
   triggerReason: string;
+  allowedFrom?: SubscriptionStatus[];
   extraSet?: Partial<typeof userSubscriptions.$inferInsert>;
 }) {
   const existing = await getSubscriptionOrThrow(params.id);
 
-  if (!canTransitionSubscription(existing.status, params.nextStatus)) {
+  // The state machine allows same-state writes; staff actions must not repeat or relabel them.
+  if (
+    (params.allowedFrom && !params.allowedFrom.includes(existing.status)) ||
+    !canTransitionSubscription(existing.status, params.nextStatus)
+  ) {
     throw new SubscriptionTransitionError(
       `Cannot transition subscription from "${existing.status}" to "${params.nextStatus}".`
     );
@@ -113,6 +118,7 @@ export async function confirmSubscription(id: string, actorUserId: string) {
     nextStatus: "confirmed_active",
     actorUserId,
     triggerReason: "admin_manual_confirmation",
+    allowedFrom: ["pending_confirmation", "expired"],
     extraSet: { startDate: new Date().toISOString().slice(0, 10) },
   });
 }
@@ -123,22 +129,31 @@ export async function cancelSubscription(id: string, actorUserId: string) {
     nextStatus: "cancelled",
     actorUserId,
     triggerReason: "admin_manual_cancellation",
+    allowedFrom: ["registration_submitted", "pending_confirmation", "confirmed_active", "paused"],
   });
 }
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
+/** True only for a real calendar date: "2027-02-30" would otherwise roll over to March. */
+function isCalendarDate(value: string): boolean {
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
 export function validatePauseRange(pauseStart: string, pauseEnd: string): string | null {
-  if (!DATE_PATTERN.test(pauseStart) || !DATE_PATTERN.test(pauseEnd)) {
+  if (typeof pauseStart !== "string" || typeof pauseEnd !== "string" || !DATE_PATTERN.test(pauseStart) || !DATE_PATTERN.test(pauseEnd)) {
     return "Pause dates must be in YYYY-MM-DD format.";
   }
-  const start = new Date(pauseStart);
-  const end = new Date(pauseEnd);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+  if (!isCalendarDate(pauseStart) || !isCalendarDate(pauseEnd)) {
     return "Pause dates must be valid calendar dates.";
   }
-  if (end < start) {
+  if (pauseEnd < pauseStart) {
     return "Pause end date must be on or after the pause start date.";
+  }
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  if (pauseEnd < today) {
+    return "These pause dates are already in the past.";
   }
   return null;
 }
@@ -157,6 +172,7 @@ export async function pauseSubscription(
     nextStatus: "paused",
     actorUserId,
     triggerReason: "admin_manual_pause",
+    allowedFrom: ["confirmed_active"],
     extraSet: { pauseStart, pauseEnd },
   });
 }
@@ -167,6 +183,7 @@ export async function resumeSubscription(id: string, actorUserId: string) {
     nextStatus: "confirmed_active",
     actorUserId,
     triggerReason: "admin_manual_resume",
+    allowedFrom: ["paused"],
     extraSet: { pauseStart: null, pauseEnd: null },
   });
 }

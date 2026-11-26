@@ -268,7 +268,7 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
         name: data.planName,
         monthlyPriceINR: data.monthlyPriceINR,
         perDayPriceINR: Math.round(data.monthlyPriceINR / 30),
-        tagline: "Doctor-approved daily breakfast subscription",
+        tagline: "Daily breakfast box subscription",
         features: [],
       };
 
@@ -332,6 +332,21 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
 
       if (!user) {
         throw new Error("Failed to resolve or create customer user identity.");
+      }
+
+      // The name and phone typed on this registration are how the team reaches the customer.
+      if (data.userId) {
+        const fullName = data.customer.fullName.trim();
+        const phone = data.customer.phone.trim();
+        await tx
+          .insert(profiles)
+          .values({ userId: user.id, fullName, phone, email: user.email })
+          .onConflictDoUpdate({ target: profiles.userId, set: { fullName, phone, updatedAt: new Date() } });
+        // users.phone is unique: only take the number if no other account holds it.
+        const [owner] = await tx.select({ id: users.id }).from(users).where(eq(users.phone, phone)).limit(1);
+        if (!owner) {
+          await tx.update(users).set({ phone, updatedAt: new Date() }).where(eq(users.id, user.id));
+        }
       }
 
       // 1b. Duplicate guard (CUS-09): one open registration per account.
@@ -469,7 +484,7 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
       monthlyPriceINR: record.plan?.monthlyPriceINR || (record.planId === "premium" ? 4000 : 3500),
       customer: {
         fullName: record.user.profile?.fullName || "",
-        phone: record.user.phone || record.user.profile?.phone || "",
+        phone: record.user.profile?.phone || record.user.phone || "",
         email: record.user.email || record.user.profile?.email || "",
       },
       deliveryAddress: {
@@ -515,7 +530,7 @@ export class DrizzlePostgresLeadRepository implements ILeadRepository {
       monthlyPriceINR: record.plan?.monthlyPriceINR || (record.planId === "premium" ? 4000 : 3500),
       customer: {
         fullName: record.user.profile?.fullName || "",
-        phone: record.user.phone || record.user.profile?.phone || "",
+        phone: record.user.profile?.phone || record.user.phone || "",
         email: record.user.email || record.user.profile?.email || "",
       },
       deliveryAddress: {
