@@ -73,8 +73,9 @@ export async function POST(request: Request) {
         const paymentEntity = eventPayload?.payload?.payment?.entity;
         const orderId = paymentEntity?.order_id;
         const paymentId = paymentEntity?.id;
-        const notes = paymentEntity?.notes || {};
-        const leadRef = notes.leadReferenceCode;
+        // Checkout clients can influence payment notes; trust the order we created.
+        const storedOrder = orderId ? await paymentRepository.getOrder(orderId) : null;
+        const leadRef = storedOrder?.leadReferenceCode;
 
         if (leadRef) {
           const lead = await leadRepository.getLeadByReference(leadRef);

@@ -76,6 +76,7 @@ export async function POST(request: Request) {
     // order was actually created for this leadReferenceCode. Without this
     // check, a valid signature for a cheap/unrelated order could be
     // replayed with a different leadReferenceCode to activate it instead.
+    let subscriptionStatus: string | null = null;
     if (leadReferenceCode) {
       if (!existingOrder || existingOrder.leadReferenceCode !== leadReferenceCode) {
         console.error(
@@ -88,7 +89,9 @@ export async function POST(request: Request) {
           existingLead.hasActivePerks = true;
           existingLead.updatedAt = new Date().toISOString();
           await leadRepository.updateLead(existingLead);
+          subscriptionStatus = "confirmed_active";
         } else if (existingLead) {
+          subscriptionStatus = existingLead.status;
           console.warn(
             `[PAYMENTS VERIFY] Ignoring illegal transition for lead ${leadReferenceCode}: "${existingLead.status}" -> "confirmed_active".`
           );
@@ -109,10 +112,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       verified: true,
-      status: "confirmed_active",
+      status: subscriptionStatus,
       orderId: razorpayOrderId,
       paymentId: razorpayPaymentId,
-      message: "Payment signature cryptographically verified and subscription activated.",
+      message:
+        subscriptionStatus === "confirmed_active"
+          ? "Payment signature cryptographically verified and subscription activated."
+          : "Payment verified. The subscription was not activated; our team will follow up.",
     });
   } catch (error: any) {
     console.error("[PAYMENTS VERIFY ERROR]:", error);
