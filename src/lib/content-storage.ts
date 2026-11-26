@@ -222,6 +222,8 @@ export async function updateContentPageDraft(params: {
 export async function publishContentPage(id: string, actorUserId: string) {
   const existing = await getContentPageById(id);
   if (!existing) throw new Error("Content page not found.");
+  // Publishing twice must not reset the publish date or add audit noise.
+  if (existing.page.status === "published") return existing.page;
 
   const [updated] = await db
     .update(contentPages)
@@ -242,6 +244,7 @@ export async function publishContentPage(id: string, actorUserId: string) {
 export async function unpublishContentPage(id: string, actorUserId: string) {
   const existing = await getContentPageById(id);
   if (!existing) throw new Error("Content page not found.");
+  if (existing.page.status !== "published") return existing.page;
 
   const [updated] = await db
     .update(contentPages)
