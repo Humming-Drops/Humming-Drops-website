@@ -1,5 +1,8 @@
 # Runbook RB-02: Build, Typecheck & Verification Suite
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Document:** `docs/runbooks/build-and-verification.md`  
 **Target Audience:** All Engineers, CI/CD Maintainers, Quality Engineers  
 **Prerequisites:** Completed RB-01 (Local Development Setup)  

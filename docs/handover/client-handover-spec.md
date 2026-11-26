@@ -1,5 +1,8 @@
 # Humming Drops & MedCity Smiles — Client Handover Specification
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Document:** `docs/handover/client-handover-spec.md`  
 **Document Version:** 1.0  
 **Date:** November 2026  

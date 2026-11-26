@@ -1,5 +1,8 @@
 # RB-06: Database Migration, Backup & Restore Runbook
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Status:** Documented procedure, **not yet executed against any live database**. No
 Railway/Postgres credentials were available in the environment that authored this
 runbook — every command below must be run by whoever holds real staging/production

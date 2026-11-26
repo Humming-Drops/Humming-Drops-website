@@ -1,5 +1,8 @@
 # HUMMING DROPS & MEDCITY SMILES — MASTER IMPLEMENTATION TRACKER
 
+> **Historical document.** Parts of it describe Clerk, MongoDB, Supabase or Vercel setups that no longer match the code. See the root `README.md` and `docs/qa/QA-2026-11-26.md` for the current state.
+
+
 **Document Version:** 1.0  
 **Phase:** Phase 0 — Discovery & Technical Architecture  
 **Status:** Active Master Tracking Document  
