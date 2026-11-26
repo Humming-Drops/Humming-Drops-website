@@ -39,6 +39,11 @@ export function isSafeRedirectUrl(url: string | null | undefined): boolean {
       return false;
     }
 
+    // Dot segments ("/..//evil.com") can normalise into a protocol-relative path
+    if (parsed.pathname.startsWith("//")) {
+      return false;
+    }
+
     // Must be http/https
     if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
       return false;

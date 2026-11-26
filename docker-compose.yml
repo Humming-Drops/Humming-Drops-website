@@ -30,7 +30,6 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/hummingdrops_dev
       DATABASE_SSL: disable
-      SESSION_SECRET: ${SESSION_SECRET:-hummingdrops_secure_session_signing_secret_2026_dev_key_super_entropy}
     ports:
       - "3000:3000"
     depends_on:

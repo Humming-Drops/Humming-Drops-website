@@ -47,11 +47,22 @@ export async function getSession(): Promise<SessionPayload | null> {
  * Lightweight drop-in replacement for auth() in server routes.
  */
 export async function auth() {
-  const session = await getSession();
+  const current = await getSessionUser();
   return {
-    userId: session?.userId ?? null,
-    sessionId: session ? "active_session" : null,
+    userId: current?.user.id ?? null,
+    sessionId: current ? "active_session" : null,
   };
+}
+
+/**
+ * Session plus its live database row. A deleted or deactivated account has no
+ * session, and roles always come from the database, never from the cookie.
+ */
+async function getSessionUser() {
+  const session = await getSession();
+  if (!session) return null;
+  const user = await getAppUserById(session.userId);
+  return user?.isActive ? { session, user } : null;
 }
 
 /**
@@ -117,27 +128,17 @@ export async function getAppUserById(identifier: string) {
  * Checks whether the current user has any of the specified roles.
  */
 export async function hasAppRole(roles: string[]): Promise<boolean> {
-  const session = await getSession();
-  if (!session) return false;
-
-  const user = await getAppUserById(session.userId);
-  return Boolean(user?.isActive && roles.includes(user.role));
+  const current = await getSessionUser();
+  return Boolean(current && roles.includes(current.user.role));
 }
 
 /**
  * Checks whether the current user holds a specific RBAC permission.
  */
 export async function hasPermission(permissionSlug: string): Promise<boolean> {
-  const session = await getSession();
-  if (!session) return false;
-
-  // Cryptographically verified super-admin / admin role bypasses explicit checks
-  if (session.role === "admin" || session.role === "super_admin") {
-    return true;
-  }
-
-  const appUser = await getAppUserById(session.userId);
-  if (!appUser?.isActive) return false;
+  const current = await getSessionUser();
+  if (!current) return false;
+  const appUser = current.user;
 
   if (appUser.role === "admin" || appUser.role === "super_admin") {
     return true;
@@ -180,14 +181,9 @@ export async function requirePermission(permissionSlug: string) {
  * Returns true if the user is a staff account (any non-customer role or holds staff RBAC grant).
  */
 export async function isStaffUser(): Promise<boolean> {
-  const session = await getSession();
-  if (!session) return false;
-
-  // Cryptographically verified staff role in active session
-  if (session.role && session.role !== "customer") return true;
-
-  const appUser = await getAppUserById(session.userId);
-  if (!appUser?.isActive) return false;
+  const current = await getSessionUser();
+  if (!current) return false;
+  const appUser = current.user;
   if (appUser.role !== "customer") return true;
 
   try {
