@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowDown, ChevronRight, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
+import { Pause, Play, ArrowDown, ChevronRight, Sparkles, Clock, ShieldCheck, Sun, Apple, Salad, HeartPulse } from "lucide-react";
 import { DoodleSquiggle } from "@/components/ui/doodles";
 
 const fadeInUp: Variants = {
@@ -73,6 +73,20 @@ const HERO_BENEFITS = [
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [userPaused, setUserPaused] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      setUserPaused(false);
+      video.play().catch(() => {});
+    } else {
+      setUserPaused(true);
+      video.pause();
+    }
+  };
 
   // Ensure video autoplays and pauses when scrolled out of view, resumes when scrolled back in
   useEffect(() => {
@@ -86,6 +100,12 @@ export function Hero() {
     video.setAttribute("playsinline", "true");
     video.setAttribute("webkit-playsinline", "true");
     video.setAttribute("x5-playsinline", "true");
+
+    // Respect reduced motion and an explicit pause: no automatic playback.
+    if (shouldReduceMotion || userPaused) {
+      video.pause();
+      return;
+    }
 
     const playPromise = video.play();
     if (playPromise !== undefined) {
@@ -114,7 +134,7 @@ export function Hero() {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [shouldReduceMotion, userPaused]);
 
   return (
     <section
@@ -131,11 +151,12 @@ export function Hero() {
       <div className="relative w-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[54%] xl:w-[56%] h-[46svh] sm:h-[50svh] lg:h-full overflow-hidden bg-mint z-0 rounded-b-[32px] lg:rounded-none">
         <video
           ref={videoRef}
-          autoPlay
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster="/images/hero-poster.jpg"
           disablePictureInPicture
           disableRemotePlayback
@@ -149,6 +170,15 @@ export function Hero() {
         >
           <source src="/videos/hero-clean.mp4" type="video/mp4" />
         </video>
+
+        <button
+          type="button"
+          onClick={togglePlayback}
+          aria-label={playing ? "Pause background video" : "Play background video"}
+          className="absolute bottom-10 left-4 lg:bottom-6 lg:left-24 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-black/55 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        >
+          {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+        </button>
 
         {/* Soft edge gradient to blend seamlessly */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 lg:hidden pointer-events-none" />

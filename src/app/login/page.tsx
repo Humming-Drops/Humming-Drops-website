@@ -31,9 +31,9 @@ export default function LoginPage() {
               <span>Healthy Drops, Healthier You</span>
             </div>
 
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-950 tracking-tight leading-[1.15]">
+            <p className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-950 tracking-tight leading-[1.15]">
               Every morning begins with fresh nutrition.
-            </h2>
+            </p>
 
             <p className="text-base text-stone-600 leading-relaxed max-w-lg">
               Fresh cut breakfast boxes delivered right to your doorstep in Bangalore. 4 varieties of fresh fruit, 2 crisp vegetables, mix salad, and sprouts prepared every dawn with CARE by Berrybeats Cafe.

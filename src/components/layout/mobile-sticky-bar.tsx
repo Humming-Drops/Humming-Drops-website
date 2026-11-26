@@ -5,11 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { useBrandTheme } from "@/components/theme/brand-provider";
+import { useAuth } from "@/lib/auth/client";
 
 export function MobileStickyBar() {
   const [visible, setVisible] = useState(false);
   const { theme } = useBrandTheme();
   const pathname = usePathname();
+  const { isSignedIn, user } = useAuth();
+  // Same rule as the navbar: no "Subscribe" prompt for an open subscription.
+  const subscribed = Boolean(isSignedIn && user?.hasOpenSubscription);
 
   const isExcluded = Boolean(
     pathname?.startsWith("/admin") ||
@@ -17,7 +21,9 @@ export function MobileStickyBar() {
     pathname?.startsWith("/onboarding") ||
     pathname?.startsWith("/subscribe") ||
     pathname?.startsWith("/login") ||
-    pathname?.startsWith("/register")
+    pathname?.startsWith("/register") ||
+    pathname?.startsWith("/forgot-password") ||
+    pathname?.startsWith("/reset-password")
   );
 
   useEffect(() => {
@@ -55,10 +61,10 @@ export function MobileStickyBar() {
             </Link>
 
             <Link
-              href="/subscribe?plan=standard"
+              href={subscribed ? "/dashboard" : "/subscribe?plan=standard"}
               className="flex-1 min-h-[44px] px-3.5 py-2 rounded-full bg-brand-primary hover:bg-brand-hover text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md active:scale-[0.98] transition-all truncate focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
-              <span>Subscribe</span>
+              <span>{subscribed ? "My Dashboard" : "Subscribe"}</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             </Link>
           </>
@@ -73,10 +79,10 @@ export function MobileStickyBar() {
             </Link>
 
             <Link
-              href="/subscribe?plan=standard"
+              href={subscribed ? "/dashboard" : "/subscribe?plan=standard"}
               className="flex-1 min-h-[44px] px-3.5 py-2 rounded-full bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md active:scale-[0.98] transition-all truncate focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
             >
-              <span>Join Community</span>
+              <span>{subscribed ? "My Dashboard" : "Join Community"}</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             </Link>
           </>
