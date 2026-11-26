@@ -7,6 +7,7 @@ import {
   createSessionToken,
   getSessionCookieOptions,
 } from "@/lib/auth/session";
+import { passwordFingerprint } from "@/lib/auth/revocation";
 import {
   isValidEmail,
   normalizePhone,
@@ -152,6 +153,7 @@ export async function POST(request: Request) {
       email: newUser.email,
       role: newUser.role,
       fullName,
+      pv: passwordFingerprint(passwordHash),
     });
 
     // 9. Set Cookie & Return Success

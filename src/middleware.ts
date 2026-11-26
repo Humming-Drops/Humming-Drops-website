@@ -31,6 +31,17 @@ function isMatch(pathname: string, prefixes: string[]): boolean {
   );
 }
 
+function isSameOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return true; // non-browser clients
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -46,6 +57,13 @@ export async function middleware(request: NextRequest) {
       });
       return NextResponse.redirect(cleanUrl);
     }
+  }
+
+  // A server page found this signed cookie no longer valid: drop it instead of bouncing back.
+  if (pathname === "/login" && request.nextUrl.searchParams.get("session") === "expired") {
+    const response = NextResponse.next();
+    response.cookies.delete(SESSION_COOKIE_NAME);
+    return response;
   }
 
   // 2. Read and verify session token from cookies
@@ -101,6 +119,13 @@ export async function middleware(request: NextRequest) {
     const planParam = request.nextUrl.searchParams.get("plan");
     const registerUrl = buildRegisterRedirectUrl(request.url, planParam);
     return NextResponse.redirect(registerUrl);
+  }
+
+  // Browsers send Origin on cross-site writes; refuse them (webhooks sign their own requests).
+  if (pathname.startsWith("/api/") && pathname !== "/api/payments/webhook" && !["GET", "HEAD", "OPTIONS"].includes(request.method)) {
+    if (!isSameOrigin(request)) {
+      return NextResponse.json({ success: false, error: "Cross-origin request refused." }, { status: 403 });
+    }
   }
 
   // 6. Enforce protection for dashboard, onboarding, and private APIs

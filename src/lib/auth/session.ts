@@ -8,6 +8,10 @@ export interface SessionPayload {
   email: string;
   role: string;
   fullName?: string;
+  /** Session id, used to revoke this one session on sign-out. */
+  jti?: string;
+  /** Password fingerprint: a password change ends older sessions. */
+  pv?: string;
   exp: number; // Unix timestamp in seconds
 }
 
@@ -71,7 +75,7 @@ export async function createSessionToken(
   expiresInSeconds: number = SESSION_MAX_AGE_SECONDS
 ): Promise<string> {
   const exp = Math.floor(Date.now() / 1000) + expiresInSeconds;
-  const payload: SessionPayload = { ...data, exp };
+  const payload: SessionPayload = { jti: crypto.randomUUID(), ...data, exp };
 
   const enc = new TextEncoder();
   const payloadBytes = enc.encode(JSON.stringify(payload));

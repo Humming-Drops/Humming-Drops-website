@@ -32,10 +32,11 @@ export default async function DashboardLayout({
   // they can reach any dashboard page. /onboarding itself isn't under
   // this layout, so it's never caught in this redirect.
   const current = await getCurrentUser();
-  if (current) {
-    if (!current.profile) {
-      redirect("/onboarding");
-    }
+  if (!current) {
+    redirect("/login?session=expired");
+  }
+  if (!current.profile) {
+    redirect("/onboarding");
   }
 
   return (

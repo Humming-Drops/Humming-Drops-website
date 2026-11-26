@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function OnboardingPage() {
   const current = await getCurrentUser();
   if (!current) {
-    redirect("/login");
+    redirect("/login?session=expired");
   }
 
   // Intentional: sign-up creates the profile, so /onboarding is only for accounts that have none
