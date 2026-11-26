@@ -1,19 +1,10 @@
 import Link from "next/link";
 import { ExternalLink, LayoutDashboard } from "lucide-react";
-import { isStaffUser } from "@/lib/auth/server";
-import { PortalNav, type PortalNavItem } from "@/components/layout/portal-nav";
+import { hasPermission, isStaffUser } from "@/lib/auth/server";
+import { visibleAdminSections } from "@/lib/auth/admin-sections";
+import { PortalNav } from "@/components/layout/portal-nav";
 import { AdminSignInPortal } from "@/components/auth/admin-sign-in-portal";
 import { AdminSignOutButton } from "@/components/admin/admin-sign-out-button";
-
-const ADMIN_NAV_ITEMS: PortalNavItem[] = [
-  { label: "Overview", href: "/admin" },
-  { label: "Leads", href: "/admin/leads" },
-  { label: "Subscriptions", href: "/admin/subscriptions" },
-  { label: "Payments", href: "/admin/payments" },
-  { label: "Content", href: "/admin/content" },
-  { label: "Staff", href: "/admin/staff" },
-  { label: "Audit log", href: "/admin/audit-log" },
-];
 
 const HEADER_LINK =
   "inline-flex min-h-[44px] min-w-[44px] lg:min-h-[40px] lg:min-w-[40px] items-center justify-center rounded-full px-2 text-xs font-semibold text-brand-primary transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:px-3";
@@ -34,6 +25,7 @@ export default async function AdminLayout({
   if (!(await isStaffUser())) {
     return <AdminSignInPortal />;
   }
+  const navItems = (await visibleAdminSections(hasPermission)).map(({ label, href }) => ({ label, href }));
 
   return (
     <div className="flex-1 bg-muted/40">
@@ -59,8 +51,8 @@ export default async function AdminLayout({
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:py-8 lg:flex-row lg:gap-8 md:px-8">
-        <PortalNav items={ADMIN_NAV_ITEMS} ariaLabel="Admin Navigation" />
-        <main className="min-w-0 flex-1">{children}</main>
+        <PortalNav items={navItems} ariaLabel="Admin Navigation" />
+        <div className="min-w-0 flex-1">{children}</div>
       </div>
     </div>
   );

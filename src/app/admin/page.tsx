@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { leadRepository } from "@/lib/lead-storage";
 import { hasPermission } from "@/lib/auth/server";
+import { visibleAdminSections } from "@/lib/auth/admin-sections";
 import {
   AdminPageHeader,
   AdminSectionHeading,
@@ -9,16 +10,9 @@ import {
   adminCard,
 } from "@/components/admin/admin-ui";
 
-const NEXT_ACTIONS = [
-  { label: "Review registrations", href: "/admin/leads" },
-  { label: "Manage subscriptions", href: "/admin/subscriptions" },
-  { label: "View payments", href: "/admin/payments" },
-  { label: "Manage website content", href: "/admin/content" },
-  { label: "Manage staff roles", href: "/admin/staff" },
-];
-
 export default async function AdminOverviewPage() {
   const canReadLeads = await hasPermission("leads:read");
+  const nextActions = (await visibleAdminSections(hasPermission)).filter((s) => s.action);
   const leads = canReadLeads ? await leadRepository.getAllLeads() : [];
   const pending = leads.filter((lead) => lead.status === "pending_confirmation").length;
   const active = leads.filter((lead) => lead.status === "confirmed_active").length;
@@ -46,13 +40,13 @@ export default async function AdminOverviewPage() {
       <div className={`${adminCard} p-4 sm:p-6`}>
         <AdminSectionHeading>Next actions</AdminSectionHeading>
         <div className="mt-4 flex flex-wrap gap-3">
-          {NEXT_ACTIONS.map((action, index) => (
+          {nextActions.map((action, index) => (
             <Link
               key={action.href}
               href={action.href}
               className={adminButton(index === 0 ? "primary" : "secondary")}
             >
-              {action.label}
+              {action.action}
             </Link>
           ))}
         </div>
